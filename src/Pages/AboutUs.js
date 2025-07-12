@@ -1,112 +1,165 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FaChalkboard, FaUsers, FaBuilding, FaAward, FaClock } from 'react-icons/fa';
+import { FaChalkboard, FaClock } from 'react-icons/fa';
 import CountUp from 'react-countup';
 
 const AboutUs = () => {
-  const [isVisible, setIsVisible] = useState(false); // State to control visibility
+  const [isVisible, setIsVisible] = useState(false);
+  const [hoverIndex, setHoverIndex] = useState(null);
+  const statsRef = useRef(null);
 
   const stats = [
-    { icon: <FaChalkboard />, number: '2500', label: 'Total Teachers' },
-    { icon: <FaUsers />, number: '5000', label: 'Total Students' },
-    { icon: <FaBuilding />, number: '350', label: 'Total Classrooms' },
-    { icon: <FaAward />, number: '1200', label: 'Best Awards Won' },
+    { number: 20000, label: 'Graduated Students' },
+    { number: 124, label: 'Expert Instructors' },
+    { number: 20, label: 'Esteemed Clients', suffix: '+' },
+    { number: 15000, label: 'Students Got Employed' },
   ];
 
-  const statsRef = useRef(null); // Ref to detect scroll position
+  const courses = [
+    {
+      title: 'QA / Testing Tools',
+      img: 'https://cdn-icons-png.flaticon.com/512/5968/5968331.png',
+    },
+    {
+      title: 'Selenium',
+      img: 'https://upload.wikimedia.org/wikipedia/commons/d/d5/Selenium_Logo.png',
+    },
+    {
+      title: 'Salesforce Dev & Admin',
+      img: 'https://cdn.iconscout.com/icon/free/png-256/salesforce-2-432152.png',
+    },
+    {
+      title: 'Amazon Web Services',
+      img: 'https://cdn-icons-png.flaticon.com/512/873/873120.png',
+    },
+    {
+      title: 'DevOps',
+      img: 'https://cdn-icons-png.flaticon.com/512/5968/5968866.png',
+    },
+    {
+      title: 'Azure',
+      img: 'https://cdn.iconscout.com/icon/free/png-256/microsoft-azure-1868965-1583129.png',
+    },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
-      const rect = statsRef.current.getBoundingClientRect();
-      if (rect.top <= window.innerHeight) {
-        setIsVisible(true); // Set to true when the stats section is visible
+      const rect = statsRef.current?.getBoundingClientRect();
+      if (rect && rect.top <= window.innerHeight) {
+        setIsVisible(true);
       }
     };
-
     window.addEventListener('scroll', handleScroll);
-    handleScroll();  // Check visibility on initial load as well
-
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <section className="w-full px-6 md:px-[60px] py-20">
-      {/* About Us heading */}
-      <div className="max-w-[600px] mb-12">
-        <h1 className="font-roboto font-bold text-5xl mb-2 text-black">About Us</h1>
-        <div
-          style={{
-            width: '216px',
-            height: '8px',
-            borderRadius: '20px',
-            backgroundColor: '#007860',
-          }}
-        />
+    <section className="container-fluid py-5">
+      {/* Heading */}
+      <div className="mb-5">
+        <h1 className="fw-bold display-5">
+          About <span className="text-success">Magnitia</span>
+        </h1>
+        <div className="bg-success rounded-pill" style={{ width: '90px', height: '6px' }}></div>
       </div>
 
-      {/* Main content */}
-      <div className="flex flex-col md:flex-row items-center justify-between relative mb-20">
-        {/* Left side */}
-        <div className="max-w-[600px] mb-8 md:mb-0">
-          <h2 className="font-roboto font-bold text-3xl md:text-4xl mb-2 text-black">
-            Delivering Top-Quality Online Tuition
-          </h2>
-          <h3 className="font-roboto font-bold text-3xl md:text-4xl mb-6 text-black">From India’s Best Educators</h3>
-          <p className="font-roboto text-base text-gray-700 mb-8 max-w-[550px]">
-            We assess each student’s strengths, challenges, and goals to build a roadmap that suits them.
+      {/* Main Content */}
+      <div className="row align-items-start mb-5">
+        {/* Left Column */}
+        <div className="col-md-6">
+          <p className="text-muted mb-3">
+            Magnitia IT- Software Training Institute Hyderabad offers professional online & classroom trainings for the latest trending IT technologies like Software Testing, Data Science, Cyber Security, AI / ML, Salesforce, QA / Testing Tools, Selenium Automation, DevOps, AWS, Python, Power BI, Appium, Angular, SDET, Web services testing, Manual testing Courses and more.
           </p>
-          <div className="flex flex-wrap space-x-10 text-gray-800 font-roboto font-medium text-lg">
-            <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <FaChalkboard className="text-[#007860]" />
-              <span className="text-[#007860]">Expert Trainers</span>
+          <p className="text-muted">
+            Magnitia formulates software training programs that are constantly refined/revised to maintain sync with industry expectations using innovative training methodologies to ensure max skill transfer and achieve production-ready capability.
+          </p>
+
+          <div className="d-flex flex-wrap gap-4 mt-4">
+            <div className="d-flex align-items-center text-success fw-semibold">
+              <FaChalkboard className="me-2" />
+              Expert Trainers
             </div>
-            <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <FaClock className="text-[#007860]" />
-              <span className="text-[#007860]">Flexible Timings</span>
+            <div className="d-flex align-items-center text-success fw-semibold">
+              <FaClock className="me-2" />
+              Flexible Timings
             </div>
           </div>
         </div>
 
-        {/* Right image + overlay */}
-        <div className="relative w-[350px] md:w-[400px] h-[350px] md:h-[400px] flex-shrink-0">
-          <img
-            src="/image.png"
-            alt="About Us Illustration"
-            className="w-full h-full object-cover rounded-md"
-          />
-          {/* Badge */}
-          <div
-            className="absolute top-2/3 left-[-35px] transform -translate-y-1/2 bg-white rounded-lg shadow-md w-[133px] h-[62px] flex items-center justify-center"
-          >
-            <span className="font-roboto font-semibold text-sm text-[#007860]">
-              20k+ Learners
-            </span>
+        {/* Right Column - Courses Offered */}
+        <div className="col-md-6 mt-4 mt-md-0">
+          <div className="bg-white shadow-sm rounded p-4">
+            <h3 className="fw-bold text-dark mb-4">
+              Courses <span className="text-success">Offered</span>
+            </h3>
+
+            <div className="row row-cols-1 row-cols-sm-2 g-3">
+              {courses.map((course, idx) => {
+                const isHovered = idx === hoverIndex;
+                const courseStyle = {
+                  padding: '10px',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  transition: 'all 0.3s ease',
+                  backgroundColor: isHovered ? '#f0fdf4' : 'transparent',
+                  boxShadow: isHovered ? '0 4px 12px rgba(0, 0, 0, 0.08)' : 'none',
+                  transform: isHovered ? 'scale(1.02)' : 'scale(1)',
+                };
+
+                return (
+                  <div
+                    key={idx}
+                    className="col"
+                    onMouseEnter={() => setHoverIndex(idx)}
+                    onMouseLeave={() => setHoverIndex(null)}
+                    style={courseStyle}
+                  >
+                    <img
+                      src={course.img}
+                      alt={course.title}
+                      className="me-2"
+                      width="24"
+                      height="24"
+                      style={{ objectFit: 'contain' }}
+                    />
+                    <span className="text-secondary fw-medium">{course.title}</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="text-center mt-4">
+              <button
+                className="btn text-white fw-semibold rounded-pill px-4 py-2"
+                style={{ backgroundColor: '#6f42c1' }}
+              >
+                Browse Courses
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Stats */}
+      {/* Stats Section */}
       <div
         ref={statsRef}
-        className={`flex flex-wrap justify-center items-center gap-16 ${isVisible ? 'opacity-100 transition-opacity duration-1000' : 'opacity-0'}`}
+        className={`row text-white text-center py-5 px-3  transition-opacity ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+        style={{
+          backgroundImage: 'url("https://magnitia.com/assets/images/rcb-bg.jpg")',
+          backgroundBlendMode: 'multiply',
+          backgroundSize: 'cover',
+          transition: 'opacity 1s ease-in-out',
+        }}
       >
         {stats.map((stat, idx) => (
-          <React.Fragment key={idx}>
-            <div className="flex flex-col items-center mb-10">
-              {/* Stat circle */}
-              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-2" style={{ backgroundColor: '#007860' }}>
-                <span className="text-white text-lg">{stat.icon}</span>
-              </div>
-              <span className="font-roboto font-bold text-base text-black">
-                {isVisible && <CountUp start={0} end={parseInt(stat.number)} duration={3} separator="," />}
-              </span>
-              <span className="font-roboto text-sm text-gray-600 text-center">{stat.label}</span>
-            </div>
-
-            {/* Vertical gray line (between circles only) */}
-            {idx !== stats.length - 1 && (
-              <div className="w-[2px] h-[120px] bg-gray-300 mt-4"></div>
-            )}
-          </React.Fragment>
+          <div key={idx} className="col-6 col-md-3 mb-3">
+            <h2 className="fw-bold display-6">
+              <CountUp end={stat.number} duration={2} separator="," suffix={stat.suffix || ''} />
+            </h2>
+            <p className="mb-0">{stat.label}</p>
+          </div>
         ))}
       </div>
     </section>

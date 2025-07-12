@@ -7,7 +7,7 @@ import FAQ from "./Pages/FAQ";
 import BlogPage from "./Pages/BlogPage";
 import OurMentorsPage from "./Pages/OurMentorsPage";
 import AvailableCourses from "./Pages/AvailableCourses";
-import Courses from "./Pages/Cources";
+import Courses from "./Pages/Courses";
 import CourseDetail from "./Pages/CourseDetail";
 import DoubtSession from "./Pages/DoubtSession";
 import Certificate from "./Pages/Certificate";

@@ -14,38 +14,52 @@ import YourStatistics from "./YourStatistics";
 import LiveClasses from "./LiveClasses";
 import CompletedClasses from "./CompletedClasses";
 import Interviews from "./Interviews";
-import Courses from "./Cources";
+import Course from "../components/course";
+import CourseAndFeatures from "../components/CourseSection";
+import MagnitiaCourses from "../components/magnitiaCourses";
+import Features from "../components/Features";
+import DifferSection from "../components/differSection";
+import BatchAndAlumniSection from "../components/batchandreview";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
-  // Check if user is logged in when the component mounts
   useEffect(() => {
-    const userId = localStorage.getItem('userId');
-    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem("userId");
+    const token = localStorage.getItem("token");
     if (userId && token) {
       setIsLoggedIn(true);
     }
+
+    // Show modal 1 second after page loads
+    setTimeout(() => setShowModal(true), 1000);
   }, []);
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
 
   return (
     <>
       <Header />
-      <Hero />
+      
 
-      {/* Before Login */}
-      {!isLoggedIn && (
+      {!isLoggedIn ? (
         <>
+          <CourseAndFeatures />
+          <MagnitiaCourses />
+          <Features />
           <AboutUs />
-          <IndustryExperts />
-          <Courses />
+          <Course />
+          <DifferSection />
+          <BatchAndAlumniSection />
           <GetInTouch />
-          <SuccessStories />
+          <IndustryExperts />
         </>
-      )}
-
-      {/* After Login */}
-      {isLoggedIn && (
+      ) : (
         <>
           <EnrolledCourses />
           <LiveClasses />
@@ -57,6 +71,65 @@ const HomePage = () => {
       )}
 
       <Footer />
+
+      {/* Bootstrap Modal */}
+      {showModal && (
+        <div
+          className="modal d-block fade show"
+          tabIndex="-1"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.6)" }}
+          onClick={handleCloseModal}
+        >
+          <div className="modal-dialog modal-dialog-centered" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-content rounded-4 border-0 overflow-hidden">
+              {/* Header */}
+              <div className="modal-header  text-dark">
+                <h5 className="modal-title">Welcome to Magnitia!</h5>
+                <button
+                  type="button"
+                  className="btn-close btn-close-dark"
+                  onClick={handleCloseModal}
+                ></button>
+              </div>
+
+              <div className="p-2">
+                {/* Image */}
+                <img
+                  src="https://magnitia.com/images/Magnitia-up-coming-batches-july-09.jpg"
+                  alt="Welcome Banner"
+                  className="img-fluid w-100"
+                  style={{ maxHeight: "300px", objectFit: "cover" }}
+                />
+
+              </div>
+
+              {/* Body */}
+              <div className="modal-body text-center">
+                <h5 className="mb-3 fw-bold">Start your learning journey today!</h5>
+                <p className="text-muted">
+                  Join the best courses curated by top industry experts and get
+                  certified. Limited seats available.
+                </p>
+              </div>
+
+              {/* Footer */}
+              <div className="modal-footer justify-content-center">
+                <button
+                  className="btn btn-success rounded-pill px-4"
+                  onClick={() => {
+
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                    // Optionally navigate to courses section
+                    navigate('/courses');
+                  }}
+                >
+                  Enroll Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
