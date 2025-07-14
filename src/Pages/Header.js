@@ -3,232 +3,214 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [active, setActive] = useState('Home');
+  const [active, setActive] = useState('');
   const [showResourcesDropdown, setShowResourcesDropdown] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState('');  // Renamed from mobile to phoneNumber
-  const [password, setPassword] = useState('');  // Added password field
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const menuItems = isLoggedIn 
-    ? ['Home', 'Courses', 'Interviews', 'Certificate', 'Doubt Session', 'Contact Us', 'Resources'] 
-    : ['Home', 'Courses', 'Contact Us', 'Our Mentors', 'Resources'];
+  const resourcesSubMenu = [
+    { label: 'Blog', path: '/blog' },
+    { label: 'FAQ', path: '/faq' },
+  ];
 
-  // Check login status on mount
+  const baseMenuItems = isLoggedIn
+    ? [
+        { label: 'Home', path: '/' },
+        { label: 'Courses', path: '/courses' },
+        { label: 'Interviews', path: '/interviews' },
+        { label: 'Certificate', path: '/certificate' },
+        { label: 'Doubt Session', path: '/doubtsession' },
+        { label: 'Contact Us', path: '/contactus' },
+        { label: 'Resources', subMenu: resourcesSubMenu },
+        { label: 'Clients', path: '/clients' },
+      ]
+    : [
+        { label: 'Home', path: '/' },
+        { label: 'About Us', path: '/aboutus'},
+        { label: 'Courses', path: '/courses' },
+        { label: 'Contact Us', path: '/contactus' },
+        { label: 'Our Mentors', path: '/ourmentors' },
+        { label: 'Resources', subMenu: resourcesSubMenu },        
+        { label: 'UpCommingBatches', path: '/upcommingbatches'},
+        { label: 'Clients', path: '/clients' },
+      ];
+
   useEffect(() => {
-    const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
-    setIsLoggedIn(!!(userId && token));
+    const userId = localStorage.getItem('userId');
+    setIsLoggedIn(!!(token && userId));
   }, []);
 
-  // Handle active menu highlighting
   useEffect(() => {
-    const path = location.pathname;
-    if (path === '/') setActive('Home');
-    else if (path === '/courses') setActive('Courses');
-    else if (path === '/contactus') setActive('Contact Us');
-    else if (path === '/ourmentors') setActive('Our Mentors');
-    else if (path === '/doubtsession') setActive('Doubt Session');
-    else if (path === '/certificate') setActive('Certificate');
-    else if (path === '/interviews') setActive('Interviews');
-    else if (['/aboutus', '/blog', '/faq'].includes(path)) setActive('Resources');
-    else setActive('');  // Default fallback
+    const found = baseMenuItems.find(item =>
+      item.path === location.pathname || item.subMenu?.some(sub => sub.path === location.pathname)
+    );
+    setActive(found?.label || '');
   }, [location.pathname]);
 
-  const toggleMenu = () => setIsOpen(!isOpen);
+  const handleClick = (item) => {
+    if (item.subMenu) {
+      setShowResourcesDropdown((prev) => !prev);
+    } else {
+      navigate(item.path);
+      setIsOpen(false);
+      setShowResourcesDropdown(false);
+    }
+    setActive(item.label);
+  };
 
-  // Handle login with loader
   const handleLogin = async () => {
-    if (!phoneNumber || !password) {
-      alert('Phone number and password are required');
-      return;
-    }
-
-    const phoneNumberPattern = /^[0-9]{10}$/;
-    if (!phoneNumberPattern.test(phoneNumber)) {
-      alert('Invalid phone number format');
-      return;
-    }
+    if (!phoneNumber || !password) return alert('Phone number and password are required');
+    if (!/^[0-9]{10}$/.test(phoneNumber)) return alert('Invalid phone number');
 
     try {
       setIsLoading(true);
-      const response = await fetch('https://hicapbackend.onrender.com/api/users/login', {
+      const res = await fetch('https://hicapbackend.onrender.com/api/users/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ phoneNumber, password }),  // Sending phoneNumber and password
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phoneNumber, password }),
       });
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (response.status === 200) {
-        localStorage.setItem('userId', data.user._id);
+      if (res.status === 200) {
         localStorage.setItem('token', data.token);
+        localStorage.setItem('userId', data.user._id);
         setIsLoggedIn(true);
         setShowLoginModal(false);
         window.location.reload();
       } else {
-        alert(data.error || 'Something went wrong!');
+        alert(data.error || 'Login failed');
       }
-    } catch (error) {
-      console.error('Login error:', error);
-      alert('An error occurred while logging in');
+    } catch (err) {
+      alert('Login error');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Handle logout with loader
   const handleLogout = () => {
-    setIsLoading(true);
-    localStorage.removeItem('userId');
-    localStorage.removeItem('token');
+    localStorage.clear();
     setIsLoggedIn(false);
-    setTimeout(() => {
-      window.location.reload();
-    }, 500);
-  };
-
-  // Handle menu clicks
-  const handleClick = (item) => {
-    setActive(item);
-    if (item !== 'Resources') {
-      navigate(getPath(item));
-      setShowResourcesDropdown(false);
-      setIsOpen(false);
-    } else {
-      setShowResourcesDropdown((prev) => !prev);
-    }
-  };
-
-  // Path mapping helper
-  const getPath = (item) => {
-    switch (item) {
-      case 'Home': return '/';
-      case 'Courses': return '/courses';
-      case 'Contact Us': return '/contactus';
-      case 'Our Mentors': return '/ourmentors';
-      case 'Doubt Session': return '/doubtsession';
-      case 'Certificate': return '/certificate';
-      case 'Interviews': return '/interviews';
-      case 'About Us': return '/aboutus';
-      case 'Blog': return '/blog';
-      case 'FAQ': return '/faq';
-      default: return '/';
-    }
+    setTimeout(() => window.location.reload(), 500);
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-white shadow-md h-[60px] font-roboto z-50">
-      {/* Global Loader */}
+    <header className="fixed top-0 left-0 w-full bg-white shadow z-50">
+      {/* Loading Overlay */}
       {isLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#007860]"></div>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[100]">
+          <div className="animate-spin h-12 w-12 rounded-full border-t-4 border-b-4 border-[#007860]" />
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
-        {/* LOGO */}
+      {/* Navbar */}
+      <div className="max-w-7xl mx-auto px-4 h-[60px] flex items-center justify-between">
         <div className="text-xl font-bold text-black">LOGO</div>
 
-        {/* DESKTOP MENU */}
-        <nav className="hidden md:flex flex-1 justify-center space-x-8 text-black font-medium relative">
-          {menuItems.map((item, index) => (
+        {/* Desktop Menu */}
+        <nav className="hidden md:flex space-x-6 items-center text-sm font-medium relative">
+          {baseMenuItems.map((item, idx) => (
             <div
-              key={index}
-              className={`relative flex items-center cursor-pointer ${active === item ? 'font-bold' : 'font-normal'}`}
-              onClick={() => handleClick(item)}
-              onMouseEnter={() => item === 'Resources' && setShowResourcesDropdown(true)}
-              onMouseLeave={() => item === 'Resources' && setShowResourcesDropdown(false)}
+              key={idx}
+              className="relative group"
+              onMouseEnter={() => item.subMenu && setShowResourcesDropdown(true)}
+              onMouseLeave={() => item.subMenu && setShowResourcesDropdown(false)}
             >
-              <span>{item}</span>
+              <button
+                onClick={() => handleClick(item)}
+                className={`px-1 py-2 cursor-pointer ${
+                  active === item.label ? 'border-b-[2px] border-[#007860] font-semibold' : ''
+                }`}
+              >
+                {item.label}
+              </button>
 
-              {active === item && (
-                <span className="absolute left-0 bottom-[-6px] h-1.5 rounded-full bg-[#007860]" style={{ width: '100%' }} />
-              )}
-
-              {item === 'Resources' && showResourcesDropdown && (
-                <div className="absolute top-full left-0 mt-2 bg-white shadow-lg rounded border w-48 z-10">
-                  <button
-                    className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                    onClick={() => handleClick('About Us')}
-                  >
-                    About Us
-                  </button>
-                  <button
-                    className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                    onClick={() => handleClick('Blog')}
-                  >
-                    Blog
-                  </button>
-                  <button
-                    className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                    onClick={() => handleClick('FAQ')}
-                  >
-                    FAQ
-                  </button>
+              {/* Dropdown for Resources */}
+              {item.label === 'Resources' && showResourcesDropdown && (
+                <div className="absolute top-full left-0 mt-2 w-48 bg-white border shadow-lg rounded z-10">
+                  {item.subMenu.map((sub, subIdx) => (
+                    <div
+                      key={subIdx}
+                      className="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                      onClick={() => {
+                        navigate(sub.path);
+                        setShowResourcesDropdown(false);
+                        setActive(item.label);
+                      }}
+                    >
+                      {sub.label}
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
           ))}
-        </nav>
 
-        {/* AUTH BUTTONS */}
-        <div className="hidden md:flex">
           {isLoggedIn ? (
             <button
               onClick={handleLogout}
-              className="bg-[#007860] hover:bg-[#00604d] text-white px-4 py-1.5 rounded flex items-center space-x-2"
+              className="ml-4 bg-[#007860] hover:bg-[#00604d] text-white px-4 py-1.5 rounded"
             >
-              <span>Logout</span>
-              <span className="text-lg">→</span>
+              Logout →
             </button>
           ) : (
             <button
               onClick={() => setShowLoginModal(true)}
-              className="bg-[#007860] hover:bg-[#00604d] text-white px-4 py-1.5 rounded flex items-center space-x-2"
+              className="ml-4 bg-[#007860] hover:bg-[#00604d] text-white px-4 py-1.5 rounded"
             >
-              <span>Login</span>
-              <span className="text-lg">→</span>
+              Login →
             </button>
           )}
-        </div>
+        </nav>
 
-        {/* MOBILE MENU ICON */}
-        <div className="md:hidden ml-auto">
-          <button onClick={toggleMenu} className="text-black focus:outline-none">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              {isOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
-        </div>
+        {/* Mobile Hamburger */}
+        <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-black">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2">
+            {isOpen ? (
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
       </div>
 
-      {/* MOBILE MENU */}
+      {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden px-4 pb-4 space-y-3 text-black">
-          {menuItems.map((item, index) => (
-            <div key={index}>
+        <div className="md:hidden bg-white px-4 pb-4 space-y-2 text-sm">
+          {baseMenuItems.map((item, idx) => (
+            <div key={idx}>
               <div
+                className={`py-2 cursor-pointer ${
+                  active === item.label ? 'font-semibold border-b-[2px] border-[#007860]' : ''
+                }`}
                 onClick={() => handleClick(item)}
-                className={`cursor-pointer flex items-center justify-between py-2 ${active === item ? 'font-bold' : ''}`}
               >
-                <span>{item}</span>
+                {item.label}
               </div>
 
-              {item === 'Resources' && showResourcesDropdown && (
+              {item.label === 'Resources' && showResourcesDropdown && (
                 <div className="pl-4 space-y-1">
-                  <button onClick={() => handleClick('About Us')} className="text-sm">About Us</button>
-                  <button onClick={() => handleClick('Blog')} className="text-sm">Blog</button>
-                  <button onClick={() => handleClick('FAQ')} className="text-sm">FAQ</button>
+                  {item.subMenu.map((sub, subIdx) => (
+                    <div
+                      key={subIdx}
+                      className="text-sm cursor-pointer py-1"
+                      onClick={() => {
+                        navigate(sub.path);
+                        setShowResourcesDropdown(false);
+                        setIsOpen(false);
+                        setActive(item.label);
+                      }}
+                    >
+                      {sub.label}
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
@@ -237,45 +219,43 @@ const Header = () => {
           {isLoggedIn ? (
             <button
               onClick={handleLogout}
-              className="w-full bg-[#007860] hover:bg-[#00604d] text-white py-2 rounded flex items-center justify-center space-x-2"
+              className="w-full bg-[#007860] text-white py-2 rounded"
             >
-              <span>Logout</span>
-              <span className="text-lg">→</span>
+              Logout →
             </button>
           ) : (
             <button
               onClick={() => setShowLoginModal(true)}
-              className="w-full bg-[#007860] hover:bg-[#00604d] text-white py-2 rounded flex items-center justify-center space-x-2"
+              className="w-full bg-[#007860] text-white py-2 rounded"
             >
-              <span>Login</span>
-              <span className="text-lg">→</span>
+              Login →
             </button>
           )}
         </div>
       )}
 
-      {/* LOGIN MODAL */}
+      {/* Login Modal */}
       {showLoginModal && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg w-80 shadow-lg">
-            <h2 className="text-2xl font-semibold mb-4 text-center">Login</h2>
+            <h2 className="text-xl font-semibold text-center mb-4">Login</h2>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+            <div className="mb-3">
+              <label className="block text-sm font-medium mb-1">Phone Number</label>
               <input
                 type="text"
-                className="w-full px-4 py-2 border rounded-lg mt-1"
+                className="w-full border px-3 py-2 rounded"
                 placeholder="Enter your phone number"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
               />
             </div>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Password</label>
+            <div className="mb-3">
+              <label className="block text-sm font-medium mb-1">Password</label>
               <input
                 type="password"
-                className="w-full px-4 py-2 border rounded-lg mt-1"
+                className="w-full border px-3 py-2 rounded"
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -285,24 +265,19 @@ const Header = () => {
             <button
               onClick={handleLogin}
               disabled={isLoading}
-              className={`w-full ${isLoading ? 'bg-gray-400' : 'bg-[#007860] hover:bg-[#00604d]'} text-white py-2 rounded-lg flex items-center justify-center`}
+              className={`w-full py-2 rounded text-white ${
+                isLoading ? 'bg-gray-400' : 'bg-[#007860]'
+              }`}
             >
-              {isLoading ? (
-                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-              ) : (
-                'Login'
-              )}
+              {isLoading ? 'Logging in...' : 'Login'}
             </button>
 
             <button
               onClick={() => setShowLoginModal(false)}
+              className="w-full mt-2 text-[#007860] text-sm"
               disabled={isLoading}
-              className="w-full text-center mt-2 text-[#007860] disabled:text-gray-400"
             >
-              Close
+              Cancel
             </button>
           </div>
         </div>

@@ -12,6 +12,8 @@ import CourseDetail from "./Pages/CourseDetail";
 import DoubtSession from "./Pages/DoubtSession";
 import Certificate from "./Pages/Certificate";
 import Interviews from "./Pages/Interviews";
+import Clients from "./Pages/Clients";
+import UpCommingBatches from "./components/UpCommingBatches";
 
 function App() {
   return (
@@ -19,10 +21,12 @@ function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/contactus" element={<ContactUs />} />
       <Route path="/aboutus" element={<AboutSection />} />
+      <Route path="/upcommingbatches" element={<UpCommingBatches />} />
       <Route path="/faq" element={<FAQ />} />
       <Route path="/blog" element={<BlogPage />} />
       <Route path="/ourmentors" element={<OurMentorsPage />} />
       <Route path="/courses" element={<Courses />} />
+      <Route path="/clients" element={<Clients />} />
       <Route path="/doubtsession" element={<DoubtSession />} />
       <Route path="/certificate" element={<Certificate />} />
       <Route path="/interviews" element={<Interviews />} />
