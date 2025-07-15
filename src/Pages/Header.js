@@ -32,7 +32,7 @@ const Header = () => {
       { label: 'Home', path: '/' },
       { label: 'About Us', path: '/aboutus' },
       { label: 'Courses', isMegaMenu: true },
-      { label: 'Upcoming Batches', path: '/upcomingbatches' },
+      { label: 'Upcoming Batches', path: '/upcommingbatches' },
       { label: 'Our Mentors', path: '/ourmentors' },
       { label: 'Blog', path: '/blog' },
       { label: 'Clients', path: '/clients' },
