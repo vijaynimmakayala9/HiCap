@@ -1,37 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Download, Book, Clock, Users } from 'lucide-react';
 import Header from './Header';
 import Footer from './Footer';
 import { jsPDF } from 'jspdf';
 
+const courseData = {
+  'AI & Machine Learning': {
+    instructor: 'Margarita',
+    lessons: 12,
+    duration: '40 Hours',
+    students: '1500+',
+    completion: 50,
+    description:
+      'AI Data Analyst Masters Training offers a comprehensive way to develop advanced data analysis and interpretation skills.',
+    image: 'https://img.freepik.com/free-vector/artificial-intelligence-technology-background_23-2148327745.jpg',
+  },
+  'Web Development': {
+    instructor: 'James Smith',
+    lessons: 18,
+    duration: '60 Hours',
+    students: '2500+',
+    completion: 75,
+    description:
+      'Full Stack Web Development course covers frontend, backend, and deployment using latest technologies.',
+    image: 'https://img.freepik.com/free-vector/gradient-software-development-concept_23-2148824393.jpg',
+  },
+  'Data Science': {
+    instructor: 'Sophia Lee',
+    lessons: 15,
+    duration: '50 Hours',
+    students: '1800+',
+    completion: 90,
+    description:
+      'Comprehensive Data Science training with Python, statistics, machine learning, and data visualization.',
+    image: 'https://img.freepik.com/free-vector/data-science-concept-illustration_114360-8541.jpg',
+  },
+};
+
+
 const Certificate = () => {
+  const [selectedCourse, setSelectedCourse] = useState('AI & Machine Learning');
+  const course = courseData[selectedCourse];
+
   const generatePDF = () => {
     const doc = new jsPDF();
-
-    // Define certificate content for PDF
     doc.setFont('Roboto', 'normal');
     doc.setFontSize(20);
-
-    // Add Title to the PDF
     doc.text('Certificate of Completion', 20, 20);
-
-    // Add the course title, description, and other content
     doc.setFontSize(16);
-    doc.text('Course: AI & Machine Learning', 20, 40);
-    doc.text('Instructor: Margarita', 20, 60);
-    doc.text('Course Completed: 50%', 20, 80);
-    doc.text('Duration: 40 hours', 20, 100);
-    doc.text('Lessons Completed: 12', 20, 120);
-    doc.text('Total Students: 1500+', 20, 140);
-
-    // Add some space and then the certificate image (you can also add custom logo here)
-    doc.addImage('/certificate.png', 'PNG', 20, 160, 170, 50); // Replace with your image path
-
-    // Add a footer for the certificate
+    doc.text(`Course: ${selectedCourse}`, 20, 40);
+    doc.text(`Instructor: ${course.instructor}`, 20, 60);
+    doc.text(`Course Completed: ${course.completion}%`, 20, 80);
+    doc.text(`Duration: ${course.duration}`, 20, 100);
+    doc.text(`Lessons Completed: ${course.lessons}`, 20, 120);
+    doc.text(`Total Students: ${course.students}`, 20, 140);
+    doc.addImage('/certificate.png', 'PNG', 20, 160, 170, 50);
     doc.setFontSize(12);
     doc.text('Issued by: Your Company Name', 20, 220);
-
-    // Save the PDF with the name "certificate.pdf"
     doc.save('certificate.pdf');
   };
 
@@ -39,307 +64,140 @@ const Certificate = () => {
     <>
       <Header />
 
-      <div className="font-roboto px-6 md:px-[120px] min-h-screen mt-10">
-        {/* Heading */}
-        <div className="max-w-[600px] mb-4" style={{ marginRight: 'auto', marginTop: '70px' }}>
-          <h1 className="font-roboto font-bold text-3xl mb-2 text-black">Certificate</h1>
-          <div
-            style={{
-              width: '216px',
-              height: '8px',
-              borderRadius: '20px',
-              backgroundColor: '#007860',
-              marginBottom: '12px',
-            }}
-          />
+      <div className="container-fluid px-3 px-md-5 py-4 py-md-5 my-5">
+        <div className="mb-4 mt-5 mt-md-0">
+          <h1 className="fw-bold mb-2">Certificate</h1>
+          <div className="bg-success" style={{ width: '216px', height: '3px', borderRadius: '20px' }} />
         </div>
 
-        {/* New text below certificate */}
-        <div className="max-w-[600px] mb-12" style={{ marginRight: 'auto' }}>
-          <p
-            style={{
-              fontFamily: 'Roboto',
-              fontWeight: 500,
-              fontSize: 20,
-              color: '#333',
-            }}
+        <div className="mb-4">
+          <label className="form-label fw-semibold">Select Course</label>
+          <select
+            className="form-select"
+            value={selectedCourse}
+            onChange={(e) => setSelectedCourse(e.target.value)}
           >
-            My course
-          </p>
+            {Object.keys(courseData).map((course) => (
+              <option key={course} value={course}>{course}</option>
+            ))}
+          </select>
         </div>
 
-        {/* Main Top Rectangle */}
-        <div
-          style={{
-            width: 1200,
-            height: 250,
-            borderRadius: 20,
-            border: '1px solid #00000033',
-            background: '#FFFFFF',
-            position: 'relative',
-            marginBottom: '48px',
-            display: 'flex',
-            alignItems: 'center',
-            paddingLeft: 120,
-            gap: 40,
-          }}
-        >
-          {/* Left image */}
-          <img
-            src="/ai.png"
-            alt="AI"
-            style={{ width: 120, height: 120, objectFit: 'contain' }}
-          />
-
-          {/* Text block */}
-          <div style={{ maxWidth: 550 }}>
-            <h2
-              style={{
-                fontFamily: 'Roboto',
-                fontWeight: 600,
-                fontSize: 24,
-                lineHeight: '150%',
-                color: 'black',
-                marginBottom: 12,
-                width: 243,
-                height: 36,
-              }}
-            >
-              AI & Machine Learning
-            </h2>
-
-            <p
-              style={{
-                fontFamily: 'Roboto',
-                fontWeight: 400,
-                fontSize: 18,
-                lineHeight: '26px',
-                width: 550,
-                height: 104,
-                color: 'black',
-              }}
-            >
-              AI Data Analyst Masters Training offers a comprehensive way to develop advanced data
-              analysis and interpretation skills, equipping professionals to make informed, data-driven
-              decisions and drive business growth with precision.
-            </p>
-
-            {/* Lesson no, Duration, Students with icons */}
-            <div className="flex gap-8 mt-6" style={{ color: '#000' }}>
-              <div className="flex items-center gap-2">
-                <Book size={20} />
-                <span>Lesson No: 12</span>
+        <div className="card border-light shadow-sm mb-4 mb-md-5">
+          <div className="card-body p-4 p-md-5">
+            <div className="row align-items-center">
+              <div className="col-12 col-md-2 text-center mb-4 mb-md-0">
+                <img
+                  src={course.image}
+                  alt={selectedCourse}
+                  className="img-fluid"
+                  style={{
+                    maxWidth: '100%',
+                    height: 'auto',
+                    objectFit: 'contain',
+                  }}
+                />
               </div>
-              <div className="flex items-center gap-2">
-                <Clock size={20} />
-                <span>Duration: 40 Hours</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Users size={20} />
-                <span>Students: 1500+</span>
+              <div className="col-12 col-md-10">
+                <h2 className="h3 fw-bold mb-3">{selectedCourse}</h2>
+                <p className="lead mb-4">{course.description}</p>
+                <div className="d-flex flex-wrap gap-3 gap-md-5">
+                  <div className="d-flex align-items-center">
+                    <Book size={20} className="me-2" />
+                    <span>Lesson No: {course.lessons}</span>
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <Clock size={20} className="me-2" />
+                    <span>Duration: {course.duration}</span>
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <Users size={20} className="me-2" />
+                    <span>Students: {course.students}</span>
+                  </div>
+                </div>
               </div>
             </div>
+
           </div>
         </div>
 
-        {/* Bottom Section Flex */}
-        <div className="flex gap-12 mb-12"> {/* added margin bottom */}
-
-          {/* Left Rectangle */}
-          <div
-            style={{
-              width: 320,  // smaller width (60% of 526)
-              height: 335,  // smaller height (60% of 553)
-              borderRadius: 20,
-              border: '1px solid #00000033',
-              background: '#FFFFFF',
-              padding: 20,  // smaller padding
-              boxSizing: 'border-box',
-              position: 'relative',
-            }}
-          >
-            {/* Certificate Dashboard Text */}
-            <h2
-              style={{
-                fontFamily: 'Roboto',
-                fontWeight: 600,
-                fontSize: 22,  // smaller font size
-                lineHeight: '150%',
-                color: 'black',
-                width: 220,
-                height: 36,
-                marginBottom: 12,
-              }}
-            >
-              Certificate Dashboard
-            </h2>
-
-            {/* Horizontal line */}
-            <hr
-              style={{
-                width: '100%',
-                borderColor: '#00000033',
-                borderWidth: 1,
-                marginBottom: 16,
-              }}
-            />
-
-            {/* Course Name label */}
-            <h3
-              style={{
-                fontFamily: 'Roboto',
-                fontWeight: 600,
-                fontSize: 18,
-                lineHeight: '150%',
-                color: 'black',
-                marginBottom: 6,
-              }}
-            >
-              Course Name:
-            </h3>
-
-            {/* Course Name */}
-            <p
-              style={{
-                fontFamily: 'Roboto',
-                fontWeight: 600,
-                fontSize: 22,
-                lineHeight: '150%',
-                color: 'black',
-                marginBottom: 18,
-              }}
-            >
-              AI & Machine Learning
-            </p>
-
-            {/* Another horizontal line */}
-            <hr
-              style={{
-                width: '100%',
-                borderColor: '#00000033',
-                borderWidth: 1,
-                marginBottom: 18,
-              }}
-            />
-
-            {/* Course Completed label */}
-            <h3
-              style={{
-                fontFamily: 'Roboto',
-                fontWeight: 600,
-                fontSize: 18,
-                lineHeight: '150%',
-                color: 'black',
-                marginBottom: 18,
-              }}
-            >
-              Course Completed:
-            </h3>
-
-            {/* Half Circle Progress */}
-            <div
-              style={{
-                position: 'relative',
-                width: 100,
-                height: 50,
-                margin: '0 auto',
-              }}
-            >
-              {/* Half circle background (gray) */}
-              <div
-                style={{
-                  width: '100px',
-                  height: '50px',
-                  backgroundColor: '#ccc',
-                  borderTopLeftRadius: '100px',
-                  borderTopRightRadius: '100px',
-                }}
-              />
-              {/* Half circle foreground (green progress) */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '50px', // half width for 50%
-                  height: '50px',
-                  backgroundColor: '#007860',
-                  borderTopLeftRadius: '100px',
-                }}
-              />
-              {/* Text in center */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  fontFamily: 'Poppins',
-                  fontWeight: 600,
-                  fontSize: 20,
-                  color: 'black',
-                }}
-              >
-                50%
+        <div className="row g-4 mb-5">
+          <div className="col-lg-6">
+            <div className="card border-light shadow-sm h-100">
+              <div className="card-body p-4">
+                <h2 className="h4 fw-bold mb-3">Certificate Dashboard</h2>
+                <hr className="my-3" />
+                <h3 className="h5 fw-bold mb-2">Course Name:</h3>
+                <p className="h4 fw-bold mb-4">{selectedCourse}</p>
+                <hr className="my-3" />
+                <h3 className="h5 fw-bold mb-3 text-center">Course Completed:</h3>
+                <div className="text-center my-4">
+                  <div className="position-relative d-inline-block">
+                    <div className="progress-circle" style={{ width: '100px', height: '50px' }}>
+                      <div className="progress-circle-background"></div>
+                      <div
+                        className="progress-circle-foreground"
+                        style={{ width: `${course.completion}%` }}
+                      ></div>
+                      <div className="progress-circle-text">{course.completion}%</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Right Rectangle */}
-          <div
-            style={{
-              width: 320,  // smaller width
-              height: 335,  // smaller height
-              borderRadius: 20,
-              border: '1px solid #00000033',
-              background: '#FFFFFF',
-              padding: 20,
-              boxSizing: 'border-box',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              position: 'relative',
-            }}
-          >
-            <img
-              src="/certificate.png"
-              alt="Certificate"
-              style={{ maxWidth: '100%', maxHeight: '70%', objectFit: 'contain' }}
-            />
-
-            {/* Download Button */}
-            <button
-              onClick={generatePDF}
-              style={{
-                width: 140,
-                height: 44,
-                borderRadius: 5,
-                backgroundColor: '#007860',
-                color: 'white',
-                fontFamily: 'Roboto',
-                fontWeight: 600,
-                fontSize: 16,
-                lineHeight: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 8,
-                cursor: 'pointer',
-                border: 'none',
-                marginTop: 24,
-                paddingTop: 12,
-                paddingBottom: 12,
-                paddingLeft: 24,
-                paddingRight: 24,
-              }}
-            >
-              <span>Download</span>
-              <Download size={20} />
-            </button>
+          <div className="col-lg-6">
+            <div className="card border-light shadow-sm h-100">
+              <div className="card-body p-4 d-flex flex-column align-items-center justify-content-between">
+                <img
+                  src="/certificate.png"
+                  alt="Certificate"
+                  className="img-fluid mb-4"
+                  style={{ maxHeight: '200px' }}
+                />
+                <button
+                  onClick={generatePDF}
+                  className="btn btn-success btn-lg d-flex align-items-center gap-2"
+                >
+                  <span>Download</span>
+                  <Download size={20} />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        .progress-circle {
+          position: relative;
+          overflow: hidden;
+        }
+        .progress-circle-background {
+          width: 100px;
+          height: 50px;
+          background-color: #e9ecef;
+          border-top-left-radius: 100px;
+          border-top-right-radius: 100px;
+        }
+        .progress-circle-foreground {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 50px;
+          background-color: #007860;
+          border-top-left-radius: 100px;
+        }
+        .progress-circle-text {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-weight: 600;
+          font-size: 1.25rem;
+        }
+      `}</style>
 
       <Footer />
     </>

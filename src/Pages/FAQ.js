@@ -6,7 +6,7 @@ import Footer from './Footer';
 const faqData = [
   {
     question: "Does my client need to use Wise too?",
-    answer: "No, your client doesn’t need to use Wise. You can send them a payment request directly.",
+    answer: "No, your client doesn't need to use Wise. You can send them a payment request directly.",
   },
   {
     question: "Which company types are eligible?",
@@ -57,71 +57,52 @@ const FAQ = () => {
     <>
       <Header />
 
-      <div
-        style={{
-          maxWidth: '1200px',
-          margin: '60px auto', // Margin to space out from the top
-          padding: '0 20px',
-          display: 'flex',
-          gap: '60px',
-          fontFamily: 'Roboto',
-        }}
-      >
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10 my-5 md:py-16 flex flex-col lg:flex-row gap-8 lg:gap-16 font-roboto">
         {/* Left Side - FAQ List */}
-        <div style={{ flex: 2 }}>
-          <div className="max-w-[600px] mb-10 mt-18"> {/* Added mt-18 for spacing */}
-            <h1 className="font-roboto font-bold text-3xl mb-2 text-black mt-10">Frequently Asked Questions</h1>
-            <div
-              style={{
-                width: '216px',
-                height: '8px',
-                borderRadius: '20px',
-                backgroundColor: '#007860',
-              }}
-            />
+        <div className="w-full lg:w-2/3">
+          <div className="mb-8 md:mb-12">
+            <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl text-gray-900 mb-2">
+              Frequently Asked Questions
+            </h1>
+            <div className="w-32 sm:w-48 h-2 rounded-full bg-[#007860]" />
           </div>
 
-          {faqData.map((faq, index) => (
-            <div
-              key={index}
-              style={{
-                borderBottom: '1px solid #ddd',
-                padding: '20px 0',
-                cursor: 'pointer',
-              }}
-              onClick={() => toggleFAQ(index)}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '18px', fontWeight: '600', color: '#333' }}>
-                  {String(index + 1).padStart(2, '0')}. {faq.question}
-                </span>
-                <span style={{ color: '#007860' }}>
-                  {openIndex === index ? <FaMinus /> : <FaPlus />}
-                </span>
+          <div className="space-y-4">
+            {faqData.map((faq, index) => (
+              <div
+                key={index}
+                className="border-b border-gray-200 pb-4 transition-all duration-200"
+                onClick={() => toggleFAQ(index)}
+              >
+                <div className="flex justify-between items-center cursor-pointer group">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-800 group-hover:text-[#007860] transition-colors duration-200">
+                    {String(index + 1).padStart(2, '0')}. {faq.question}
+                  </h3>
+                  <span className="text-[#007860] ml-4">
+                    {openIndex === index ? (
+                      <FaMinus className="text-sm sm:text-base" />
+                    ) : (
+                      <FaPlus className="text-sm sm:text-base" />
+                    )}
+                  </span>
+                </div>
+                {openIndex === index && (
+                  <p className="mt-3 text-sm sm:text-base text-gray-600 leading-relaxed">
+                    {faq.answer}
+                  </p>
+                )}
               </div>
-              {openIndex === index && (
-                <p style={{ marginTop: '10px', fontSize: '16px', color: '#555', lineHeight: '1.6' }}>
-                  {faq.answer}
-                </p>
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* Right Side - Big Circular Icon */}
-        <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: '30px' }}>
-          <div
-            style={{
-              width: '220px',
-              height: '220px',
-              borderRadius: '50%',
-              backgroundColor: '#00786020',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <FaQuestionCircle size={100} color="#007860" />
+        <div className="w-full lg:w-1/3 flex justify-center lg:justify-end items-start pt-8 lg:pt-16">
+          <div className="relative w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full bg-[#00786020] flex items-center justify-center">
+            <FaQuestionCircle 
+              className="text-[#007860] w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28" 
+            />
+            <div className="absolute inset-0 rounded-full border-8 border-[#00786010] animate-ping-slow opacity-30"></div>
           </div>
         </div>
       </div>

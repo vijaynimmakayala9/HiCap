@@ -21,6 +21,7 @@ import Features from "../components/Features";
 import DifferSection from "../components/differSection";
 import BatchAndAlumniSection from "../components/batchandreview";
 import { useNavigate } from "react-router-dom";
+import Dashboard from "../components/Dashboard";
 
 const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -52,7 +53,6 @@ const HomePage = () => {
           <CourseAndFeatures />
           <MagnitiaCourses />
           <Features />
-          <AboutUs />
           <Course />
           <DifferSection />
           <BatchAndAlumniSection />
@@ -61,12 +61,7 @@ const HomePage = () => {
         </>
       ) : (
         <>
-          <EnrolledCourses />
-          <LiveClasses />
-          <CompletedClasses />
-          <RecommendedCourses />
-          <TopPerformers />
-          <YourStatistics />
+          <Dashboard/>
         </>
       )}
 

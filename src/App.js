@@ -14,11 +14,13 @@ import Certificate from "./Pages/Certificate";
 import Interviews from "./Pages/Interviews";
 import Clients from "./Pages/Clients";
 import UpCommingBatches from "./components/UpCommingBatches";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/contactus" element={<ContactUs />} />
       <Route path="/aboutus" element={<AboutSection />} />
       <Route path="/upcommingbatches" element={<UpCommingBatches />} />

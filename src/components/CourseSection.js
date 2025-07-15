@@ -29,8 +29,8 @@ const CourseAndFeatures = () => {
               <div
                 className="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
                 style={{
-                  width: '280px',
-                  height: '280px',
+                  width: '300px',
+                  height: '300px',
                   background: 'conic-gradient(#9c27b0, #673ab7, #3f51b5)',
                   padding: '12px',
                 }}
@@ -40,15 +40,15 @@ const CourseAndFeatures = () => {
                   alt="Student"
                   className="img-fluid rounded-circle"
                   style={{
-                    width: '240px',
-                    height: '240px',
+                    width: '260px',
+                    height: '260px',
                     objectFit: 'cover',
                     border: '6px solid #fff',
                   }}
                 />
               </div>
               <h4>
-                <span className="text-success fw-bold">Courses</span>{' '}
+                <span className="text-success fw-bold">Courses</span>{' '}<br/>
                 <span className="text-warning fw-bold">for Students</span>
               </h4>
             </div>
@@ -56,14 +56,14 @@ const CourseAndFeatures = () => {
             {/* Right - Professionals */}
             <div className="col-md-5 text-center mb-4">
               <h4>
-                <span className="text-warning fw-bold">Courses</span>{' '}
+                <span className="text-warning fw-bold">Courses</span>{' '}<br/>
                 <span className="text-success fw-bold">for Professionals</span>
               </h4>
               <div
                 className="rounded-circle d-flex align-items-center justify-content-center mx-auto mt-3"
                 style={{
-                  width: '280px',
-                  height: '280px',
+                  width: '300px',
+                  height: '300px',
                   background: 'conic-gradient(#03a9f4, #3f51b5, #ff5722)',
                   padding: '12px',
                 }}
@@ -73,8 +73,8 @@ const CourseAndFeatures = () => {
                   alt="Professional"
                   className="img-fluid rounded-circle"
                   style={{
-                    width: '240px',
-                    height: '240px',
+                    width: '260px',
+                    height: '260px',
                     objectFit: 'cover',
                     border: '6px solid #fff',
                   }}

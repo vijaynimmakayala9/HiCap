@@ -1,20 +1,37 @@
-import React, { useState } from 'react';
-import { FaPhoneAlt, FaEnvelope } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaPhoneAlt, FaEnvelope, FaPlus, FaMinus } from 'react-icons/fa';
 import Header from './Header';
 import Footer from './Footer';
+import AboutMagnitia from './AboutMagnitia';
 
 const ContactUs = () => {
+  const [courses, setCourses] = useState([]);
+  const [isBranchVisible, setIsBranchVisible] = useState(true); // toggle state
   const [formData, setFormData] = useState({
-    fullName: '',
+    name: '',
+    phone: '',
     email: '',
-    mobile: '',
-    description: '',
+    course: '',
+    city: '',
+    timing: '',
+    message: '',
   });
 
-  const [submitStatus, setSubmitStatus] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Handle input changes
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await fetch('https://hicapbackend.onrender.com/api/users/allcourses');
+        const data = await response.json();
+        setCourses(data);
+      } catch (error) {
+        console.error('Failed to fetch courses:', error);
+      }
+    };
+    fetchCourses();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -23,219 +40,214 @@ const ContactUs = () => {
     }));
   };
 
-  // Handle form submission
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  // Send POST request to the API endpoint
-  try {
-    const response = await fetch('https://hicapbackend.onrender.com/api/users/contact', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
-
-    const data = await response.json();
-    
-    if (response.ok) {
-      // Success message in alert
-      alert('Your contact form has been submitted successfully!');
-      
-      // Reset form data
-      setFormData({
-        fullName: '',
-        email: '',
-        mobile: '',
-        description: '',
+    try {
+      const response = await fetch('https://hicapbackend.onrender.com/api/users/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
-    } else {
-      // Error message in alert if the response is not ok
-      alert(data.message || 'Something went wrong!');
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    // Error alert in case of network or server issues
-    alert('Error submitting form.');
-  } finally {
-    setIsSubmitting(false);
-  }
-};
 
+      const result = await response.json();
+
+      if (response.ok) {
+        alert('Your enquiry has been submitted successfully!');
+        setFormData({
+          name: '',
+          phone: '',
+          email: '',
+          course: '',
+          city: '',
+          timing: '',
+          message: '',
+        });
+      } else {
+        alert(result.message || 'Submission failed. Try again.');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('Something went wrong.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <>
       <Header />
 
-      {/* Heading with green line, left aligned and smaller */}
-      <div className="max-w-[600px] mb-20 mt-20 ml-10">
-        <h1 className="font-roboto font-bold text-3xl mb-2 text-black">
-          Contact Us
-        </h1>
-        <div
-          style={{
-            width: '216px',
-            height: '8px',
-            borderRadius: '20px',
-            backgroundColor: '#007860',
-          }}
-        />
+      {/* About Section */}
+      <div className="max-w-[1440px] mx-auto px-4 py-5">
+        <AboutMagnitia />
       </div>
 
-      {/* Big rectangle */}
-      <section
-        style={{
-          width: '1440px',
-          height: '290px',
-          backgroundColor: '#007860',
-          margin: '0 auto 40px auto',
-          paddingLeft: '40px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          color: 'white',
-          fontFamily: 'Roboto',
-          borderRadius: '8px',
-          maxWidth: '1440px',
-          textAlign: 'left',
-        }}
-      >
-        <h2 style={{ fontSize: '36px', fontWeight: '700', marginBottom: '8px' }}>
-          How can we Help you?
-        </h2>
+      {/* Contact Section */}
+      <div className="max-w-[1440px] mx-auto px-4 py-10">
+        {/* Heading */}
+        <div className="mb-10 text-center my-2">
+          <h1 className="text-3xl font-bold" style={{ color: "#9c27b0" }}>
+            Looking for Classroom/Online Training?
+          </h1>
 
-        <p style={{ fontSize: '16px', fontWeight: '400', maxWidth: '600px' }}>
-          A member of our team would love to help you with your query.
-        </p>
-      </section>
+          {/* Phone details */}
+          <p className="text-gray-800 mt-2">
+            <strong>Tel :</strong>{' '}
+            <a href="tel:+916309161616" className="text-green-700 font-semibold">
+              +91 6309 16 16 16
+            </a>{' '}
+            /{' '}
+            <strong>E-Mail :</strong>{' '}
+            <a href="mailto:info.courses@gmail.com" className="text-green-700 font-semibold">
+              info.courses@gmail.com
+            </a>
+          </p>
+        </div>
 
-      {/* Content below */}
-      <section
-        style={{ width: '1440px', margin: '0 auto', padding: '0 24px' }}
-        className="flex justify-center items-start gap-20"
-      >
-        <div className="w-full max-w-[657px]">
-          <h2 className="font-roboto font-bold text-4xl text-black mb-6">
-            Get in Touch with us!
-          </h2>
 
-          <div className="space-y-6">
-            <div className="flex items-center space-x-4">
-              <div
-                style={{
-                  width: '50px',
-                  height: '50px',
-                  borderRadius: '50%',
-                  backgroundColor: '#007860',
-                }}
-                className="flex items-center justify-center text-white"
+        {/* Form and Branch Side-by-Side */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start mb-20">
+          {/* Left: Form */}
+          <div className="bg-gray-100 p-6 rounded-lg shadow-lg w-full">
+            <h2 className="text-2xl font-bold text-green-700 mb-4">Course Enquiry Form</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input
+                type="text"
+                name="name"
+                placeholder="Your Name*"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="w-full p-3 border border-gray-300 rounded"
+              />
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Your Phone Number*"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+                className="w-full p-3 border border-gray-300 rounded"
+              />
+              <input
+                type="email"
+                name="email"
+                placeholder="Your Email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded"
+              />
+              <select
+                name="course"
+                value={formData.course}
+                onChange={handleChange}
+                required
+                className="w-full p-3 border border-gray-300 rounded"
               >
-                <FaPhoneAlt />
-              </div>
-              <span className="text-black font-roboto font-medium text-lg">
-                +91 98765 43210
-              </span>
+                <option value="">Select Course</option>
+                {courses.map((c) => (
+                  <option key={c._id} value={c.name}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+              <input
+                type="text"
+                name="city"
+                placeholder="City Name"
+                value={formData.city}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded"
+              />
+              <select
+                name="timing"
+                value={formData.timing}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded"
+              >
+                <option value="">Preferred Timings</option>
+                <option value="Morning">Morning</option>
+                <option value="Afternoon">Afternoon</option>
+                <option value="Evening">Evening</option>
+                <option value="Weekend">Weekend</option>
+                <option value="Online">Online</option>
+              </select>
+              <textarea
+                name="message"
+                placeholder="Your Message"
+                rows="4"
+                value={formData.message}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded resize-none"
+              />
+              <button
+                type="submit"
+                className="w-full bg-green-700 text-white py-3 rounded font-semibold hover:opacity-90"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit Enquiry'}
+              </button>
+            </form>
+          </div>
+
+          {/* Right: Collapsible Branch Info */}
+          <div className="rounded-lg border shadow overflow-hidden">
+            <div
+              className="bg-green-700 text-white px-5 py-3 flex justify-between items-center cursor-pointer"
+              onClick={() => setIsBranchVisible(!isBranchVisible)}
+            >
+              <span className="font-semibold uppercase">Hyderabad</span>
+              {isBranchVisible ? <FaMinus /> : <FaPlus />}
             </div>
 
-            <div className="flex items-center space-x-4">
-              <div
-                style={{
-                  width: '50px',
-                  height: '50px',
-                  borderRadius: '50%',
-                  backgroundColor: '#007860',
-                }}
-                className="flex items-center justify-center text-white"
-              >
-                <FaEnvelope />
-              </div>
-              <span className="text-black font-roboto font-medium text-lg">
-                contact@example.com
-              </span>
-            </div>
+            {isBranchVisible && (
+              <>
+                <div className="p-5 space-y-3">
+                  <h3 className="text-xl font-bold text-purple-700">Hyderabad Branch</h3>
+                  <p className="text-gray-800">
+                    Plot No. MIG-208, GSR Enclave, 3rd Floor, Above the Arvind Store,<br />
+                    Road No. 1, KPHB Colony, Kukatpally, Hyderabad, 500072
+                  </p>
+                  <p className="text-gray-800">
+                    <strong>Tel :</strong>{' '}
+                    <a href="tel:+916309161616" className="text-green-700 font-semibold">
+                      +91 6309 16 16 16
+                    </a>{' '}
+                    /{' '}
+                    <a href="tel:+916309171717" className="text-green-700 font-semibold">
+                      +91 6309 17 17 17
+                    </a>
+                  </p>
+                  <p className="text-gray-800">
+                    <strong>Email :</strong>{' '}
+                    <a href="mailto:info@magnitia.com" className="text-green-700 font-semibold">
+                      info@magnitia.com
+                    </a>
+                  </p>
+                </div>
+                <div className="w-full h-[300px]">
+                  <iframe
+                    title="Magnitia IT Map"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.3433657893185!2d78.39761891418862!3d17.44246400523407!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9156ed0e6b8f%3A0x8ac1071d0275821f!2sMAGNITIA%20-%20IT%20Training%20Institute!5e0!3m2!1sen!2sin!4v1659340731616!5m2!1sen!2sin"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen=""
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  ></iframe>
+                </div>
+              </>
+            )}
           </div>
         </div>
-
-        <div
-          style={{
-            width: '380px',
-            borderRadius: '10px',
-            backgroundColor: '#007860',
-            padding: '20px',
-            height: 'auto',
-          }}
-          className="text-white"
-        >
-          <h2
-            className="font-roboto font-bold capitalize mb-3"
-            style={{
-              fontSize: '24px',
-              lineHeight: '32px',
-              backgroundColor: '#FFFFFF',
-              color: '#007860',
-              padding: '8px 16px',
-              borderRadius: '8px',
-              width: 'fit-content',
-            }}
-          >
-            Sign Up for Free Resources
-          </h2>
-
-          <form className="space-y-3 mt-3" onSubmit={handleSubmit}>
-            <input
-              type="text"
-              name="fullName"
-              placeholder="Name"
-              className="w-full p-2 rounded-md text-black text-sm"
-              value={formData.fullName}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              className="w-full p-2 rounded-md text-black text-sm"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="tel"
-              name="mobile"
-              placeholder="Phone"
-              className="w-full p-2 rounded-md text-black text-sm"
-              value={formData.mobile}
-              onChange={handleChange}
-              required
-            />
-            <textarea
-              name="description"
-              placeholder="Description"
-              rows={2}
-              className="w-full p-2 rounded-md text-black resize-none text-sm"
-              value={formData.description}
-              onChange={handleChange}
-              required
-            />
-            <button
-              type="submit"
-              className="bg-white text-[#007860] font-semibold py-2 px-5 rounded-md hover:opacity-90 text-sm"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Submitting...' : 'Submit'}
-            </button>
-          </form>
-
-          {submitStatus && <p className="mt-4 text-center text-white">{submitStatus}</p>}
-        </div>
-      </section>
-
-      <div style={{ marginTop: '100px' }}>
-        <Footer />
       </div>
+
+      <Footer />
     </>
   );
 };
