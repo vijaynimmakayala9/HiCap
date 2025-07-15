@@ -22,7 +22,6 @@ const Dashboard = () => {
                 <RecommendedCourses />
                 <TopPerformers />
             </div>
-            
         </>
     );
 };

@@ -91,25 +91,29 @@ const Courses = () => {
     <nav className="d-flex justify-content-center mt-4">
       <ul className="pagination">
         <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-          <button className="page-link" onClick={() => setCurrentPage((prev) => prev - 1)}>
+          <button className="page-link text-success border-success" onClick={() => setCurrentPage((prev) => prev - 1)}>
             Previous
           </button>
         </li>
         {Array.from({ length: totalPages }, (_, idx) => (
           <li key={idx} className={`page-item ${currentPage === idx + 1 ? 'active' : ''}`}>
-            <button className="page-link" onClick={() => setCurrentPage(idx + 1)}>
+            <button
+              className={`page-link ${currentPage === idx + 1 ? 'bg-success border-success text-white' : 'text-success border-success'}`}
+              onClick={() => setCurrentPage(idx + 1)}
+            >
               {idx + 1}
             </button>
           </li>
         ))}
         <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-          <button className="page-link" onClick={() => setCurrentPage((prev) => prev + 1)}>
+          <button className="page-link text-success border-success" onClick={() => setCurrentPage((prev) => prev + 1)}>
             Next
           </button>
         </li>
       </ul>
     </nav>
   );
+
 
   return (
     <>

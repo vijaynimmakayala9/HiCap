@@ -10,7 +10,7 @@ const CompletedCourses = () => {
     {
       id: 'ai-ml',
       name: 'AI & Machine Learning',
-      image: '/ai.png',
+      image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=800&q=80',
       duration: '6 Months',
       lessons: 12,
       students: 300,
@@ -18,7 +18,7 @@ const CompletedCourses = () => {
     {
       id: 'web-dev',
       name: 'Web Development',
-      image: '/webdev.png',
+      image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=800&q=80',
       duration: '4 Months',
       lessons: 10,
       students: 250,

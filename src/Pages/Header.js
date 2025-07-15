@@ -214,8 +214,8 @@ const Header = () => {
                 <button
                   onClick={() => handleClick(item)}
                   className={`px-3 py-2 font-medium text-sm lg:text-base h-full flex items-center ${active === item.label
-                      ? 'text-[#007860] border-b-2 border-[#007860]'
-                      : 'text-gray-700 hover:text-[#007860]'
+                    ? 'text-[#007860] border-b-2 border-[#007860]'
+                    : 'text-gray-700 hover:text-[#007860]'
                     }`}
                 >
                   {item.label}
@@ -263,7 +263,10 @@ const Header = () => {
 
         {/* Mega Menu */}
         {showCoursesMenu && (
-          <div ref={megaMenuRef} className="hidden md:block absolute left-0 w-full bg-white border-t border-gray-200 shadow-lg z-40">
+          <div
+            ref={megaMenuRef}
+            className="hidden md:block absolute left-0 w-full bg-white border-t border-gray-200 shadow-lg z-40"
+          >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {Object.entries(courseCategories).map(([category, courses]) => (
@@ -275,8 +278,45 @@ const Header = () => {
                           key={i}
                           className="text-sm font-medium text-gray-800 cursor-pointer hover:text-[#007860] hover:translate-x-1 transition-transform duration-200"
                           onClick={() => {
-                            navigate('/courses');
-                            setShowCoursesMenu(false);
+                            const courseIdMap = {
+                              "AWS Training": "aws123",
+                              "Angular 2+": "angular123",
+                              "PowerBI": "powerbi123",
+                              "Cyber Security": "cyber123",
+                              "Azure": "azure123",
+                              "Data Science": "datasci123",
+                              "PowerBI Power Apps Training": "powerapps123",
+                              "Salesforce Dev & Admin": "salesforce123",
+                              "DevOps Training": "devops123",
+                              "MSBI": "msbi123",
+                              "Data Analytics Training": "dataanalytics123",
+                              "QA / Testing Tools": "qa123",
+                              "Python Training": "python123",
+                              "Selenium Training": "selenium123",
+                              "RPA Training": "rpa123",
+                              "Generative AI for Testing": "genai123",
+                              "Digital Marketing Training": "dm123",
+                              "Appium": "appium123",
+                              "Playwright": "playwright123",
+                              "Full Stack QA (SDET)": "sdet123",
+                              "JMeter": "jmeter123",
+                              "Protractor": "protractor123",
+                              "UFT / QTP": "uft123",
+                              "Cucumber": "cucumber123",
+                              "ETL Testing": "etl123",
+                              "ISTQB Training": "istqb123",
+                              "LoadRunner": "loadrunner123",
+                              "WebServices Testing": "webtest123",
+                              "Manual Testing": "manual123",
+                            };
+
+                            const courseId = courseIdMap[course];
+                            if (courseId) {
+                              navigate(`/course/${courseId}`);
+                              setShowCoursesMenu(false);
+                            } else {
+                              alert('Course ID not found!');
+                            }
                           }}
                         >
                           {course}
@@ -299,8 +339,8 @@ const Header = () => {
                   key={idx}
                   onClick={() => handleClick(item)}
                   className={`block w-full text-left px-4 py-3 text-sm font-medium rounded-md ${active === item.label
-                      ? 'bg-gray-100 text-[#007860]'
-                      : 'text-gray-700 hover:bg-gray-50 hover:text-[#007860]'
+                    ? 'bg-gray-100 text-[#007860]'
+                    : 'text-gray-700 hover:bg-gray-50 hover:text-[#007860]'
                     }`}
                 >
                   {item.label}

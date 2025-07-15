@@ -10,7 +10,7 @@ const mockLiveClasses = [
     description: 'Join our daily UI/UX design bootcamp to build real-world projects.',
     duration: '1 Hour daily',
     status: 'Ongoing Classes',
-    image: 'https://images.unsplash.com/photo-1587614295999-e8c0fd3f2ab7?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 2,
@@ -18,7 +18,7 @@ const mockLiveClasses = [
     description: 'Hands-on coding with MERN stack — Build real-time apps.',
     duration: '2 Hours daily',
     status: 'Ongoing Classes',
-    image: 'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 3,
@@ -34,7 +34,7 @@ const mockLiveClasses = [
     description: 'Live practical sessions with projects and datasets.',
     duration: '1 Hour daily',
     status: 'Ongoing Classes',
-    image: 'https://images.unsplash.com/photo-1581091870627-3b11c3c3b79e?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 5,
@@ -42,7 +42,7 @@ const mockLiveClasses = [
     description: 'Learn to build scalable React apps with hooks, context, and routing.',
     duration: '1.5 Hours daily',
     status: 'Ongoing Classes',
-    image: 'https://images.unsplash.com/photo-1580894732444-8ecded7900d3?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 6,
@@ -50,7 +50,7 @@ const mockLiveClasses = [
     description: 'Explore AWS cloud solutions and hands-on labs in live sessions.',
     duration: '2 Hours daily',
     status: 'Ongoing Classes',
-    image: 'https://images.unsplash.com/photo-1581092580505-d076b29908e6?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=800&q=80',
   },
 ];
 
