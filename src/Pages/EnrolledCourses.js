@@ -36,7 +36,7 @@ const EnrolledCourses = () => {
             courseId: {
               _id: 'mock1',
               name: 'Advanced React & Redux',
-              image: 'https://miro.medium.com/v2/resize:fit:1400/1*LrY41S3Z5rI9Ro2Xj1h8vA.png',
+              image: 'https://www.shutterstock.com/image-vector/full-stack-developer-concept-coding-260nw-2303766769.jpg',
               duration: '6 Weeks',
               liveProjects: 10,
               rating: 150,
@@ -82,7 +82,7 @@ const EnrolledCourses = () => {
     <section className="container py-5 mt-4">
       <div className="mb-4">
         <h1 className="fw-bold text-dark">Enrolled Courses</h1>
-        <div className="bg-success rounded-pill" style={{ width: '216px', height: '8px' }}></div>
+        <div className="bg-success rounded-pill" style={{ width: '216px', height: '3px' }}></div>
       </div>
 
       {enrolledCourses.length === 0 ? (

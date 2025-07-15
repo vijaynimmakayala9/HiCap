@@ -7,7 +7,7 @@ const Courses = () => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-   const [enrolledCourse, setEnrolledCourse] = useState(null);
+  const [enrolledCourse, setEnrolledCourse] = useState(null);
   const [expandedCourses, setExpandedCourses] = useState({});
   const [formData, setFormData] = useState({
     fullName: '',
@@ -17,16 +17,8 @@ const Courses = () => {
     enrollmentDate: '',
   });
 
-  const handleClick = () => {
-    navigate('/courses');
-  };
-  const toggleDescription = (id) => {
-    setExpandedCourses((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const coursesPerPage = 8;
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -45,6 +37,17 @@ const Courses = () => {
     fetchCourses();
   }, []);
 
+  const totalPages = Math.ceil(courses.length / coursesPerPage);
+  const startIdx = (currentPage - 1) * coursesPerPage;
+  const currentCourses = courses.slice(startIdx, startIdx + coursesPerPage);
+
+  const toggleDescription = (id) => {
+    setExpandedCourses((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
   const handleEnrollClick = (course) => {
     setEnrolledCourse(course);
     setIsModalOpen(true);
@@ -56,89 +59,88 @@ const Courses = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const enrollmentPayload = {
+    const payload = {
       courseId: enrolledCourse._id,
-      fullName: formData.fullName,
-      email: formData.email,
-      phoneNumber: formData.phoneNumber,
-      additionalMessage: formData.additionalMessage,
+      ...formData,
     };
 
     try {
-      const response = await fetch('https://hicapbackend.onrender.com/api/users/enrollcourse', {
+      const res = await fetch('https://hicapbackend.onrender.com/api/users/enrollcourse', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(enrollmentPayload),
+        body: JSON.stringify(payload),
       });
-      const data = await response.json();
-      if (response.ok) {
+      const data = await res.json();
+      if (res.ok) {
         alert('Enrollment successful!');
         handleCloseModal();
       } else {
-        alert(data.message || 'Error enrolling in course.');
+        alert(data.message || 'Error enrolling.');
       }
     } catch (error) {
-      console.error('Error enrolling:', error);
-      alert('Error submitting enrollment form.');
+      alert('Submission failed.');
     }
   };
+
+  const renderPagination = () => (
+    <nav className="d-flex justify-content-center mt-4">
+      <ul className="pagination">
+        <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+          <button className="page-link" onClick={() => setCurrentPage((prev) => prev - 1)}>
+            Previous
+          </button>
+        </li>
+        {Array.from({ length: totalPages }, (_, idx) => (
+          <li key={idx} className={`page-item ${currentPage === idx + 1 ? 'active' : ''}`}>
+            <button className="page-link" onClick={() => setCurrentPage(idx + 1)}>
+              {idx + 1}
+            </button>
+          </li>
+        ))}
+        <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+          <button className="page-link" onClick={() => setCurrentPage((prev) => prev + 1)}>
+            Next
+          </button>
+        </li>
+      </ul>
+    </nav>
+  );
 
   return (
     <>
       <Header />
-      <section className="container py-5">
-        <div className="mb-4">
+      <section className="container py-5 my-5">
+        <div className="mb-4 text-center text-md-start">
           <h1 className="fw-bold display-6">Available Courses</h1>
-          <div className="bg-success rounded-pill" style={{ width: '216px', height: '8px' }}></div>
+          <div className="bg-success rounded-pill mx-auto mx-md-0" style={{ width: '216px', height: '3px' }}></div>
         </div>
 
         <div className="row">
-          {courses.map(({ _id, name, duration, liveProjects, rating, description, image }) => (
-            <div key={_id} className="col-md-6 col-lg-3 mb-4">
-              <div className="card h-100 shadow-sm border-0 rounded-4" style={{ transition: 'transform 0.3s', cursor: 'pointer' }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-                <img src={image} className="card-img-top rounded-top-4" alt={name} style={{ height: '160px', objectFit: 'cover' }} />
-                <div className="card-body">
+          {currentCourses.map(({ _id, name, duration, liveProjects, rating, description, image }) => (
+            <div key={_id} className="col-12 col-sm-6 col-lg-4 col-xl-3 mb-4">
+              <div className="card h-100 shadow-sm border-0 rounded-4">
+                <img src={image} alt={name} className="card-img-top rounded-top-4" style={{ height: '160px', objectFit: 'cover' }} />
+                <div className="card-body d-flex flex-column">
                   <h5 className="card-title fw-bold text-success">{name}</h5>
                   <p className="card-text text-muted" style={{ fontSize: '0.9rem' }}>
-                    {expandedCourses[_id]
-                      ? description
-                      : `${description?.substring(0, 100)}...`}
+                    {expandedCourses[_id] ? description : `${description?.substring(0, 100)}...`}
                   </p>
                   {description?.length > 100 && (
-                    <button
-                      className="btn btn-link px-0 mb-2 text-success"
-                      style={{ fontSize: '0.85rem' }}
-                      onClick={() => toggleDescription(_id)}
-                    >
+                    <button className="btn btn-link px-0 mb-2 text-success" style={{ fontSize: '0.85rem' }} onClick={() => toggleDescription(_id)}>
                       {expandedCourses[_id] ? 'View Less' : 'View All'}
                     </button>
                   )}
-                  <div className="d-flex flex-wrap text-muted small mb-3">
-                    <div className="me-3 d-flex align-items-center">
-                      <FaRegClock className="me-1" /> {duration}
-                    </div>
-                    <div className="me-3 d-flex align-items-center">
-                      <FaTasks className="me-1" /> {liveProjects} Live Projects
-                    </div>
-                    <div className="d-flex align-items-center">
-                      <FaStar className="me-1 text-warning" /> {rating}/5
-                    </div>
+                  <div className="d-flex flex-wrap text-muted small mb-3 gap-3">
+                    <div className="d-flex align-items-center"><FaRegClock className="me-1" /> {duration}</div>
+                    <div className="d-flex align-items-center"><FaTasks className="me-1" /> {liveProjects} Projects</div>
+                    <div className="d-flex align-items-center"><FaStar className="me-1 text-warning" /> {rating}/5</div>
                   </div>
-
-                  <button
-                    className="btn btn-success w-100"
-                    onClick={() => handleEnrollClick({ title: name, duration, description, _id })}
-                  >
+                  <button className="btn btn-success w-100 mt-auto" onClick={() => handleEnrollClick({ title: name, duration, description, _id })}>
                     Enroll
                   </button>
                 </div>
@@ -147,15 +149,13 @@ const Courses = () => {
           ))}
         </div>
 
-        <div className="text-center mt-4">
-          <button className="btn btn-outline-success px-5 py-2 fw-semibold rounded-pill" onClick={handleClick}>View All</button>
-        </div>
+        {renderPagination()}
       </section>
 
-      {/* Modal */}
+      {/* Modal remains unchanged */}
       {isModalOpen && (
-        <div className="modal d-block" tabIndex="-1" role="dialog" style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}>
-          <div className="modal-dialog modal-dialog-centered" role="document">
+        <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+          <div className="modal-dialog modal-dialog-centered modal-lg">
             <div className="modal-content border-0 rounded-4">
               <div className="modal-header bg-success text-white rounded-top-4">
                 <h5 className="modal-title">Enroll in {enrolledCourse?.title}</h5>
@@ -163,11 +163,13 @@ const Courses = () => {
               </div>
               <div className="modal-body">
                 <form onSubmit={handleSubmit}>
-                  <input type="text" name="fullName" value={formData.fullName} onChange={handleInputChange} className="form-control mb-3" placeholder="Full Name" required />
-                  <input type="email" name="email" value={formData.email} onChange={handleInputChange} className="form-control mb-3" placeholder="Email" required />
-                  <input type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleInputChange} className="form-control mb-3" placeholder="Phone Number" required />
-                  <input type="date" name="enrollmentDate" value={formData.enrollmentDate} onChange={handleInputChange} className="form-control mb-3" />
-                  <textarea name="additionalMessage" value={formData.additionalMessage} onChange={handleInputChange} rows="3" className="form-control mb-3" placeholder="Additional Message or Comments"></textarea>
+                  <div className="row">
+                    <div className="col-md-6 mb-3"><input type="text" name="fullName" className="form-control" placeholder="Full Name" value={formData.fullName} onChange={handleInputChange} required /></div>
+                    <div className="col-md-6 mb-3"><input type="email" name="email" className="form-control" placeholder="Email" value={formData.email} onChange={handleInputChange} required /></div>
+                    <div className="col-md-6 mb-3"><input type="tel" name="phoneNumber" className="form-control" placeholder="Phone Number" value={formData.phoneNumber} onChange={handleInputChange} required /></div>
+                    <div className="col-md-6 mb-3"><input type="date" name="enrollmentDate" className="form-control" value={formData.enrollmentDate} onChange={handleInputChange} /></div>
+                    <div className="col-12 mb-3"><textarea name="additionalMessage" className="form-control" rows="3" placeholder="Additional Message or Comments" value={formData.additionalMessage} onChange={handleInputChange}></textarea></div>
+                  </div>
                   <div className="d-flex justify-content-between">
                     <button type="button" className="btn btn-outline-secondary" onClick={handleCloseModal}>Cancel</button>
                     <button type="submit" className="btn btn-success">Submit</button>

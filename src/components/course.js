@@ -42,7 +42,7 @@ const Course = () => {
         <section className="container py-5">
             <div className="mb-4">
                 <h1 className="fw-bold display-6">Popular Courses</h1>
-                <div className="bg-success rounded-pill" style={{ width: '216px', height: '8px' }}></div>
+                <div className="bg-success rounded-pill" style={{ width: '216px', height: '3px' }}></div>
             </div>
 
             <div className="row">

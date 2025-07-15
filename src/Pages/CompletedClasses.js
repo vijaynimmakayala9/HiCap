@@ -3,91 +3,85 @@ import { useNavigate } from 'react-router-dom';
 import { FaRegClock, FaUserGraduate, FaBook } from 'react-icons/fa';
 import { MoveRight } from 'lucide-react';
 
-const CompletedClasses = () => {
+const CompletedCourses = () => {
   const navigate = useNavigate();
 
-  const handleStartLearning = () => {
-    navigate('/course/ai-ml');
+  const completedCourses = [
+    {
+      id: 'ai-ml',
+      name: 'AI & Machine Learning',
+      image: '/ai.png',
+      duration: '6 Months',
+      lessons: 12,
+      students: 300,
+    },
+    {
+      id: 'web-dev',
+      name: 'Web Development',
+      image: '/webdev.png',
+      duration: '4 Months',
+      lessons: 10,
+      students: 250,
+    },
+  ];
+
+  const handleStartLearning = (courseId) => {
+    navigate(`/course/${courseId}`);
   };
 
   return (
-    <section className="w-full px-6 md:px-[60px] py-20 pt-0">
-      {/* Heading */}
-      <div className="max-w-[600px] mb-12">
-        <h1 className="font-roboto font-bold text-3xl mb-2 text-black">Completed Classes</h1>
-        <div
-          style={{
-            width: '216px',
-            height: '8px',
-            borderRadius: '20px',
-            backgroundColor: '#007860',
-          }}
-        />
+    <section className="container py-5 mt-4">
+      <div className="mb-4">
+        <h1 className="fw-bold text-dark">Completed Courses</h1>
+        <div className="bg-success rounded-pill" style={{ width: '216px', height: '3px' }}></div>
       </div>
 
-      {/* Course Card */}
-      <div
-        style={{
-          width: '387px',
-          height: '450px',
-          border: '1px solid #0000004D',
-          boxShadow: '0px 4px 10px 0px #00000040',
-          borderRadius: '10px',
-          overflow: 'hidden',
-          backgroundColor: '#ffffff',
-        }}
-      >
-        <img
-          src="/ai.png"
-          alt="AI & ML"
-          style={{ width: '100%', height: '200px', objectFit: 'cover' }}
-        />
+      {completedCourses.length === 0 ? (
+        <p className="text-center">You haven’t completed any courses yet.</p>
+      ) : (
+        <div className="row g-4">
+          {completedCourses.map((course) => (
+            <div key={course.id} className="col-12 col-sm-6 col-lg-4">
+              <div className="card h-100 shadow-sm border-1 rounded-3">
+                <img
+                  src={course.image}
+                  alt={course.name}
+                  className="card-img-top"
+                  style={{ height: '200px', objectFit: 'cover' }}
+                />
+                <div className="card-body d-flex flex-column justify-content-between">
+                  <h5 className="card-title fw-semibold">{course.name}</h5>
 
-        <div style={{ padding: '16px 20px' }}>
-          <h2 className="font-roboto font-semibold text-[20px] text-black mb-4">
-            AI & Machine Learning
-          </h2>
+                  <div className="d-flex justify-content-between text-muted small my-3">
+                    <div className="d-flex align-items-center gap-1">
+                      <FaRegClock />
+                      <span>{course.duration}</span>
+                    </div>
+                    <div className="d-flex align-items-center gap-1">
+                      <FaBook />
+                      <span>{course.lessons} Lessons</span>
+                    </div>
+                    <div className="d-flex align-items-center gap-1">
+                      <FaUserGraduate />
+                      <span>{course.students}+ Students</span>
+                    </div>
+                  </div>
 
-          <div className="flex justify-between mb-6 text-sm text-gray-700">
-            <div className="flex items-center gap-1">
-              <FaRegClock />
-              <span>6 Months</span>
+                  <button
+                    onClick={() => handleStartLearning(course.id)}
+                    className="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2 mt-auto"
+                    style={{ borderRadius: '5px', height: '45px' }}
+                  >
+                    Start Learning <MoveRight size={18} />
+                  </button>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-1">
-              <FaBook />
-              <span>12 Lessons</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <FaUserGraduate />
-              <span>300+ Students</span>
-            </div>
-          </div>
-
-          <div
-            onClick={handleStartLearning}
-            style={{
-              width: '185px',
-              height: '50px',
-              padding: '10px 20px',
-              borderRadius: '5px',
-              backgroundColor: '#007860',
-              color: 'white',
-              fontWeight: '600',
-              fontFamily: 'Roboto, sans-serif',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '10px',
-              cursor: 'pointer',
-            }}
-          >
-            <span>Start Learning</span>
-            <MoveRight size={20} />
-          </div>
+          ))}
         </div>
-      </div>
+      )}
     </section>
   );
 };
 
-export default CompletedClasses;
+export default CompletedCourses;

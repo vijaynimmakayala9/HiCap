@@ -47,7 +47,7 @@ const AvailableCourses = () => {
         <div
           style={{
             width: '216px',
-            height: '8px',
+            height: '3px',
             borderRadius: '20px',
             backgroundColor: '#007860',
           }}
