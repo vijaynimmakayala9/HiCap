@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 
 const CourseEnquiryModal = ({ show, handleClose }) => {
   const [courses, setCourses] = useState([]);
@@ -24,22 +25,69 @@ const CourseEnquiryModal = ({ show, handleClose }) => {
         console.error('Failed to fetch courses:', error);
       }
     };
-
     fetchCourses();
   }, []);
 
-  // Form change handler
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   // Submit handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    alert("Form submitted!");
-    handleClose();
+
+    const payload = {
+      name: formData.name,
+      phoneNumber: formData.phone,
+      email: formData.email,
+      section: [{ name: formData.course }],
+      city: formData.city,
+      timings: [{ preferred: formData.timing }],
+      message: formData.message
+    };
+
+    try {
+      const response = await fetch('https://hicap-backend-4rat.onrender.com/api/enquiries/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Enquiry Submitted',
+          text: 'We will get back to you soon!'
+        });
+        setFormData({
+          name: '',
+          phone: '',
+          email: '',
+          course: '',
+          city: '',
+          timing: '',
+          message: ''
+        });
+        handleClose();
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Submission Failed',
+          text: 'Please try again later.'
+        });
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Network Error',
+        text: 'Unable to submit enquiry.'
+      });
+    }
   };
 
   return (

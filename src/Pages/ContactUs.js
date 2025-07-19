@@ -3,10 +3,11 @@ import { FaPhoneAlt, FaEnvelope, FaPlus, FaMinus } from 'react-icons/fa';
 import Header from './Header';
 import Footer from './Footer';
 import AboutMagnitia from './AboutMagnitia';
+import Swal from 'sweetalert2';
 
 const ContactUs = () => {
   const [courses, setCourses] = useState([]);
-  const [isBranchVisible, setIsBranchVisible] = useState(true); // toggle state
+  const [isBranchVisible, setIsBranchVisible] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -44,19 +45,27 @@ const ContactUs = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    const payload = {
+      name: formData.name,
+      phoneNumber: formData.phone,
+      email: formData.email,
+      section: [{ name: formData.course }],
+      city: formData.city,
+      timings: [{ preferred: formData.timing }],
+      message: formData.message
+    };
+
     try {
-      const response = await fetch('https://hicapbackend.onrender.com/api/users/contact', {
+      const response = await fetch('https://hicap-backend-4rat.onrender.com/api/enquiries/create', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        alert('Your enquiry has been submitted successfully!');
+        Swal.fire('Success', 'Your enquiry has been submitted!', 'success');
         setFormData({
           name: '',
           phone: '',
@@ -67,11 +76,11 @@ const ContactUs = () => {
           message: '',
         });
       } else {
-        alert(result.message || 'Submission failed. Try again.');
+        Swal.fire('Error', result.message || 'Submission failed. Try again.', 'error');
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('Something went wrong.');
+      Swal.fire('Error', 'Something went wrong. Try again later.', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -81,20 +90,15 @@ const ContactUs = () => {
     <>
       <Header />
 
-      {/* About Section */}
       <div className="max-w-[1440px] mx-auto px-4 py-5">
         <AboutMagnitia />
       </div>
 
-      {/* Contact Section */}
       <div className="max-w-[1440px] mx-auto px-4 py-10">
-        {/* Heading */}
         <div className="mb-10 text-center my-2">
           <h1 className="text-3xl font-bold" style={{ color: "#9c27b0" }}>
             Looking for Classroom/Online Training?
           </h1>
-
-          {/* Phone details */}
           <p className="text-gray-800 mt-2">
             <strong>Tel :</strong>{' '}
             <a href="tel:+916309161616" className="text-green-700 font-semibold">
@@ -108,10 +112,8 @@ const ContactUs = () => {
           </p>
         </div>
 
-
-        {/* Form and Branch Side-by-Side */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start mb-20">
-          {/* Left: Form */}
+          {/* Enquiry Form */}
           <div className="bg-gray-100 p-6 rounded-lg shadow-lg w-full">
             <h2 className="text-2xl font-bold text-green-700 mb-4">Course Enquiry Form</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -194,7 +196,7 @@ const ContactUs = () => {
             </form>
           </div>
 
-          {/* Right: Collapsible Branch Info */}
+          {/* Branch Details Toggle Section */}
           <div className="rounded-lg border shadow overflow-hidden">
             <div
               className="bg-green-700 text-white px-5 py-3 flex justify-between items-center cursor-pointer"
