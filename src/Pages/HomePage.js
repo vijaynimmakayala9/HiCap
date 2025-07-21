@@ -22,10 +22,12 @@ import DifferSection from "../components/differSection";
 import BatchAndAlumniSection from "../components/batchandreview";
 import { useNavigate } from "react-router-dom";
 import Dashboard from "../components/Dashboard";
+import axios from "axios";
 
 const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,7 +37,19 @@ const HomePage = () => {
       setIsLoggedIn(true);
     }
 
-    // Show modal 1 second after page loads
+    // Fetch content for modal
+    axios
+      .get("https://hicap-backend-4rat.onrender.com/api/content")
+      .then((res) => {
+        if (res.data?.data?.length > 0) {
+          setModalContent(res.data.data[0]);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch modal content", err);
+      });
+
+    // Show modal after 1 second
     setTimeout(() => setShowModal(true), 1000);
   }, []);
 
@@ -46,7 +60,6 @@ const HomePage = () => {
   return (
     <>
       <Header />
-      
 
       {!isLoggedIn ? (
         <>
@@ -61,25 +74,27 @@ const HomePage = () => {
         </>
       ) : (
         <>
-          <Dashboard/>
+          <Dashboard />
         </>
       )}
 
       <Footer />
 
-      {/* Bootstrap Modal */}
-      {showModal && (
+      {/* Modal */}
+      {showModal && modalContent && (
         <div
           className="modal d-block fade show"
           tabIndex="-1"
           style={{ backgroundColor: "rgba(0, 0, 0, 0.6)" }}
           onClick={handleCloseModal}
         >
-          <div className="modal-dialog modal-dialog-centered" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="modal-dialog modal-dialog-centered"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="modal-content rounded-4 border-0 overflow-hidden">
-              {/* Header */}
-              <div className="modal-header  text-dark">
-                <h5 className="modal-title">Welcome to Magnitia!</h5>
+              <div className="modal-header text-dark">
+                <h5 className="modal-title">{modalContent.title || "Welcome!"}</h5>
                 <button
                   type="button"
                   className="btn-close btn-close-dark"
@@ -88,34 +103,29 @@ const HomePage = () => {
               </div>
 
               <div className="p-2">
-                {/* Image */}
                 <img
-                  src="https://magnitia.com/images/Magnitia-up-coming-batches-july-09.jpg"
-                  alt="Welcome Banner"
+                  src={modalContent.image}
+                  alt="Modal Visual"
                   className="img-fluid w-100"
                   style={{ maxHeight: "300px", objectFit: "cover" }}
                 />
-
               </div>
 
-              {/* Body */}
               <div className="modal-body text-center">
-                <h5 className="mb-3 fw-bold">Start your learning journey today!</h5>
-                <p className="text-muted">
-                  Join the best courses curated by top industry experts and get
-                  certified. Limited seats available.
+                <h5 className="mb-3 fw-bold">
+                  {modalContent.heading || "Start Your Journey"}
+                </h5>
+                <p className="text-muted white-space-pre-line">
+                  {modalContent.description || "Join now to explore more."}
                 </p>
               </div>
 
-              {/* Footer */}
               <div className="modal-footer justify-content-center">
                 <button
                   className="btn btn-success rounded-pill px-4"
                   onClick={() => {
-
                     window.scrollTo({ top: 0, behavior: "smooth" });
-                    // Optionally navigate to courses section
-                    navigate('/courses');
+                    navigate("/courses");
                   }}
                 >
                   Enroll Now
