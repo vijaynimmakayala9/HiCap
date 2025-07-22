@@ -1,33 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import { FaLaptopCode, FaChalkboardTeacher, FaGraduationCap, FaHeadset } from 'react-icons/fa';
 
 const Features = () => {
   const [hoveredCard, setHoveredCard] = useState(null);
   const [hoveredIcon, setHoveredIcon] = useState(null);
+  const [features, setFeatures] = useState([]);
 
-  const features = [
-    {
-      icon: <FaLaptopCode className="fs-3" />,
-      title: 'Advanced Topics',
-      description: 'Training curriculum that is in-sync with Industry expectations',
-    },
-    {
-      icon: <FaChalkboardTeacher className="fs-3" />,
-      title: 'High Effective Trainers',
-      description: 'Tech experts with years of frontline IT exp & passionate for mentoring',
-    },
-    {
-      icon: <FaGraduationCap className="fs-3" />,
-      title: 'Extensive Practice',
-      description: 'Key aspect of our training methodology; examples, assignments, project tasks',
-    },
-    {
-      icon: <FaHeadset className="fs-3" />,
-      title: 'Anytime Support',
-      description: 'Friendly tech support to troubleshoot issues during your practice sessions',
-    },
-  ];
+  useEffect(() => {
+    const fetchFeatures = async () => {
+      try {
+        const res = await axios.get('https://hicap-backend-1.onrender.com/api/home-features');
+        if (res.data.data && res.data.data.length > 0) {
+          setFeatures(res.data.data[0].features);
+        }
+      } catch (error) {
+        console.error('Error fetching features:', error);
+      }
+    };
+    fetchFeatures();
+  }, []);
 
   const handleCardHover = (index, isHovering) => {
     setHoveredCard(isHovering ? index : null);
@@ -54,29 +46,38 @@ const Features = () => {
 
       <Row className="g-4">
         {features.map((feature, index) => (
-          <Col key={index} xs={12} sm={6} lg={3}>
-            <Card 
+          <Col key={feature._id} xs={12} sm={6} lg={3}>
+            <Card
               className={`h-100 border-0 shadow-sm rounded-4 p-4 ${hoveredCard === index ? 'shadow-lg translate-top' : ''}`}
-              style={{ 
+              style={{
                 transition: 'all 0.3s ease',
-                transform: hoveredCard === index ? 'translateY(-5px)' : 'none'
+                transform: hoveredCard === index ? 'translateY(-5px)' : 'none',
               }}
               onMouseEnter={() => handleCardHover(index, true)}
               onMouseLeave={() => handleCardHover(index, false)}
             >
               <Card.Body className="text-center">
-                <div 
-                  className={`d-flex align-items-center justify-content-center mx-auto mb-4 rounded-circle ${hoveredIcon === index ? 'bg-success text-white' : 'bg-success bg-opacity-10 text-success'}`}
+                <div
+                  className={`d-flex align-items-center justify-content-center mx-auto mb-4 rounded-circle ${hoveredIcon === index ? 'bg-success bg-opacity-10 text-success' : 'bg-success bg-opacity-10 text-success'}`}
                   style={{ width: '70px', height: '70px', transition: 'all 0.3s ease' }}
                   onMouseEnter={() => handleIconHover(index, true)}
                   onMouseLeave={() => handleIconHover(index, false)}
                 >
-                  {React.cloneElement(feature.icon, {
-                    className: `fs-3 ${hoveredIcon === index ? 'text-white' : 'text-success'}`
-                  })}
+                  <img
+                    src={feature.image}
+                    alt={feature.title}
+                    className="img-fluid rounded-circle"
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      objectFit: 'cover',
+                    }}
+                  />
                 </div>
                 <Card.Title className="fw-bold mb-3">{feature.title}</Card.Title>
-                <Card.Text className="text-muted small">{feature.description}</Card.Text>
+                <Card.Text className="text-muted small">
+                  {feature.content}
+                </Card.Text>
               </Card.Body>
             </Card>
           </Col>

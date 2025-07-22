@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import CourseEnquiryModal from './EnrollModal';
 
 const CourseAndFeatures = () => {
-  // Optional: add styles inline for reusability
+  const [showEnquiryModal, setShowEnquiryModal] = useState(false);
+  const [courseData, setCourseData] = useState([]);
+
   const cardHoverStyle = {
     transition: 'transform 0.3s ease, box-shadow 0.3s ease',
   };
@@ -16,7 +19,18 @@ const CourseAndFeatures = () => {
     e.currentTarget.style.transform = 'none';
     e.currentTarget.style.boxShadow = '0 .5rem 1rem rgba(0,0,0,.15)';
   };
-  const [showEnquiryModal, setShowEnquiryModal] = useState(false);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const res = await axios.get('https://hicap-backend-1.onrender.com/api/home');
+        setCourseData(res.data.data || []);
+      } catch (error) {
+        console.error('Error fetching course data:', error);
+      }
+    };
+    fetchCourses();
+  }, []);
 
   return (
     <>
@@ -24,63 +38,67 @@ const CourseAndFeatures = () => {
         {/* ===== Course Section ===== */}
         <div className="container py-5 mt-5">
           <div className="row justify-content-center align-items-center">
-            {/* Left - Students */}
-            <div className="col-md-5 text-center mb-4">
-              <div
-                className="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
-                style={{
-                  width: '300px',
-                  height: '300px',
-                  background: 'conic-gradient(#9c27b0, #673ab7, #3f51b5)',
-                  padding: '12px',
-                }}
-              >
-                <img
-                  src="https://media.istockphoto.com/id/1438969575/photo/smiling-young-male-college-student-wearing-headphones-standing-in-a-classroom.jpg?s=612x612&w=0&k=20&c=yNawJP9JGXU6LOL262ME5M1U2xxNKQsvT7F9DZhZCh4="
-                  alt="Student"
-                  className="img-fluid rounded-circle"
-                  style={{
-                    width: '260px',
-                    height: '260px',
-                    objectFit: 'cover',
-                    border: '6px solid #fff',
-                  }}
-                />
+            {courseData.map((course, index) => (
+              <div className="col-md-5 text-center mb-4" key={course._id}>
+                {index === 0 ? (
+                  <>
+                    <div
+                      className="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
+                      style={{
+                        width: '300px',
+                        height: '300px',
+                        background: 'conic-gradient(#9c27b0, #673ab7, #3f51b5)',
+                        padding: '12px',
+                      }}
+                    >
+                      <img
+                        src={course.image}
+                        alt={course.name}
+                        className="img-fluid rounded-circle"
+                        style={{
+                          width: '260px',
+                          height: '260px',
+                          objectFit: 'cover',
+                          border: '6px solid #fff',
+                        }}
+                      />
+                    </div>
+                    <h4>
+                      <span className="text-success fw-bold">Courses</span><br />
+                      <span className="text-warning fw-bold">{course.name}</span>
+                    </h4>
+                  </>
+                ) : (
+                  <>
+                    <h4>
+                      <span className="text-warning fw-bold">Courses</span><br />
+                      <span className="text-success fw-bold">{course.name}</span>
+                    </h4>
+                    <div
+                      className="rounded-circle d-flex align-items-center justify-content-center mx-auto mt-3"
+                      style={{
+                        width: '300px',
+                        height: '300px',
+                        background: 'conic-gradient(#03a9f4, #3f51b5, #ff5722)',
+                        padding: '12px',
+                      }}
+                    >
+                      <img
+                        src={course.image}
+                        alt={course.name}
+                        className="img-fluid rounded-circle"
+                        style={{
+                          width: '260px',
+                          height: '260px',
+                          objectFit: 'cover',
+                          border: '6px solid #fff',
+                        }}
+                      />
+                    </div>
+                  </>
+                )}
               </div>
-              <h4>
-                <span className="text-success fw-bold">Courses</span>{' '}<br/>
-                <span className="text-warning fw-bold">for Students</span>
-              </h4>
-            </div>
-
-            {/* Right - Professionals */}
-            <div className="col-md-5 text-center mb-4">
-              <h4>
-                <span className="text-warning fw-bold">Courses</span>{' '}<br/>
-                <span className="text-success fw-bold">for Professionals</span>
-              </h4>
-              <div
-                className="rounded-circle d-flex align-items-center justify-content-center mx-auto mt-3"
-                style={{
-                  width: '300px',
-                  height: '300px',
-                  background: 'conic-gradient(#03a9f4, #3f51b5, #ff5722)',
-                  padding: '12px',
-                }}
-              >
-                <img
-                  src="https://aofoto.pl/wp-content/uploads/2022/06/03-professional-headshot.jpg"
-                  alt="Professional"
-                  className="img-fluid rounded-circle"
-                  style={{
-                    width: '260px',
-                    height: '260px',
-                    objectFit: 'cover',
-                    border: '6px solid #fff',
-                  }}
-                />
-              </div>
-            </div>
+            ))}
 
             {/* Enroll Now Button */}
             <div className="text-center mt-4">
@@ -91,7 +109,7 @@ const CourseAndFeatures = () => {
                   borderRadius: '50px',
                   transition: 'all 0.3s ease',
                 }}
-                onClick={()=> setShowEnquiryModal(true)}
+                onClick={() => setShowEnquiryModal(true)}
                 onMouseOver={(e) => (e.target.style.backgroundColor = '#7b1fa2')}
                 onMouseOut={(e) => (e.target.style.backgroundColor = '#9c27b0')}
               >
@@ -166,6 +184,8 @@ const CourseAndFeatures = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal */}
       <CourseEnquiryModal
         show={showEnquiryModal}
         handleClose={() => setShowEnquiryModal(false)}
