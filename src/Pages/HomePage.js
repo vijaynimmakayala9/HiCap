@@ -4,7 +4,6 @@ import Hero from "./Hero";
 import AboutUs from "./AboutUs";
 import IndustryExperts from "./IndustryExperts";
 import AvailableCourses from "./AvailableCourses";
-import GetInTouch from "./GetInTouch";
 import SuccessStories from "./SuccessStories";
 import Footer from "./Footer";
 import EnrolledCourses from "./EnrolledCourses";
@@ -19,10 +18,10 @@ import CourseAndFeatures from "../components/CourseSection";
 import MagnitiaCourses from "../components/magnitiaCourses";
 import Features from "../components/Features";
 import DifferSection from "../components/differSection";
-import BatchAndAlumniSection from "../components/batchandreview";
 import { useNavigate } from "react-router-dom";
 import Dashboard from "../components/Dashboard";
 import axios from "axios";
+import Reviews from "../components/Reviews";
 
 const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -68,8 +67,7 @@ const HomePage = () => {
           <Features />
           <Course />
           <DifferSection />
-          <BatchAndAlumniSection />
-          <GetInTouch />
+          <Reviews />
           <IndustryExperts />
         </>
       ) : (
