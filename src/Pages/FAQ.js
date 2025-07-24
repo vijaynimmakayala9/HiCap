@@ -11,7 +11,7 @@ const FAQ = () => {
 
   useEffect(() => {
     axios
-      .get('https://hicap-backend-1.onrender.com/api/faq')
+      .get('https://hicap-backend-4rat.onrender.com/api/faq')
       .then((res) => {
         const data = res.data.data[0];
         setFaqImage(data.image || '');

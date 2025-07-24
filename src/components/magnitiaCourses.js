@@ -34,7 +34,7 @@ const MagnitiaCourses = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get('https://hicap-backend-1.onrender.com/api/courses');
+        const res = await axios.get('https://hicap-backend-4rat.onrender.com/api/courses');
         setCourses(res.data.data || []);
       } catch (error) {
         console.error('Error fetching courses:', error);

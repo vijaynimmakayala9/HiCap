@@ -15,6 +15,7 @@ import Interviews from "./Pages/Interviews";
 import Clients from "./Pages/Clients";
 import UpCommingBatches from "./components/UpCommingBatches";
 import Dashboard from "./components/Dashboard";
+import AdminCourses from "./admin/AdminCourses";
 
 function App() {
   return (
@@ -33,6 +34,8 @@ function App() {
       <Route path="/certificate" element={<Certificate />} />
       <Route path="/interviews" element={<Interviews />} />
       <Route path="/course/:id" element={<CourseDetail />} />
+
+      <Route path="/admin" element={<AdminCourses />} />
     </Routes>
   );
 }

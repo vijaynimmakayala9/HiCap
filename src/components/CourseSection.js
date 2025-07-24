@@ -23,7 +23,7 @@ const CourseAndFeatures = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get('https://hicap-backend-1.onrender.com/api/home');
+        const res = await axios.get('https://hicap-backend-4rat.onrender.com/api/home');
         setCourseData(res.data.data || []);
       } catch (error) {
         console.error('Error fetching course data:', error);

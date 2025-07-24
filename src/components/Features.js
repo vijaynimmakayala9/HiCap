@@ -10,7 +10,7 @@ const Features = () => {
   useEffect(() => {
     const fetchFeatures = async () => {
       try {
-        const res = await axios.get('https://hicap-backend-1.onrender.com/api/home-features');
+        const res = await axios.get('https://hicap-backend-4rat.onrender.com/api/home-features');
         if (res.data.data && res.data.data.length > 0) {
           setFeatures(res.data.data[0].features);
         }
