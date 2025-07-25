@@ -123,7 +123,7 @@ const HomePage = () => {
                   className="btn btn-success rounded-pill px-4"
                   onClick={() => {
                     window.scrollTo({ top: 0, behavior: "smooth" });
-                    navigate("/courses");
+                    navigate("/contactus");
                   }}
                 >
                   Enroll Now

@@ -1,309 +1,485 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaRegClock, FaUserGraduate } from 'react-icons/fa';
+import { FaBars, FaTimes, FaRegClock, FaUserGraduate, FaChevronDown, FaUser, FaLock, FaPhone } from 'react-icons/fa';
 
 const Header = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [active, setActive] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [courses, setCourses] = useState([]);
   const [showCoursesMenu, setShowCoursesMenu] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [identifier, setIdentifier] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [courses, setCourses] = useState([]);
+  const [loginData, setLoginData] = useState({
+    phoneNumber: '',
+    password: ''
+  });
+  const [loginError, setLoginError] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
-
   const megaMenuRef = useRef();
-  const loginModalRef = useRef();
+  const coursesBtnRef = useRef();
+  const navRef = useRef();
+  const modalRef = useRef();
 
   const baseMenuItems = isLoggedIn
     ? [
-        { label: 'Home', path: '/' },
-        { label: 'Courses', isMegaMenu: true },
-        { label: 'Interviews', path: '/interviews' },
-        { label: 'Certificate', path: '/certificate' },
-        { label: 'Doubt Session', path: '/doubtsession' },
-        { label: 'Contact Us', path: '/contactus' },
-        { label: 'Blog', path: '/blog' },
-        { label: 'Clients', path: '/clients' },
-        { label: 'FAQ', path: '/faq' },
-      ]
+      { label: 'Dashboard', path: '/dashboard' },
+      { label: 'Courses', isMegaMenu: true },
+      { label: 'Interviews', path: '/interviews' },
+      { label: 'Certificate', path: '/certificate' },
+      { label: 'Doubt Session', path: '/doubtsession' },
+      { label: 'Contact Us', path: '/contactus' },
+      { label: 'Blog', path: '/blog' },
+      { label: 'Clients', path: '/clients' },
+      { label: 'FAQ', path: '/faq' },
+    ]
     : [
-        { label: 'Home', path: '/' },
-        { label: 'About Us', path: '/aboutus' },
-        { label: 'Courses', isMegaMenu: true },
-        { label: 'Upcoming Batches', path: '/upcommingbatches' },
-        { label: 'Our Mentors', path: '/ourmentors' },
-        { label: 'Blog', path: '/blog' },
-        { label: 'Clients', path: '/clients' },
-        { label: 'Contact Us', path: '/contactus' },
-        { label: 'FAQ', path: '/faq' },
-      ];
+      { label: 'Home', path: '/' },
+      { label: 'About Us', path: '/aboutus' },
+      { label: 'Courses', isMegaMenu: true },
+      { label: 'Upcoming Batches', path: '/upcommingbatches' },
+      { label: 'Our Mentors', path: '/ourmentors' },
+      { label: 'Blog', path: '/blog' },
+      { label: 'Clients', path: '/clients' },
+      { label: 'Contact Us', path: '/contactus' },
+      { label: 'FAQ', path: '/faq' },
+    ];
 
-  // Fetch course data
   useEffect(() => {
     fetch('https://hicap-backend-4rat.onrender.com/api/course1')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setCourses(data.data);
-        }
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) setCourses(data);
+        else if (Array.isArray(data.data)) setCourses(data.data);
+        else setCourses([]);
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        setCourses([]);
+      });
   }, []);
-
-  const courseCategories = {
-    'HIGH RATED COURSES': courses.filter(course => course.isHighRated),
-    'POPULAR COURSES': courses.filter(course => course.isPopular),
-    'CLOUD & DEVOPS': courses.filter(course =>
-      ['Cloud Computing', 'DevOps'].includes(course.category)
-    ),
-    'DATA SCIENCE & ANALYTICS': courses.filter(course =>
-      ['Data Science', 'Data Analytics'].includes(course.category)
-    ),
-    'TESTING & QA': courses.filter(course =>
-      ['Testing', 'QA'].some(keyword =>
-        course.category?.includes(keyword) || course.subcategory?.includes(keyword)
-      )
-    ),
-    'PROGRAMMING': courses.filter(course => course.category === 'Programming'),
-  };
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userId = localStorage.getItem('userId');
-    setIsLoggedIn(!!(token && userId));
-  }, []);
-
-  useEffect(() => {
-    const found = baseMenuItems.find(item => item.path === location.pathname);
-    setActive(found?.label || '');
-  }, [location.pathname, isLoggedIn]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (megaMenuRef.current && !megaMenuRef.current.contains(e.target)) {
+      if (
+        megaMenuRef.current &&
+        !megaMenuRef.current.contains(e.target) &&
+        !coursesBtnRef.current.contains(e.target) &&
+        !navRef.current.contains(e.target)
+      ) {
         setShowCoursesMenu(false);
       }
-      if (loginModalRef.current && !loginModalRef.current.contains(e.target)) {
+
+      if (modalRef.current && !modalRef.current.contains(e.target) && !e.target.classList.contains('login-button')) {
         setShowLoginModal(false);
       }
     };
 
-    if (showCoursesMenu || showLoginModal) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showCoursesMenu, showLoginModal]);
-
-  const handleClick = (item) => {
-    if (item.isMegaMenu) {
-      setShowCoursesMenu(!showCoursesMenu);
-    } else {
-      navigate(item.path);
-      setIsOpen(false);
-      setShowCoursesMenu(false);
-    }
-    setActive(item.label);
+  const groupedCourses = {
+    'High Rated Courses': Array.isArray(courses) ? courses.filter(course => course.isHighRated) : [],
+    'Popular Courses': Array.isArray(courses) ? courses.filter(course => course.isPopular) : [],
+    'Testing Courses': Array.isArray(courses)
+      ? courses.filter(course => (course.category || '').toLowerCase().includes('test'))
+      : [],
   };
 
-  const handleLogin = () => {
-    const defaultEmail = 'admin@gmail.com';
-    const defaultPassword = 'admin123';
+  const handleCourseClick = (id) => {
+    navigate(`/course/${id}`);
+    setShowCoursesMenu(false);
+    setIsMobileMenuOpen(false);
+  };
 
-    if (!identifier || !password) {
-      return alert('Email/Phone and password are required');
-    }
+  const handleNavigate = (path) => {
+    navigate(path);
+    setIsMobileMenuOpen(false);
+  };
 
-    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier);
-    const isPhone = /^[0-9]{10}$/.test(identifier);
+  const handleLoginChange = (e) => {
+    const { name, value } = e.target;
+    setLoginData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
-    if (!isEmail && !isPhone) {
-      return alert('Invalid email or phone number');
-    }
+  const [user, setUser] = useState();
 
-    if (
-      (identifier === defaultEmail || identifier === '9999999999') &&
-      password === defaultPassword
-    ) {
-      localStorage.setItem('token', 'dummy-token');
-      localStorage.setItem('userId', 'admin-user-id');
-      setIsLoggedIn(true);
-      setShowLoginModal(false);
-      navigate('/dashboard');
-    } else {
-      alert('Invalid credentials');
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    setLoginError('');
+    setIsLoggingIn(true);
+
+    try {
+      const response = await fetch('https://hicap-backend-4rat.onrender.com/api/userlogin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          phoneNumber: loginData.phoneNumber,
+          password: loginData.password
+        })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setIsLoggedIn(true);
+        setShowLoginModal(false);
+
+        // Store all user data in session storage
+        const userData = result.data;
+
+
+        setUser({
+          id: userData._id,
+          name: userData.name,
+          phone: userData.phoneNumber,
+          email: userData.email,
+          token: userData.token
+        });
+        // 2. Store in sessionStorage (stringify the object)
+        sessionStorage.setItem('user', JSON.stringify({
+          id: userData._id,
+          name: userData.name,
+          phone: userData.phoneNumber,
+          email: userData.email,
+          token: userData.token
+        }));
+
+        navigate('/dashboard');
+      } else {
+        setLoginError(result.message || 'Login failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setLoginError('An error occurred. Please try again.');
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
   const handleLogout = () => {
-    localStorage.clear();
     setIsLoggedIn(false);
+    // Clear any stored user data/token here
+    sessionStorage.removeItem('user');
+    setUser(null);
     navigate('/');
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-white shadow-md z-50">
-      {/* Loader */}
-      {isLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[100]">
-          <div className="animate-spin h-12 w-12 rounded-full border-t-4 border-b-4 border-[#007860]" />
+    <header className="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div
+          className="text-2xl font-bold text-green-700 cursor-pointer"
+          onClick={() => navigate('/')}
+        >
+          HiCap
         </div>
-      )}
 
-      {/* Login Modal */}
-      {showLoginModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 px-4">
-          <div
-            ref={loginModalRef}
-            className="bg-white p-6 rounded-lg w-full max-w-md shadow-xl"
+        {/* Mobile Hamburger */}
+        <div className="md:hidden flex items-center">
+          {isLoggedIn ? (
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm mr-3"
+            >
+              Logout
+            </button>
+          ) : (
+            <button
+              onClick={() => setShowLoginModal(true)}
+              className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md text-sm mr-3 login-button"
+            >
+              Login
+            </button>
+          )}
+          <button
+            className="text-green-700 text-2xl login-button"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
-            <h2 className="text-xl font-bold mb-4 text-gray-800">Login</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Email or Phone</label>
-                <input
-                  type="text"
-                  value={identifier}
-                  onChange={(e) => setIdentifier(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  placeholder="Enter email or 10-digit phone"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Password</label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  placeholder="Enter password"
-                />
-              </div>
-              <div className="flex justify-end space-x-3 pt-2">
-                <button onClick={() => setShowLoginModal(false)} className="text-sm font-semibold text-gray-600">
-                  Cancel
-                </button>
-                <button onClick={handleLogin} className="bg-[#007860] text-white px-4 py-2 rounded-md">
-                  Login
-                </button>
-              </div>
-            </div>
-          </div>
+            {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+          </button>
         </div>
-      )}
 
-      {/* Main Header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          <div
-            className="text-xl font-bold text-black cursor-pointer hover:text-[#007860]"
-            onClick={() => navigate('/')}
-          >
-            LOGO
-          </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-4 h-full">
-            {baseMenuItems.map((item, idx) => (
+        {/* Desktop Menu */}
+        <nav
+          ref={navRef}
+          className="hidden md:flex gap-6 items-center relative"
+          onMouseLeave={() => setShowCoursesMenu(false)}
+        >
+          {baseMenuItems.map((item, idx) =>
+            item.isMegaMenu ? (
               <div
                 key={idx}
-                className="relative group h-full flex items-center"
-                onMouseEnter={() => item.isMegaMenu && setShowCoursesMenu(true)}
+                className="relative"
+                onMouseEnter={() => setShowCoursesMenu(true)}
               >
-                <button
-                  onClick={() => handleClick(item)}
-                  className={`px-3 py-2 font-medium text-sm lg:text-base h-full flex items-center ${active === item.label
-                      ? 'text-[#007860] border-b-2 border-[#007860]'
-                      : 'text-gray-700 hover:text-[#007860]'
+                <div className="inline-flex items-center gap-1">
+                  <span
+                    ref={coursesBtnRef}
+                    className={`cursor-pointer font-medium hover:text-green-700 flex items-center ${location.pathname === item.path ? 'text-green-700' : ''
+                      }`}
+                  >
+                    Courses <FaChevronDown className="ml-1 text-xs" />
+                  </span>
+                </div>
+
+                {showCoursesMenu && (
+                  <div
+                    ref={megaMenuRef}
+                    className="absolute top-full left-0 bg-white shadow-xl rounded-md border border-gray-100 mt-2 p-6 z-50 w-screen max-w-6xl grid grid-cols-3 gap-8"
+                    style={{ left: '50%', transform: 'translateX(-50%)' }}
+                  >
+                    {Object.entries(groupedCourses).map(([category, items]) => (
+                      <div key={category} className="space-y-4">
+                        <h4 className="font-bold text-lg text-green-700 border-b border-gray-200 pb-2">
+                          {category}
+                        </h4>
+                        <ul className="space-y-4">
+                          {items.slice(0, 4).map((course) => (
+                            <li
+                              key={course._id}
+                              className="cursor-pointer group"
+                              onClick={() => handleCourseClick(course._id)}
+                            >
+                              <div className="flex items-start gap-3">
+                                <div className="bg-gray-100 group-hover:bg-green-50 p-2 rounded-md">
+                                  <div className="w-8 h-8 bg-green-100 rounded-md flex items-center justify-center text-green-700">
+                                    <FaUserGraduate className="text-sm" />
+                                  </div>
+                                </div>
+                                <div>
+                                  <div className="text-sm font-medium group-hover:text-green-700">
+                                    {course.name}
+                                  </div>
+                                  <div className="flex items-center text-xs text-gray-500 gap-2 mt-1">
+                                    <FaRegClock /> {course.duration || 'N/A'}
+                                    <span>•</span>
+                                    <span>{course.noOfStudents || 0}+ students</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                    <div className="col-span-3 border-t border-gray-200 pt-4 mt-2">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <h4 className="font-bold text-green-700">Can't find what you're looking for?</h4>
+                          <p className="text-sm text-gray-600 mt-1">
+                            Browse our complete course catalog or talk to our advisors
+                          </p>
+                        </div>
+                        <div className="space-x-3">
+                          <button
+                            className="px-4 py-2 bg-green-50 text-green-700 rounded-md hover:bg-green-100 text-sm font-medium"
+                            onClick={() => {
+                              navigate('/courses');
+                              setShowCoursesMenu(false);
+                            }}
+                          >
+                            View All Courses
+                          </button>
+                          <button
+                            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm font-medium"
+                            onClick={() => {
+                              navigate('/contact');
+                              setShowCoursesMenu(false);
+                            }}
+                          >
+                            Contact Advisor
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <span
+                key={idx}
+                className={`cursor-pointer font-medium hover:text-green-700 ${location.pathname === item.path ? 'text-green-700' : ''
+                  }`}
+                onClick={() => handleNavigate(item.path)}
+              >
+                {item.label}
+              </span>
+            )
+          )}
+
+          {isLoggedIn ? (
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm ml-4"
+            >
+              Logout
+            </button>
+          ) : (
+            <button
+              onClick={() => setShowLoginModal(true)}
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm ml-4 login-button"
+            >
+              Login
+            </button>
+          )}
+        </nav>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden bg-white shadow-md px-4 py-4 space-y-4 border-t absolute top-full left-0 right-0">
+            {baseMenuItems.map((item, idx) =>
+              item.isMegaMenu ? (
+                <div key={idx}>
+                  <span className="block font-semibold text-green-700 mb-2">Courses</span>
+                  {Object.entries(groupedCourses).map(([category, items]) => (
+                    <div key={category} className="mb-3">
+                      <h5 className="text-sm font-bold text-gray-700 mb-1">{category}</h5>
+                      <ul className="pl-2">
+                        {items.map((course) => (
+                          <li
+                            key={course._id}
+                            className="text-sm cursor-pointer hover:underline mb-1"
+                            onClick={() => handleCourseClick(course._id)}
+                          >
+                            {course.name}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div
+                  key={idx}
+                  className={`text-sm cursor-pointer hover:text-green-700 ${location.pathname === item.path ? 'text-green-700' : ''
                     }`}
+                  onClick={() => handleNavigate(item.path)}
                 >
                   {item.label}
-                  {item.isMegaMenu && (
-                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  )}
-                </button>
-              </div>
-            ))}
+                </div>
+              )
+            )}
             {isLoggedIn ? (
-              <button onClick={handleLogout} className="bg-[#007860] text-white px-4 py-2 rounded-md text-sm font-bold">
-                Logout →
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm w-full"
+              >
+                Logout
               </button>
             ) : (
-              <button onClick={() => setShowLoginModal(true)} className="bg-[#007860] text-white px-4 py-2 rounded-md text-sm font-bold">
-                Login →
+              <button
+                onClick={() => setShowLoginModal(true)}
+                className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md text-sm w-full login-button"
+              >
+                Login
               </button>
             )}
-          </nav>
-
-          {/* Mobile Menu Toggle */}
-          <div className="md:hidden">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-gray-700 p-2">
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {isOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        {/* Mega Menu */}
-        {showCoursesMenu && (
-          <div
-            ref={megaMenuRef}
-            className="hidden md:block absolute left-0 w-full bg-white border-t border-gray-200 shadow-lg z-40"
-            onMouseLeave={() => setShowCoursesMenu(false)}
-          >
-            <div className="max-w-7xl mx-auto px-4 py-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {Object.entries(courseCategories).map(([category, courseList]) => (
-                  <div key={category} className="space-y-4">
-                    <h4 className="text-sm font-bold text-gray-500 uppercase">{category}</h4>
-                    <ul className="space-y-3">
-                      {courseList.map((course, i) => (
-                        <li
-                          key={i}
-                          className="flex items-start gap-3 cursor-pointer group"
-                          onClick={() => {
-                            navigate(`/course/${course._id}`);
-                            setShowCoursesMenu(false);
-                          }}
-                        >
-                          <div className="w-10 h-10 rounded-md bg-gray-100 flex items-center justify-center text-xs text-gray-600 border">
-                            {course.name?.charAt(0)}
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-gray-800 group-hover:text-[#007860]">{course.name}</p>
-                            <div className="flex items-center text-xs text-gray-500 mt-1">
-                              <span className="flex items-center mr-3">
-                                <FaRegClock className="mr-1" /> {course.duration || 'NA'} months
-                              </span>
-                              <span className="flex items-center">
-                                <FaUserGraduate className="mr-1" /> {course.noOfStudents || 0}+ students
-                              </span>
-                            </div>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         )}
       </div>
+
+      {showLoginModal && (
+        <div className="fixed inset-0 bg-white bg-opacity-30 backdrop-blur-md flex items-center justify-center z-50 transition-all duration-300 ease-in-out">
+          <div
+            ref={modalRef}
+            className="bg-white w-full max-w-md mx-4 sm:mx-6 rounded-2xl shadow-2xl p-6 sm:p-8 animate-fadeIn"
+          >
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-semibold text-green-700">Login</h3>
+              <button
+                onClick={() => setShowLoginModal(false)}
+                className="text-gray-500 hover:text-gray-800 transition"
+              >
+                <FaTimes className="text-xl" />
+              </button>
+            </div>
+
+            <form onSubmit={handleLoginSubmit} className="space-y-5">
+              {loginError && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md text-sm">
+                  {loginError}
+                </div>
+              )}
+
+              <div className="relative">
+                <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                  <FaPhone />
+                </span>
+                <input
+                  type="tel"
+                  name="phoneNumber"
+                  value={loginData.phoneNumber}
+                  onChange={handleLoginChange}
+                  placeholder="Phone Number"
+                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
+                  required
+                />
+              </div>
+
+              <div className="relative">
+                <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                  <FaLock />
+                </span>
+                <input
+                  type="password"
+                  name="password"
+                  value={loginData.password}
+                  onChange={handleLoginChange}
+                  placeholder="Password"
+                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoggingIn}
+                className={`w-full py-2 px-4 rounded-md font-medium text-white transition duration-200 ease-in-out flex items-center justify-center ${isLoggingIn
+                  ? 'bg-green-400 cursor-not-allowed'
+                  : 'bg-green-600 hover:bg-green-700'
+                  }`}
+              >
+                {isLoggingIn ? (
+                  <>
+                    <svg
+                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Logging in...
+                  </>
+                ) : (
+                  'Login'
+                )}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
     </header>
   );
 };
