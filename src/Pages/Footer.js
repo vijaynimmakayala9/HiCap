@@ -3,7 +3,8 @@ import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from 'react-icons/f
 
 const Footer = () => {
   const quickLinks = ['Home', 'About Us', 'Services', 'Courses', 'Contact'];
-  const socialIcons = [FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn];
+  const socialIcons = [FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn];   
+  
 
   return (
     <footer className="bg-black text-white py-8 py-lg-12">

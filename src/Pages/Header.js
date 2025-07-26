@@ -14,6 +14,7 @@ const Header = () => {
   });
   const [loginError, setLoginError] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [user, setUser] = useState(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -65,8 +66,8 @@ const Header = () => {
       if (
         megaMenuRef.current &&
         !megaMenuRef.current.contains(e.target) &&
-        !coursesBtnRef.current.contains(e.target) &&
-        !navRef.current.contains(e.target)
+        (!coursesBtnRef.current || !coursesBtnRef.current.contains(e.target)) &&
+        (!navRef.current || !navRef.current.contains(e.target))
       ) {
         setShowCoursesMenu(false);
       }
@@ -78,6 +79,17 @@ const Header = () => {
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setShowCoursesMenu(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const groupedCourses = {
@@ -107,8 +119,6 @@ const Header = () => {
     }));
   };
 
-  const [user, setUser] = useState();
-
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoginError('');
@@ -131,11 +141,7 @@ const Header = () => {
       if (response.ok) {
         setIsLoggedIn(true);
         setShowLoginModal(false);
-
-        // Store all user data in session storage
         const userData = result.data;
-
-
         setUser({
           id: userData._id,
           name: userData.name,
@@ -143,7 +149,7 @@ const Header = () => {
           email: userData.email,
           token: userData.token
         });
-        // 2. Store in sessionStorage (stringify the object)
+
         sessionStorage.setItem('user', JSON.stringify({
           id: userData._id,
           name: userData.name,
@@ -166,11 +172,140 @@ const Header = () => {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    // Clear any stored user data/token here
     sessionStorage.removeItem('user');
     setUser(null);
     navigate('/');
   };
+
+  const MegaMenu = () => (
+    <div
+      ref={megaMenuRef}
+      className="absolute top-full left-0 bg-white shadow-xl rounded-md border border-gray-100 mt-2 p-4 md:p-6 z-50 w-full md:w-[90vw] max-w-6xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8"
+      style={{ left: '50%', transform: 'translateX(-50%)' }}
+    >
+      {Object.entries(groupedCourses).map(([category, items]) => (
+        <div key={category} className="space-y-3 md:space-y-4">
+          <h4 className="font-bold text-base md:text-lg text-green-700 border-b border-gray-200 pb-1 md:pb-2">
+            {category}
+          </h4>
+          <ul className="space-y-2 md:space-y-4">
+            {items.slice(0, 4).map((course) => (
+              <li
+                key={course._id}
+                className="cursor-pointer group"
+                onClick={() => handleCourseClick(course._id)}
+              >
+                <div className="flex items-start gap-2 md:gap-3">
+                  <div className="bg-gray-100 group-hover:bg-green-50 p-1 md:p-2 rounded-md">
+                    <div className="w-6 h-6 md:w-8 md:h-8 bg-green-100 rounded-md flex items-center justify-center text-green-700">
+                      <FaUserGraduate className="text-xs md:text-sm" />
+                    </div>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm md:text-base font-medium group-hover:text-green-700 truncate">
+                      {course.name}
+                    </div>
+                    <div className="flex items-center text-xs text-gray-500 gap-1 md:gap-2 mt-1">
+                      <FaRegClock className="flex-shrink-0" />
+                      <span className="truncate">{course.duration || 'N/A'}</span>
+                      <span>•</span>
+                      <span>{course.noOfStudents || 0}+ students</span>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+      <div className="col-span-1 sm:col-span-2 lg:col-span-3 border-t border-gray-200 pt-3 md:pt-4 mt-2">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-0">
+          <div className="flex-1">
+            <h4 className="font-bold text-green-700 text-sm md:text-base">
+              Can't find what you're looking for?
+            </h4>
+            <p className="text-gray-600 text-xs md:text-sm mt-1">
+              Browse our complete course catalog or talk to our advisors
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2 md:gap-3 w-full md:w-auto">
+            <button
+              className="px-3 py-1 md:px-4 md:py-2 bg-green-50 text-green-700 rounded-md hover:bg-green-100 text-xs md:text-sm font-medium whitespace-nowrap"
+              onClick={() => {
+                navigate('/courses');
+                setShowCoursesMenu(false);
+              }}
+            >
+              View All Courses
+            </button>
+            <button
+              className="px-3 py-1 md:px-4 md:py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-xs md:text-sm font-medium whitespace-nowrap"
+              onClick={() => {
+                navigate('/contact');
+                setShowCoursesMenu(false);
+              }}
+            >
+              Contact Advisor
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const MobileMegaMenu = () => (
+    <div className="pl-4 space-y-3">
+      {Object.entries(groupedCourses).map(([category, items]) => (
+        <div key={category} className="mb-2">
+          <h5 className="text-sm font-bold text-gray-700 mb-1">{category}</h5>
+          <ul className="pl-2 space-y-2">
+            {items.map((course) => (
+              <li
+                key={course._id}
+                className="cursor-pointer hover:underline flex items-start"
+                onClick={() => handleCourseClick(course._id)}
+              >
+                <span className="bg-gray-100 p-1 rounded mr-2 flex-shrink-0">
+                  <FaUserGraduate className="text-xs text-green-700" />
+                </span>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm truncate">{course.name}</div>
+                  <div className="flex items-center text-xs text-gray-500 gap-1 mt-1">
+                    <FaRegClock className="flex-shrink-0" />
+                    <span className="truncate">{course.duration || 'N/A'}</span>
+                    <span>•</span>
+                    <span>{course.noOfStudents || 0}+ students</span>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+      <div className="pt-3 border-t border-gray-200 space-y-2">
+        <button
+          className="w-full px-3 py-1.5 bg-green-50 text-green-700 rounded-md hover:bg-green-100 text-sm font-medium"
+          onClick={() => {
+            navigate('/courses');
+            setShowCoursesMenu(false);
+            setIsMobileMenuOpen(false);
+          }}
+        >
+          View All Courses
+        </button>
+        <button
+          className="w-full px-3 py-1.5 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm font-medium"
+          onClick={() => {
+            navigate('/contact');
+            setShowCoursesMenu(false);
+            setIsMobileMenuOpen(false);
+          }}
+        >
+          Contact Advisor
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <header className="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
@@ -182,7 +317,6 @@ const Header = () => {
           HiCap
         </div>
 
-        {/* Mobile Hamburger */}
         <div className="md:hidden flex items-center">
           {isLoggedIn ? (
             <button
@@ -207,10 +341,9 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Desktop Menu */}
         <nav
           ref={navRef}
-          className="hidden md:flex gap-6 items-center relative"
+          className="hidden md:flex gap-4 lg:gap-6 items-center relative"
           onMouseLeave={() => setShowCoursesMenu(false)}
         >
           {baseMenuItems.map((item, idx) =>
@@ -229,84 +362,12 @@ const Header = () => {
                     Courses <FaChevronDown className="ml-1 text-xs" />
                   </span>
                 </div>
-
-                {showCoursesMenu && (
-                  <div
-                    ref={megaMenuRef}
-                    className="absolute top-full left-0 bg-white shadow-xl rounded-md border border-gray-100 mt-2 p-6 z-50 w-screen max-w-6xl grid grid-cols-3 gap-8"
-                    style={{ left: '50%', transform: 'translateX(-50%)' }}
-                  >
-                    {Object.entries(groupedCourses).map(([category, items]) => (
-                      <div key={category} className="space-y-4">
-                        <h4 className="font-bold text-lg text-green-700 border-b border-gray-200 pb-2">
-                          {category}
-                        </h4>
-                        <ul className="space-y-4">
-                          {items.slice(0, 4).map((course) => (
-                            <li
-                              key={course._id}
-                              className="cursor-pointer group"
-                              onClick={() => handleCourseClick(course._id)}
-                            >
-                              <div className="flex items-start gap-3">
-                                <div className="bg-gray-100 group-hover:bg-green-50 p-2 rounded-md">
-                                  <div className="w-8 h-8 bg-green-100 rounded-md flex items-center justify-center text-green-700">
-                                    <FaUserGraduate className="text-sm" />
-                                  </div>
-                                </div>
-                                <div>
-                                  <div className="text-sm font-medium group-hover:text-green-700">
-                                    {course.name}
-                                  </div>
-                                  <div className="flex items-center text-xs text-gray-500 gap-2 mt-1">
-                                    <FaRegClock /> {course.duration || 'N/A'}
-                                    <span>•</span>
-                                    <span>{course.noOfStudents || 0}+ students</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                    <div className="col-span-3 border-t border-gray-200 pt-4 mt-2">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <h4 className="font-bold text-green-700">Can't find what you're looking for?</h4>
-                          <p className="text-sm text-gray-600 mt-1">
-                            Browse our complete course catalog or talk to our advisors
-                          </p>
-                        </div>
-                        <div className="space-x-3">
-                          <button
-                            className="px-4 py-2 bg-green-50 text-green-700 rounded-md hover:bg-green-100 text-sm font-medium"
-                            onClick={() => {
-                              navigate('/courses');
-                              setShowCoursesMenu(false);
-                            }}
-                          >
-                            View All Courses
-                          </button>
-                          <button
-                            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm font-medium"
-                            onClick={() => {
-                              navigate('/contact');
-                              setShowCoursesMenu(false);
-                            }}
-                          >
-                            Contact Advisor
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                {showCoursesMenu && <MegaMenu />}
               </div>
             ) : (
               <span
                 key={idx}
-                className={`cursor-pointer font-medium hover:text-green-700 ${location.pathname === item.path ? 'text-green-700' : ''
+                className={`cursor-pointer font-medium hover:text-green-700 whitespace-nowrap ${location.pathname === item.path ? 'text-green-700' : ''
                   }`}
                 onClick={() => handleNavigate(item.path)}
               >
@@ -332,29 +393,19 @@ const Header = () => {
           )}
         </nav>
 
-        {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden bg-white shadow-md px-4 py-4 space-y-4 border-t absolute top-full left-0 right-0">
+          <div className="md:hidden bg-white shadow-md px-4 py-4 space-y-4 border-t absolute top-full left-0 right-0 max-h-[80vh] overflow-y-auto">
             {baseMenuItems.map((item, idx) =>
               item.isMegaMenu ? (
-                <div key={idx}>
-                  <span className="block font-semibold text-green-700 mb-2">Courses</span>
-                  {Object.entries(groupedCourses).map(([category, items]) => (
-                    <div key={category} className="mb-3">
-                      <h5 className="text-sm font-bold text-gray-700 mb-1">{category}</h5>
-                      <ul className="pl-2">
-                        {items.map((course) => (
-                          <li
-                            key={course._id}
-                            className="text-sm cursor-pointer hover:underline mb-1"
-                            onClick={() => handleCourseClick(course._id)}
-                          >
-                            {course.name}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
+                <div key={idx} className="mb-3">
+                  <div
+                    className="flex items-center justify-between font-semibold text-green-700 mb-1 cursor-pointer"
+                    onClick={() => setShowCoursesMenu(!showCoursesMenu)}
+                  >
+                    <span>Courses</span>
+                    <FaChevronDown className={`transition-transform ${showCoursesMenu ? 'rotate-180' : ''}`} />
+                  </div>
+                  {showCoursesMenu && <MobileMegaMenu />}
                 </div>
               ) : (
                 <div
@@ -370,14 +421,14 @@ const Header = () => {
             {isLoggedIn ? (
               <button
                 onClick={handleLogout}
-                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm w-full"
+                className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md text-sm w-full"
               >
                 Logout
               </button>
             ) : (
               <button
                 onClick={() => setShowLoginModal(true)}
-                className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md text-sm w-full login-button"
+                className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md text-sm w-full login-button"
               >
                 Login
               </button>
@@ -387,10 +438,10 @@ const Header = () => {
       </div>
 
       {showLoginModal && (
-        <div className="fixed inset-0 bg-white bg-opacity-30 backdrop-blur-md flex items-center justify-center z-50 transition-all duration-300 ease-in-out">
+        <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div
             ref={modalRef}
-            className="bg-white w-full max-w-md mx-4 sm:mx-6 rounded-2xl shadow-2xl p-6 sm:p-8 animate-fadeIn"
+            className="bg-white w-full max-w-md rounded-xl shadow-xl p-6 animate-fadeIn"
           >
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-2xl font-semibold text-green-700">Login</h3>
@@ -443,8 +494,8 @@ const Header = () => {
                 type="submit"
                 disabled={isLoggingIn}
                 className={`w-full py-2 px-4 rounded-md font-medium text-white transition duration-200 ease-in-out flex items-center justify-center ${isLoggingIn
-                  ? 'bg-green-400 cursor-not-allowed'
-                  : 'bg-green-600 hover:bg-green-700'
+                    ? 'bg-green-400 cursor-not-allowed'
+                    : 'bg-green-600 hover:bg-green-700'
                   }`}
               >
                 {isLoggingIn ? (
@@ -479,7 +530,6 @@ const Header = () => {
           </div>
         </div>
       )}
-
     </header>
   );
 };
