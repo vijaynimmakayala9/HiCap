@@ -1,86 +1,126 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaRegClock, FaUserGraduate, FaBook } from 'react-icons/fa';
-import { MoveRight } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import {
+  FaCertificate,
+  FaArrowLeft,
+  FaArrowRight,
+  FaStar,
+} from 'react-icons/fa';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const CompletedCourses = () => {
-  const navigate = useNavigate();
+  const [completedCourses, setCompletedCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const user = JSON.parse(sessionStorage.getItem('user'));
+  const userId = user?.id;
 
-  const completedCourses = [
-    {
-      id: 'ai-ml',
-      name: 'AI & Machine Learning',
-      image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=800&q=80',
-      duration: '6 Months',
-      lessons: 12,
-      students: 300,
-    },
-    {
-      id: 'web-dev',
-      name: 'Web Development',
-      image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=800&q=80',
-      duration: '4 Months',
-      lessons: 10,
-      students: 250,
-    },
-  ];
+  useEffect(() => {
+    axios
+      .get(`https://hicap-backend-4rat.onrender.com/api/enrollments/${userId}`)
+      .then((res) => {
+        if (res.data.success) {
+          const filtered = res.data.data.filter(
+            (item) => item.status === 'completed'
+          );
+          setCompletedCourses(filtered);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, [userId]);
 
-  const handleStartLearning = (courseId) => {
-    navigate(`/course/${courseId}`);
+  const nextSlide = () => {
+    if (completedCourses.length <= 3) return;
+    setCurrentIndex((prevIndex) =>
+      prevIndex + 3 >= completedCourses.length ? 0 : prevIndex + 3
+    );
   };
 
+  const prevSlide = () => {
+    if (completedCourses.length <= 3) return;
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? Math.max(completedCourses.length - 3, 0) : prevIndex - 3
+    );
+  };
+
+  const visibleCourses = completedCourses.slice(currentIndex, currentIndex + 3);
+
   return (
-    <section className="container py-5 mt-4">
-      <div className="mb-4">
-        <h1 className="fw-bold text-dark">Completed Courses</h1>
-        <div className="bg-success rounded-pill" style={{ width: '216px', height: '3px' }}></div>
+    <div className="container mt-5 completed-courses">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h3 className="m-0 d-flex align-items-center">
+          <FaCertificate className="me-2 text-primary" /> Completed Courses
+        </h3>
+        <div>
+          <button className="btn btn-outline-secondary me-2" onClick={prevSlide}>
+            <FaArrowLeft />
+          </button>
+          <button className="btn btn-outline-secondary" onClick={nextSlide}>
+            <FaArrowRight />
+          </button>
+        </div>
       </div>
 
-      {completedCourses.length === 0 ? (
-        <p className="text-center">You haven’t completed any courses yet.</p>
+      {loading ? (
+        <div className="text-center py-5">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      ) : completedCourses.length === 0 ? (
+        <div className="alert alert-info">No completed courses found.</div>
       ) : (
-        <div className="row g-4">
-          {completedCourses.map((course) => (
-            <div key={course.id} className="col-12 col-sm-6 col-lg-4">
-              <div className="card h-100 shadow-sm border-1 rounded-3">
+        <div className="row">
+          {visibleCourses.map(({ _id, course, updatedAt }) => (
+            <div className="col-12 col-sm-12 col-md-6 col-lg-4 mb-4" key={_id}>
+              <div className="card h-100 shadow-sm d-flex flex-column">
                 <img
                   src={course.image}
-                  alt={course.name}
                   className="card-img-top"
-                  style={{ height: '200px', objectFit: 'cover' }}
+                  alt={course.name}
+                  style={{ height: '180px', objectFit: 'cover' }}
                 />
-                <div className="card-body d-flex flex-column justify-content-between">
-                  <h5 className="card-title fw-semibold">{course.name}</h5>
+                <div className="card-body d-flex flex-column">
+                  <h5 className="card-title mb-2">{course.name}</h5>
+                  <p className="card-text text-muted small flex-grow-1" style={{ minHeight: '60px' }}>
+                    {course.description}
+                  </p>
 
-                  <div className="d-flex justify-content-between text-muted small my-3">
-                    <div className="d-flex align-items-center gap-1">
-                      <FaRegClock />
-                      <span>{course.duration}</span>
-                    </div>
-                    <div className="d-flex align-items-center gap-1">
-                      <FaBook />
-                      <span>{course.lessons} Lessons</span>
-                    </div>
-                    <div className="d-flex align-items-center gap-1">
-                      <FaUserGraduate />
-                      <span>{course.students}+ Students</span>
-                    </div>
+                  <div className="rating mb-2 d-flex">
+                    {[...Array(5)].map((_, i) => (
+                      <FaStar
+                        key={i}
+                        className={
+                          i < Math.floor(course.rating) ? 'text-warning' : 'text-secondary'
+                        }
+                      />
+                    ))}
+                    <small className="text-muted ms-2">({course.reviewCount})</small>
                   </div>
 
-                  <button
-                    onClick={() => handleStartLearning(course.id)}
-                    className="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2 mt-auto"
-                    style={{ borderRadius: '5px', height: '45px' }}
-                  >
-                    Start Learning <MoveRight size={18} />
-                  </button>
+                  <div className="d-flex justify-content-between align-items-center mt-2">
+                    <span className="badge bg-success">Completed</span>
+                    <small className="text-muted">
+                      {new Date(updatedAt).toLocaleDateString()}
+                    </small>
+                  </div>
+                </div>
+
+                <div className="card-footer bg-white border-top-0 d-flex justify-content-between">
+                  <button className="btn btn-md btn-primary">Certificate</button>
+                  <button className="btn btn-md btn-outline-primary">View</button>
                 </div>
               </div>
             </div>
+
           ))}
         </div>
       )}
-    </section>
+    </div>
   );
 };
 

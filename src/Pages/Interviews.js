@@ -70,7 +70,7 @@ const InterviewCard = ({ interview, onApplyClick }) => {
         </div>
         <button
           onClick={() => onApplyClick(interview)}
-          className="btn btn-success w-100 rounded-pill d-flex align-items-center justify-content-center gap-2 mt-2"
+          className="btn btn-primary w-100 rounded-pill d-flex align-items-center justify-content-center gap-2 mt-2"
         >
           Apply <ArrowRight size={16} />
         </button>
@@ -173,7 +173,7 @@ const Interviews = () => {
                 <div className="mb-3">
                   <label className="form-label fw-semibold">Upload Resume</label>
                   <div className="d-flex align-items-center gap-2">
-                    <label htmlFor="resume" className="btn btn-outline-success btn-sm">
+                    <label htmlFor="resume" className="btn btn-outline-primary btn-sm">
                       <FaUpload className="me-1" /> Upload
                     </label>
                     {formData.resume && (
@@ -189,7 +189,7 @@ const Interviews = () => {
                     accept=".pdf,.doc,.docx,.txt"
                   />
                 </div>
-                <button type="submit" className="btn btn-success w-100 rounded-pill mt-3 d-flex align-items-center justify-content-center gap-2">
+                <button type="submit" className="btn btn-primary w-100 rounded-pill mt-3 d-flex align-items-center justify-content-center gap-2">
                   Submit Application <ArrowRight size={16} />
                 </button>
               </form>

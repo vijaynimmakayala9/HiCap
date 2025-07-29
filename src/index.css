@@ -29,3 +29,59 @@
     animation: scrollLeftToRight 10s linear infinite;
   }
 }
+
+
+/*Enrolled and Completed courses*/
+
+/* Shared styles for both carousels */
+.carousel-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease;
+  width: 100%;
+}
+
+.carousel-slide {
+  flex: 0 0 calc(100% / 3 - 20px);
+  margin-right: 20px;
+  min-width: 0;
+}
+
+.card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-img-top {
+  height: 180px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.carousel-controls {
+  display: flex;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .carousel-slide {
+    flex: 0 0 calc(100% / 2 - 15px);
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-slide {
+    flex: 0 0 100%;
+  }
+}

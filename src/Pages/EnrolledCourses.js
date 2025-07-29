@@ -1,120 +1,104 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaRegClock, FaUserGraduate, FaBook } from 'react-icons/fa';
-import { MoveRight } from 'lucide-react';
+import axios from 'axios';
+import { FaBook, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const EnrolledCourses = () => {
-  const navigate = useNavigate();
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const user = JSON.parse(sessionStorage.getItem('user'));
+  const userId = user?.id;
 
   useEffect(() => {
-    const user = JSON.parse(sessionStorage.getItem('user'));
-    const id = user?.id;
-    console.log(id)
-
-    if (!id) {
-      setError('User ID not found in session.');
-      setLoading(false);
-      return;
-    }
-
-    const fetchEnrolledCourses = async () => {
-      try {
-        const response = await fetch(`https://hicap-backend-4rat.onrender.com/api/enrollments/${id}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch enrolled courses');
+    axios
+      .get(`https://hicap-backend-4rat.onrender.com/api/enrollments/${userId}`)
+      .then((res) => {
+        if (res.data.success) {
+          const filtered = res.data.data.filter((item) => item.status === 'enrolled');
+          setEnrolledCourses(filtered);
         }
-
-        const result = await response.json();
-        const data = result?.data;
-
-        if (!data) {
-          setEnrolledCourses([]);
-        } else if (Array.isArray(data)) {
-          setEnrolledCourses(data);
-        } else {
-          setEnrolledCourses([data]); // Wrap single object in array
-        }
-      } catch (err) {
-        setError(err.message);
-      } finally {
         setLoading(false);
-      }
-    };
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, [userId]);
 
-    fetchEnrolledCourses();
-  }, []);
-
-  const handleStartLearning = (courseId) => {
-    navigate(`/course/${courseId}`);
+  const nextSlide = () => {
+    if (enrolledCourses.length <= 3) return;
+    setCurrentIndex((prevIndex) =>
+      prevIndex + 3 >= enrolledCourses.length ? 0 : prevIndex + 3
+    );
   };
 
-  if (loading) {
-    return <div className="text-center py-5">Loading...</div>;
-  }
+  const prevSlide = () => {
+    if (enrolledCourses.length <= 3) return;
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? Math.max(enrolledCourses.length - 3, 0) : prevIndex - 3
+    );
+  };
 
-  if (error) {
-    return <div className="text-center text-danger py-5">{error}</div>;
-  }
+  const visibleCourses = enrolledCourses.slice(currentIndex, currentIndex + 3);
 
   return (
-    <section className="container py-5 mt-4">
-      <div className="mb-4">
-        <h1 className="fw-bold text-dark">Enrolled Courses</h1>
-        <div className="bg-success rounded-pill" style={{ width: '216px', height: '3px' }}></div>
+    <div className="container mt-5 enrolled-courses">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h3 className="m-0 d-flex align-items-center">
+          <FaBook className="me-2 text-primary" />Enrolled Courses
+          
+        </h3>
+        <div>
+          <button className="btn btn-outline-secondary me-2" onClick={prevSlide}>
+            <FaArrowLeft />
+          </button>
+          <button className="btn btn-outline-secondary" onClick={nextSlide}>
+            <FaArrowRight />
+          </button>
+        </div>
       </div>
 
-      {enrolledCourses.length === 0 ? (
-        <p className="text-center">You have not enrolled in any courses yet.</p>
+      {loading ? (
+        <div className="text-center py-5">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      ) : enrolledCourses.length === 0 ? (
+        <div className="alert alert-info">No enrolled courses found.</div>
       ) : (
-        <div className="row g-4">
-          {enrolledCourses.map((enrollment) => {
-            const course = enrollment.course;
-
-            return (
-              <div key={enrollment._id} className="col-12 col-sm-6 col-lg-4">
-                <div className="card h-100 shadow-sm border-1 rounded-3">
-                  <img
-                    src={course.image}
-                    alt={course.name}
-                    className="card-img-top"
-                    style={{ height: '200px', objectFit: 'cover' }}
-                  />
-                  <div className="card-body d-flex flex-column justify-content-between">
-                    <h5 className="card-title fw-semibold">{course.name}</h5>
-
-                    <div className="d-flex justify-content-between text-muted small my-3">
-                      <div className="d-flex align-items-center gap-1">
-                        <FaRegClock />
-                        <span>{course.duration}</span>
-                      </div>
-                      <div className="d-flex align-items-center gap-1">
-                        <FaBook />
-                        <span>{course.noOfLessons || 0} Lessons</span>
-                      </div>
-                      <div className="d-flex align-items-center gap-1">
-                        <FaUserGraduate />
-                        <span>{course.noOfStudents || 0} Students</span>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => handleStartLearning(course._id)}
-                      className="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2 mt-auto"
-                      style={{ borderRadius: '5px', height: '45px' }}
-                    >
-                      Start Learning <MoveRight size={18} />
-                    </button>
+        <div className="row">
+          {visibleCourses.map(({ _id, course, createdAt }) => (
+            <div className="col-12 col-sm-12 col-md-4 mb-4" key={_id}>
+              <div className="card h-100 shadow-sm">
+                <img
+                  src={course.image}
+                  className="card-img-top"
+                  alt={course.name}
+                  style={{ height: '180px', objectFit: 'cover' }}
+                />
+                <div className="card-body d-flex flex-column">
+                  <h5 className="card-title">{course.name}</h5>
+                  <p className="card-text text-muted">{course.description}</p>
+                  <div className="mt-auto d-flex justify-content-between align-items-center">
+                    <span className="badge bg-primary">Enrolled</span>
+                    <small className="text-muted">
+                      {new Date(createdAt).toLocaleDateString()}
+                    </small>
                   </div>
                 </div>
+                <div className="card-footer bg-white border-top-0">
+                  <button className="btn btn-md btn-primary w-100" >{/* onClick={()=>Navigate('/dashboard/courseModule')} */}
+                    Continue Learning
+                  </button>
+                </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       )}
-    </section>
+    </div>
   );
 };
 

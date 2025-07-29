@@ -158,7 +158,7 @@ const Certificate = () => {
                 />
                 <button
                   onClick={generatePDF}
-                  className="btn btn-success btn-lg d-flex align-items-center gap-2"
+                  className="btn btn-primary btn-lg d-flex align-items-center gap-2"
                 >
                   <span>Download</span>
                   <Download size={20} />

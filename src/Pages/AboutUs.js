@@ -60,13 +60,14 @@ const AboutUS = () => {
           />
         </div>
         <div className="col-md-6">
-          <h3 className="fw-bold mb-3 mb-md-4">Why Magnitia</h3>
+          <h3 className="fw-bold mb-3 mb-md-4">Why Choose Techsterker</h3>
           <div className="row gy-3">
             {[
-              'Formulating training curriculum refined to match industry expectations',
-              'Innovative methodologies to ensure maximum skill transfer',
-              'Skill-centric coaching for production-readiness',
-              'Strong placement connections to industry'
+              'Industry-oriented curriculum',
+              'Personalized mentorship',
+              'Modern classrooms and lab facilities',
+              'Internship and placement assistance',
+              'Affordable course fees'
             ].map((point, i) => (
               <div key={i} className="col-12 d-flex align-items-start">
                 <span className="badge bg-warning text-dark fs-5 me-3 flex-shrink-0">{`0${i + 1}`}</span>
@@ -84,13 +85,13 @@ const AboutUS = () => {
           <div className="mb-3">
             <h5 className="text-success fw-bold">Vision:</h5>
             <p className="mb-0">
-              To cater to the learning pursuit of aspirants in India and abroad through our physical centers located in key IT cities as well as Australia, Abu Dhabi, Canada & USA.
+              To create a premier IT training center that equips people with skills for the future and turns them into self-assured professionals who make significant contributions to the digital world.
             </p>
           </div>
           <div>
             <h5 className="text-success fw-bold">Mission:</h5>
             <p className="mb-0">
-              To skill & mentor enthusiastic aspirants on advanced software technologies thereby empowering them with a qualitative career.
+               At TECHSTERKER, we're committed to giving our students career-growth resources, informed coaching, and continuous guidance.  In order to help each student reach their career objectives, we aim to establish a vibrant learning atmosphere that fosters personal development, creativity, and critical thinking.
             </p>
           </div>
         </div>

@@ -114,20 +114,15 @@ const LiveClasses = () => {
                   </div>
                 </div>
 
-                <a
+                <button className='btn btn-md btn-primary'><a
                   href={cls.meetLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn text-white d-flex align-items-center justify-content-center gap-2"
-                  style={{
-                    backgroundColor: '#007860',
-                    borderRadius: '999px',
-                    fontWeight: '600',
-                    height: '40px',
-                  }}
+
                 >
                   Join Now <MoveRight size={20} />
-                </a>
+                </a></button>
               </div>
             </div>
           ))}

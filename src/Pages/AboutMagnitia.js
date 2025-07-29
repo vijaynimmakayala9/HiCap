@@ -38,7 +38,7 @@ const AboutMagnitia = () => {
                     aboutData.title1
                   )}
                 </>
-              )} */}About Our <span className="text-success">Instuite</span>
+              )} */}About <span className="text-success">{aboutData.title1}</span> Institute
             </h2>
             <p className="text-muted">{aboutData.content1}</p>
           </div>

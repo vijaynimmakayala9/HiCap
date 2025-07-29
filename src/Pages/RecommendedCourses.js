@@ -92,7 +92,7 @@ const RecommendedCourses = () => {
                 <p className="card-text small text-secondary">{course.description}</p>
 
                 <button
-                  className="btn btn-success mt-auto"
+                  className="btn btn-primary mt-auto"
                   style={{ borderRadius: '5px', height: '40px', fontWeight: '600' }}
                 >
                   Enroll
@@ -107,7 +107,7 @@ const RecommendedCourses = () => {
       <div className="text-center mt-4">
         <button
           onClick={handleViewAllClick}
-          className="btn btn-outline-success px-4 py-2 fw-semibold"
+          className="btn btn-outline-primary px-4 py-2 fw-semibold"
           style={{ borderRadius: '5px' }}
         >
           View All

@@ -114,7 +114,7 @@ const Course = () => {
                                 <div className="mt-auto d-flex justify-content-between align-items-center">
                                     <span className="text-success fw-bold">${price || 'Free'}</span>
                                     <button
-                                        className="btn btn-outline-success btn-sm"
+                                        className="btn btn-outline-primary btn-sm"
                                         onClick={() => handleEnrollClick({ title: name, _id })}
                                     >
                                         Enroll
@@ -122,7 +122,7 @@ const Course = () => {
                                 </div>
 
                                 <button
-                                    className="btn btn-success btn-sm mt-2 w-100"
+                                    className="btn btn-primary btn-sm mt-2 w-100"
                                     onClick={() => handleCourseClick(_id)}
                                 >
                                     View Details
@@ -135,7 +135,7 @@ const Course = () => {
 
             <div className="text-center mt-5">
                 <button
-                    className="btn btn-outline-success px-5 py-2 fw-semibold rounded-pill"
+                    className="btn btn-outline-primary px-5 py-2 fw-semibold rounded-pill"
                     onClick={() => navigate('/courses')}
                 >
                     View All Courses

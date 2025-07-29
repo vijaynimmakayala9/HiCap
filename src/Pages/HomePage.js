@@ -109,7 +109,7 @@ const HomePage = () => {
 
               <div className="modal-footer justify-content-center">
                 <button
-                  className="btn btn-success rounded-pill px-4"
+                  className="btn btn-primary rounded-pill px-4"
                   onClick={() => {
                     window.scrollTo({ top: 0, behavior: "smooth" });
                     navigate("/contactus");
