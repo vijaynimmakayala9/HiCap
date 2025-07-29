@@ -53,7 +53,7 @@ const AboutUS = () => {
       <div className="row align-items-center bg-light p-3 p-md-4 rounded shadow-sm mb-4 mb-md-5 g-4">
         <div className="col-md-6 text-center">
           <img
-            src="https://www.magnitia.com/images/abt-bghh.jpg"
+            src="https://www.Magnitia.com/images/abt-bghh.jpg"
             alt="Why Magnitia"
             className="img-fluid rounded shadow-sm"
             style={{ maxWidth: '100%', height: 'auto' }}
@@ -96,7 +96,7 @@ const AboutUS = () => {
         </div>
         <div className="col-md-6 order-md-2 order-1 text-center">
           <img
-            src="https://www.magnitia.com/images/mision1.png"
+            src="https://www.Magnitia.com/images/mision1.png"
             alt="Vision Mission"
             className="img-fluid rounded shadow-sm"
             style={{ maxWidth: '100%', height: 'auto' }}
@@ -142,11 +142,11 @@ const AboutUS = () => {
                 <p>{technicalTeam.description2}</p>
               </>
             )}
-            
+
           </div>
           <div className="col-md-4 text-center">
             <img
-              src={technicalTeam?.image2 || "https://www.magnitia.com/images/gallery/institute9.jpg"}
+              src={technicalTeam?.image2 || "https://www.Magnitia.com/images/gallery/institute9.jpg"}
               alt="Technical Team"
               className="img-fluid rounded shadow-sm"
             />
@@ -162,13 +162,15 @@ const AboutUS = () => {
             <p>{item.description3}</p>
             <div className="row g-3">
               {item.image3.map((imgUrl, i) => (
-                <div className="col-6 col-sm-4 col-md-3" key={i}>
+                <div className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" key={i}>
                   <img
                     src={imgUrl}
                     alt={`Global Classroom ${i + 1}`}
-                    className="img-fluid rounded shadow-sm"
+                    className="img-fluid rounded shadow-sm w-100"
+                    style={{ height: "200px", objectFit: "cover" }}
                   />
                 </div>
+
               ))}
             </div>
           </div>

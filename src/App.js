@@ -16,12 +16,12 @@ import Clients from "./Pages/Clients";
 import UpCommingBatches from "./components/UpCommingBatches";
 import Dashboard from "./components/Dashboard";
 import AdminCourses from "./admin/AdminCourses";
+import PrivateRoute from "./components/PrivateRoute"; // ✅ import the wrapper
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/contactus" element={<ContactUs />} />
       <Route path="/aboutus" element={<AboutSection />} />
       <Route path="/upcommingbatches" element={<UpCommingBatches />} />
@@ -29,11 +29,14 @@ function App() {
       <Route path="/blog" element={<BlogPage />} />
       <Route path="/ourmentors" element={<OurMentorsPage />} />
       <Route path="/courses" element={<Courses />} />
-      <Route path="/clients" element={<Clients />} />
-      <Route path="/doubtsession" element={<DoubtSession />} />
-      <Route path="/certificate" element={<Certificate />} />
-      <Route path="/interviews" element={<Interviews />} />
       <Route path="/course/:id" element={<CourseDetail />} />
+      <Route path="/clients" element={<Clients />} />
+
+      {/* 🔒 Private Routes */}
+      <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+      <Route path="/dashboard/doubtsession" element={<PrivateRoute><DoubtSession /></PrivateRoute>} />
+      <Route path="/dashboard/certificate" element={<PrivateRoute><Certificate /></PrivateRoute>} />
+      <Route path="/dashboard/interviews" element={<PrivateRoute><Interviews /></PrivateRoute>} />
 
       <Route path="/admin" element={<AdminCourses />} />
     </Routes>

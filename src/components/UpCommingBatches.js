@@ -200,7 +200,7 @@ const UpCommingBatches = () => {
             <h3 className="text-lg font-semibold text-blue-800 mb-2">Need Help Choosing a Batch?</h3>
             <p className="text-gray-700 mb-3">
               Contact our counselors at <span className="font-semibold">+91 1234567890</span> or 
-              email us at <span className="font-semibold">info@magnitia.com</span> for personalized guidance.
+              email us at <span className="font-semibold">info@Magnitia.com</span> for personalized guidance.
             </p>
             <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
               Request a Call Back

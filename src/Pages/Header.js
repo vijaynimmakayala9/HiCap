@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaBars, FaTimes, FaRegClock, FaUserGraduate, FaChevronDown, FaUser, FaLock, FaPhone } from 'react-icons/fa';
+import { FaBars, FaTimes, FaChevronDown, FaUserGraduate, FaRegClock, FaUserCircle, FaSignOutAlt, FaPhone, FaLock, FaVideo, FaBook, FaQuestionCircle, FaCertificate } from 'react-icons/fa';
 
-const Header = () => {
+// Guest Header Component
+const GuestHeader = ({ onLogin }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [courses, setCourses] = useState([]);
   const [showCoursesMenu, setShowCoursesMenu] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -14,7 +14,6 @@ const Header = () => {
   });
   const [loginError, setLoginError] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [user, setUser] = useState(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,29 +22,17 @@ const Header = () => {
   const navRef = useRef();
   const modalRef = useRef();
 
-  const baseMenuItems = isLoggedIn
-    ? [
-      { label: 'Dashboard', path: '/dashboard' },
-      { label: 'Courses', isMegaMenu: true },
-      { label: 'Interviews', path: '/interviews' },
-      { label: 'Certificate', path: '/certificate' },
-      { label: 'Doubt Session', path: '/doubtsession' },
-      { label: 'Contact Us', path: '/contactus' },
-      { label: 'Blog', path: '/blog' },
-      { label: 'Clients', path: '/clients' },
-      { label: 'FAQ', path: '/faq' },
-    ]
-    : [
-      { label: 'Home', path: '/' },
-      { label: 'About Us', path: '/aboutus' },
-      { label: 'Courses', isMegaMenu: true },
-      { label: 'Upcoming Batches', path: '/upcommingbatches' },
-      { label: 'Our Mentors', path: '/ourmentors' },
-      { label: 'Blog', path: '/blog' },
-      { label: 'Clients', path: '/clients' },
-      { label: 'Contact Us', path: '/contactus' },
-      { label: 'FAQ', path: '/faq' },
-    ];
+  const menuItems = [
+    { label: 'Home', path: '/' },
+    { label: 'About Us', path: '/aboutus' },
+    { label: 'Courses', isMegaMenu: true },
+    { label: 'Upcoming Batches', path: '/upcommingbatches' },
+    { label: 'Our Mentors', path: '/ourmentors' },
+    { label: 'Faqs', path: '/faqs' },
+    { label: 'Clients', path: '/clients' },
+    { label: 'Blog', path: '/blog' },
+    { label: 'Contact Us', path: '/contactus' },
+  ];
 
   useEffect(() => {
     fetch('https://hicap-backend-4rat.onrender.com/api/course1')
@@ -79,17 +66,6 @@ const Header = () => {
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setShowCoursesMenu(false);
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const groupedCourses = {
@@ -139,25 +115,15 @@ const Header = () => {
       const result = await response.json();
 
       if (response.ok) {
-        setIsLoggedIn(true);
         setShowLoginModal(false);
         const userData = result.data;
-        setUser({
+        onLogin({
           id: userData._id,
           name: userData.name,
           phone: userData.phoneNumber,
           email: userData.email,
           token: userData.token
         });
-
-        sessionStorage.setItem('user', JSON.stringify({
-          id: userData._id,
-          name: userData.name,
-          phone: userData.phoneNumber,
-          email: userData.email,
-          token: userData.token
-        }));
-
         navigate('/dashboard');
       } else {
         setLoginError(result.message || 'Login failed. Please try again.');
@@ -170,83 +136,83 @@ const Header = () => {
     }
   };
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    sessionStorage.removeItem('user');
-    setUser(null);
-    navigate('/');
-  };
-
   const MegaMenu = () => (
     <div
       ref={megaMenuRef}
-      className="absolute top-full left-0 bg-white shadow-xl rounded-md border border-gray-100 mt-2 p-4 md:p-6 z-50 w-full md:w-[90vw] max-w-6xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8"
-      style={{ left: '50%', transform: 'translateX(-50%)' }}
+      className="mega-menu position-absolute bg-white shadow-lg border rounded mt-2"
     >
-      {Object.entries(groupedCourses).map(([category, items]) => (
-        <div key={category} className="space-y-3 md:space-y-4">
-          <h4 className="font-bold text-base md:text-lg text-green-700 border-b border-gray-200 pb-1 md:pb-2">
-            {category}
-          </h4>
-          <ul className="space-y-2 md:space-y-4">
-            {items.slice(0, 4).map((course) => (
-              <li
-                key={course._id}
-                className="cursor-pointer group"
-                onClick={() => handleCourseClick(course._id)}
-              >
-                <div className="flex items-start gap-2 md:gap-3">
-                  <div className="bg-gray-100 group-hover:bg-green-50 p-1 md:p-2 rounded-md">
-                    <div className="w-6 h-6 md:w-8 md:h-8 bg-green-100 rounded-md flex items-center justify-center text-green-700">
-                      <FaUserGraduate className="text-xs md:text-sm" />
+      <div className="p-3 p-md-4 p-lg-5">
+        <div className="row g-3 g-md-4">
+          {Object.entries(groupedCourses).map(([category, items]) => (
+            <div key={category} className="col-12 col-md-6 col-lg-4">
+              <h6 className="fw-bold text-success border-bottom border-2 pb-2 mb-3">
+                {category}
+              </h6>
+              <ul className="list-unstyled">
+                {items.slice(0, 4).map((course) => (
+                  <li
+                    key={course._id}
+                    className="mb-3 cursor-pointer"
+                    onClick={() => handleCourseClick(course._id)}
+                  >
+                    <div className="d-flex gap-2 p-2 rounded hover-bg-light">
+                      <div className="bg-light p-2 rounded flex-shrink-0">
+                        <div className="d-flex align-items-center justify-content-center bg-success-subtle rounded" 
+                             style={{ width: '32px', height: '32px' }}>
+                          <FaUserGraduate className="text-success small" />
+                        </div>
+                      </div>
+                      <div className="flex-grow-1 overflow-hidden">
+                        <div className="fw-medium text-truncate small">
+                          {course.name}
+                        </div>
+                        <div className="d-flex align-items-center gap-1 text-muted small mt-1">
+                          <FaRegClock />
+                          <span className="text-truncate">{course.duration || 'N/A'}</span>
+                          <span>•</span>
+                          <span className="text-truncate">{course.noOfStudents || 0}+ students</span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm md:text-base font-medium group-hover:text-green-700 truncate">
-                      {course.name}
-                    </div>
-                    <div className="flex items-center text-xs text-gray-500 gap-1 md:gap-2 mt-1">
-                      <FaRegClock className="flex-shrink-0" />
-                      <span className="truncate">{course.duration || 'N/A'}</span>
-                      <span>•</span>
-                      <span>{course.noOfStudents || 0}+ students</span>
-                    </div>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
-      ))}
-      <div className="col-span-1 sm:col-span-2 lg:col-span-3 border-t border-gray-200 pt-3 md:pt-4 mt-2">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-0">
-          <div className="flex-1">
-            <h4 className="font-bold text-green-700 text-sm md:text-base">
-              Can't find what you're looking for?
-            </h4>
-            <p className="text-gray-600 text-xs md:text-sm mt-1">
-              Browse our complete course catalog or talk to our advisors
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-2 md:gap-3 w-full md:w-auto">
-            <button
-              className="px-3 py-1 md:px-4 md:py-2 bg-green-50 text-green-700 rounded-md hover:bg-green-100 text-xs md:text-sm font-medium whitespace-nowrap"
-              onClick={() => {
-                navigate('/courses');
-                setShowCoursesMenu(false);
-              }}
-            >
-              View All Courses
-            </button>
-            <button
-              className="px-3 py-1 md:px-4 md:py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-xs md:text-sm font-medium whitespace-nowrap"
-              onClick={() => {
-                navigate('/contact');
-                setShowCoursesMenu(false);
-              }}
-            >
-              Contact Advisor
-            </button>
+        
+        <div className="border-top pt-3 mt-3">
+          <div className="row align-items-center g-3">
+            <div className="col-12 col-md-8">
+              <h6 className="fw-bold text-success mb-1">
+                Can't find what you're looking for?
+              </h6>
+              <p className="text-muted small mb-0">
+                Browse our complete course catalog or talk to our advisors
+              </p>
+            </div>
+            <div className="col-12 col-md-4">
+              <div className="d-flex flex-column flex-md-row gap-2">
+                <button
+                  className="btn btn-outline-success btn-sm flex-fill"
+                  onClick={() => {
+                    navigate('/courses');
+                    setShowCoursesMenu(false);
+                  }}
+                >
+                  View All Courses
+                </button>
+                <button
+                  className="btn btn-success btn-sm flex-fill"
+                  onClick={() => {
+                    navigate('/contactus');
+                    setShowCoursesMenu(false);
+                  }}
+                >
+                  Contact Advisor
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -254,27 +220,29 @@ const Header = () => {
   );
 
   const MobileMegaMenu = () => (
-    <div className="pl-4 space-y-3">
+    <div className="bg-light rounded p-3 mt-2">
       {Object.entries(groupedCourses).map(([category, items]) => (
-        <div key={category} className="mb-2">
-          <h5 className="text-sm font-bold text-gray-700 mb-1">{category}</h5>
-          <ul className="pl-2 space-y-2">
-            {items.map((course) => (
+        <div key={category} className="mb-3">
+          <h6 className="fw-bold text-muted mb-2 small">{category}</h6>
+          <ul className="list-unstyled ps-2">
+            {items.slice(0, 3).map((course) => (
               <li
                 key={course._id}
-                className="cursor-pointer hover:underline flex items-start"
+                className="mb-2 cursor-pointer"
                 onClick={() => handleCourseClick(course._id)}
               >
-                <span className="bg-gray-100 p-1 rounded mr-2 flex-shrink-0">
-                  <FaUserGraduate className="text-xs text-green-700" />
-                </span>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm truncate">{course.name}</div>
-                  <div className="flex items-center text-xs text-gray-500 gap-1 mt-1">
-                    <FaRegClock className="flex-shrink-0" />
-                    <span className="truncate">{course.duration || 'N/A'}</span>
-                    <span>•</span>
-                    <span>{course.noOfStudents || 0}+ students</span>
+                <div className="d-flex align-items-start p-2 rounded hover-bg-white">
+                  <span className="bg-secondary p-1 rounded me-2 flex-shrink-0">
+                    <FaUserGraduate className="text-success" style={{ fontSize: '0.75rem' }} />
+                  </span>
+                  <div className="flex-grow-1 overflow-hidden">
+                    <div className="fw-medium text-truncate small">{course.name}</div>
+                    <div className="d-flex align-items-center gap-1 text-muted mt-1" style={{ fontSize: '0.75rem' }}>
+                      <FaRegClock />
+                      <span className="text-truncate">{course.duration || 'N/A'}</span>
+                      <span>•</span>
+                      <span>{course.noOfStudents || 0}+</span>
+                    </div>
                   </div>
                 </div>
               </li>
@@ -282,9 +250,9 @@ const Header = () => {
           </ul>
         </div>
       ))}
-      <div className="pt-3 border-t border-gray-200 space-y-2">
+      <div className="border-top pt-2 d-grid gap-2">
         <button
-          className="w-full px-3 py-1.5 bg-green-50 text-green-700 rounded-md hover:bg-green-100 text-sm font-medium"
+          className="btn btn-outline-success btn-sm"
           onClick={() => {
             navigate('/courses');
             setShowCoursesMenu(false);
@@ -294,9 +262,9 @@ const Header = () => {
           View All Courses
         </button>
         <button
-          className="w-full px-3 py-1.5 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm font-medium"
+          className="btn btn-success btn-sm"
           onClick={() => {
-            navigate('/contact');
+            navigate('/contactus');
             setShowCoursesMenu(false);
             setIsMobileMenuOpen(false);
           }}
@@ -308,218 +276,272 @@ const Header = () => {
   );
 
   return (
-    <header className="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <div
-          className="text-2xl font-bold text-green-700 cursor-pointer"
-          onClick={() => navigate('/')}
-        >
-          HiCap
-        </div>
+    <>
+      <style jsx>{`
+        .cursor-pointer { cursor: pointer; }
+        .hover-bg-light:hover { background-color: var(--bs-light) !important; }
+        .hover-bg-white:hover { background-color: white !important; }
+        .navbar-brand img { 
+          height: 40px;
+          transition: all 0.3s ease;
+        }
+        .navbar {
+          transition: all 0.3s ease;
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+        }
+        @media (min-width: 576px) {
+          .navbar-brand img { height: 45px; }
+        }
+        @media (min-width: 768px) {
+          .navbar-brand img { height: 50px; }
+          .navbar {
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+          }
+        }
+        @media (min-width: 992px) {
+          .navbar-brand img { height: 56px; }
+        }
+        .fade-in {
+          animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        .spinner-border-sm {
+          width: 1rem;
+          height: 1rem;
+        }
+        .input-group-icon {
+          position: relative;
+        }
+        .input-group-icon .form-control {
+          padding-left: 2.5rem;
+        }
+        .input-group-icon .input-icon {
+          position: absolute;
+          left: 0.75rem;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 10;
+          color: var(--bs-secondary);
+        }
+        .mega-menu {
+          width: calc(100vw - 2rem);
+          max-width: 800px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 1050;
+          max-height: 80vh;
+          overflow-y: auto;
+        }
+        @media (min-width: 768px) {
+          .mega-menu {
+            width: auto;
+            min-width: 600px;
+          }
+        }
+        .rotate-180 {
+          transform: rotate(180deg);
+          transition: transform 0.3s ease;
+        }
+        .mobile-menu {
+          max-height: calc(100vh - 70px);
+          overflow-y: auto;
+        }
+        .nav-link {
+          transition: all 0.2s ease;
+        }
+        .login-button {
+          white-space: nowrap;
+        }
+      `}</style>
 
-        <div className="md:hidden flex items-center">
-          {isLoggedIn ? (
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm mr-3"
-            >
-              Logout
-            </button>
-          ) : (
-            <button
-              onClick={() => setShowLoginModal(true)}
-              className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md text-sm mr-3 login-button"
-            >
-              Login
-            </button>
-          )}
-          <button
-            className="text-green-700 text-2xl login-button"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+      <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+        <div className="container-fluid px-3 px-md-4 px-lg-5">
+          {/* Logo */}
+          <a 
+            className="navbar-brand cursor-pointer" 
+            onClick={() => navigate('/')}
           >
-            {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
-          </button>
-        </div>
+            <img 
+              src="/logo/hicap-logo.png" 
+              alt="HiCap Logo" 
+              className="img-fluid"
+            />
+          </a>
 
-        <nav
-          ref={navRef}
-          className="hidden md:flex gap-4 lg:gap-6 items-center relative"
-          onMouseLeave={() => setShowCoursesMenu(false)}
-        >
-          {baseMenuItems.map((item, idx) =>
-            item.isMegaMenu ? (
-              <div
-                key={idx}
-                className="relative"
-                onMouseEnter={() => setShowCoursesMenu(true)}
-              >
-                <div className="inline-flex items-center gap-1">
-                  <span
-                    ref={coursesBtnRef}
-                    className={`cursor-pointer font-medium hover:text-green-700 flex items-center ${location.pathname === item.path ? 'text-green-700' : ''
-                      }`}
-                  >
-                    Courses <FaChevronDown className="ml-1 text-xs" />
-                  </span>
-                </div>
-                {showCoursesMenu && <MegaMenu />}
-              </div>
-            ) : (
-              <span
-                key={idx}
-                className={`cursor-pointer font-medium hover:text-green-700 whitespace-nowrap ${location.pathname === item.path ? 'text-green-700' : ''
-                  }`}
-                onClick={() => handleNavigate(item.path)}
-              >
-                {item.label}
-              </span>
-            )
-          )}
-
-          {isLoggedIn ? (
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm ml-4"
-            >
-              Logout
-            </button>
-          ) : (
+          {/* Mobile Navigation */}
+          <div className="d-lg-none d-flex align-items-center gap-2">
             <button
               onClick={() => setShowLoginModal(true)}
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm ml-4 login-button"
+              className="btn btn-success btn-sm login-button"
             >
               Login
             </button>
-          )}
-        </nav>
+            <button
+              className="btn btn-outline-success p-2 login-button"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle navigation"
+            >
+              {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+            </button>
+          </div>
 
-        {isMobileMenuOpen && (
-          <div className="md:hidden bg-white shadow-md px-4 py-4 space-y-4 border-t absolute top-full left-0 right-0 max-h-[80vh] overflow-y-auto">
-            {baseMenuItems.map((item, idx) =>
+          {/* Desktop Navigation */}
+          <div
+            ref={navRef}
+            className="d-none d-lg-flex align-items-center gap-3 position-relative"
+            onMouseLeave={() => setShowCoursesMenu(false)}
+          >
+            {menuItems.map((item, idx) =>
               item.isMegaMenu ? (
-                <div key={idx} className="mb-3">
-                  <div
-                    className="flex items-center justify-between font-semibold text-green-700 mb-1 cursor-pointer"
-                    onClick={() => setShowCoursesMenu(!showCoursesMenu)}
-                  >
-                    <span>Courses</span>
-                    <FaChevronDown className={`transition-transform ${showCoursesMenu ? 'rotate-180' : ''}`} />
-                  </div>
-                  {showCoursesMenu && <MobileMegaMenu />}
-                </div>
-              ) : (
                 <div
                   key={idx}
-                  className={`text-sm cursor-pointer hover:text-green-700 ${location.pathname === item.path ? 'text-green-700' : ''
+                  className="position-relative"
+                  onMouseEnter={() => setShowCoursesMenu(true)}
+                >
+                  <span
+                    ref={coursesBtnRef}
+                    className={`nav-link cursor-pointer d-flex align-items-center px-3 py-2 rounded ${
+                      location.pathname === item.path ? 'text-success bg-success-subtle' : ''
                     }`}
+                  >
+                    Courses <FaChevronDown className="ms-1 small" />
+                  </span>
+                  {showCoursesMenu && <MegaMenu />}
+                </div>
+              ) : (
+                <span
+                  key={idx}
+                  className={`nav-link cursor-pointer px-3 py-2 rounded ${
+                    location.pathname === item.path ? 'text-success bg-success-subtle' : ''
+                  }`}
                   onClick={() => handleNavigate(item.path)}
                 >
                   {item.label}
-                </div>
+                </span>
               )
             )}
-            {isLoggedIn ? (
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md text-sm w-full"
-              >
-                Logout
-              </button>
-            ) : (
-              <button
-                onClick={() => setShowLoginModal(true)}
-                className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md text-sm w-full login-button"
-              >
-                Login
-              </button>
-            )}
-          </div>
-        )}
-      </div>
 
+            <button
+              onClick={() => setShowLoginModal(true)}
+              className="btn btn-success ms-3 login-button"
+            >
+              Login
+            </button>
+          </div>
+
+          {/* Mobile Menu Collapse */}
+          {isMobileMenuOpen && (
+            <div className="d-lg-none position-fixed bg-white shadow-lg border-top w-100 mobile-menu" 
+                 style={{ top: '70px', left: 0, right: 0, zIndex: 1040 }}>
+              <div className="p-3">
+                {menuItems.map((item, idx) =>
+                  item.isMegaMenu ? (
+                    <div key={idx} className="mb-3">
+                      <div
+                        className="d-flex justify-content-between align-items-center fw-semibold text-success mb-2 p-2 rounded cursor-pointer hover-bg-light"
+                        onClick={() => setShowCoursesMenu(!showCoursesMenu)}
+                      >
+                        <span>Courses</span>
+                        <FaChevronDown className={`small transition ${showCoursesMenu ? 'rotate-180' : ''}`} />
+                      </div>
+                      {showCoursesMenu && <MobileMegaMenu />}
+                    </div>
+                  ) : (
+                    <div
+                      key={idx}
+                      className={`nav-link cursor-pointer p-2 rounded mb-2 ${
+                        location.pathname === item.path ? 'text-success bg-success-subtle' : ''
+                      }`}
+                      onClick={() => handleNavigate(item.path)}
+                    >
+                      {item.label}
+                    </div>
+                  )
+                )}
+                <button
+                  onClick={() => setShowLoginModal(true)}
+                  className="btn btn-success w-100 mt-3 login-button"
+                >
+                  Login
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </nav>
+
+      {/* Login Modal */}
       {showLoginModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="modal-backdrop position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center p-3" 
+             style={{ backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', zIndex: 1055 }}>
           <div
             ref={modalRef}
-            className="bg-white w-full max-w-md rounded-xl shadow-xl p-6 animate-fadeIn"
+            className="bg-white rounded-3 shadow-lg p-4 w-100 fade-in"
+            style={{ maxWidth: '400px' }}
           >
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-semibold text-green-700">Login</h3>
+            <div className="d-flex justify-content-between align-items-center mb-4">
+              <h4 className="text-success mb-0">Login</h4>
               <button
                 onClick={() => setShowLoginModal(false)}
-                className="text-gray-500 hover:text-gray-800 transition"
-              >
-                <FaTimes className="text-xl" />
-              </button>
+                className="btn-close"
+                aria-label="Close"
+              ></button>
             </div>
 
-            <form onSubmit={handleLoginSubmit} className="space-y-5">
+            <form onSubmit={handleLoginSubmit}>
               {loginError && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md text-sm">
+                <div className="alert alert-danger small">
                   {loginError}
                 </div>
               )}
 
-              <div className="relative">
-                <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
-                  <FaPhone />
-                </span>
-                <input
-                  type="tel"
-                  name="phoneNumber"
-                  value={loginData.phoneNumber}
-                  onChange={handleLoginChange}
-                  placeholder="Phone Number"
-                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
-                  required
-                />
+              <div className="mb-3">
+                <div className="input-group-icon">
+                  <input
+                    type="tel"
+                    name="phoneNumber"
+                    value={loginData.phoneNumber}
+                    onChange={handleLoginChange}
+                    placeholder="Phone Number"
+                    className="form-control"
+                    required
+                  />
+                  <FaPhone className="input-icon" />
+                </div>
               </div>
 
-              <div className="relative">
-                <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
-                  <FaLock />
-                </span>
-                <input
-                  type="password"
-                  name="password"
-                  value={loginData.password}
-                  onChange={handleLoginChange}
-                  placeholder="Password"
-                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
-                  required
-                />
+              <div className="mb-4">
+                <div className="input-group-icon">
+                  <input
+                    type="password"
+                    name="password"
+                    value={loginData.password}
+                    onChange={handleLoginChange}
+                    placeholder="Password"
+                    className="form-control"
+                    required
+                  />
+                  <FaLock className="input-icon" />
+                </div>
               </div>
 
               <button
                 type="submit"
                 disabled={isLoggingIn}
-                className={`w-full py-2 px-4 rounded-md font-medium text-white transition duration-200 ease-in-out flex items-center justify-center ${isLoggingIn
-                    ? 'bg-green-400 cursor-not-allowed'
-                    : 'bg-green-600 hover:bg-green-700'
-                  }`}
+                className={`btn w-100 d-flex align-items-center justify-content-center ${
+                  isLoggingIn ? 'btn-secondary' : 'btn-success'
+                }`}
               >
                 {isLoggingIn ? (
                   <>
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
+                    <div className="spinner-border spinner-border-sm me-2" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
                     Logging in...
                   </>
                 ) : (
@@ -530,7 +552,290 @@ const Header = () => {
           </div>
         </div>
       )}
-    </header>
+    </>
+  );
+};
+
+// User Header Component (for logged-in users)
+const UserHeader = ({ user, onLogout }) => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showMobileUserMenu, setShowMobileUserMenu] = useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const userMenuRef = useRef();
+  const mobileUserMenuRef = useRef();
+
+  const dashboardMenuItems = [
+    { label: 'Dashboard', path: '/dashboard', icon: FaUserCircle, shortLabel: 'Dashboard' },
+    { label: 'Interviews', path: '/dashboard/interviews', icon: FaQuestionCircle, shortLabel: 'Interviews' },
+    { label: 'Live Classes', path: '/dashboard/live-classes', icon: FaVideo, shortLabel: 'Live' },
+    { label: 'Course Module', path: '/dashboard/course-module', icon: FaBook, shortLabel: 'Courses' },
+    { label: 'Doubt Session', path: '/dashboard/doubt-session', icon: FaQuestionCircle, shortLabel: 'Doubts' },
+    { label: 'Certificate', path: '/dashboard/certificate', icon: FaCertificate, shortLabel: 'Cert' },
+  ];
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setShowUserMenu(false);
+      }
+      if (mobileUserMenuRef.current && !mobileUserMenuRef.current.contains(e.target)) {
+        setShowMobileUserMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleNavigate = (path) => {
+    navigate(path);
+    setIsMobileMenuOpen(false);
+    setShowUserMenu(false);
+    setShowMobileUserMenu(false);
+  };
+
+  return (
+    <>
+      <style jsx>{`
+        .cursor-pointer { cursor: pointer; }
+        .navbar-brand img { 
+          height: 40px;
+          transition: all 0.3s ease;
+        }
+        .user-menu {
+          min-width: 200px;
+        }
+        .user-info {
+          max-width: 120px;
+        }
+        .mobile-user-menu {
+          max-height: calc(100vh - 70px);
+          overflow-y: auto;
+        }
+        .nav-item {
+          transition: all 0.2s ease;
+        }
+        .nav-item:hover {
+          background-color: var(--bs-light);
+        }
+        @media (min-width: 576px) {
+          .navbar-brand img { height: 45px; }
+        }
+        @media (min-width: 768px) {
+          .navbar-brand img { height: 50px; }
+        }
+        @media (min-width: 992px) {
+          .navbar-brand img { height: 56px; }
+        }
+        .rotate-180 {
+          transform: rotate(180deg);
+          transition: transform 0.3s ease;
+        }
+      `}</style>
+
+      <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+        <div className="container-fluid px-3 px-md-4 px-lg-5">
+          {/* Logo */}
+          <a 
+            className="navbar-brand cursor-pointer" 
+            onClick={() => navigate('/dashboard')}
+          >
+            <img 
+              src="/logo/hicap-logo.png" 
+              alt="HiCap Logo" 
+              className="img-fluid"
+            />
+          </a>
+
+          {/* Mobile Navigation */}
+          <div className="d-lg-none d-flex align-items-center gap-2">
+            <div className="dropdown" ref={mobileUserMenuRef}>
+              <button
+                className="btn btn-outline-success p-2 d-flex align-items-center gap-1"
+                type="button"
+                onClick={() => setShowMobileUserMenu(!showMobileUserMenu)}
+              >
+                <FaUserCircle />
+                <FaChevronDown className={`small ${showMobileUserMenu ? 'rotate-180' : ''}`} />
+              </button>
+              {showMobileUserMenu && (
+                <div className="dropdown-menu show position-absolute end-0 mt-2 user-menu">
+                  <div className="px-3 py-2 bg-light border-bottom">
+                    <div className="fw-medium small text-truncate">{user?.name || 'User'}</div>
+                    <div className="text-muted small text-truncate">{user?.email || user?.phone}</div>
+                  </div>
+                  {dashboardMenuItems.map((item, idx) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <button
+                        key={idx}
+                        className={`dropdown-item d-flex align-items-center gap-2 ${
+                          location.pathname === item.path ? 'text-success bg-success-subtle' : ''
+                        }`}
+                        onClick={() => handleNavigate(item.path)}
+                      >
+                        <IconComponent className="small" />
+                        <span>{item.label}</span>
+                      </button>
+                    );
+                  })}
+                  <div className="dropdown-divider"></div>
+                  <button
+                    className="dropdown-item d-flex align-items-center gap-2 text-danger"
+                    onClick={onLogout}
+                  >
+                    <FaSignOutAlt className="small" />
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+            <button
+              className="btn btn-outline-success p-2"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle navigation"
+            >
+              {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+            </button>
+          </div>
+
+          {/* Desktop Navigation */}
+          <nav className="d-none d-lg-flex align-items-center gap-2">
+            {dashboardMenuItems.map((item, idx) => {
+              const IconComponent = item.icon;
+              return (
+                <button
+                  key={idx}
+                  className={`btn btn-link text-decoration-none d-flex align-items-center gap-2 px-3 py-2 rounded ${
+                    location.pathname === item.path 
+                      ? 'text-success bg-success-subtle' 
+                      : 'text-muted'
+                  }`}
+                  onClick={() => handleNavigate(item.path)}
+                >
+                  <IconComponent className="small" />
+                  <span className="d-none d-xl-inline">{item.label}</span>
+                  <span className="d-xl-none">{item.shortLabel}</span>
+                </button>
+              );
+            })}
+
+            <div className="dropdown ms-3" ref={userMenuRef}>
+              <button
+                className="btn btn-outline-success d-flex align-items-center gap-2 px-3 py-2"
+                type="button"
+                onClick={() => setShowUserMenu(!showUserMenu)}
+              >
+                <FaUserCircle />
+                <div className="d-none d-xl-block text-start user-info">
+                  <div className="small fw-medium text-truncate">{user?.name || 'Account'}</div>
+                  <div className="small text-muted text-truncate">{user?.email || user?.phone}</div>
+                </div>
+                <FaChevronDown className={`small ${showUserMenu ? 'rotate-180' : ''}`} />
+              </button>
+              {showUserMenu && (
+                <div className="dropdown-menu show position-absolute end-0 mt-2 user-menu">
+                  <div className="px-3 py-2 bg-light border-bottom">
+                    <div className="fw-medium small text-truncate">{user?.name || 'User'}</div>
+                    <div className="text-muted small text-truncate">{user?.email || user?.phone || 'Welcome!'}</div>
+                  </div>
+                  <div className="dropdown-divider"></div>
+                  <button
+                    className="dropdown-item d-flex align-items-center gap-2 text-danger"
+                    onClick={onLogout}
+                  >
+                    <FaSignOutAlt className="small" />
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
+          </nav>
+
+          {/* Mobile Menu Overlay */}
+          {isMobileMenuOpen && (
+            <div className="d-lg-none position-fixed bg-white w-100 mobile-user-menu" 
+                 style={{ top: '70px', left: 0, right: 0, zIndex: 1040 }}>
+              <div className="p-4">
+                <div className="d-flex align-items-center gap-3 p-3 bg-success-subtle rounded mb-4">
+                  <FaUserCircle className="text-success" style={{ fontSize: '2rem' }} />
+                  <div className="flex-grow-1 overflow-hidden">
+                    <div className="fw-medium text-truncate">{user?.name || 'User'}</div>
+                    <div className="text-muted small text-truncate">{user?.email || user?.phone}</div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h5 className="fw-bold border-bottom pb-2 mb-3">My Dashboard</h5>
+                  {dashboardMenuItems.map((item, idx) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <button
+                        key={idx}
+                        className={`btn w-100 text-start d-flex align-items-center gap-3 p-3 mb-2 rounded ${
+                          location.pathname === item.path
+                            ? 'btn-success-subtle text-success border-start border-success border-4'
+                            : 'btn-light'
+                        }`}
+                        onClick={() => handleNavigate(item.path)}
+                      >
+                        <IconComponent />
+                        <span className="fw-medium">{item.label}</span>
+                      </button>
+                    );
+                  })}
+                  
+                  <button
+                    className="btn btn-outline-danger w-100 d-flex align-items-center gap-3 p-3 mt-4"
+                    onClick={onLogout}
+                  >
+                    <FaSignOutAlt />
+                    <span className="fw-medium">Logout</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </nav>
+    </>
+  );
+};
+
+// Header Wrapper Component
+const Header = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const userData = JSON.parse(sessionStorage.getItem('user'));
+    if (userData) {
+      setIsLoggedIn(true);
+      setUser(userData);
+    }
+  }, []);
+
+  const handleLogin = (userData) => {
+    setIsLoggedIn(true);
+    setUser(userData);
+    sessionStorage.setItem('user', JSON.stringify(userData));
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUser(null);
+    sessionStorage.removeItem('user');
+    navigate('/');
+  };
+
+  return isLoggedIn ? (
+    <UserHeader user={user} onLogout={handleLogout} />
+  ) : (
+    <GuestHeader onLogin={handleLogin} />
   );
 };
 

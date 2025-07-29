@@ -13,7 +13,7 @@ const Footer = () => {
           {/* Left Section - Company Info */}
           <div className="col-lg-4">
             <div className="pe-lg-4">
-              <h2 className="display-6 fw-bold mb-4">YourCompany</h2>
+              <h2 className="display-6 fw-bold mb-4"><img src='/logo/hicap-logo.png' className='img-fluid'/></h2>
               <p className="text-gray-300 mb-4 mb-lg-5">
                 Innovating your future with cutting-edge technology and tailored digital solutions.
               </p>

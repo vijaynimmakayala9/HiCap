@@ -1,27 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Header from "./Header";
-import Hero from "./Hero";
-import AboutUs from "./AboutUs";
 import IndustryExperts from "./IndustryExperts";
-import AvailableCourses from "./AvailableCourses";
-import SuccessStories from "./SuccessStories";
 import Footer from "./Footer";
-import EnrolledCourses from "./EnrolledCourses";
-import RecommendedCourses from "./RecommendedCourses";
-import TopPerformers from "./TopPerformers";
-import YourStatistics from "./YourStatistics";
-import LiveClasses from "./LiveClasses";
-import CompletedClasses from "./CompletedClasses";
-import Interviews from "./Interviews";
 import Course from "../components/course";
 import CourseAndFeatures from "../components/CourseSection";
-import MagnitiaCourses from "../components/magnitiaCourses";
 import Features from "../components/Features";
 import DifferSection from "../components/differSection";
 import { useNavigate } from "react-router-dom";
 import Dashboard from "../components/Dashboard";
 import axios from "axios";
 import Reviews from "../components/Reviews";
+import MagnitiaCourses from '../components/magnitiaCourses'
 
 const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -63,7 +52,7 @@ const HomePage = () => {
       {!isLoggedIn ? (
         <>
           <CourseAndFeatures />
-          <MagnitiaCourses />
+          <MagnitiaCourses/>
           <Features />
           <Course />
           <DifferSection />

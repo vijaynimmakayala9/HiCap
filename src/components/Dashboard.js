@@ -6,8 +6,8 @@ import CompletedClasses from '../Pages/CompletedClasses';
 import RecommendedCourses from '../Pages/RecommendedCourses';
 import TopPerformers from '../Pages/TopPerformers';
 import YourStatistics from '../Pages/YourStatistics';
-import Header from "../Pages/Header";
 import Footer from "../Pages/Footer";
+import Header from "../Pages/Header";
 
 
 const Dashboard = () => {
@@ -22,6 +22,7 @@ const Dashboard = () => {
                 <RecommendedCourses />
                 <TopPerformers />
             </div>
+            <Footer/>
         </>
     );
 };

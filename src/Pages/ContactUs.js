@@ -226,15 +226,15 @@ const ContactUs = () => {
                   </p>
                   <p className="text-gray-800">
                     <strong>Email :</strong>{' '}
-                    <a href="mailto:info@magnitia.com" className="text-green-700 font-semibold">
-                      info@magnitia.com
+                    <a href="mailto:info@Magnitia.com" className="text-green-700 font-semibold">
+                      info@Magnitia.com
                     </a>
                   </p>
                 </div>
                 <div className="w-full h-[300px]">
                   <iframe
                     title="Magnitia IT Map"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.3433657893185!2d78.39761891418862!3d17.44246400523407!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9156ed0e6b8f%3A0x8ac1071d0275821f!2sMAGNITIA%20-%20IT%20Training%20Institute!5e0!3m2!1sen!2sin!4v1659340731616!5m2!1sen!2sin"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.3433657893185!2d78.39761891418862!3d17.44246400523407!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9156ed0e6b8f%3A0x8ac1071d0275821f!2sMagnitia%20-%20IT%20Training%20Institute!5e0!3m2!1sen!2sin!4v1659340731616!5m2!1sen!2sin"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
