@@ -1,196 +1,236 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import CourseEnquiryModal from './EnrollModal';
+import React, { useState, useEffect, useRef } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const CourseAndFeatures = () => {
-  const [showEnquiryModal, setShowEnquiryModal] = useState(false);
-  const [courseData, setCourseData] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const carouselRef = useRef(null);
+  const intervalRef = useRef(null);
 
-  const cardHoverStyle = {
-    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+  const courses = [
+    {
+      title: "“IT TRAINING AND SKILL DEVELOPMENT",
+      description: "This IT Fundamentals Training Course provides a comprehensive introduction to the core concepts of Information Technology. Designed for beginners and professionals seeking foundational knowledge, the course covers computer hardware, software, networking, databases, cybersecurity, and cloud computing.Through a mix of theoretical instruction and hands- on practice, participants will learn how IT systems work together to support business operations.",
+      image: "/1.png",
+      buttonText: "Enroll Now",
+      // features: [
+      //   "12-week intensive program",
+      //   "Hands-on projects",
+      //   "Career support"
+      // ]
+    },
+    {
+      title: "IT TRAINING AND SKILL DEVELOPMENT",
+      description: "This IT Fundamentals Training Course provides a comprehensive introduction to the core concepts of Information Technology. Designed for beginners and professionals seeking foundational knowledge, the course covers computer hardware, software, networking, databases, cybersecurity, and cloud computing.Through a mix of theoretical instruction and hands- on practice, participants will learn how IT systems work together to support business operations.",
+      image: "/2.png",
+      buttonText: "Enroll Now",
+      // features: [
+      //   "8-week course",
+      //   "Real-world datasets",
+      //   "Python focused"
+      // ]
+    },
+    {
+      title: "IT TRAINING AND SKILL DEVELOPMENT",
+      description: "This IT Fundamentals Training Course provides a comprehensive introduction to the core concepts of Information Technology. Designed for beginners and professionals seeking foundational knowledge, the course covers computer hardware, software, networking, databases, cybersecurity, and cloud computing.Through a mix of theoretical instruction and hands- on practice, participants will learn how IT systems work together to support business operations.",
+      image: "/3.png",
+      buttonText: "Enroll Now",
+      // features: [
+      //   "Project-based learning",
+      //   "Industry tools",
+      //   "Portfolio building"
+      // ]
+    }
+  ];
+
+  // Auto-scroll functionality
+  const startAutoScroll = () => {
+    intervalRef.current = setInterval(() => {
+      if (!isPaused) {
+        const nextIndex = (activeIndex + 1) % courses.length;
+        goToSlide(nextIndex);
+      }
+    }, 3000); // Change slide every 3 seconds
   };
 
-  const handleMouseEnter = (e) => {
-    e.currentTarget.style.transform = 'translateY(-5px)';
-    e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.15)';
+  const stopAutoScroll = () => {
+    clearInterval(intervalRef.current);
   };
 
-  const handleMouseLeave = (e) => {
-    e.currentTarget.style.transform = 'none';
-    e.currentTarget.style.boxShadow = '0 .5rem 1rem rgba(0,0,0,.15)';
+  const goToSlide = (index) => {
+    setActiveIndex(index);
+    if (carouselRef.current) {
+      const carousel = new window.bootstrap.Carousel(carouselRef.current);
+      carousel.to(index);
+    }
   };
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const res = await axios.get('https://hicap-backend-4rat.onrender.com/api/home');
-        setCourseData(res.data.data || []);
-      } catch (error) {
-        console.error('Error fetching course data:', error);
-      }
+    // Initialize auto-scroll
+    startAutoScroll();
+
+    // Initialize Bootstrap carousel
+    if (carouselRef.current) {
+      new window.bootstrap.Carousel(carouselRef.current, {
+        interval: false, // We handle the interval ourselves
+        wrap: true
+      });
+    }
+
+    return () => {
+      stopAutoScroll();
     };
-    fetchCourses();
   }, []);
 
+  // Reset timer when activeIndex changes
+  useEffect(() => {
+    stopAutoScroll();
+    if (!isPaused) {
+      startAutoScroll();
+    }
+  }, [activeIndex, isPaused]);
+
+  const handleMouseEnter = () => {
+    setIsPaused(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsPaused(false);
+  };
+
   return (
-    <>
-      <div>
-        {/* ===== Course Section ===== */}
-        <div className="container py-5 mt-5">
-          <div className="row justify-content-center align-items-center">
-            {courseData.map((course, index) => (
-              <div className="col-md-5 text-center mb-4" key={course._id}>
-                {index === 0 ? (
-                  <>
-                    <div
-                      className="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
-                      style={{
-                        width: '300px',
-                        height: '300px',
-                        background: 'conic-gradient(#9c27b0, #673ab7, #3f51b5)',
-                        padding: '12px',
-                      }}
-                    >
-                      <img
-                        src={course.image}
-                        alt={course.name}
-                        className="img-fluid rounded-circle"
-                        style={{
-                          width: '260px',
-                          height: '260px',
-                          objectFit: 'cover',
-                          border: '6px solid #fff',
-                        }}
-                      />
+    <section className="py-5 mt-5" >
+      <div className="container">
+        {/* <div className="text-center mb-5">
+          <h2 className="display-5 fw-bold">Our Featured Courses</h2>
+          <p className="text-muted lead">Learn from industry experts with real-world experience</p>
+        </div> */}
+
+        <div
+          id="courseCarousel"
+          className="carousel slide"
+          ref={carouselRef}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <div className="carousel-inner">
+            {courses.map((course, index) => (
+              <div key={index} className={`carousel-item ${index === activeIndex ? 'active' : ''}`}>
+                <div className="row g-4 align-items-center">
+                  <div className="col-lg-6">
+                    <img
+                      src={course.image}
+                      alt={course.title}
+                      className="img-fluid rounded-3 shadow-lg"
+                      style={{ height: '400px', width: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div className="col-lg-6">
+                    <div className="ps-lg-4">
+                      <h3 className="fw-bold mb-3 display-6" >IT <span style={{ color: "#064C89"}} >TRAINING</span> AND <span style={{ color: "#064C89"}} >SKILL</span> DEVELOPMENT”</h3>
+                      <p className=" mb-4 ">{course.description}</p>
+
+                      {/* <ul className="mb-4">
+                        {course.features.map((feature, i) => (
+                          <li key={i} className="mb-2">
+                            <i className="bi bi-check-circle-fill text-primary me-2"></i>
+                            {feature}
+                          </li>
+                        ))}
+                      </ul> */}
+
+                      <div className="d-flex justify-content-lg-end justify-content-start">
+                        <button className=" gradient-button btn-md px-4 py-3 rounded-pill fw-bold" style={{width: "200px"}}>
+                          {course.buttonText}
+                        </button>
+                      </div>
+
                     </div>
-                    <h4>
-                      <span className="text-success fw-bold">Courses</span><br />
-                      <span className="text-warning fw-bold">{course.name}</span>
-                    </h4>
-                  </>
-                ) : (
-                  <>
-                    <h4>
-                      <span className="text-warning fw-bold">Courses</span><br />
-                      <span className="text-success fw-bold">{course.name}</span>
-                    </h4>
-                    <div
-                      className="rounded-circle d-flex align-items-center justify-content-center mx-auto mt-3"
-                      style={{
-                        width: '300px',
-                        height: '300px',
-                        background: 'conic-gradient(#03a9f4, #3f51b5, #ff5722)',
-                        padding: '12px',
-                      }}
-                    >
-                      <img
-                        src={course.image}
-                        alt={course.name}
-                        className="img-fluid rounded-circle"
-                        style={{
-                          width: '260px',
-                          height: '260px',
-                          objectFit: 'cover',
-                          border: '6px solid #fff',
-                        }}
-                      />
-                    </div>
-                  </>
-                )}
+                  </div>
+                </div>
               </div>
             ))}
+          </div>
 
-            {/* Enroll Now Button */}
-            <div className="text-center mt-4">
+          {/* <div className="d-flex justify-content-center mt-4">
+            {courses.map((_, index) => (
               <button
-                className="btn btn-lg fw-bold px-5 py-3 text-white"
-                style={{
-                  backgroundColor: '#9c27b0',
-                  borderRadius: '50px',
-                  transition: 'all 0.3s ease',
-                }}
-                onClick={() => setShowEnquiryModal(true)}
-                onMouseOver={(e) => (e.target.style.backgroundColor = '#7b1fa2')}
-                onMouseOut={(e) => (e.target.style.backgroundColor = '#9c27b0')}
+                key={index}
+                type="button"
+                onClick={() => goToSlide(index)}
+                className={`mx-1 p-0 border-0 bg-transparent ${index === activeIndex ? 'active' : ''}`}
+                aria-label={`Slide ${index + 1}`}
               >
-                Enroll Now
+                <div 
+                  style={{
+                    width: index === activeIndex ? '24px' : '12px',
+                    height: '12px',
+                    borderRadius: '6px',
+                    backgroundColor: index === activeIndex ? '#0d6efd' : '#adb5bd',
+                    transition: 'all 0.3s ease'
+                  }}
+                ></div>
               </button>
-            </div>
-          </div>
-        </div>
+            ))}
+          </div> */}
 
-        {/* ===== Feature Cards Section ===== */}
-        <div className="container py-5">
-          <div className="row text-center">
-            {/* Practical Training */}
-            <div className="col-md-4 mb-4">
-              <div
-                className="card h-100 shadow-sm"
-                style={cardHoverStyle}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                <div className="card-body">
-                  <div className="mb-3">
-                    <i className="bi bi-tools fs-1 text-primary"></i>
-                  </div>
-                  <h5 className="card-title fw-bold">Practical Training</h5>
-                  <p className="card-text">
-                    Hands-on experience with real-world tools and projects to build job-ready skills.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Best Simulations */}
-            <div className="col-md-4 mb-4">
-              <div
-                className="card h-100 shadow-sm"
-                style={cardHoverStyle}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                <div className="card-body">
-                  <div className="mb-3">
-                    <i className="bi bi-cpu fs-1 text-success"></i>
-                  </div>
-                  <h5 className="card-title fw-bold">Best Simulations</h5>
-                  <p className="card-text">
-                    Industry-grade simulations that mirror actual job environments for better learning.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Placement Assistance */}
-            <div className="col-md-4 mb-4">
-              <div
-                className="card h-100 shadow-sm"
-                style={cardHoverStyle}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                <div className="card-body">
-                  <div className="mb-3">
-                    <i className="bi bi-briefcase-fill fs-1 text-warning"></i>
-                  </div>
-                  <h5 className="card-title fw-bold">Placement Assistance</h5>
-                  <p className="card-text">
-                    Resume building, mock interviews, and job referral support to launch your career.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Controls */}
+          {/* <button 
+            className="carousel-control-prev" 
+            type="button" 
+            onClick={() => goToSlide((activeIndex - 1 + courses.length) % courses.length)}
+          >
+            <span className="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+            <span className="visually-hidden">Previous</span>
+          </button>
+          <button 
+            className="carousel-control-next" 
+            type="button" 
+            onClick={() => goToSlide((activeIndex + 1) % courses.length)}
+          >
+            <span className="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+            <span className="visually-hidden">Next</span>
+          </button> */}
         </div>
       </div>
 
-      {/* Modal */}
-      <CourseEnquiryModal
-        show={showEnquiryModal}
-        handleClose={() => setShowEnquiryModal(false)}
-      />
-    </>
+
+
+      {/* Custom CSS */}
+      <style jsx>{`
+        .carousel-control-prev,
+        .carousel-control-next {
+          width: auto;
+          opacity: 1;
+        }
+        .carousel-control-prev {
+          left: -50px;
+        }
+        .carousel-control-next {
+          right: -50px;
+        }
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+          background-size: 1.2rem;
+        }
+        .btn-primary {
+          background: linear-gradient(45deg, #0d6efd, #0b5ed7);
+          border: none;
+          box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+        }
+        .btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+          transition: all 0.3s ease;
+        }
+        li {
+          font-size: 1.1rem;
+        }
+        .carousel-item {
+          transition: transform 0.6s ease-in-out;
+        }
+      `}</style>
+    </section>
   );
 };
 

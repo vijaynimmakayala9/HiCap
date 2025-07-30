@@ -85,3 +85,27 @@
     flex: 0 0 100%;
   }
 }
+
+
+
+
+
+/*Gradient Button*/
+
+.gradient-button {
+  background: linear-gradient(45deg ,#064C89, #0077B5);
+  color: white !important;
+}
+.gradient-text {
+  color: #064c89 !important;;
+}
+
+/* Course ENroll button*/
+
+.enroll-hover:hover {
+  background-color: #064c89; /* Bootstrap dark */
+  color: #fff;
+  border-color: #212529;
+  transform: scale(1.05);
+  transition: all 0.2s ease-in-out;
+}

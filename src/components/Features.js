@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Row, Col, Card } from 'react-bootstrap';
+
+const iconList = [
+  'bi-laptop', 'bi-code-slash', 'bi-globe', 'bi-lightbulb',
+  'bi-bar-chart', 'bi-people', 'bi-cpu', 'bi-book'
+];
 
 const Features = () => {
   const [hoveredCard, setHoveredCard] = useState(null);
-  const [hoveredIcon, setHoveredIcon] = useState(null);
   const [features, setFeatures] = useState([]);
 
   useEffect(() => {
@@ -21,69 +24,77 @@ const Features = () => {
     fetchFeatures();
   }, []);
 
-  const handleCardHover = (index, isHovering) => {
-    setHoveredCard(isHovering ? index : null);
-  };
-
-  const handleIconHover = (index, isHovering) => {
-    setHoveredIcon(isHovering ? index : null);
-  };
-
   return (
-    <Container className="py-5 my-4">
-      <Row className="justify-content-center text-center mb-4">
-        <Col lg={8}>
-          <h4 className="text-secondary mb-3">
-            Some great features of <span className="text-success fw-bold">Magnitia</span>
-          </h4>
+    <div className="container-fluid py-5 my-4 bg-light">
+      <div className="row justify-content-center text-center mb-4">
+        <div className="col-lg-8">
+          <div className="d-inline-block position-relative mb-3">
+            <h2 className="fw-bold text-dark mb-1">
+              Some great features of <span style={{ color: "#064C89" }}>TECHSTERKER</span>
+            </h2>
+            <div
+              style={{
+                width: "100px",
+                height: "5px",
+                backgroundColor: "#064C89",
+                borderRadius: "999px",
+                position: "absolute",
+                left: "0",
+                bottom: "-6px",
+              }}
+            ></div>
+          </div>
           <p className="text-muted mb-0">
             Advanced training programs on leading IT Technologies offered in multiple formats that offer flexibility in learning
             <br className="d-none d-md-block" />
-            <span className="fw-semibold">(Classroom / Live online / Recorded - Weekdays / Weekends)</span>
+            <strong>(Classroom / Live online / Recorded - Weekdays / Weekends)</strong>
           </p>
-        </Col>
-      </Row>
+        </div>
+      </div>
 
-      <Row className="g-4">
+      <div className="row g-4 my-4 p-4 bg-light rounded">
         {features.map((feature, index) => (
-          <Col key={feature._id} xs={12} sm={6} lg={3}>
-            <Card
-              className={`h-100 border-0 shadow-sm rounded-4 p-4 ${hoveredCard === index ? 'shadow-lg translate-top' : ''}`}
+          <div key={feature._id} className="col-12 col-sm-6 col-lg-3">
+            <div
+              className={`h-100 border-0 p-4 shadow-sm rounded-4 text-center bg-white position-relative overflow-hidden ${hoveredCard === index ? 'shadow-lg' : ''}`}
+              onMouseEnter={() => setHoveredCard(index)}
+              onMouseLeave={() => setHoveredCard(null)}
               style={{
                 transition: 'all 0.3s ease',
-                transform: hoveredCard === index ? 'translateY(-5px)' : 'none',
+                transform: hoveredCard === index ? 'translateY(-6px)' : 'none',
               }}
-              onMouseEnter={() => handleCardHover(index, true)}
-              onMouseLeave={() => handleCardHover(index, false)}
             >
-              <Card.Body className="text-center">
-                <div
-                  className={`d-flex align-items-center justify-content-center mx-auto mb-4 rounded-circle ${hoveredIcon === index ? 'bg-success bg-opacity-10 text-success' : 'bg-success bg-opacity-10 text-success'}`}
-                  style={{ width: '70px', height: '70px', transition: 'all 0.3s ease' }}
-                  onMouseEnter={() => handleIconHover(index, true)}
-                  onMouseLeave={() => handleIconHover(index, false)}
-                >
-                  <img
-                    src={feature.image}
-                    alt={feature.title}
-                    className="img-fluid rounded-circle"
-                    style={{
-                      width: '40px',
-                      height: '40px',
-                      objectFit: 'cover',
-                    }}
-                  />
-                </div>
-                <Card.Title className="fw-bold mb-3">{feature.title}</Card.Title>
-                <Card.Text className="text-muted small">
-                  {feature.content}
-                </Card.Text>
-              </Card.Body>
-            </Card>
-          </Col>
+              {/* Border top effect on hover */}
+              <div 
+                className={`position-absolute top-0 left-0 right-0 ${hoveredCard === index ? 'bg-primary' : ''}`}
+                style={{
+                  height: '4px',
+                  transition: 'all 0.3s ease',
+                  opacity: hoveredCard === index ? 1 : 0,
+                }}
+              ></div>
+              
+              <div
+                className={`d-flex align-items-center justify-content-center mx-auto mb-4 rounded-circle ${hoveredCard === index
+                    ? 'bg-primary text-white'
+                    : 'bg-primary bg-opacity-10 text-primary'
+                  }`}
+                style={{
+                  width: '70px',
+                  height: '70px',
+                  fontSize: '28px',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                <i className={`bi ${iconList[index % iconList.length]}`}></i>
+              </div>
+              <h5 className="fw-bold mb-3">{feature.title}</h5>
+              <p className="text-muted small">{feature.content}</p>
+            </div>
+          </div>
         ))}
-      </Row>
-    </Container>
+      </div>
+    </div>
   );
 };
 

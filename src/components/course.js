@@ -10,6 +10,7 @@ const Course = () => {
     const [showEnquiryModal, setShowEnquiryModal] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [hoveredCard, setHoveredCard] = useState(null);
 
     const toggleDescription = (id) => {
         setExpandedCourses((prev) => ({
@@ -62,19 +63,48 @@ const Course = () => {
     return (
         <section className="container py-5">
             <div className="mb-5 text-center">
-                <h2 className="fw-bold display-6">Popular Courses</h2>
-                <div className="bg-success mx-auto rounded-pill" style={{ width: '216px', height: '3px' }}></div>
+                <div className="d-inline-block position-relative mb-3">
+                    <h2 className="fw-bold display-6 mb-1">Recommended <span style={{ color: "#064C89" }}>Courses</span></h2>
+                    <div
+                        style={{
+                            width: "140px",
+                            height: "4px",
+                            backgroundColor: "#064C89",
+                            borderRadius: "999px",
+                            position: "absolute",
+                            left: "0",
+                            bottom: "-4px",
+                        }}
+                    ></div>
+                </div>
+                <p>Upskill yourself through classroom & online training with the latest technologies in the IT industry from the Best Software Training Institute in Hyderabad- TECHSTERKER</p>
             </div>
 
             <div className="row">
                 {courses.map(({ _id, name, duration, noOfLessons, rating, description, image, price }) => (
                     <div key={_id} className="col-md-6 col-lg-3 mb-4">
-                        <div className="card h-100 shadow-sm border-0 rounded-4">
+                        <div 
+                            className="card h-100 shadow-sm border-0 rounded-4 position-relative overflow-hidden"
+                            onMouseEnter={() => setHoveredCard(_id)}
+                            onMouseLeave={() => setHoveredCard(null)}
+                            style={{
+                                transition: 'all 0.3s ease',
+                                transform: hoveredCard === _id ? 'translateY(-6px)' : 'none',
+                            }}
+                        >
+                            {/* Border top effect on hover */}
+                            <div 
+                                className={`position-absolute top-0 left-0 right-0 ${hoveredCard === _id ? 'bg-primary' : ''}`}
+                                style={{
+                                    height: '4px',
+                                    transition: 'all 0.3s ease',
+                                    opacity: hoveredCard === _id ? 1 : 0,
+                                }}
+                            ></div>
+
                             <div
                                 style={{ cursor: 'pointer' }}
                                 onClick={() => handleCourseClick(_id)}
-                                onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-4px)')}
-                                onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
                             >
                                 <img
                                     src={image || 'https://via.placeholder.com/300x160?text=Course+Image'}
@@ -85,44 +115,45 @@ const Course = () => {
                             </div>
 
                             <div className="card-body d-flex flex-column">
-                                <h5 className="card-title fw-bold text-success">{name}</h5>
+                                <h5 className="card-title fw-bold"><span style={{ color: "#064C89" }}>{name}</span></h5>
                                 <p className="card-text text-muted" style={{ fontSize: '0.9rem' }}>
                                     {expandedCourses[_id] ? description : `${description?.substring(0, 100)}...`}
+                                    {description?.length > 100 && (
+                                        <button
+                                            className="btn btn-link text-primary p-0"
+                                            style={{ fontSize: '0.85rem' }}
+                                            onClick={() => toggleDescription(_id)}
+                                        >
+                                            {expandedCourses[_id] ? 'View Less' : 'View All'}
+                                        </button>
+                                    )}
                                 </p>
-                                {description?.length > 100 && (
-                                    <button
-                                        className="btn btn-link text-success p-0 mb-2"
-                                        style={{ fontSize: '0.85rem' }}
-                                        onClick={() => toggleDescription(_id)}
-                                    >
-                                        {expandedCourses[_id] ? 'View Less' : 'View All'}
-                                    </button>
-                                )}
 
-                                <div className="d-flex flex-wrap text-muted small mb-3 gap-3">
+                                <div className="d-flex justify-content-between flex-wrap text-muted small mb-3 gap-3">
                                     <div className="d-flex align-items-center">
-                                        <FaRegClock className="me-1" /> {duration || 'N/A'}
+                                        <FaRegClock className="me-1 text-primary" /> {duration || 'N/A'} Months
                                     </div>
                                     <div className="d-flex align-items-center">
-                                        <FaTasks className="me-1" /> {noOfLessons || 0} Lessons
-                                    </div>
-                                    <div className="d-flex align-items-center">
-                                        <FaStar className="me-1 text-warning" /> {rating || 0}/5
+                                        <FaTasks className="me-1 text-primary" /> {noOfLessons || 0} Lessons
                                     </div>
                                 </div>
 
                                 <div className="mt-auto d-flex justify-content-between align-items-center">
-                                    <span className="text-success fw-bold">${price || 'Free'}</span>
-                                    <button
-                                        className="btn btn-outline-primary btn-sm"
-                                        onClick={() => handleEnrollClick({ title: name, _id })}
-                                    >
-                                        Enroll
-                                    </button>
+                                    <span className="text-primary fw-bold">₹{price || 'Free'}</span>
+                                    <div className="d-flex align-items-center">
+                                        <FaStar className="me-1 text-warning" /> {rating || 4.5}/5
+                                    </div>
                                 </div>
+                                <br />
+                                <button
+                                    className="btn btn-outline-primary btn-sm"
+                                    onClick={() => handleEnrollClick({ title: name, _id })}
+                                >
+                                    Enroll Now
+                                </button>
 
                                 <button
-                                    className="btn btn-primary btn-sm mt-2 w-100"
+                                    className="btn gradient-button btn-sm mt-2 w-100"
                                     onClick={() => handleCourseClick(_id)}
                                 >
                                     View Details
@@ -133,18 +164,18 @@ const Course = () => {
                 ))}
             </div>
 
-            <div className="text-center mt-5">
+            <div className="text-center mt-2">
                 <button
-                    className="btn btn-outline-primary px-5 py-2 fw-semibold rounded-pill"
+                    className="btn gradient-button px-5 py-2 fw-semibold rounded-pill"
                     onClick={() => navigate('/courses')}
                 >
                     View All Courses
                 </button>
             </div>
 
-            <CourseEnquiryModal 
-                show={showEnquiryModal} 
-                handleClose={() => setShowEnquiryModal(false)} 
+            <CourseEnquiryModal
+                show={showEnquiryModal}
+                handleClose={() => setShowEnquiryModal(false)}
                 prefillCourse={selectedCourse?.title}
             />
         </section>

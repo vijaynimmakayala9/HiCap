@@ -25,36 +25,45 @@ const AboutMagnitia = () => {
         <div className="row align-items-center mb-4 mb-md-5 g-4">
           {/* Text Section */}
           <div className="col-md-6 order-md-1 order-2">
-            <h2 className="fw-bold text-uppercase mb-3 mb-md-4">
-              {/* {aboutData.title1 && (
-                <>
-                  {aboutData.title1.split("Magnitia").length > 1 ? (
-                    <>
-                      {aboutData.title1.split("Magnitia")[0]}
-                      <span className="text-success">Magnitia</span>
-                      {aboutData.title1.split("Magnitia")[1]}
-                    </>
-                  ) : (
-                    aboutData.title1
-                  )}
-                </>
-              )} */}About <span className="text-success">{aboutData.title1}</span> Institute
-            </h2>
-            <p className="text-muted">{aboutData.content1}</p>
+            <div className="position-relative mb-4">
+              <h2 className="fw-bold mb-3">
+                About <span style={{ color: "#064C89" }}>TECHSTERKER</span> Institute
+              </h2>
+              <div
+                style={{
+                  width: "150px",
+                  height: "4px",
+                  backgroundColor: "#064C89",
+                  borderRadius: "999px",
+                  position: "absolute",
+                  left: "0",
+                  bottom: "-8px",
+                }}
+              ></div>
+            </div>
+            <p className="text-muted mb-4">{aboutData.content1}</p>
+            
           </div>
 
           {/* Image Section */}
-          <div className="col-md-6 order-md-2 order-1 text-center">
-            <img
-              src={aboutData.image1}
-              alt="Welcome"
-              className="img-fluid rounded shadow-sm"
-              style={{ maxWidth: "100%", height: "auto" }}
-            />
+          <div className="col-md-6 order-md-2 order-1">
+            <div className="position-relative">
+              <img
+                src={aboutData.image1}
+                alt="About TECHSTERKER"
+                className="img-fluid rounded-4 shadow-sm w-100"
+                style={{ height: "auto", maxHeight: "400px", objectFit: "cover" }}
+              />
+              
+            </div>
           </div>
         </div>
       ) : (
-        <p className="text-center">Loading...</p>
+        <div className="text-center py-5">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
       )}
     </section>
   );

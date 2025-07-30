@@ -10,8 +10,10 @@ const MagnitiaCourses = () => {
     transition: 'transform 0.3s ease, box-shadow 0.3s ease',
     overflow: 'hidden',
     width: '100%',
-    maxWidth: '100%',
     height: 'auto',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   };
 
   const handleHover = (e, enter) => {
@@ -25,10 +27,11 @@ const MagnitiaCourses = () => {
   };
 
   const imageStyle = {
-    width: '100%',
+    width: '80%', // Reduced image size
     height: 'auto',
     objectFit: 'cover',
     display: 'block',
+    margin: '0 auto',
   };
 
   useEffect(() => {
@@ -45,26 +48,25 @@ const MagnitiaCourses = () => {
   }, []);
 
   return (
-    <div className="container py-5">
+    <div className="container pt-5">
       {courses.map((course, index) => (
         <div
-          className={`row g-5 align-items-center ${index > 0 ? 'mt-5' : ''}`}
+          className="row g-4 align-items-center mb-5"
           key={course._id}
         >
           {/* Text Block */}
           <div className={`col-lg-6 ${index % 2 === 1 ? 'order-lg-2' : ''}`}>
             <div className="px-3">
-              <h5 className="text-secondary">
+              <h5 className="text-primary">
                 {course.name.charAt(0).toUpperCase() + course.name.slice(1)}
               </h5>
               <h3 className="fw-bold text-uppercase">
-                <span style={{ color: '#8e24aa' }}>{course.title}</span>{' '}
-                <span className="text-success">Magnitia</span>
+                <span style={{ color: '#000' }}>{course.title}</span>{' '}
+                <span className="" style={{ color: '#064C89' }}>Techsterker</span>
               </h3>
               <p className="mt-3 text-muted">{course.content}</p>
               <button
-                className="btn btn-primary mt-3 fw-bold px-4 py-2 rounded-pill"
-                style={{ backgroundColor: '#8e24aa', border: 'none' }}
+                className="btn gradient-button mt-3 fw-bold px-4 py-2 rounded-pill"
                 onClick={() => navigate('/courses')}
               >
                 Explore Courses
@@ -90,6 +92,7 @@ const MagnitiaCourses = () => {
           </div>
         </div>
       ))}
+
     </div>
   );
 };

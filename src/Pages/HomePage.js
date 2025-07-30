@@ -11,6 +11,8 @@ import Dashboard from "../components/Dashboard";
 import axios from "axios";
 import Reviews from "../components/Reviews";
 import MagnitiaCourses from '../components/magnitiaCourses'
+import ClientScroller from "../components/Client Scroller";
+import Counter from "../components/Counter";
 
 const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -52,12 +54,14 @@ const HomePage = () => {
       {!isLoggedIn ? (
         <>
           <CourseAndFeatures />
+          <ClientScroller/>
           <MagnitiaCourses/>
           <Features />
+          <Counter/>
           <Course />
           <DifferSection />
           <Reviews />
-          <IndustryExperts />
+          {/* <IndustryExperts /> */}
         </>
       ) : (
         <>

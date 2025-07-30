@@ -1,7 +1,7 @@
 import AboutMagnitia from "./AboutMagnitia";
 import Footer from "./Footer";
 import Header from "./Header";
-import IndustryExperts from "./IndustryExperts";
+import ClientScroller from "../components/Client Scroller";
 
 const Clients = ()=>{
     return (
@@ -9,7 +9,7 @@ const Clients = ()=>{
         <Header/>
         <div className="mt-5">
         <AboutMagnitia/>
-        <IndustryExperts/>
+        <ClientScroller/>
         </div>
         <Footer/>
         </>

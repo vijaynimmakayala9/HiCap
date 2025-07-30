@@ -17,6 +17,7 @@ import {
 } from 'react-icons/fa';
 import Footer from './Footer';
 import Header from './Header';
+import { Container, Row, Col, Card, Button, Badge, Accordion } from 'react-bootstrap';
 
 const Counter = ({ end, duration = 1000, suffix = '' }) => {
   const [count, setCount] = useState(0);
@@ -41,21 +42,21 @@ const StarRating = ({ rating, reviewCount }) => {
   const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
   for (let i = 0; i < fullStars; i++) {
-    stars.push(<FaStar key={`full-${i}`} className="text-yellow-400" />);
+    stars.push(<FaStar key={`full-${i}`} className="text-warning" />);
   }
 
   if (hasHalfStar) {
-    stars.push(<FaStarHalfAlt key="half" className="text-yellow-400" />);
+    stars.push(<FaStarHalfAlt key="half" className="text-warning" />);
   }
 
   for (let i = 0; i < emptyStars; i++) {
-    stars.push(<FaRegStar key={`empty-${i}`} className="text-yellow-400" />);
+    stars.push(<FaRegStar key={`empty-${i}`} className="text-warning" />);
   }
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="d-flex align-items-center gap-1">
       {stars}
-      <span className="ml-2 text-sm text-gray-600">({reviewCount} reviews)</span>
+      <span className="ms-2 small text-muted">({reviewCount} reviews)</span>
     </div>
   );
 };
@@ -73,18 +74,13 @@ const CourseDetail = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-
-        // Fetch data from the API endpoint
         const response = await fetch('https://hicap-backend-4rat.onrender.com/api/course1');
         const coursesData = await response.json();
 
         if (coursesData.success) {
           setAllCourses(coursesData.data);
-
-          // Find the specific course from all courses
           const selectedCourse = coursesData.data.find(c => c._id === id);
           if (selectedCourse) {
-            // Enhance course data with additional properties
             const enhancedCourse = {
               ...selectedCourse,
               image: selectedCourse.image || "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2850&q=80",
@@ -124,446 +120,459 @@ const CourseDetail = () => {
     fetchData();
   }, [id]);
 
+
   const toggleFAQ = (index) => {
     setOpenFAQIndex(openFAQIndex === index ? null : index);
   };
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center py-10">
-        <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-700 mb-4"></div>
-        <p>Loading course details...</p>
+    <div className="min-vh-100 d-flex align-items-center justify-content-center">
+      <div className="text-center py-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="mt-2">Loading course details...</p>
       </div>
     </div>
   );
 
   if (error) return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center py-10 text-red-500">
+    <div className="min-vh-100 d-flex align-items-center justify-content-center">
+      <div className="text-center py-5 text-danger">
         <p>Error: {error}</p>
-        <button
+        <Button
+          variant="primary"
           onClick={() => window.location.reload()}
-          className="mt-4 bg-purple-700 text-white px-4 py-2 rounded-md hover:bg-purple-800 transition-colors"
+          className="mt-3"
         >
           Try Again
-        </button>
+        </Button>
       </div>
     </div>
   );
 
   if (!course) return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center py-10">
+    <div className="min-vh-100 d-flex align-items-center justify-content-center">
+      <div className="text-center py-5">
         <p>Course not found</p>
-        <button
+        <Button
+          variant="primary"
           onClick={() => navigate('/')}
-          className="mt-4 bg-purple-700 text-white px-4 py-2 rounded-md hover:bg-purple-800 transition-colors"
+          className="mt-3"
         >
           Browse Courses
-        </button>
+        </Button>
       </div>
     </div>
   );
 
-  // Get related courses (excluding current course)
   const relatedCourses = allCourses.filter(c => c._id !== id).slice(0, 3);
 
   return (
     <>
       <Header />
-      <div className="min-h-screen flex flex-col bg-gray-50">
-        <main className="flex-grow my-2 px-4 sm:px-6 lg:px-8">
+      <div className="min-vh-100 d-flex flex-column bg-light mt-5">
+        <main className="flex-grow my-2">
           {/* Hero Banner */}
-          <div className="relative py-8 md:py-12 lg:py-16">
-            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              {/* Text Content */}
-              <div className="p-4 md:p-6 lg:p-8 order-2 lg:order-1">
-                <p className="text-green-600 font-semibold mb-2 uppercase tracking-wide text-xs sm:text-sm">
-                  {course.category} Training
-                </p>
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-purple-700 mb-3 sm:mb-4">
-                  {course.name}
-                </h1>
-                <p className="text-gray-700 text-sm sm:text-base md:text-lg mb-4 sm:mb-6">
-                  {course.description}
-                </p>
-
-                {/* Rating Display */}
-                <div className="mb-3 sm:mb-4">
-                  <StarRating rating={course.rating} reviewCount={course.reviewCount} />
-                </div>
-
-                <div className="flex flex-wrap gap-2 sm:gap-3 mb-4 sm:mb-6">
-                  <span className="flex items-center gap-1 bg-green-100 text-green-800 px-2 sm:px-3 py-1 rounded-full font-medium text-xs sm:text-sm">
-                    <FaRegClock className="text-xs" /> {course.duration}
-                  </span>
-                  <span className="flex items-center gap-1 bg-green-100 text-green-800 px-2 sm:px-3 py-1 rounded-full font-medium text-xs sm:text-sm">
-                    <FaUserGraduate className="text-xs" /> {course.noOfStudents}+ Students
-                  </span>
-                  <span className="flex items-center gap-1 bg-green-100 text-green-800 px-2 sm:px-3 py-1 rounded-full font-medium text-xs sm:text-sm">
-                    <FaBook className="text-xs" /> {course.noOfLessons} Lessons
-                  </span>
-                </div>
-
-                {/* Course Metadata */}
-                <div className="mb-4 sm:mb-6 space-y-1 sm:space-y-2 text-xs sm:text-sm">
-                  <p className="text-gray-600">
-                    <span className="font-semibold">Subcategory:</span> {course.subcategory}
-                  </p>
-                  <p className="text-gray-600">
-                    <span className="font-semibold">Mode:</span> {course.mode}
-                  </p>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                  <button className="bg-purple-700 hover:bg-purple-800 text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-md transition-all hover:scale-105 text-xs sm:text-sm md:text-base">
-                    Enroll Now - ${course.price}
-                  </button>
-                  <button className="border border-purple-700 text-purple-700 hover:bg-purple-50 font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-md transition-all hover:scale-105 text-xs sm:text-sm md:text-base">
-                    Download Syllabus
-                  </button>
-                </div>
-              </div>
-
+          <Container className="py-5">
+            <Row className="align-items-center g-4">
               {/* Image */}
-              <div className="flex justify-center items-center order-1 lg:order-2">
-                <div className="relative group w-full max-w-md">
-                  <img
+              <Col lg={6} className="order-1 order-lg-1">
+                <div className="position-relative">
+                  <Card.Img
+                    variant="top"
                     src={course.image}
                     alt={course.name}
-                    className="rounded-xl md:rounded-2xl lg:rounded-3xl shadow-xl border-2 sm:border-4 border-white w-full h-auto transition duration-300 group-hover:scale-105 aspect-video object-cover"
-                    loading="lazy"
+                    className="rounded-3 border-3 border-white img-fluid"
                   />
-                  <div className="absolute bottom-3 left-3 bg-white text-green-800 text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 rounded-full shadow-md">
+                  <Badge bg="white" text="primary" className="position-absolute bottom-0 start-0 m-3 shadow-sm fw-bold">
                     New Batch Starting Soon!
+                  </Badge>
+                </div>
+              </Col>
+              {/* Text Content */}
+              <Col lg={6} className="order-2 order-lg-2">
+                <div className="p-3 p-md-4">
+                  <Badge className="mb-2 text-uppercase" style={{ backgroundColor: "#0077B5", color: "#fff" }}>
+                    {course.category} Training
+                  </Badge>
+                  <h1 className="display-5 fw-bold mb-3" style={{ color: "#064C89" }}>
+                    {course.name}
+                  </h1>
+                  <p className="lead text-muted mb-4">
+                    {course.description}
+                  </p>
+
+                  <div className="mb-3">
+                    <StarRating rating={course.rating} reviewCount={course.reviewCount} />
+                  </div>
+
+                  <div className="d-flex flex-wrap gap-2 mb-4">
+                    <Badge className="d-flex align-items-center gap-1" style={{ backgroundColor: "#0077B5", color: "#fff" }}>
+                      <FaRegClock className="fs-6" /> {course.duration}
+                    </Badge>
+                    <Badge className="d-flex align-items-center gap-1" style={{ backgroundColor: "#0077B5", color: "#fff" }}>
+                      <FaUserGraduate className="fs-6" /> {course.noOfStudents}+ Students
+                    </Badge>
+                    <Badge className="d-flex align-items-center gap-1" style={{ backgroundColor: "#0077B5", color: "#fff" }}>
+                      <FaBook className="fs-6" /> {course.noOfLessons} Lessons
+                    </Badge>
+                  </div>
+
+                  <div className="mb-4">
+                    <p className="mb-1 small text-muted">
+                      <span className="fw-semibold">Subcategory:</span> {course.subcategory}
+                    </p>
+                    <p className="mb-0 small text-muted">
+                      <span className="fw-semibold">Mode:</span> {course.mode}
+                    </p>
+                  </div>
+
+                  <div className="d-flex flex-column flex-sm-row gap-3">
+                    <Button size="lg" className="shadow gradient-button">
+                      Enroll Now - ${course.price}
+                    </Button>
+                    <Button variant="outline-primary" size="lg" className="shadow">
+                      Download Syllabus
+                    </Button>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="max-w-7xl mx-auto py-6 md:py-10 lg:py-12">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
-              {/* Students Enrolled */}
-              <div className="bg-green-50 p-3 sm:p-4 rounded-lg flex flex-col items-center text-center">
-                <FaUserGraduate className="text-green-600 text-2xl sm:text-3xl mb-1 sm:mb-2" />
-                <p className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600">
-                  <Counter end={course.noOfStudents} suffix="+" />
-                </p>
-                <p className="text-xs sm:text-sm text-gray-600">Students Enrolled</p>
-              </div>
-
-              {/* Lessons */}
-              <div className="bg-green-50 p-3 sm:p-4 rounded-lg flex flex-col items-center text-center">
-                <FaBookOpen className="text-green-600 text-2xl sm:text-3xl mb-1 sm:mb-2" />
-                <p className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600">
-                  <Counter end={course.noOfLessons} />
-                </p>
-                <p className="text-xs sm:text-sm text-gray-600">Lessons</p>
-              </div>
-
-              {/* Reviews */}
-              <div className="bg-green-50 p-3 sm:p-4 rounded-lg flex flex-col items-center text-center">
-                <FaStar className="text-yellow-500 text-2xl sm:text-3xl mb-1 sm:mb-2" />
-                <p className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600">
-                  {course.rating}/5
-                </p>
-                <p className="text-xs sm:text-sm text-gray-600">Reviews</p>
-              </div>
-            </div>
+              </Col>
 
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-12">
-              <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md border border-gray-200">
-                <h3 className="text-base sm:text-lg md:text-xl font-bold mb-3 sm:mb-4 text-green-800 flex items-center gap-2">
-                  <FaCertificate className="text-green-600" /> What You'll Get
-                </h3>
+            </Row>
+          </Container>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-3 sm:gap-4">
-                  {course.features.map((feature, index) => (
-                    <div key={index} className="bg-green-50 rounded-lg shadow-sm p-2 sm:p-3 flex flex-col items-center text-center">
-                      {feature.image && (
-                        <img
-                          src={feature.image}
-                          alt={feature.title}
-                          className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full object-cover mb-1 sm:mb-2"
-                          loading="lazy"
-                        />
+          {/* Stats Cards */}
+          <Container className="py-4">
+            <Row className="g-3">
+              <Col sm={4}>
+                <Card className="border-0 shadow-sm text-center py-3 bg-info bg-opacity-10">
+                  <FaUserGraduate className="text-primary fs-3 mb-2 mx-auto" />
+                  <h3 style={{ color: "#064C89" }}>
+                    <Counter end={course.noOfStudents} suffix="+" />
+                  </h3>
+                  <p className="small text-primary mb-0 fw-bold">Students Enrolled</p>
+                </Card>
+              </Col>
+              <Col sm={4}>
+                <Card className="border-0 shadow-sm text-center py-3 bg-info bg-opacity-10">
+                  <FaBookOpen className="text-primary fs-3 mb-2 mx-auto" />
+                  <h3 style={{ color: "#064C89" }}>
+                    <Counter end={course.noOfLessons} />
+                  </h3>
+                  <p className="small text-primary mb-0 fw-bold">Lessons</p>
+                </Card>
+              </Col>
+              <Col sm={4}>
+                <Card className="border-0 shadow-sm text-center py-3 bg-info bg-opacity-10">
+                  <FaStar className="text-warning fs-3 mb-2 mx-auto" />
+                  <h3 style={{ color: "#064C89" }}>
+                    {course.rating}/5
+                  </h3>
+                  <p className="small text-primary mb-0 fw-bold">Reviews</p>
+                </Card>
+              </Col>
+            </Row>
+          </Container>
+
+          {/* Features and Training Options */}
+          <Container className="py-4">
+            <Row className="g-4">
+              {/* What You'll Get */}
+              <Col lg={6}>
+                <Card className="border-0 shadow-sm h-100">
+                  <Card.Body>
+                    <Card.Title
+                      className="d-flex align-items-center mb-3 pb-1 border-bottom"
+                      style={{ fontWeight: '600', fontSize: '1.25rem', color: "#064C89" }}
+                    >
+                      <FaCertificate className="me-2" size={20} />
+                      What You'll Get
+                    </Card.Title>
+                    <Row className="g-2">
+                      {course.features.map((feature, index) => (
+                        <Col xs={12} sm={6} key={index}>
+                          <Card className="border-0 shadow-sm h-100">
+                            <Card.Body className="d-flex align-items-center gap-3 p-2">
+                              <img
+                                src={feature.image}
+                                alt={feature.title}
+                                className="img-fluid rounded-circle"
+                                style={{ width: '48px', height: '48px', objectFit: 'cover' }}
+                              />
+                              <p className="mb-0 small flex-grow-1">{feature.title}</p>
+                            </Card.Body>
+                          </Card>
+                        </Col>
+                      ))}
+                    </Row>
+                  </Card.Body>
+                </Card>
+              </Col>
+
+              {/* Training Options */}
+              <Col lg={6}>
+                <Card className="border-0 shadow-sm h-100">
+                  <Card.Body>
+                    <Card.Title
+                      className="d-flex align-items-center mb-3 pb-1 border-bottom"
+                      style={{ fontWeight: '600', fontSize: '1.25rem', color: "#064C89" }}
+                    >
+                      <FaChalkboardTeacher className="me-2" size={20} />
+                      Training Options
+                    </Card.Title>
+
+                    <div className="mb-3">
+                      <p className="small fw-semibold mb-1">Mode:</p>
+                      <Badge bg="info" className="text-capitalize">
+                        {course.mode}
+                      </Badge>
+                    </div>
+
+                    <div className="mb-3">
+                      <p className="small fw-semibold mb-1">Status:</p>
+                      <Badge bg={course.status === 'available' ? 'success' : 'warning'}>
+                        {course.status === 'available' ? 'Available Now' : 'Coming Soon'}
+                      </Badge>
+                    </div>
+
+                    <div className="mb-3">
+                      <p className="small fw-semibold mb-1">Price:</p>
+                      <h4 style={{ color: "#064C89" }}>₹{course.price}</h4>
+                    </div>
+
+                    <div className="d-flex flex-wrap gap-1">
+                      {course.isPopular && (
+                        <Badge bg="warning" text="dark">Popular Course</Badge>
                       )}
-                      <span className="text-xs sm:text-sm text-gray-800 font-medium">{feature.title}</span>
+                      {course.isHighRated && (
+                        <Badge bg="primary">Top Rated</Badge>
+                      )}
                     </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+          </Container>
+
+
+          {/* Learning Objectives */}
+          <Container className="py-4">
+            <Card className="border-0 shadow-sm">
+              <Card.Body>
+                <Card.Title className="border-bottom pb-2" style={{color: "#064C89"}}>
+                  Learning Objectives
+                </Card.Title>
+                <Row className="g-3">
+                  {course.courseObject?.map((item, index) => (
+                    <Col xs={12} sm={6} lg={4} key={index}>
+                      <Card className="border-0 h-100 bg-info bg-opacity-10" >
+                        <Card.Body>
+                          <Card.Title className="fs-6" style={{color: "#064C89"}}>
+                            {item.title || `Objective ${index + 1}`}
+                          </Card.Title>
+                          <Card.Text className="small text-muted">
+                            {item.content}
+                          </Card.Text>
+                        </Card.Body>
+                      </Card>
+                    </Col>
                   ))}
-                </div>
-              </div>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Container>
 
-              <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md border border-gray-200">
-                <h3 className="text-base sm:text-lg md:text-xl font-bold mb-3 sm:mb-4 text-green-800 flex items-center gap-2">
-                  <FaChalkboardTeacher className="text-green-600" /> Training Options
-                </h3>
-                <div className="space-y-2 sm:space-y-3">
-                  <div>
-                    <p className="text-xs sm:text-sm font-semibold text-gray-800">Mode:</p>
-                    <p className="capitalize bg-green-100 text-green-800 px-2 sm:px-3 py-1 rounded-full inline-block text-xs sm:text-sm">
-                      {course.mode}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs sm:text-sm font-semibold text-gray-800">Status:</p>
-                    <p className={`px-2 sm:px-3 py-1 rounded-full inline-block text-xs sm:text-sm ${course.status === 'available' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                      }`}>
-                      {course.status === 'available' ? 'Available Now' : 'Coming Soon'}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs sm:text-sm font-semibold text-gray-800">Price:</p>
-                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-green-600">${course.price}</p>
-                  </div>
-                  <div className="flex flex-wrap gap-1 sm:gap-2">
-                    {course.isPopular && (
-                      <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">
-                        Popular Course
-                      </span>
-                    )}
-                    {course.isHighRated && (
-                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
-                        Top Rated
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+          {/* FAQs */}
+          {course.faq && course.faq.length > 0 && (
+            <Container className="py-4">
+              <Card className="border-0">
+                <Card.Body className="bg-info bg-opacity-10" >
+                  <Card.Title style={{color: "#064C89"}}>
+                    Frequently Asked Questions
+                  </Card.Title>
+                  <Accordion defaultActiveKey="0">
+                    {course.faq.map((item, index) => (
+                      <Accordion.Item eventKey={index.toString()} key={index}>
+                        <Accordion.Header style={{color: "#064C89"}}>{item.question}</Accordion.Header>
+                        <Accordion.Body style={{color: "#064C89"}}>
+                          {item.answer}
+                        </Accordion.Body>
+                      </Accordion.Item>
+                    ))}
+                  </Accordion>
+                </Card.Body>
+              </Card>
+            </Container>
+          )}
 
-            {/* Course Objectives */}
-            <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-md border border-gray-200 mb-8 sm:mb-12">
-              <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-6 text-green-800 border-b pb-2">
-                Learning Objectives
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
-                {course.courseObject?.map((item, index) => (
-                  <div key={index} className="bg-green-50 border border-green-100 rounded-lg p-3 sm:p-4 shadow-sm hover:shadow-md transition">
-                    <h3 className="font-semibold text-green-800 mb-1 sm:mb-2 text-xs sm:text-sm md:text-base">
-                      {item.title || `Objective ${index + 1}`}
-                    </h3>
-                    <p className="text-gray-700 text-xs sm:text-sm">
-                      {item.content}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* FAQs */}
-            {course.faq && course.faq.length > 0 && (
-              <div className="p-4 sm:p-6 md:p-8 rounded-xl shadow-md border border-orange-200 mb-8 sm:mb-12 bg-orange-500">
-                <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-6 text-white pb-2">
-                  Frequently Asked Questions
-                </h2>
-                <div className="space-y-2 sm:space-y-3">
-                  {course.faq.map((item, index) => (
-                    <div key={index} className="rounded-lg bg-white text-gray-900 overflow-hidden transition-all duration-300">
-                      <button
-                        onClick={() => toggleFAQ(index)}
-                        className="w-full flex justify-between items-center px-3 sm:px-4 py-2 sm:py-3 font-medium text-xs sm:text-sm md:text-base bg-white hover:bg-orange-50 transition-colors"
-                      >
-                        <span className="text-left">{item.question}</span>
-                        {openFAQIndex === index ? <FaChevronUp /> : <FaChevronDown />}
-                      </button>
-                      <div
-                        className={`px-3 sm:px-4 pt-0 pb-3 sm:pb-4 text-gray-700 text-xs sm:text-sm transition-all duration-300 ease-in-out ${openFAQIndex === index ? 'block' : 'hidden'
-                          }`}
-                      >
-                        {item.answer}
-                      </div>
-                    </div>
+          {/* Who Can Learn */}
+          <Container className="py-4">
+            <Card className="border-0 shadow-sm">
+              <Card.Body>
+                <Card.Title className="text-primary border-bottom pb-2">
+                  Who Can Learn
+                </Card.Title>
+                <Row className="g-3">
+                  {[
+                    {
+                      image: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+                      title: "Students & Freshers",
+                      description: "Ideal for those starting their career and seeking strong foundational skills."
+                    },
+                    {
+                      image: "https://cdn-icons-png.flaticon.com/512/1053/1053244.png",
+                      title: "Working Professionals",
+                      description: "Upgrade your skills or pivot your career into high-demand roles."
+                    },
+                    {
+                      image: "https://cdn-icons-png.flaticon.com/512/190/190411.png",
+                      title: "Freelancers",
+                      description: "Enhance your service offering and land better-paying projects."
+                    },
+                    {
+                      image: "https://cdn-icons-png.flaticon.com/512/706/706830.png",
+                      title: "Entrepreneurs",
+                      description: "Gain practical knowledge to grow and manage your own business more effectively."
+                    }
+                  ].map((learner, index) => (
+                    <Col xs={12} sm={6} key={index}>
+                      <Card className="border-0 shadow-sm h-100">
+                        <Card.Body className="d-flex gap-3">
+                          <img
+                            src={learner.image}
+                            alt={learner.title}
+                            className="rounded-circle border border-2 border-info"
+                            style={{ width: '48px', height: '48px', objectFit: 'cover' }}
+                          />
+                          <div>
+                            <h5 className="text-primary">{learner.title}</h5>
+                            <p className="small text-muted mb-0">{learner.description}</p>
+                          </div>
+                        </Card.Body>
+                      </Card>
+                    </Col>
                   ))}
-                </div>
-              </div>
-            )}
+                </Row>
+              </Card.Body>
+            </Card>
+          </Container>
 
-            {/* Who Can Learn */}
-            <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-md border border-gray-200 mb-8 sm:mb-12">
-              <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-6 text-green-800 border-b pb-2">
-                Who Can Learn
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
-                {[
-                  {
-                    image: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-                    title: "Students & Freshers",
-                    description: "Ideal for those starting their career and seeking strong foundational skills."
-                  },
-                  {
-                    image: "https://cdn-icons-png.flaticon.com/512/1053/1053244.png",
-                    title: "Working Professionals",
-                    description: "Upgrade your skills or pivot your career into high-demand roles."
-                  },
-                  {
-                    image: "https://cdn-icons-png.flaticon.com/512/190/190411.png",
-                    title: "Freelancers",
-                    description: "Enhance your service offering and land better-paying projects."
-                  },
-                  {
-                    image: "https://cdn-icons-png.flaticon.com/512/706/706830.png",
-                    title: "Entrepreneurs",
-                    description: "Gain practical knowledge to grow and manage your own business more effectively."
-                  }
-                ].map((learner, index) => (
-                  <div key={index} className="flex gap-2 sm:gap-3 md:gap-4 items-start p-2 sm:p-3 hover:bg-green-50 rounded-lg transition">
-                    <img
-                      src={learner.image}
-                      alt={learner.title}
-                      className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full object-cover border-2 border-green-300"
-                      loading="lazy"
-                    />
-                    <div>
-                      <h3 className="font-semibold text-sm sm:text-base md:text-lg text-green-700 mb-1">
-                        {learner.title}
-                      </h3>
-                      <p className="text-gray-600 text-xs sm:text-sm">
-                        {learner.description}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+          {/* Course Information */}
+          <Container className="py-4">
+            <Card className="border-0 shadow-sm">
+              <Card.Body>
+                <Card.Title className="text-primary border-bottom pb-2">
+                  Course Information
+                </Card.Title>
+                <Row>
+                  <Col md={6}>
+                    <h5 className="text-primary">Technical Details</h5>
+                    <ul className="list-unstyled">
+                      <li className="d-flex justify-content-between py-2 border-bottom">
+                        <span className="text-muted">Total Lessons:</span>
+                        <span className="fw-semibold">{course.noOfLessons}</span>
+                      </li>
+                      <li className="d-flex justify-content-between py-2 border-bottom">
+                        <span className="text-muted">Enrolled Students:</span>
+                        <span className="fw-semibold">{course.noOfStudents.toLocaleString()}</span>
+                      </li>
+                    </ul>
+                  </Col>
+                  <Col md={6}>
+                    <h5 className="text-primary">Course Statistics</h5>
+                    <ul className="list-unstyled">
+                      <li className="d-flex justify-content-between py-2 border-bottom">
+                        <span className="text-muted">Course Category:</span>
+                        <span className="fw-semibold">{course.category}</span>
+                      </li>
+                      <li className="d-flex justify-content-between py-2 border-bottom">
+                        <span className="text-muted">Subcategory:</span>
+                        <span className="fw-semibold">{course.subcategory}</span>
+                      </li>
+                      <li className="d-flex justify-content-between py-2 border-bottom">
+                        <span className="text-muted">Average Rating:</span>
+                        <span className="fw-semibold">{course.rating}/5.0</span>
+                      </li>
+                      <li className="d-flex justify-content-between py-2 border-bottom">
+                        <span className="text-muted">Total Reviews:</span>
+                        <span className="fw-semibold">{course.reviewCount.toLocaleString()}</span>
+                      </li>
+                    </ul>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Container>
 
-            {/* Additional Course Information */}
-            <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-md border border-gray-200 mb-8 sm:mb-12">
-              <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-6 text-green-800 border-b pb-2">
-                Course Information
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
-                <div>
-                  <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3 md:mb-4">
-                    Technical Details
-                  </h3>
-                  <div className="space-y-2 sm:space-y-3">
-                    <div className="flex justify-between text-xs sm:text-sm md:text-base">
-                      <span className="text-gray-600">Total Lessons:</span>
-                      <span className="text-gray-800 font-medium">{course.noOfLessons}</span>
-                    </div>
-                    <div className="flex justify-between text-xs sm:text-sm md:text-base">
-                      <span className="text-gray-600">Enrolled Students:</span>
-                      <span className="text-gray-800 font-medium">
-                        {course.noOfStudents.toLocaleString()}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3 md:mb-4">
-                    Course Statistics
-                  </h3>
-                  <div className="space-y-2 sm:space-y-3">
-                    <div className="flex justify-between text-xs sm:text-sm md:text-base">
-                      <span className="text-gray-600">Course Category:</span>
-                      <span className="text-gray-800 font-medium">{course.category}</span>
-                    </div>
-                    <div className="flex justify-between text-xs sm:text-sm md:text-base">
-                      <span className="text-gray-600">Subcategory:</span>
-                      <span className="text-gray-800 font-medium">{course.subcategory}</span>
-                    </div>
-                    <div className="flex justify-between text-xs sm:text-sm md:text-base">
-                      <span className="text-gray-600">Average Rating:</span>
-                      <span className="text-gray-800 font-medium">{course.rating}/5.0</span>
-                    </div>
-                    <div className="flex justify-between text-xs sm:text-sm md:text-base">
-                      <span className="text-gray-600">Total Reviews:</span>
-                      <span className="text-gray-800 font-medium">
-                        {course.reviewCount.toLocaleString()}
-                      </span>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Related Courses */}
-            {relatedCourses.length > 0 && (
-              <div className="mb-8 sm:mb-12">
-                <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-6 text-green-800">
-                  You May Also Like
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                  {relatedCourses.map(relatedCourse => (
-                    <div key={relatedCourse._id} className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition">
-                      <img
-                        src={relatedCourse.image || "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2850&q=80"}
+          {/* Related Courses */}
+          {relatedCourses.length > 0 && (
+            <Container className="py-4">
+              <h2 className="text-primary mb-4">You May Also Like</h2>
+              <Row className="g-4">
+                {relatedCourses.map(relatedCourse => (
+                  <Col xs={12} sm={6} lg={4} key={relatedCourse._id}>
+                    <Card className="h-100 shadow-sm">
+                      <Card.Img
+                        variant="top"
+                        src={relatedCourse.image}
                         alt={relatedCourse.name}
-                        className="w-full h-36 sm:h-40 md:h-48 object-cover"
-                        loading="lazy"
+                        style={{ height: '180px', objectFit: 'cover' }}
                       />
-                      <div className="p-3 sm:p-4 md:p-6">
-                        <div className="flex justify-between items-start mb-1 sm:mb-2">
-                          <h3 className="font-bold text-sm sm:text-base md:text-lg text-gray-800 line-clamp-2">
+                      <Card.Body>
+                        <div className="d-flex justify-content-between mb-2">
+                          <Card.Title className="fs-6 mb-0">
                             {relatedCourse.name}
-                          </h3>
-                          <span className="text-base sm:text-lg md:text-xl font-bold text-green-600 whitespace-nowrap ml-2">
+                          </Card.Title>
+                          <span className="text-primary fw-bold">
                             ${relatedCourse.price}
                           </span>
                         </div>
-
-                        <div className="mb-1 sm:mb-2">
-                          <StarRating rating={relatedCourse.rating} reviewCount={relatedCourse.reviewCount} />
+                        <StarRating rating={relatedCourse.rating} reviewCount={relatedCourse.reviewCount} />
+                        <div className="d-flex flex-wrap gap-1 my-2">
+                          <small className="text-muted d-flex align-items-center">
+                            <FaRegClock className="me-1" /> {relatedCourse.duration}
+                          </small>
+                          <small className="text-muted d-flex align-items-center">
+                            <FaUserGraduate className="me-1" /> {relatedCourse.noOfStudents}+
+                          </small>
+                          <small className="text-muted d-flex align-items-center">
+                            <FaBook className="me-1" /> {relatedCourse.noOfLessons}
+                          </small>
                         </div>
-
-                        <div className="flex items-center gap-1 text-2xs sm:text-xs text-gray-600 mb-2 sm:mb-3 flex-wrap">
-                          <span className="flex items-center gap-1">
-                            <FaRegClock className="text-2xs" /> {relatedCourse.duration}
-                          </span>
-                          <span className="mx-1">•</span>
-                          <span className="flex items-center gap-1">
-                            <FaUserGraduate className="text-2xs" /> {relatedCourse.noOfStudents}+
-                          </span>
-                          <span className="mx-1">•</span>
-                          <span className="flex items-center gap-1">
-                            <FaBook className="text-2xs" /> {relatedCourse.noOfLessons}
-                          </span>
-                        </div>
-
-                        <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
+                        <Card.Text className="small text-muted mb-3">
                           {relatedCourse.description}
-                        </p>
-
-                        <div className="flex gap-1 sm:gap-2 mb-3 sm:mb-4 flex-wrap">
+                        </Card.Text>
+                        <div className="d-flex flex-wrap gap-1 mb-3">
                           {relatedCourse.isPopular && (
-                            <span className="bg-yellow-100 text-yellow-800 px-1 sm:px-2 py-1 rounded-full text-2xs sm:text-xs">
-                              Popular
-                            </span>
+                            <Badge bg="warning" text="dark">Popular</Badge>
                           )}
                           {relatedCourse.isHighRated && (
-                            <span className="bg-blue-100 text-blue-800 px-1 sm:px-2 py-1 rounded-full text-2xs sm:text-xs">
-                              Top Rated
-                            </span>
+                            <Badge bg="primary">Top Rated</Badge>
                           )}
-                          <span className={`px-1 sm:px-2 py-1 rounded-full text-2xs sm:text-xs ${relatedCourse.status === 'available' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                            }`}>
+                          <Badge bg={relatedCourse.status === 'available' ? 'success' : 'warning'}>
                             {relatedCourse.status === 'available' ? 'Available' : 'Coming Soon'}
-                          </span>
+                          </Badge>
                         </div>
-
-                        <button
+                        <Button
+                          variant="outline-primary"
+                          size="sm"
+                          className="w-100"
                           onClick={() => {
                             navigate(`/course/${relatedCourse._id}`);
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                           }}
-                          className="w-full bg-green-100 hover:bg-green-200 text-green-800 font-semibold py-1 sm:py-2 rounded-lg transition text-xs sm:text-sm"
                         >
                           View Details
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-
-          </div>
+                        </Button>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                ))}
+              </Row>
+            </Container>
+          )}
         </main>
       </div>
       <Footer />

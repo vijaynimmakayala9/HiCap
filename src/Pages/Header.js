@@ -6,6 +6,7 @@ const GuestHeader = ({ onLogin }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [courses, setCourses] = useState([]);
   const [showCoursesMenu, setShowCoursesMenu] = useState(false);
+  const [showResourcesMenu, setShowResourcesMenu] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginData, setLoginData] = useState({
     phoneNumber: '',
@@ -13,11 +14,13 @@ const GuestHeader = ({ onLogin }) => {
   });
   const [loginError, setLoginError] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('Popular Courses');
 
   const navigate = useNavigate();
   const location = useLocation();
   const megaMenuRef = useRef();
   const coursesBtnRef = useRef();
+  const resourcesBtnRef = useRef();
   const navRef = useRef();
   const modalRef = useRef();
 
@@ -27,10 +30,16 @@ const GuestHeader = ({ onLogin }) => {
     { label: 'Courses', isMegaMenu: true },
     { label: 'Upcoming Batches', path: '/upcommingbatches' },
     { label: 'Our Mentors', path: '/ourmentors' },
-    { label: 'Faqs', path: '/faqs' },
-    { label: 'Clients', path: '/clients' },
-    { label: 'Blog', path: '/blog' },
-    { label: 'Contact Us', path: '/contactus' },
+    {
+      label: 'Resources',
+      isDropdown: true,
+      items: [
+        { label: 'FAQs', path: '/faqs' },
+        { label: 'Blog', path: '/blog' },
+        { label: 'Contact Us', path: '/contactus' }
+      ]
+    },
+    { label: 'Clients', path: '/clients' }
   ];
 
   useEffect(() => {
@@ -53,9 +62,11 @@ const GuestHeader = ({ onLogin }) => {
         megaMenuRef.current &&
         !megaMenuRef.current.contains(e.target) &&
         (!coursesBtnRef.current || !coursesBtnRef.current.contains(e.target)) &&
+        (!resourcesBtnRef.current || !resourcesBtnRef.current.contains(e.target)) &&
         (!navRef.current || !navRef.current.contains(e.target))
       ) {
         setShowCoursesMenu(false);
+        setShowResourcesMenu(false);
       }
 
       if (modalRef.current && !modalRef.current.contains(e.target) && !e.target.classList.contains('login-button')) {
@@ -71,7 +82,7 @@ const GuestHeader = ({ onLogin }) => {
     'High Rated Courses': Array.isArray(courses) ? courses.filter(course => course.isHighRated) : [],
     'Popular Courses': Array.isArray(courses) ? courses.filter(course => course.isPopular) : [],
     'Testing Courses': Array.isArray(courses)
-      ? courses.filter(course => (course.category || '').toLowerCase().includes('test'))
+      ? courses.filter(course => (course.name || '').toLowerCase().includes('java'))
       : [],
   };
 
@@ -84,6 +95,7 @@ const GuestHeader = ({ onLogin }) => {
   const handleNavigate = (path) => {
     navigate(path);
     setIsMobileMenuOpen(false);
+    setShowResourcesMenu(false);
   };
 
   const handleLoginChange = (e) => {
@@ -149,50 +161,71 @@ const GuestHeader = ({ onLogin }) => {
         overflowY: 'auto'
       }}
     >
-      <div className="p-4 p-lg-5">
-        <div className="row g-4">
-          {Object.entries(groupedCourses).map(([category, items]) => (
-            <div key={category} className="col-12 col-md-6 col-lg-4">
-              <h6 className="fw-bold text-success border-bottom border-2 pb-2 mb-3 fs-6">
-                {category}
-              </h6>
-              <ul className="list-unstyled">
-                {items.slice(0, 4).map((course) => (
-                  <li
-                    key={course._id}
-                    className="mb-3 cursor-pointer"
+      <div className="p-4 p-lg-4">
+        <div className="row g-0">
+          {/* Categories Column */}
+          <div className="col-md-3 border-end pe-3">
+            <h6 className="fw-bold text-primary mb-3 fs-6">Course Categories</h6>
+            <ul className="list-unstyled">
+              {Object.keys(groupedCourses).map((category) => (
+                <li key={category} className="mb-2">
+                  <button
+                    className={`btn w-100 text-start px-3 py-2 rounded  ${selectedCategory === category ? 'gradient-button' : 'text-dark'
+                      }`}
+                    style={{ fontSize: '14px' }}
+                    onClick={() => setSelectedCategory(category)}
+                  >
+                    {category}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Courses Column */}
+          <div className="col-md-9 ps-4">
+            <h6 className="fw-bold text-primary mb-3 fs-6">{selectedCategory}</h6>
+            <div className="row g-3">
+              {groupedCourses[selectedCategory]?.slice(0, 6).map((course) => (
+                <div key={course._id} className="col-md-6">
+                  <div
+                    className="d-flex gap-3 p-3 rounded hover-bg-light cursor-pointer"
                     onClick={() => handleCourseClick(course._id)}
                   >
-                    <div className="d-flex gap-3 p-3 rounded hover-bg-light">
-                      <div className="bg-light p-2 rounded flex-shrink-0">
-                        <div className="d-flex align-items-center justify-content-center bg-success-subtle rounded" 
-                             style={{ width: '36px', height: '36px' }}>
-                          <FaUserGraduate className="text-success" style={{ fontSize: '16px' }} />
-                        </div>
-                      </div>
-                      <div className="flex-grow-1 overflow-hidden">
-                        <div className="fw-medium text-truncate" style={{ fontSize: '14px' }}>
-                          {course.name}
-                        </div>
-                        <div className="d-flex align-items-center gap-2 text-muted mt-1" style={{ fontSize: '12px' }}>
-                          <FaRegClock style={{ fontSize: '11px' }} />
-                          <span className="text-truncate">{course.duration || 'N/A'}</span>
-                          <span>•</span>
-                          <span className="text-truncate">{course.noOfStudents || 0}+ students</span>
-                        </div>
+                    <div className="bg-light p-2 rounded flex-shrink-0">
+                      <div className="d-flex align-items-center justify-content-center  rounded"
+                        style={{ width: '36px', height: '36px' }}>
+                        <img src={course.image} className='img-fluid' />
                       </div>
                     </div>
-                  </li>
-                ))}
-              </ul>
+                    <div className="flex-grow-1 overflow-hidden">
+                      <div className="fw-medium text-truncate" style={{ fontSize: '14px' }}>
+                        {course.name}
+                      </div>
+                      <div className="d-flex align-items-center gap-2 text-muted mt-1" style={{ fontSize: '12px' }}>
+
+                        <span className="text-truncate">{course.category || 'N/A'}</span>
+                        <span>•</span>
+                        <span className="text-truncate">{course.duration || 0} months</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+
+            {groupedCourses[selectedCategory]?.length === 0 && (
+              <div className="text-center py-4 text-muted">
+                No courses available in this category
+              </div>
+            )}
+          </div>
         </div>
-        
+
         <div className="border-top pt-4 mt-4">
           <div className="row align-items-center g-3">
             <div className="col-12 col-md-8">
-              <h6 className="fw-bold text-success mb-2 fs-6">
+              <h6 className="fw-bold text-primary mb-2 fs-6">
                 Can't find what you're looking for?
               </h6>
               <p className="text-muted mb-0" style={{ fontSize: '13px' }}>
@@ -212,7 +245,7 @@ const GuestHeader = ({ onLogin }) => {
                   View All Courses
                 </button>
                 <button
-                  className="btn btn-primary btn-sm flex-fill"
+                  className="btn gradient-button btn-sm flex-fill"
                   style={{ fontSize: '13px' }}
                   onClick={() => {
                     navigate('/contactus');
@@ -226,6 +259,34 @@ const GuestHeader = ({ onLogin }) => {
           </div>
         </div>
       </div>
+    </div>
+  );
+
+  const ResourcesDropdown = () => (
+    <div
+      className="position-absolute bg-white shadow-lg border rounded mt-2"
+      style={{
+        minWidth: '200px',
+        zIndex: 1050
+      }}
+    >
+      <ul className="list-unstyled p-2">
+        {menuItems.find(item => item.label === 'Resources').items.map((item, idx) => (
+          <li key={idx}>
+            <button
+              className={`btn w-100 text-start px-3 py-2 rounded ${location.pathname === item.path ? 'text-primary' : ''
+                }`}
+              style={{ fontSize: '14px' }}
+              onClick={() => {
+                handleNavigate(item.path);
+                setShowResourcesMenu(false);
+              }}
+            >
+              {item.label}
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 
@@ -243,15 +304,15 @@ const GuestHeader = ({ onLogin }) => {
               >
                 <div className="d-flex align-items-start p-2 rounded hover-bg-white">
                   <span className="bg-secondary p-1 rounded me-2 flex-shrink-0">
-                    <FaUserGraduate className="text-success" style={{ fontSize: '12px' }} />
+                    <img src={course.image} className='img-fluid' />
                   </span>
                   <div className="flex-grow-1 overflow-hidden">
                     <div className="fw-medium text-truncate" style={{ fontSize: '13px' }}>{course.name}</div>
                     <div className="d-flex align-items-center gap-1 text-muted mt-1" style={{ fontSize: '11px' }}>
                       <FaRegClock style={{ fontSize: '10px' }} />
-                      <span className="text-truncate">{course.duration || 'N/A'}</span>
+                      <span className="text-truncate">{course.category || 'N/A'}</span>
                       <span>•</span>
-                      <span>{course.noOfStudents || 0}+</span>
+                      <span>{course.duration || 0} months</span>
                     </div>
                   </div>
                 </div>
@@ -291,13 +352,13 @@ const GuestHeader = ({ onLogin }) => {
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top" style={{ minHeight: '80px', zIndex: 1050 }}>
         <div className="container-fluid px-3 px-md-4 px-lg-5">
-          <a 
-            className="navbar-brand cursor-pointer" 
+          <a
+            className="navbar-brand cursor-pointer"
             onClick={() => navigate('/')}
           >
-            <img 
-              src="/logo/hicap-logo.png" 
-              alt="HiCap Logo" 
+            <img
+              src="/logo/logo1.png"
+              alt="HiCap Logo"
               className="img-fluid"
               style={{ height: '50px' }}
             />
@@ -306,13 +367,13 @@ const GuestHeader = ({ onLogin }) => {
           <div className="d-lg-none d-flex align-items-center gap-2" style={{ position: 'relative', zIndex: 1051 }}>
             <button
               onClick={() => setShowLoginModal(true)}
-              className="btn btn-primary btn-sm"
+              className="btn gradient-button btn-md"
               style={{ whiteSpace: 'nowrap', fontSize: '14px', padding: '0.5rem 1.25rem' }}
             >
               Login
             </button>
             <button
-              className="btn btn-outline-primary p-2"
+              className="btn gradient-button p-2"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle navigation"
               style={{ width: '44px', height: '44px' }}
@@ -323,45 +384,80 @@ const GuestHeader = ({ onLogin }) => {
 
           <div
             ref={navRef}
-            className="d-none d-lg-flex align-items-center gap-1 position-relative"
-            onMouseLeave={() => setShowCoursesMenu(false)}
+            className="d-none d-lg-flex align-items-center justify-content-center gap-1 position-relative mx-auto"
+            onMouseLeave={() => {
+              setShowCoursesMenu(false);
+              setShowResourcesMenu(false);
+            }}
           >
-            {menuItems.map((item, idx) =>
-              item.isMegaMenu ? (
-                <div
-                  key={idx}
-                  className="position-relative"
-                  onMouseEnter={() => setShowCoursesMenu(true)}
-                >
-                  <span
-                    ref={coursesBtnRef}
-                    className={`nav-link cursor-pointer d-flex align-items-center px-3 py-2 rounded ${
-                      location.pathname === item.path ? 'text-success bg-success-subtle' : ''
-                    }`}
-                    style={{ fontSize: '15px', fontWeight: 500, transition: 'all 0.2s ease' }}
+            {menuItems.map((item, idx) => {
+              if (item.isMegaMenu) {
+                return (
+                  <div
+                    key={idx}
+                    className="position-relative"
+                    onMouseEnter={() => setShowCoursesMenu(true)}
                   >
-                    Courses <FaChevronDown className="ms-1" style={{ fontSize: '12px' }} />
+                    <span
+                      ref={coursesBtnRef}
+                      className={`nav-link cursor-pointer d-flex align-items-center px-3 py-2 rounded ${location.pathname === item.path ? 'text-success bg-success-subtle' : ''
+                        }`}
+                      style={{
+                        fontSize: '15px',
+                        fontWeight: 500,
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      Courses <FaChevronDown className="ms-1" style={{ fontSize: '12px' }} />
+                    </span>
+                    {showCoursesMenu && <MegaMenu />}
+                  </div>
+                );
+              } else if (item.isDropdown) {
+                return (
+                  <div
+                    key={idx}
+                    className="position-relative"
+                    onMouseEnter={() => setShowResourcesMenu(true)}
+                  >
+                    <span
+                      ref={resourcesBtnRef}
+                      className={`nav-link cursor-pointer d-flex align-items-center px-3 py-2 rounded ${item.items.some(i => location.pathname === i.path) ? 'text-success bg-success-subtle' : ''
+                        }`}
+                      style={{
+                        fontSize: '15px',
+                        fontWeight: 500,
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      Resources <FaChevronDown className="ms-1" style={{ fontSize: '12px' }} />
+                    </span>
+                    {showResourcesMenu && <ResourcesDropdown />}
+                  </div>
+                );
+              } else {
+                return (
+                  <span
+                    key={idx}
+                    className={`nav-link cursor-pointer px-3 py-2 rounded ${location.pathname === item.path ? 'text-primary' : ''
+                      }`}
+                    onClick={() => handleNavigate(item.path)}
+                    style={{
+                      fontSize: '15px',
+                      fontWeight: 500,
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    {item.label}
                   </span>
-                  {showCoursesMenu && <MegaMenu />}
-                </div>
-              ) : (
-                <span
-                  key={idx}
-                  className={`nav-link cursor-pointer px-3 py-2 rounded ${
-                    location.pathname === item.path ? 'text-success bg-success-subtle' : ''
-                  }`}
-                  onClick={() => handleNavigate(item.path)}
-                  style={{ fontSize: '15px', fontWeight: 500, transition: 'all 0.2s ease' }}
-                >
-                  {item.label}
-                </span>
-              )
-            )}
+                );
+              }
+            })}
 
             <button
               onClick={() => setShowLoginModal(true)}
-              className="btn btn-primary ms-3"
-              style={{ whiteSpace: 'nowrap', fontSize: '14px', padding: '0.5rem 1.25rem' }}
+              className=" gradient-button btn-md ms-3 rounded-pill"
+              style={{ whiteSpace: 'nowrap', fontSize: '14px', padding: '0.5rem 1.25rem', fontWeight: 600, width: "150px",  }}
             >
               Login
             </button>
@@ -369,12 +465,12 @@ const GuestHeader = ({ onLogin }) => {
 
           {isMobileMenuOpen && (
             <>
-              <div 
+              <div
                 className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-25"
                 style={{ zIndex: 1039 }}
                 onClick={() => setIsMobileMenuOpen(false)}
               />
-              <div 
+              <div
                 className="d-lg-none position-fixed bg-white shadow-lg w-100"
                 style={{
                   top: '80px',
@@ -386,50 +482,93 @@ const GuestHeader = ({ onLogin }) => {
                 }}
               >
                 <div className="p-3" style={{ paddingBottom: '20px' }}>
-                  {menuItems.map((item, idx) =>
-                    item.isMegaMenu ? (
-                      <div key={idx} className="mb-2">
-                        <div
-                          className="d-flex justify-content-between align-items-center fw-semibold text-dark mb-2 p-3 rounded"
-                          style={{ 
-                            fontSize: '16px',
-                            backgroundColor: showCoursesMenu ? '#f8f9fa' : 'white'
-                          }}
-                          onClick={() => setShowCoursesMenu(!showCoursesMenu)}
-                        >
-                          <span>{item.label}</span>
-                          <FaChevronDown 
-                            style={{ 
-                              fontSize: '14px', 
-                              transition: 'transform 0.3s ease',
-                              transform: showCoursesMenu ? 'rotate(180deg)' : 'rotate(0deg)' 
-                            }} 
-                          />
+                  {menuItems.map((item, idx) => {
+                    if (item.isMegaMenu) {
+                      return (
+                        <div key={idx} className="mb-2">
+                          <div
+                            className="d-flex justify-content-between align-items-center fw-semibold text-dark mb-2 p-3 rounded"
+                            style={{
+                              fontSize: '16px',
+                              backgroundColor: showCoursesMenu ? '#f8f9fa' : 'white'
+                            }}
+                            onClick={() => setShowCoursesMenu(!showCoursesMenu)}
+                          >
+                            <span>{item.label}</span>
+                            <FaChevronDown
+                              style={{
+                                fontSize: '14px',
+                                transition: 'transform 0.3s ease',
+                                transform: showCoursesMenu ? 'rotate(180deg)' : 'rotate(0deg)'
+                              }}
+                            />
+                          </div>
+                          {showCoursesMenu && <MobileMegaMenu />}
                         </div>
-                        {showCoursesMenu && <MobileMegaMenu />}
-                      </div>
-                    ) : (
-                      <div
-                        key={idx}
-                        className={`p-3 rounded mb-2 ${
-                          location.pathname === item.path ? 'bg-success text-white' : 'text-dark'
-                        }`}
-                        style={{ 
-                          fontSize: '16px',
-                          fontWeight: 500
-                        }}
-                        onClick={() => handleNavigate(item.path)}
-                      >
-                        {item.label}
-                      </div>
-                    )
-                  )}
+                      );
+                    } else if (item.isDropdown) {
+                      return (
+                        <div key={idx} className="mb-2">
+                          <div
+                            className="d-flex justify-content-between align-items-center fw-semibold text-dark mb-2 p-3 rounded"
+                            style={{
+                              fontSize: '16px',
+                              backgroundColor: showResourcesMenu ? '#f8f9fa' : 'white'
+                            }}
+                            onClick={() => setShowResourcesMenu(!showResourcesMenu)}
+                          >
+                            <span>{item.label}</span>
+                            <FaChevronDown
+                              style={{
+                                fontSize: '14px',
+                                transition: 'transform 0.3s ease',
+                                transform: showResourcesMenu ? 'rotate(180deg)' : 'rotate(0deg)'
+                              }}
+                            />
+                          </div>
+                          {showResourcesMenu && (
+                            <div className="ps-3">
+                              {item.items.map((subItem, subIdx) => (
+                                <div
+                                  key={subIdx}
+                                  className={`p-3 rounded mb-2 ${location.pathname === subItem.path ? 'bg-success text-white' : 'text-dark'
+                                    }`}
+                                  style={{
+                                    fontSize: '16px',
+                                    fontWeight: 500
+                                  }}
+                                  onClick={() => handleNavigate(subItem.path)}
+                                >
+                                  {subItem.label}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div
+                          key={idx}
+                          className={`p-3 rounded mb-2 ${location.pathname === item.path ? 'bg-primary text-white' : 'text-dark'
+                            }`}
+                          style={{
+                            fontSize: '16px',
+                            fontWeight: 500
+                          }}
+                          onClick={() => handleNavigate(item.path)}
+                        >
+                          {item.label}
+                        </div>
+                      );
+                    }
+                  })}
                   <button
                     onClick={() => setShowLoginModal(true)}
-                    className="btn btn-primary w-100 mt-3 py-3"
-                    style={{ 
+                    className="btn btn-md gradient-button w-100 mt-3 py-3"
+                    style={{
                       fontSize: '16px',
-                      fontWeight: 500,
+                      fontWeight: 600,
                       borderRadius: '8px'
                     }}
                   >
@@ -443,12 +582,12 @@ const GuestHeader = ({ onLogin }) => {
       </nav>
 
       {showLoginModal && (
-        <div className="modal-backdrop position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center p-3" 
-             style={{ backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', zIndex: 1055 }}>
+        <div className="modal-backdrop position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center p-3"
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', zIndex: 1055 }}>
           <div
             ref={modalRef}
             className="bg-white rounded-3 shadow-lg p-4 w-100"
-            style={{ 
+            style={{
               maxWidth: '420px',
               animation: 'fadeIn 0.3s ease-in-out',
               opacity: 1,
@@ -483,8 +622,8 @@ const GuestHeader = ({ onLogin }) => {
                     style={{ paddingLeft: '2.5rem', fontSize: '14px' }}
                     required
                   />
-                  <FaPhone className="input-icon" 
-                    style={{ 
+                  <FaPhone className="input-icon"
+                    style={{
                       position: 'absolute',
                       left: '0.75rem',
                       top: '50%',
@@ -508,8 +647,8 @@ const GuestHeader = ({ onLogin }) => {
                     style={{ paddingLeft: '2.5rem', fontSize: '14px' }}
                     required
                   />
-                  <FaLock className="input-icon" 
-                    style={{ 
+                  <FaLock className="input-icon"
+                    style={{
                       position: 'absolute',
                       left: '0.75rem',
                       top: '50%',
@@ -524,9 +663,8 @@ const GuestHeader = ({ onLogin }) => {
               <button
                 type="submit"
                 disabled={isLoggingIn}
-                className={`btn w-100 d-flex align-items-center justify-content-center ${
-                  isLoggingIn ? 'btn-secondary' : 'btn-primary'
-                }`}
+                className={`btn w-100 d-flex align-items-center justify-content-center ${isLoggingIn ? 'btn-secondary' : 'btn-primary'
+                  }`}
                 style={{ fontSize: '15px', padding: '12px' }}
               >
                 {isLoggingIn ? (
@@ -544,6 +682,21 @@ const GuestHeader = ({ onLogin }) => {
           </div>
         </div>
       )}
+
+      <style jsx>{`
+        .nav-link:hover {
+          color: blue !important;
+        }
+        .dropdown-item:hover {
+          color: blue !important;
+        }
+        .hover-bg-light:hover {
+          background-color: #f8f9fa !important;
+        }
+        .cursor-pointer {
+          cursor: pointer;
+        }
+      `}</style>
     </>
   );
 };
@@ -592,13 +745,13 @@ const UserHeader = ({ user, onLogout }) => {
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top" style={{ minHeight: '90px', padding: '1rem 0', zIndex: 1050 }}>
         <div className="container-fluid px-3 px-md-4 px-lg-5">
-          <a 
-            className="navbar-brand cursor-pointer" 
+          <a
+            className="navbar-brand cursor-pointer"
             onClick={() => navigate('/dashboard')}
           >
-            <img 
-              src="/logo/hicap-logo.png" 
-              alt="HiCap Logo" 
+            <img
+              src="/logo/hicap-logo.png"
+              alt="HiCap Logo"
               className="img-fluid"
               style={{ height: '50px' }}
             />
@@ -612,13 +765,13 @@ const UserHeader = ({ user, onLogout }) => {
                 style={{ fontSize: '14px', padding: '0.6rem 1rem' }}
                 onClick={() => setShowMobileUserMenu(!showMobileUserMenu)}
               >
-                <FaUserCircle style={{ fontSize: '16px' }} />
-                <FaChevronDown className={`${showMobileUserMenu ? 'rotate-180' : ''}`} 
+                <FaUserCircle className='text-primary' style={{ fontSize: '16px' }} />
+                <FaChevronDown className={`${showMobileUserMenu ? 'rotate-180' : ''}`}
                   style={{ fontSize: '12px', transform: showMobileUserMenu ? 'rotate(180deg)' : '', transition: 'transform 0.3s ease' }} />
               </button>
               {showMobileUserMenu && (
-                <div className="dropdown-menu show position-absolute end-0 mt-2" 
-                     style={{ minWidth: '220px' }}>
+                <div className="dropdown-menu show position-absolute end-0 mt-2"
+                  style={{ minWidth: '220px' }}>
                   <div className="px-3 py-3 bg-light border-bottom">
                     <div className="fw-medium text-truncate" style={{ fontSize: '14px' }}>{user?.name || 'User'}</div>
                     <div className="text-muted text-truncate" style={{ fontSize: '12px' }}>{user?.email || user?.phone}</div>
@@ -628,9 +781,8 @@ const UserHeader = ({ user, onLogout }) => {
                     return (
                       <button
                         key={idx}
-                        className={`dropdown-item d-flex align-items-center gap-2 py-2 ${
-                          location.pathname === item.path ? 'text-success bg-success-subtle' : ''
-                        }`}
+                        className={`dropdown-item d-flex align-items-center gap-2 py-2 ${location.pathname === item.path ? 'text-success bg-success-subtle' : ''
+                          }`}
                         style={{ fontSize: '14px' }}
                         onClick={() => handleNavigate(item.path)}
                       >
@@ -661,17 +813,16 @@ const UserHeader = ({ user, onLogout }) => {
             </button>
           </div>
 
-          <nav className="d-none d-lg-flex align-items-center gap-2">
+          <nav className="d-none d-lg-flex align-items-center justify-content-center gap-2 mx-auto">
             {dashboardMenuItems.map((item, idx) => {
               const IconComponent = item.icon;
               return (
                 <button
                   key={idx}
-                  className={`btn btn-link text-decoration-none d-flex align-items-center gap-2 ${
-                    location.pathname === item.path 
-                      ? 'text-success bg-success-subtle' 
+                  className={`btn btn-link text-decoration-none d-flex align-items-center gap-2 ${location.pathname === item.path
+                      ? 'text-success bg-success-subtle'
                       : 'text-muted'
-                  }`}
+                    }`}
                   style={{
                     fontSize: '14px',
                     fontWeight: 500,
@@ -695,17 +846,17 @@ const UserHeader = ({ user, onLogout }) => {
                 style={{ fontSize: '14px', padding: '0.6rem 1rem' }}
                 onClick={() => setShowUserMenu(!showUserMenu)}
               >
-                <FaUserCircle style={{ fontSize: '16px' }} />
+                <FaUserCircle className='text-primary' style={{ fontSize: '16px' }} />
                 <div className="d-none d-xl-block text-start" style={{ maxWidth: '140px' }}>
                   <div className="fw-medium text-truncate" style={{ fontSize: '13px' }}>{user?.name || 'Account'}</div>
                   <div className="text-muted text-truncate" style={{ fontSize: '11px' }}>{user?.email || user?.phone}</div>
                 </div>
-                <FaChevronDown className={`${showUserMenu ? 'rotate-180' : ''}`} 
+                <FaChevronDown className={`${showUserMenu ? 'rotate-180' : ''}`}
                   style={{ fontSize: '12px', transform: showUserMenu ? 'rotate(180deg)' : '', transition: 'transform 0.3s ease' }} />
               </button>
               {showUserMenu && (
-                <div className="dropdown-menu show position-absolute end-0 mt-2" 
-                     style={{ minWidth: '220px' }}>
+                <div className="dropdown-menu show position-absolute end-0 mt-2"
+                  style={{ minWidth: '220px' }}>
                   <div className="px-3 py-3 bg-light border-bottom">
                     <div className="fw-medium text-truncate" style={{ fontSize: '14px' }}>{user?.name || 'User'}</div>
                     <div className="text-muted text-truncate" style={{ fontSize: '12px' }}>{user?.email || user?.phone || 'Welcome!'}</div>
@@ -726,12 +877,12 @@ const UserHeader = ({ user, onLogout }) => {
 
           {isMobileMenuOpen && (
             <>
-              <div 
+              <div
                 className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-25"
                 style={{ zIndex: 1039 }}
                 onClick={() => setIsMobileMenuOpen(false)}
               />
-              <div 
+              <div
                 className="d-lg-none position-fixed bg-white shadow-lg w-100"
                 style={{
                   top: '90px',
@@ -750,7 +901,7 @@ const UserHeader = ({ user, onLogout }) => {
                       <div className="text-muted text-truncate" style={{ fontSize: '13px' }}>{user?.email || user?.phone}</div>
                     </div>
                   </div>
-                  
+
                   <div>
                     <h5 className="fw-bold border-bottom pb-3 mb-4" style={{ fontSize: '18px' }}>My Dashboard</h5>
                     {dashboardMenuItems.map((item, idx) => {
@@ -758,11 +909,10 @@ const UserHeader = ({ user, onLogout }) => {
                       return (
                         <button
                           key={idx}
-                          className={`btn w-100 text-start d-flex align-items-center gap-3 p-3 mb-3 rounded ${
-                            location.pathname === item.path
+                          className={`btn w-100 text-start d-flex align-items-center gap-3 p-3 mb-3 rounded ${location.pathname === item.path
                               ? 'btn-primary-subtle text-success border-start border-success border-4'
                               : 'btn-light'
-                          }`}
+                            }`}
                           style={{ fontSize: '15px' }}
                           onClick={() => handleNavigate(item.path)}
                         >
@@ -771,7 +921,7 @@ const UserHeader = ({ user, onLogout }) => {
                         </button>
                       );
                     })}
-                    
+
                     <button
                       className="btn btn-outline-danger w-100 d-flex align-items-center gap-3 p-3 mt-4"
                       style={{ fontSize: '15px' }}
@@ -787,6 +937,20 @@ const UserHeader = ({ user, onLogout }) => {
           )}
         </div>
       </nav>
+
+      <style jsx>{`
+        .btn-link:hover {
+          color: blue !important;
+          background-color: #f8f9fa !important;
+        }
+        .dropdown-item:hover {
+          color: blue !important;
+          background-color: #f8f9fa !important;
+        }
+        .cursor-pointer {
+          cursor: pointer;
+        }
+      `}</style>
     </>
   );
 };
