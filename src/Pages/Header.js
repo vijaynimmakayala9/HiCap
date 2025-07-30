@@ -400,7 +400,7 @@ const GuestHeader = ({ onLogin }) => {
                   >
                     <span
                       ref={coursesBtnRef}
-                      className={`nav-link cursor-pointer d-flex align-items-center px-3 py-2 rounded ${location.pathname === item.path ? 'text-success bg-success-subtle' : ''
+                      className={`nav-link cursor-pointer d-flex align-items-center px-3 py-2 rounded ${location.pathname === item.path ? 'text-primary' : ''
                         }`}
                       style={{
                         fontSize: '15px',
@@ -422,7 +422,7 @@ const GuestHeader = ({ onLogin }) => {
                   >
                     <span
                       ref={resourcesBtnRef}
-                      className={`nav-link cursor-pointer d-flex align-items-center px-3 py-2 rounded ${item.items.some(i => location.pathname === i.path) ? 'text-success bg-success-subtle' : ''
+                      className={`nav-link cursor-pointer d-flex align-items-center px-3 py-2 rounded ${item.items.some(i => location.pathname === i.path) ? 'text-primary' : ''
                         }`}
                       style={{
                         fontSize: '15px',
@@ -531,7 +531,7 @@ const GuestHeader = ({ onLogin }) => {
                               {item.items.map((subItem, subIdx) => (
                                 <div
                                   key={subIdx}
-                                  className={`p-3 rounded mb-2 ${location.pathname === subItem.path ? 'bg-success text-white' : 'text-dark'
+                                  className={`p-3 rounded mb-2 ${location.pathname === subItem.path ? 'bg-primary text-white' : 'text-dark'
                                     }`}
                                   style={{
                                     fontSize: '16px',
@@ -595,7 +595,7 @@ const GuestHeader = ({ onLogin }) => {
             }}
           >
             <div className="d-flex justify-content-between align-items-center mb-4">
-              <h4 className="text-success mb-0" style={{ fontSize: '24px' }}>Login</h4>
+              <h4 className="text-primary mb-0" style={{ fontSize: '24px' }}>Login</h4>
               <button
                 onClick={() => setShowLoginModal(false)}
                 className="btn-close"
@@ -781,7 +781,7 @@ const UserHeader = ({ user, onLogout }) => {
                     return (
                       <button
                         key={idx}
-                        className={`dropdown-item d-flex align-items-center gap-2 py-2 ${location.pathname === item.path ? 'text-success bg-success-subtle' : ''
+                        className={`dropdown-item d-flex align-items-center gap-2 py-2 ${location.pathname === item.path ? 'text-primary ' : ''
                           }`}
                         style={{ fontSize: '14px' }}
                         onClick={() => handleNavigate(item.path)}
@@ -820,7 +820,7 @@ const UserHeader = ({ user, onLogout }) => {
                 <button
                   key={idx}
                   className={`btn btn-link text-decoration-none d-flex align-items-center gap-2 ${location.pathname === item.path
-                      ? 'text-success bg-success-subtle'
+                      ? 'text-primary '
                       : 'text-muted'
                     }`}
                   style={{
@@ -894,8 +894,8 @@ const UserHeader = ({ user, onLogout }) => {
                 }}
               >
                 <div className="p-4">
-                  <div className="d-flex align-items-center gap-3 p-4 bg-success-subtle rounded mb-4">
-                    <FaUserCircle className="text-success" style={{ fontSize: '2.5rem' }} />
+                  <div className="d-flex align-items-center gap-3 p-4 bg-primary-subtle rounded mb-4">
+                    <FaUserCircle className="text-primary" style={{ fontSize: '2.5rem' }} />
                     <div className="flex-grow-1 overflow-hidden">
                       <div className="fw-medium text-truncate" style={{ fontSize: '16px' }}>{user?.name || 'User'}</div>
                       <div className="text-muted text-truncate" style={{ fontSize: '13px' }}>{user?.email || user?.phone}</div>
@@ -910,7 +910,7 @@ const UserHeader = ({ user, onLogout }) => {
                         <button
                           key={idx}
                           className={`btn w-100 text-start d-flex align-items-center gap-3 p-3 mb-3 rounded ${location.pathname === item.path
-                              ? 'btn-primary-subtle text-success border-start border-success border-4'
+                              ? 'btn-primary-subtle text-primary border-start border-primary border-4'
                               : 'btn-light'
                             }`}
                           style={{ fontSize: '15px' }}

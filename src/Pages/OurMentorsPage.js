@@ -8,13 +8,13 @@ const OurMentorsPage = () => {
   const [benefits, setBenefits] = useState([]);
 
   useEffect(() => {
-    // Fetch mentors
-    axios.get('https://hicap-backend-4rat.onrender.com/api/our-mentor')
+    axios
+      .get('https://hicap-backend-4rat.onrender.com/api/our-mentor')
       .then(res => setMentors(res.data.data || []))
       .catch(err => console.error('Mentor API error:', err));
 
-    // Fetch mentorship benefits
-    axios.get('https://hicap-backend-4rat.onrender.com/api/our-mentor/experience')
+    axios
+      .get('https://hicap-backend-4rat.onrender.com/api/our-mentor/experience')
       .then(res => setBenefits(res.data.data || []))
       .catch(err => console.error('Benefits API error:', err));
   }, []);
@@ -23,64 +23,95 @@ const OurMentorsPage = () => {
     <>
       <Header />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 font-roboto">
-        {/* Mentors Section Header */}
-        <div className="max-w-3xl mx-auto mb-16 text-center">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Our Mentors</h1>
-          <div className="w-48 h-2 rounded-full bg-[#007860] mx-auto mb-4"></div>
-          <p className="text-lg text-gray-600">Learn from industry experts with real-world experience</p>
+      <div className="container py-5 mt-5">
+        {/* Mentors Section Header with Custom Underline */}
+        <div className="text-center mb-5">
+          <div className="d-inline-block position-relative mb-3">
+            <h2 className="fw-bold text-dark mb-1">
+              Our <span style={{ color: "#064C89" }}>Mentors</span>
+            </h2>
+            <div
+              style={{
+                width: "100px",
+                height: "5px",
+                backgroundColor: "#064C89",
+                borderRadius: "999px",
+                position: "absolute",
+                left: "0",  // Changed from 50% to 0
+                bottom: "-6px",
+              }}
+            ></div>
+          </div>
+          <p className="lead text-secondary">
+            Learn from industry experts with real-world experience
+          </p>
         </div>
 
-        {/* Mentors Cards in Alternating Layout */}
-        <div className="mb-16">
-          <div className="container px-0">
-            {mentors.map((mentor, idx) => (
-              <div
-                key={mentor._id}
-                className={`row align-items-center mb-12 g-4 ${idx % 2 === 0 ? '' : 'flex-md-row-reverse'}`}
-              >
-                <div className="col-md-4 text-center">
-                  <img
-                    src={mentor.image}
-                    alt={mentor.name}
-                    className="img-fluid rounded-circle shadow-lg"
-                    style={{
-                      width: '220px',
-                      height: '220px',
-                      objectFit: 'cover',
-                      border: '4px solid #007860'
-                    }}
-                  />
-                </div>
-                <div className="col-md-8">
-                  <div className="p-4 p-md-5 rounded shadow-sm bg-white">
-                    <h4 className="fw-bold text-[#007860] mb-2">{mentor.name}</h4>
-                    <h6 className="text-[#4CAF50] mb-3">- {mentor.role} -</h6>
-                    <p className="text-gray-700 mb-0">{mentor.content}</p>
-                  </div>
+        {/* Mentors Cards */}
+        <div className="mb-5">
+          {mentors.map((mentor, idx) => (
+            <div
+              key={mentor._id}
+              className={`row align-items-center g-4 mb-5 ${idx % 2 !== 0 ? 'flex-md-row-reverse' : ''}`}
+            >
+              <div className="col-md-4 text-center">
+                <img
+                  src={mentor.image}
+                  alt={mentor.name}
+                  className="img-fluid rounded-circle shadow"
+                  style={{
+                    width: '220px',
+                    height: '220px',
+                    objectFit: 'cover',
+                    border: '4px solid #0077B5',
+                  }}
+                />
+              </div>
+              <div className="col-md-8">
+                <div className="bg-white shadow-sm rounded p-4">
+                  <h4 className="fw-bold mb-2" style={{ color: '#064C89' }}>{mentor.name}</h4>
+                  <h6 className="mb-3" style={{ color: '#0077B5' }}>- {mentor.role} -</h6>
+                  <p className="text-muted" style={{ fontSize: '1rem', lineHeight: '1.6' }}>{mentor.content}</p>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
 
         {/* Mentorship Benefits Section */}
-        <div className="bg-[#f8f9fa] rounded-xl p-8 md:p-12 mb-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-8">
-            Why Choose Our Mentors?
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
+        <div className="bg-light rounded p-4 p-md-5 mb-5">
+          <div className="text-center mb-4">
+            <div className="d-inline-block position-relative mb-3">
+              <h2 className="fw-bold text-dark mb-1">
+                Why Choose Our <span style={{ color: "#064C89" }}>Mentors?</span>
+              </h2>
+              <div
+                style={{
+                  width: "100px",
+                  height: "5px",
+                  backgroundColor: "#064C89",
+                  borderRadius: "999px",
+                  position: "absolute",
+                  left: "0",  // Changed from 50% to 0
+                  bottom: "-6px",
+                }}
+              ></div>
+            </div>
+          </div>
+
+          <div className="row">
             {benefits.map((item) => (
-              <div key={item._id} className="text-center">
-                <div className="w-16 h-16 rounded-full overflow-hidden mx-auto mb-4 border-2 border-[#007860]">
+              <div key={item._id} className="col-md-4 mb-4 text-center">
+                <div className="mx-auto mb-3 rounded-circle overflow-hidden border border-primary" style={{ width: '64px', height: '64px' }}>
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-full h-full object-cover"
+                    className="w-100 h-100"
+                    style={{ objectFit: 'cover' }}
                   />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">{item.name}</h3>
-                <p className="text-gray-600">{item.content}</p>
+                <h5 className="fw-semibold mb-2">{item.name}</h5>
+                <p className="text-muted">{item.content}</p>
               </div>
             ))}
           </div>

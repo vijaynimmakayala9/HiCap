@@ -185,9 +185,9 @@ const CourseDetail = () => {
                     alt={course.name}
                     className="rounded-3 border-3 border-white img-fluid"
                   />
-                  <Badge bg="white" text="primary" className="position-absolute bottom-0 start-0 m-3 shadow-sm fw-bold">
+                  {/* <Badge bg="white" text="primary" className="position-absolute bottom-0 start-0 m-3 shadow-sm fw-bold">
                     New Batch Starting Soon!
-                  </Badge>
+                  </Badge> */}
                 </div>
               </Col>
               {/* Text Content */}
@@ -199,9 +199,13 @@ const CourseDetail = () => {
                   <h1 className="display-5 fw-bold mb-3" style={{ color: "#064C89" }}>
                     {course.name}
                   </h1>
-                  <p className="lead text-muted mb-4">
+                  <p
+                    className="lead mb-4"
+                    style={{ color: "#000", fontWeight: 420 }}
+                  >
                     {course.description}
                   </p>
+
 
                   <div className="mb-3">
                     <StarRating rating={course.rating} reviewCount={course.reviewCount} />
@@ -301,7 +305,7 @@ const CourseDetail = () => {
                                 className="img-fluid rounded-circle"
                                 style={{ width: '48px', height: '48px', objectFit: 'cover' }}
                               />
-                              <p className="mb-0 small flex-grow-1">{feature.title}</p>
+                              <h4 className="mb-0 small text-dark flex-grow-1">{feature.title}</h4>
                             </Card.Body>
                           </Card>
                         </Col>
@@ -359,20 +363,29 @@ const CourseDetail = () => {
 
           {/* Learning Objectives */}
           <Container className="py-4">
-            <Card className="border-0 shadow-sm">
+            <Card className="border-0">
               <Card.Body>
-                <Card.Title className="border-bottom pb-2" style={{color: "#064C89"}}>
+                <Card.Title
+                  className="border-0 pb-3 fw-bold"
+                  style={{ color: "#064C89", fontSize: "1.75rem" }}
+                >
                   Learning Objectives
                 </Card.Title>
-                <Row className="g-3">
+                <Row className="g-4">
                   {course.courseObject?.map((item, index) => (
                     <Col xs={12} sm={6} lg={4} key={index}>
-                      <Card className="border-0 h-100 bg-info bg-opacity-10" >
+                      <Card className="border-0 h-100 bg-info bg-opacity-10 rounded-4 shadow-sm">
                         <Card.Body>
-                          <Card.Title className="fs-6" style={{color: "#064C89"}}>
+                          <Card.Title
+                            className="fs-6 fw-semibold mb-2"
+                            style={{ color: "#064C89", letterSpacing: "0.3px" }}
+                          >
                             {item.title || `Objective ${index + 1}`}
                           </Card.Title>
-                          <Card.Text className="small text-muted">
+                          <Card.Text
+                            className="text-muted small"
+                            style={{ lineHeight: "1.5", fontSize: "0.95rem" }}
+                          >
                             {item.content}
                           </Card.Text>
                         </Card.Body>
@@ -384,20 +397,23 @@ const CourseDetail = () => {
             </Card>
           </Container>
 
+
           {/* FAQs */}
           {course.faq && course.faq.length > 0 && (
             <Container className="py-4">
               <Card className="border-0">
-                <Card.Body className="bg-info bg-opacity-10" >
-                  <Card.Title style={{color: "#064C89"}}>
+                <Card.Body className="bg-info bg-opacity-10 rounded-4 shadow-sm">
+                  <Card.Title className="pb-3 fw-bold" style={{ color: "#064C89", fontSize: "1.75rem" }}>
                     Frequently Asked Questions
                   </Card.Title>
-                  <Accordion defaultActiveKey="0">
+                  <Accordion>
                     {course.faq.map((item, index) => (
                       <Accordion.Item eventKey={index.toString()} key={index}>
-                        <Accordion.Header style={{color: "#064C89"}}>{item.question}</Accordion.Header>
-                        <Accordion.Body style={{color: "#064C89"}}>
-                          {item.answer}
+                        <Accordion.Header className="fw-semibold">
+                          {item.question}
+                        </Accordion.Header>
+                        <Accordion.Body className="text-dark small" style={{ lineHeight: "1.6" }}>
+                          {item.answer || "No answer provided"} {/* Fallback if answer is empty */}
                         </Accordion.Body>
                       </Accordion.Item>
                     ))}
@@ -407,11 +423,12 @@ const CourseDetail = () => {
             </Container>
           )}
 
+
           {/* Who Can Learn */}
           <Container className="py-4">
             <Card className="border-0 shadow-sm">
               <Card.Body>
-                <Card.Title className="text-primary border-bottom pb-2">
+                <Card.Title className="border-bottom pb-2" style={{ color: "#064C89", fontSize: "1.75rem" }}>
                   Who Can Learn
                 </Card.Title>
                 <Row className="g-3">
@@ -447,8 +464,8 @@ const CourseDetail = () => {
                             style={{ width: '48px', height: '48px', objectFit: 'cover' }}
                           />
                           <div>
-                            <h5 className="text-primary">{learner.title}</h5>
-                            <p className="small text-muted mb-0">{learner.description}</p>
+                            <h5 className="" style={{ color: "#064C89" }}>{learner.title}</h5>
+                            <h6 className="small text-muted mb-0">{learner.description}</h6>
                           </div>
                         </Card.Body>
                       </Card>
@@ -463,44 +480,44 @@ const CourseDetail = () => {
           <Container className="py-4">
             <Card className="border-0 shadow-sm">
               <Card.Body>
-                <Card.Title className="text-primary border-bottom pb-2">
+                <Card.Title className="border-bottom pb-2" style={{ color: "#064C89", fontSize: "1.75rem" }}>
                   Course Information
                 </Card.Title>
                 <Row>
                   <Col md={6}>
-                    <h5 className="text-primary">Technical Details</h5>
+                    <h5 className="" style={{ color: "#064C89" }}>Course Statistics</h5>
                     <ul className="list-unstyled">
                       <li className="d-flex justify-content-between py-2 border-bottom">
-                        <span className="text-muted">Total Lessons:</span>
-                        <span className="fw-semibold">{course.noOfLessons}</span>
-                      </li>
-                      <li className="d-flex justify-content-between py-2 border-bottom">
-                        <span className="text-muted">Enrolled Students:</span>
-                        <span className="fw-semibold">{course.noOfStudents.toLocaleString()}</span>
-                      </li>
-                    </ul>
-                  </Col>
-                  <Col md={6}>
-                    <h5 className="text-primary">Course Statistics</h5>
-                    <ul className="list-unstyled">
-                      <li className="d-flex justify-content-between py-2 border-bottom">
-                        <span className="text-muted">Course Category:</span>
+                        <span className="text-dark">Course Category:</span>
                         <span className="fw-semibold">{course.category}</span>
                       </li>
                       <li className="d-flex justify-content-between py-2 border-bottom">
-                        <span className="text-muted">Subcategory:</span>
+                        <span className="text-dark">Subcategory:</span>
                         <span className="fw-semibold">{course.subcategory}</span>
                       </li>
                       <li className="d-flex justify-content-between py-2 border-bottom">
-                        <span className="text-muted">Average Rating:</span>
+                        <span className="text-dark">Average Rating:</span>
                         <span className="fw-semibold">{course.rating}/5.0</span>
                       </li>
                       <li className="d-flex justify-content-between py-2 border-bottom">
-                        <span className="text-muted">Total Reviews:</span>
+                        <span className="text-dark">Total Reviews:</span>
                         <span className="fw-semibold">{course.reviewCount.toLocaleString()}</span>
                       </li>
                     </ul>
                   </Col>
+                  <Col md={6}>
+                    <h5 className="" style={{ color: "#064C89" }}>Technical Details</h5>
+                    <ul className="list-unstyled">
+                      <li className="d-flex justify-content-between py-2 border-bottom">
+                        <span className="text-dark">Total Lessons:</span>
+                        <span className="fw-semibold">{course.noOfLessons}</span>
+                      </li>
+                      <li className="d-flex justify-content-between py-2 border-bottom">
+                        <span className="text-dark">Enrolled Students:</span>
+                        <span className="fw-semibold">{course.noOfStudents.toLocaleString()}</span>
+                      </li>
+                    </ul>
+                  </Col>                  
                 </Row>
               </Card.Body>
             </Card>
@@ -509,7 +526,7 @@ const CourseDetail = () => {
           {/* Related Courses */}
           {relatedCourses.length > 0 && (
             <Container className="py-4">
-              <h2 className="text-primary mb-4">You May Also Like</h2>
+              <h2 className="mb-4" style={{ color: "#064C89" }}>You May Also Like</h2>
               <Row className="g-4">
                 {relatedCourses.map(relatedCourse => (
                   <Col xs={12} sm={6} lg={4} key={relatedCourse._id}>
@@ -541,7 +558,7 @@ const CourseDetail = () => {
                             <FaBook className="me-1" /> {relatedCourse.noOfLessons}
                           </small>
                         </div>
-                        <Card.Text className="small text-muted mb-3">
+                        <Card.Text className="small text-dark mb-3">
                           {relatedCourse.description}
                         </Card.Text>
                         <div className="d-flex flex-wrap gap-1 mb-3">
