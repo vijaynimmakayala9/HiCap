@@ -37,15 +37,15 @@ const LiveClasses = () => {
   }, []);
 
   return (
-    <section className="container py-5 position-relative">
+    <section className="container py-5 position-relative p-2">
       {/* Heading */}
       <div className="mb-4">
-        <h2 className="fw-bold text-dark mb-2">Live Classes</h2>
+        <h2 className="fw-bold textcolor mb-2">Live Classes</h2>
         <div
           style={{
             width: '180px',
             height: '3px',
-            backgroundColor: '#007860',
+            backgroundColor: '#ad2132',
             borderRadius: '999px',
           }}
         />
@@ -54,19 +54,34 @@ const LiveClasses = () => {
       {/* Scroll Buttons */}
       <button
         onClick={() => scroll(-320)}
-        className="btn btn-light position-absolute top-50 start-0 translate-middle-y z-3 d-none d-md-flex shadow"
-        style={{ borderRadius: '50%' }}
+        className="btn bg-meroon text-white position-absolute top-50 start-0 translate-middle-y z-3 shadow"
+        style={{
+          width: '40px',
+          height: '40px',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
       >
         <FaChevronLeft />
       </button>
 
       <button
         onClick={() => scroll(320)}
-        className="btn btn-light position-absolute top-50 end-0 translate-middle-y z-3 d-none d-md-flex shadow"
-        style={{ borderRadius: '50%' }}
+        className="btn bg-meroon text-white position-absolute top-50 end-0 translate-middle-y z-3 shadow"
+        style={{
+          width: '40px',
+          height: '40px',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
       >
         <FaChevronRight />
       </button>
+
 
       {/* Content */}
       {loading ? (
@@ -85,7 +100,7 @@ const LiveClasses = () => {
             <div key={cls._id} className="flex-shrink-0" style={{ width: '300px' }}>
               <div className="card h-100 shadow rounded-4 p-3 d-flex flex-column justify-content-between">
                 <div className="mb-3">
-                  <h5 className="fw-bold text-dark mb-1">{cls.title}</h5>
+                  <h5 className="fw-bold textcolor mb-1">{cls.title}</h5>
                   <p className="text-muted mb-2">{cls.description}</p>
                   <small className="text-secondary">
                     <strong>Mentor:</strong> {cls.mentorName}
@@ -101,7 +116,7 @@ const LiveClasses = () => {
                     className="bg-light border d-flex flex-column align-items-center justify-content-center px-2 py-2 rounded"
                     style={{ width: '48%', borderColor: '#00000022' }}
                   >
-                    <MdOutlineTimer size={24} color="#007860" />
+                    <MdOutlineTimer size={24} color="#ad2132" />
                     <small className="fw-medium mt-1">{cls.duration}</small>
                   </div>
 
@@ -109,12 +124,12 @@ const LiveClasses = () => {
                     className="bg-light border d-flex flex-column align-items-center justify-content-center px-2 py-2 rounded"
                     style={{ width: '48%', borderColor: '#00000022' }}
                   >
-                    <SiGoogleclassroom size={24} color="#007860" />
+                    <SiGoogleclassroom size={24} color="#ad2132" />
                     <small className="fw-medium mt-1">Live</small>
                   </div>
                 </div>
 
-                <button className='btn btn-md btn-primary'><a
+                <button className='btn btn-md bg-meroon'><a
                   href={cls.meetLink}
                   target="_blank"
                   rel="noopener noreferrer"

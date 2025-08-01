@@ -21,7 +21,7 @@ const CompletedCourses = () => {
       .then((res) => {
         if (res.data.success) {
           const filtered = res.data.data.filter(
-            (item) => item.status === 'completed'
+            (item) => item.status === 'completed' && item.course
           );
           setCompletedCourses(filtered);
         }
@@ -50,10 +50,10 @@ const CompletedCourses = () => {
   const visibleCourses = completedCourses.slice(currentIndex, currentIndex + 3);
 
   return (
-    <div className="container mt-5 completed-courses">
+    <div className="container mt-5 completed-courses p-2">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h3 className="m-0 d-flex align-items-center">
-          <FaCertificate className="me-2 text-primary" /> Completed Courses
+          <FaCertificate className="me-2 textcolor" /> Completed Courses
         </h3>
         <div>
           <button className="btn btn-outline-secondary me-2" onClick={prevSlide}>
@@ -67,7 +67,7 @@ const CompletedCourses = () => {
 
       {loading ? (
         <div className="text-center py-5">
-          <div className="spinner-border text-primary" role="status">
+          <div className="spinner-border textcolor" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>
@@ -76,47 +76,53 @@ const CompletedCourses = () => {
       ) : (
         <div className="row">
           {visibleCourses.map(({ _id, course, updatedAt }) => (
-            <div className="col-12 col-sm-12 col-md-6 col-lg-4 mb-4" key={_id}>
-              <div className="card h-100 shadow-sm d-flex flex-column">
-                <img
-                  src={course.image}
-                  className="card-img-top"
-                  alt={course.name}
-                  style={{ height: '180px', objectFit: 'cover' }}
-                />
-                <div className="card-body d-flex flex-column">
-                  <h5 className="card-title mb-2">{course.name}</h5>
-                  <p className="card-text text-muted small flex-grow-1" style={{ minHeight: '60px' }}>
-                    {course.description}
-                  </p>
+            course && (
+              <div className="col-12 col-sm-12 col-md-6 col-lg-4 mb-4" key={_id}>
+                <div className="card h-100 shadow d-flex flex-column">
+                  <img
+                    src={course.image}
+                    className="card-img-top"
+                    alt={course.name}
+                    style={{ height: '180px', objectFit: 'cover' }}
+                  />
+                  <div className="card-body d-flex flex-column">
+                    <h5 className="card-title mb-2">{course.name}</h5>
+                    <p
+                      className="card-text text-muted small flex-grow-1"
+                      style={{ minHeight: '60px' }}
+                    >
+                      {course.description}
+                    </p>
 
-                  <div className="rating mb-2 d-flex">
-                    {[...Array(5)].map((_, i) => (
-                      <FaStar
-                        key={i}
-                        className={
-                          i < Math.floor(course.rating) ? 'text-warning' : 'text-secondary'
-                        }
-                      />
-                    ))}
-                    <small className="text-muted ms-2">({course.reviewCount})</small>
+                    <div className="rating mb-2 d-flex">
+                      {[...Array(5)].map((_, i) => (
+                        <FaStar
+                          key={i}
+                          className={
+                            i < Math.floor(course.rating)
+                              ? 'text-warning'
+                              : 'text-secondary'
+                          }
+                        />
+                      ))}
+                      <small className="text-muted ms-2">({course.reviewCount})</small>
+                    </div>
+
+                    <div className="d-flex justify-content-between align-items-center mt-2">
+                      <span className="badge bg-success">Completed</span>
+                      <small className="text-muted">
+                        {new Date(updatedAt).toLocaleDateString()}
+                      </small>
+                    </div>
                   </div>
 
-                  <div className="d-flex justify-content-between align-items-center mt-2">
-                    <span className="badge bg-success">Completed</span>
-                    <small className="text-muted">
-                      {new Date(updatedAt).toLocaleDateString()}
-                    </small>
+                  <div className="card-footer bg-white border-top-0 d-flex justify-content-between">
+                    <button className="btn btn-md bg-meroon">Certificate</button>
+                    <button className="btn btn-md btn-outline-meroon">View</button>
                   </div>
-                </div>
-
-                <div className="card-footer bg-white border-top-0 d-flex justify-content-between">
-                  <button className="btn btn-md btn-primary">Certificate</button>
-                  <button className="btn btn-md btn-outline-primary">View</button>
                 </div>
               </div>
-            </div>
-
+            )
           ))}
         </div>
       )}

@@ -127,13 +127,13 @@ const CourseAndFeatures = () => {
                   </div>
                   <div className="col-lg-6">
                     <div className="ps-lg-4">
-                      <h3 className="fw-bold mb-3 display-6" >IT <span style={{ color: "#064C89"}} >TRAINING</span> AND <span style={{ color: "#064C89"}} >SKILL</span> DEVELOPMENT”</h3>
+                      <h3 className="fw-bold mb-3 display-6" >IT <span style={{ color: "#ad2132"}} >TRAINING</span> AND <span style={{ color: "#ad2132"}} >SKILL</span> DEVELOPMENT”</h3>
                       <p className=" mb-4 ">{course.description}</p>
 
                       {/* <ul className="mb-4">
                         {course.features.map((feature, i) => (
                           <li key={i} className="mb-2">
-                            <i className="bi bi-check-circle-fill text-primary me-2"></i>
+                            <i className="bi bi-check-circle-fill textcolor me-2"></i>
                             {feature}
                           </li>
                         ))}

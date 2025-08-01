@@ -57,12 +57,12 @@ const MagnitiaCourses = () => {
           {/* Text Block */}
           <div className={`col-lg-6 ${index % 2 === 1 ? 'order-lg-2' : ''}`}>
             <div className="px-3">
-              <h5 className="text-primary">
+              <h5 className="textcolor">
                 {course.name.charAt(0).toUpperCase() + course.name.slice(1)}
               </h5>
               <h3 className="fw-bold text-uppercase">
                 <span style={{ color: '#000' }}>{course.title}</span>{' '}
-                <span className="" style={{ color: '#064C89' }}>Techsterker</span>
+                <span className="" style={{ color: '#ad2132' }}>Techsterker</span>
               </h3>
               <p className="mt-3 text-muted">{course.content}</p>
               <button

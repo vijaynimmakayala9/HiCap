@@ -1,119 +1,192 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { FaRegClock, FaTasks, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
-const courses = [
-  {
-    title: 'Multi-Cloud DevOps',
-    duration: '3 Months',
-    projects: '6 Live Projects',
-    rating: '4.7/5',
-    image: 'https://img.freepik.com/free-vector/devops-team-concept-illustration_114360-2585.jpg',
-    description:
-      'AI Data Analyst Masters Training offers a comprehensive way to develop advanced data analysis and interpretation skills.',
-  },
-  {
-    title: 'Cybersecurity Essentials',
-    duration: '4 Months',
-    projects: '5 Live Projects',
-    rating: '4.8/5',
-    image: 'https://img.freepik.com/free-vector/cyber-security-concept_23-2148532223.jpg',
-    description:
-      'This course builds strong foundational cybersecurity skills to protect networks and systems from threats.',
-  },
-  {
-    title: 'Full-Stack Web Development',
-    duration: '6 Months',
-    projects: '8 Live Projects',
-    rating: '4.9/5',
-    image: 'https://img.freepik.com/free-vector/programming-concept-illustration_114360-1351.jpg',
-    description:
-      'Learn front-end and back-end development to build scalable, responsive web applications.',
-  },
-  {
-    title: 'Cloud Architecture',
-    duration: '5 Months',
-    projects: '7 Live Projects',
-    rating: '4.7/5',
-    image: 'https://img.freepik.com/free-vector/cloud-hosting-concept-illustration_114360-7280.jpg',
-    description:
-      'Master cloud infrastructure design and deployment for scalable business solutions.',
-  },
-];
-
 const RecommendedCourses = () => {
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [recommendedCourses, setRecommendedCourses] = useState([]);
+  const [enrolledCategories, setEnrolledCategories] = useState([]);
   const navigate = useNavigate();
+
+  const userId = '68839831a3e1d9e110f71081'; // Replace with actual user ID logic
+
+  // Fetch enrolled courses and categories
+  useEffect(() => {
+    const fetchEnrollments = async () => {
+      try {
+        const response = await axios.get(
+          `https://hicap-backend-4rat.onrender.com/api/enrollments/${userId}`
+        );
+
+        const enrollments = response.data.data || [];
+        const enrolled = enrollments.map((en) => en.course).filter(Boolean);
+        const categories = enrolled.map((c) => c.category).filter(Boolean);
+
+        setEnrolledCourses(enrolled);
+        setEnrolledCategories([...new Set(categories)]);
+      } catch (err) {
+        console.error('Error fetching enrollments:', err);
+      }
+    };
+
+    fetchEnrollments();
+  }, [userId]);
+
+  // Fetch recommended courses
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const res = await axios.get('https://hicap-backend-4rat.onrender.com/api/courses');
+        const allCourses = res.data.data;
+
+        const filtered = allCourses.filter(
+          (course) =>
+            enrolledCategories.includes(course.category) &&
+            !enrolledCourses.find((ec) => ec._id === course._id)
+        );
+
+        setRecommendedCourses(filtered.slice(0, 5));
+      } catch (err) {
+        console.error('Error fetching recommended courses:', err);
+      }
+    };
+
+    if (enrolledCategories.length > 0) {
+      fetchCourses();
+    }
+  }, [enrolledCategories, enrolledCourses]);
 
   const handleViewAllClick = () => {
     navigate('/courses');
   };
 
-  // Show only first 3 courses
-  const visibleCourses = courses.slice(0, 3);
-
   return (
-    <section className="container py-5 mt-4">
-      {/* Heading */}
-      <div className="mb-4">
-        <h1 className="fw-bold text-dark">Recommended Courses</h1>
-        <div className="bg-success rounded-pill" style={{ width: '216px', height: '3px' }}></div>
-      </div>
+    <div className="container py-5 mt-4">
+      {/* Enrolled Courses */}
+      {enrolledCourses.length > 0 && (
+        <>
+          <h2 className="fw-bold mb-3" style={{ color: '#800000' }}>
+            Recommended Courses
+          </h2>
+          <div
+            className="rounded-pill mb-4"
+            style={{ width: '200px', height: '3px', backgroundColor: '#800000' }}
+          ></div>
 
-      {/* Course Cards */}
-      <div className="row g-4">
-        {visibleCourses.map((course, idx) => (
-          <div key={idx} className="col-12 col-md-6 col-lg-4">
-            <div className="card h-100 shadow-sm border-1 rounded-3">
-              <img
-                src={course.image}
-                alt={course.title}
-                className="card-img-top"
-                style={{ height: '200px', objectFit: 'cover' }}
-              />
-              <div className="card-body d-flex flex-column justify-content-between">
-                <h5 className="card-title fw-semibold">{course.title}</h5>
-
-                {/* Meta */}
-                <div className="d-flex justify-content-between text-muted small my-3 flex-wrap">
-                  <div className="d-flex align-items-center gap-1">
-                    <FaRegClock className="me-1" />
-                    <span>{course.duration}</span>
-                  </div>
-                  <div className="d-flex align-items-center gap-1">
-                    <FaTasks className="me-1" />
-                    <span>{course.projects}</span>
-                  </div>
-                  <div className="d-flex align-items-center gap-1">
-                    <FaStar className="me-1 text-warning" />
-                    <span>{course.rating}</span>
+          <div className="row g-4 mb-5">
+            {enrolledCourses.map((course, idx) => (
+              <div key={idx} className="col-md-6 col-lg-4">
+                <div className="card h-100 shadow-sm border-1 rounded-3">
+                  <img
+                    src={course.image}
+                    alt={course.name}
+                    className="card-img-top"
+                    style={{ height: '200px', objectFit: 'cover' }}
+                  />
+                  <div className="card-body d-flex flex-column">
+                    <h5 className="card-title fw-semibold text-dark">{course.name}</h5>
+                    <div className="d-flex justify-content-between text-muted small my-2 flex-wrap">
+                      <div className="d-flex align-items-center gap-1">
+                        <FaRegClock className="me-1" />
+                        <span>{course.duration} Months</span>
+                      </div>
+                      <div className="d-flex align-items-center gap-1">
+                        <FaTasks className="me-1" />
+                        <span>{course.noOfLessons} Lessons</span>
+                      </div>
+                      <div className="d-flex align-items-center gap-1">
+                        <FaStar className="me-1 text-warning" />
+                        <span>{course.rating}/5</span>
+                      </div>
+                    </div>
+                    <p className="text-secondary small">{course.description}</p>
+                    <button
+                      className="btn mt-auto text-white"
+                      style={{
+                        backgroundColor: '#800000',
+                        borderRadius: '5px',
+                        height: '40px',
+                        fontWeight: '600'
+                      }}
+                    >
+                      Continue Learning
+                    </button>
                   </div>
                 </div>
-
-                <p className="card-text small text-secondary">{course.description}</p>
-
-                <button
-                  className="btn btn-primary mt-auto"
-                  style={{ borderRadius: '5px', height: '40px', fontWeight: '600' }}
-                >
-                  Enroll
-                </button>
               </div>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
 
-      {/* View All Button */}
-      <div className="text-center mt-4">
-        <button
-          onClick={handleViewAllClick}
-          className="btn btn-outline-primary px-4 py-2 fw-semibold"
-          style={{ borderRadius: '5px' }}
-        >
-          View All
-        </button>
-      </div>
-    </section>
+      {/* Recommended Courses */}
+      {recommendedCourses.length > 0 && (
+        <>
+          <h2 className="fw-bold mb-3" style={{ color: '#800000' }}>
+            Recommended Courses
+          </h2>
+          <div
+            className="rounded-pill mb-4"
+            style={{ width: '240px', height: '3px', backgroundColor: '#800000' }}
+          ></div>
+
+          <div className="row g-4">
+            {recommendedCourses.map((course, idx) => (
+              <div key={idx} className="col-md-6 col-lg-4">
+                <div className="card h-100 shadow-sm border-1 rounded-3">
+                  <img
+                    src={course.image}
+                    alt={course.name}
+                    className="card-img-top"
+                    style={{ height: '200px', objectFit: 'cover' }}
+                  />
+                  <div className="card-body d-flex flex-column">
+                    <h5 className="card-title fw-semibold text-dark">{course.name}</h5>
+                    <div className="d-flex justify-content-between text-muted small my-2 flex-wrap">
+                      <div className="d-flex align-items-center gap-1">
+                        <FaRegClock className="me-1" />
+                        <span>{course.duration} Months</span>
+                      </div>
+                      <div className="d-flex align-items-center gap-1">
+                        <FaTasks className="me-1" />
+                        <span>{course.noOfLessons} Lessons</span>
+                      </div>
+                      <div className="d-flex align-items-center gap-1">
+                        <FaStar className="me-1 text-warning" />
+                        <span>{course.rating}/5</span>
+                      </div>
+                    </div>
+                    <p className="text-secondary small">{course.description}</p>
+                    <button
+                      className="btn mt-auto text-white"
+                      style={{
+                        backgroundColor: '#800000',
+                        borderRadius: '5px',
+                        height: '40px',
+                        fontWeight: '600'
+                      }}
+                    >
+                      Enroll Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-4">
+            <button
+              onClick={handleViewAllClick}
+              className="btn px-4 py-2 fw-semibold text-white"
+              style={{ backgroundColor: '#800000', borderRadius: '5px' }}
+            >
+              View All Courses
+            </button>
+          </div>
+        </>
+      )}
+    </div>
   );
 };
 

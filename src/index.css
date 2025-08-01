@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @layer utilities {
+
   /* Hide scrollbar for Chrome, Safari, and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -10,8 +11,10 @@
 
   /* Hide scrollbar for IE, Edge, and Firefox */
   .no-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
 
   /* Scroll Left to Right Animation */
@@ -19,6 +22,7 @@
     0% {
       transform: translateX(-100%);
     }
+
     100% {
       transform: translateX(100%);
     }
@@ -93,17 +97,51 @@
 /*Gradient Button*/
 
 .gradient-button {
-  background: linear-gradient(45deg ,#064C89, #0077B5);
+  background-color: #ad2132 !important;
   color: white !important;
 }
+
 .gradient-text {
-  color: #064c89 !important;;
+  color: #000 !important;
+  ;
 }
+
+.textcolor {
+  color: #ad2132 !important;
+}
+.textcolorlight {
+  color: #c34153 !important;
+}
+
+.bg-meroon {
+  background-color: #ad2132 !important;
+  color: #fff!important;
+}
+
+.bg-meroonlight {
+  background-color: #c34153 !important;
+  color: #fff;
+}
+
+.btn-outline-meroon {
+  color: #ad2132 !important;
+  border-color: #ad2132 !important;
+}
+
+.btn-outline-meroon:hover,
+.btn-outline-meroon:focus,
+.btn-outline-meroon:active {
+  color: #fff !important;
+  background-color: #ad2132 !important;
+  border-color: #ad2132 !important;
+}
+
 
 /* Course ENroll button*/
 
 .enroll-hover:hover {
-  background-color: #064c89; /* Bootstrap dark */
+  background-color: #ad2132;
+  /* Bootstrap dark */
   color: #fff;
   border-color: #212529;
   transform: scale(1.05);

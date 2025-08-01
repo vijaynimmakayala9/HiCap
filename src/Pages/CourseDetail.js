@@ -128,7 +128,7 @@ const CourseDetail = () => {
   if (loading) return (
     <div className="min-vh-100 d-flex align-items-center justify-content-center">
       <div className="text-center py-5">
-        <div className="spinner-border text-primary" role="status">
+        <div className="spinner-border textcolor" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
         <p className="mt-2">Loading course details...</p>
@@ -193,10 +193,15 @@ const CourseDetail = () => {
               {/* Text Content */}
               <Col lg={6} className="order-2 order-lg-2">
                 <div className="p-3 p-md-4">
-                  <Badge className="mb-2 text-uppercase" style={{ backgroundColor: "#0077B5", color: "#fff" }}>
+                  <button
+                    type="button"
+                    className="border-0 px-3 py-1 rounded-pill"
+                    style={{ backgroundColor: "#c34153", color: "#fff" }}
+                  >
                     {course.category} Training
-                  </Badge>
-                  <h1 className="display-5 fw-bold mb-3" style={{ color: "#064C89" }}>
+                  </button>
+
+                  <h1 className="display-5 fw-bold mb-3" style={{ color: "#ad2132" }}>
                     {course.name}
                   </h1>
                   <p
@@ -212,16 +217,34 @@ const CourseDetail = () => {
                   </div>
 
                   <div className="d-flex flex-wrap gap-2 mb-4">
-                    <Badge className="d-flex align-items-center gap-1" style={{ backgroundColor: "#0077B5", color: "#fff" }}>
-                      <FaRegClock className="fs-6" /> {course.duration}
-                    </Badge>
-                    <Badge className="d-flex align-items-center gap-1" style={{ backgroundColor: "#0077B5", color: "#fff" }}>
-                      <FaUserGraduate className="fs-6" /> {course.noOfStudents}+ Students
-                    </Badge>
-                    <Badge className="d-flex align-items-center gap-1" style={{ backgroundColor: "#0077B5", color: "#fff" }}>
-                      <FaBook className="fs-6" /> {course.noOfLessons} Lessons
-                    </Badge>
+                    <button
+                      type="button"
+                      className="d-flex align-items-center gap-2 px-3 py-1 border-0 rounded-pill"
+                      style={{ backgroundColor: "#c34153", color: "#fff" }}
+                    >
+                      <FaRegClock className="fs-6" />
+                      {course.duration}
+                    </button>
+
+                    <button
+                      type="button"
+                      className="d-flex align-items-center gap-2 px-3 py-1 border-0 rounded-pill"
+                      style={{ backgroundColor: "#c34153", color: "#fff" }}
+                    >
+                      <FaUserGraduate className="fs-6" />
+                      {course.noOfStudents}+ Students
+                    </button>
+
+                    <button
+                      type="button"
+                      className="d-flex align-items-center gap-2 px-3 py-1 border-0 rounded-pill"
+                      style={{ backgroundColor: "#c34153", color: "#fff" }}
+                    >
+                      <FaBook className="fs-6" />
+                      {course.noOfLessons} Lessons
+                    </button>
                   </div>
+
 
                   <div className="mb-4">
                     <p className="mb-1 small text-muted">
@@ -233,12 +256,12 @@ const CourseDetail = () => {
                   </div>
 
                   <div className="d-flex flex-column flex-sm-row gap-3">
-                    <Button size="lg" className="shadow gradient-button">
+                    <button className="btn btn-lg gradient-button">
                       Enroll Now - ${course.price}
-                    </Button>
-                    <Button variant="outline-primary" size="lg" className="shadow">
+                    </button>
+                    <button className="btn btn-lg btn-outline-meroon">
                       Download Syllabus
-                    </Button>
+                    </button>
                   </div>
                 </div>
               </Col>
@@ -251,30 +274,30 @@ const CourseDetail = () => {
           <Container className="py-4">
             <Row className="g-3">
               <Col sm={4}>
-                <Card className="border-0 shadow-sm text-center py-3 bg-info bg-opacity-10">
-                  <FaUserGraduate className="text-primary fs-3 mb-2 mx-auto" />
-                  <h3 style={{ color: "#064C89" }}>
+                <Card className="border-0 shadow-sm text-center py-3  bg-opacity-10" style={{ backgroundColor: "#fcebed" }}>
+                  <FaUserGraduate className="textcolor fs-3 mb-2 mx-auto" />
+                  <h3 style={{ color: "#ad2132" }}>
                     <Counter end={course.noOfStudents} suffix="+" />
                   </h3>
-                  <p className="small text-primary mb-0 fw-bold">Students Enrolled</p>
+                  <p className="small textcolor mb-0 fw-bold">Students Enrolled</p>
                 </Card>
               </Col>
               <Col sm={4}>
-                <Card className="border-0 shadow-sm text-center py-3 bg-info bg-opacity-10">
-                  <FaBookOpen className="text-primary fs-3 mb-2 mx-auto" />
-                  <h3 style={{ color: "#064C89" }}>
+                <Card className="border-0 shadow-sm text-center py-3 bg-opacity-10" style={{ backgroundColor: "#fcebed" }}>
+                  <FaBookOpen className="textcolor fs-3 mb-2 mx-auto" />
+                  <h3 style={{ color: "#ad2132" }}>
                     <Counter end={course.noOfLessons} />
                   </h3>
-                  <p className="small text-primary mb-0 fw-bold">Lessons</p>
+                  <p className="small textcolor mb-0 fw-bold">Lessons</p>
                 </Card>
               </Col>
               <Col sm={4}>
-                <Card className="border-0 shadow-sm text-center py-3 bg-info bg-opacity-10">
+                <Card className="border-0 shadow-sm text-center py-3  bg-opacity-10" style={{ backgroundColor: "#fcebed" }}>
                   <FaStar className="text-warning fs-3 mb-2 mx-auto" />
-                  <h3 style={{ color: "#064C89" }}>
+                  <h3 style={{ color: "#ad2132" }}>
                     {course.rating}/5
                   </h3>
-                  <p className="small text-primary mb-0 fw-bold">Reviews</p>
+                  <p className="small textcolor mb-0 fw-bold">Reviews</p>
                 </Card>
               </Col>
             </Row>
@@ -289,7 +312,7 @@ const CourseDetail = () => {
                   <Card.Body>
                     <Card.Title
                       className="d-flex align-items-center mb-3 pb-1 border-bottom"
-                      style={{ fontWeight: '600', fontSize: '1.25rem', color: "#064C89" }}
+                      style={{ fontWeight: '600', fontSize: '1.25rem', color: "#ad2132" }}
                     >
                       <FaCertificate className="me-2" size={20} />
                       What You'll Get
@@ -321,7 +344,7 @@ const CourseDetail = () => {
                   <Card.Body>
                     <Card.Title
                       className="d-flex align-items-center mb-3 pb-1 border-bottom"
-                      style={{ fontWeight: '600', fontSize: '1.25rem', color: "#064C89" }}
+                      style={{ fontWeight: '600', fontSize: '1.25rem', color: "#ad2132" }}
                     >
                       <FaChalkboardTeacher className="me-2" size={20} />
                       Training Options
@@ -329,34 +352,58 @@ const CourseDetail = () => {
 
                     <div className="mb-3">
                       <p className="small fw-semibold mb-1">Mode:</p>
-                      <Badge bg="info" className="text-capitalize">
+                      <button
+                        type="button"
+                        className="btn btn-sm text-capitalize rounded-pill px-3 py-1 border-0"
+                        style={{ backgroundColor: "#c34153", color: "#fff" }}
+                      >
                         {course.mode}
-                      </Badge>
+                      </button>
                     </div>
 
                     <div className="mb-3">
                       <p className="small fw-semibold mb-1">Status:</p>
-                      <Badge bg={course.status === 'available' ? 'success' : 'warning'}>
+                      <button
+                        type="button"
+                        className="btn btn-sm rounded-pill px-3 py-1 border-0"
+                        style={{
+                          backgroundColor: course.status === 'available' ? "#c34153" : "#c34153",
+                          color: course.status === 'available' ? "#fff" : "#000"
+                        }}
+                      >
                         {course.status === 'available' ? 'Available Now' : 'Coming Soon'}
-                      </Badge>
+                      </button>
                     </div>
 
                     <div className="mb-3">
                       <p className="small fw-semibold mb-1">Price:</p>
-                      <h4 style={{ color: "#064C89" }}>₹{course.price}</h4>
+                      <h4 style={{ color: "#ad2132" }}>₹{course.price}</h4>
                     </div>
 
                     <div className="d-flex flex-wrap gap-1">
                       {course.isPopular && (
-                        <Badge bg="warning" text="dark">Popular Course</Badge>
+                        <button
+                          type="button"
+                          className="btn btn-sm rounded-pill px-3 py-1 border-0"
+                          style={{ backgroundColor: "#c34153", color: "#fff" }}
+                        >
+                          Popular Course
+                        </button>
                       )}
                       {course.isHighRated && (
-                        <Badge bg="primary">Top Rated</Badge>
+                        <button
+                          type="button"
+                          className="btn btn-sm rounded-pill px-3 py-1 border-0"
+                          style={{ backgroundColor: "#c34153", color: "#fff" }}
+                        >
+                          Top Rated
+                        </button>
                       )}
                     </div>
                   </Card.Body>
                 </Card>
               </Col>
+
             </Row>
           </Container>
 
@@ -367,18 +414,22 @@ const CourseDetail = () => {
               <Card.Body>
                 <Card.Title
                   className="border-0 pb-3 fw-bold"
-                  style={{ color: "#064C89", fontSize: "1.75rem" }}
+                  style={{ color: "#ad2132", fontSize: "1.75rem" }}
                 >
                   Learning Objectives
                 </Card.Title>
+
                 <Row className="g-4">
                   {course.courseObject?.map((item, index) => (
                     <Col xs={12} sm={6} lg={4} key={index}>
-                      <Card className="border-0 h-100 bg-info bg-opacity-10 rounded-4 shadow-sm">
+                      <Card
+                        className="border-0 h-100 shadow-sm rounded-4"
+                        style={{ backgroundColor: "#fcebed" }} // soft light merron
+                      >
                         <Card.Body>
                           <Card.Title
                             className="fs-6 fw-semibold mb-2"
-                            style={{ color: "#064C89", letterSpacing: "0.3px" }}
+                            style={{ color: "#ad2132", letterSpacing: "0.3px" }}
                           >
                             {item.title || `Objective ${index + 1}`}
                           </Card.Title>
@@ -398,22 +449,33 @@ const CourseDetail = () => {
           </Container>
 
 
+
           {/* FAQs */}
           {course.faq && course.faq.length > 0 && (
             <Container className="py-4">
               <Card className="border-0">
-                <Card.Body className="bg-info bg-opacity-10 rounded-4 shadow-sm">
-                  <Card.Title className="pb-3 fw-bold" style={{ color: "#064C89", fontSize: "1.75rem" }}>
+                <Card.Body className="rounded-4 shadow-sm" style={{ backgroundColor: "#fcebed" }}>
+                  <Card.Title
+                    className="pb-3 fw-bold"
+                    style={{ color: "#ad2132", fontSize: "1.75rem" }}
+                  >
                     Frequently Asked Questions
                   </Card.Title>
+
                   <Accordion>
                     {course.faq.map((item, index) => (
                       <Accordion.Item eventKey={index.toString()} key={index}>
-                        <Accordion.Header className="fw-semibold">
+                        <Accordion.Header
+                          className="fw-semibold"
+                          style={{ color: "#ad2132" }}
+                        >
                           {item.question}
                         </Accordion.Header>
-                        <Accordion.Body className="text-dark small" style={{ lineHeight: "1.6" }}>
-                          {item.answer || "No answer provided"} {/* Fallback if answer is empty */}
+                        <Accordion.Body
+                          className="small"
+                          style={{ lineHeight: "1.6", color: "#333" }}
+                        >
+                          {item.answer || "No answer provided"}
                         </Accordion.Body>
                       </Accordion.Item>
                     ))}
@@ -428,7 +490,7 @@ const CourseDetail = () => {
           <Container className="py-4">
             <Card className="border-0 shadow-sm">
               <Card.Body>
-                <Card.Title className="border-bottom pb-2" style={{ color: "#064C89", fontSize: "1.75rem" }}>
+                <Card.Title className="border-bottom pb-2" style={{ color: "#ad2132", fontSize: "1.75rem" }}>
                   Who Can Learn
                 </Card.Title>
                 <Row className="g-3">
@@ -464,7 +526,7 @@ const CourseDetail = () => {
                             style={{ width: '48px', height: '48px', objectFit: 'cover' }}
                           />
                           <div>
-                            <h5 className="" style={{ color: "#064C89" }}>{learner.title}</h5>
+                            <h5 className="" style={{ color: "#ad2132" }}>{learner.title}</h5>
                             <h6 className="small text-muted mb-0">{learner.description}</h6>
                           </div>
                         </Card.Body>
@@ -480,12 +542,12 @@ const CourseDetail = () => {
           <Container className="py-4">
             <Card className="border-0 shadow-sm">
               <Card.Body>
-                <Card.Title className="border-bottom pb-2" style={{ color: "#064C89", fontSize: "1.75rem" }}>
+                <Card.Title className="border-bottom pb-2" style={{ color: "#ad2132", fontSize: "1.75rem" }}>
                   Course Information
                 </Card.Title>
                 <Row>
                   <Col md={6}>
-                    <h5 className="" style={{ color: "#064C89" }}>Course Statistics</h5>
+                    <h5 className="" style={{ color: "#ad2132" }}>Course Statistics</h5>
                     <ul className="list-unstyled">
                       <li className="d-flex justify-content-between py-2 border-bottom">
                         <span className="text-dark">Course Category:</span>
@@ -506,7 +568,7 @@ const CourseDetail = () => {
                     </ul>
                   </Col>
                   <Col md={6}>
-                    <h5 className="" style={{ color: "#064C89" }}>Technical Details</h5>
+                    <h5 className="" style={{ color: "#ad2132" }}>Technical Details</h5>
                     <ul className="list-unstyled">
                       <li className="d-flex justify-content-between py-2 border-bottom">
                         <span className="text-dark">Total Lessons:</span>
@@ -517,7 +579,7 @@ const CourseDetail = () => {
                         <span className="fw-semibold">{course.noOfStudents.toLocaleString()}</span>
                       </li>
                     </ul>
-                  </Col>                  
+                  </Col>
                 </Row>
               </Card.Body>
             </Card>
@@ -526,27 +588,37 @@ const CourseDetail = () => {
           {/* Related Courses */}
           {relatedCourses.length > 0 && (
             <Container className="py-4">
-              <h2 className="mb-4" style={{ color: "#064C89" }}>You May Also Like</h2>
+              <h2 className="mb-4" style={{ color: "#ad2132" }}>
+                You May Also Like
+              </h2>
               <Row className="g-4">
-                {relatedCourses.map(relatedCourse => (
+                {relatedCourses.map((relatedCourse) => (
                   <Col xs={12} sm={6} lg={4} key={relatedCourse._id}>
-                    <Card className="h-100 shadow-sm">
+                    <Card className="h-100 shadow-sm border-0">
                       <Card.Img
                         variant="top"
                         src={relatedCourse.image}
                         alt={relatedCourse.name}
-                        style={{ height: '180px', objectFit: 'cover' }}
+                        style={{ height: "180px", objectFit: "cover" }}
                       />
                       <Card.Body>
                         <div className="d-flex justify-content-between mb-2">
-                          <Card.Title className="fs-6 mb-0">
+                          <Card.Title
+                            className="fs-6 mb-0 fw-semibold"
+                            style={{ color: "#ad2132" }}
+                          >
                             {relatedCourse.name}
                           </Card.Title>
-                          <span className="text-primary fw-bold">
+                          <span className="fw-bold" style={{ color: "#ad2132" }}>
                             ${relatedCourse.price}
                           </span>
                         </div>
-                        <StarRating rating={relatedCourse.rating} reviewCount={relatedCourse.reviewCount} />
+
+                        <StarRating
+                          rating={relatedCourse.rating}
+                          reviewCount={relatedCourse.reviewCount}
+                        />
+
                         <div className="d-flex flex-wrap gap-1 my-2">
                           <small className="text-muted d-flex align-items-center">
                             <FaRegClock className="me-1" /> {relatedCourse.duration}
@@ -558,27 +630,61 @@ const CourseDetail = () => {
                             <FaBook className="me-1" /> {relatedCourse.noOfLessons}
                           </small>
                         </div>
+
                         <Card.Text className="small text-dark mb-3">
                           {relatedCourse.description}
                         </Card.Text>
+
                         <div className="d-flex flex-wrap gap-1 mb-3">
                           {relatedCourse.isPopular && (
-                            <Badge bg="warning" text="dark">Popular</Badge>
+                            <Button
+                              size="sm"
+                              style={{ backgroundColor: "#c34153", color: "#fff", border: "none" }}
+                            >
+                              Popular
+                            </Button>
                           )}
                           {relatedCourse.isHighRated && (
-                            <Badge bg="primary">Top Rated</Badge>
+                            <Button
+                              size="sm"
+                              style={{ backgroundColor: "#c34153", color: "#fff", border: "none" }}
+                            >
+                              Top Rated
+                            </Button>
                           )}
-                          <Badge bg={relatedCourse.status === 'available' ? 'success' : 'warning'}>
-                            {relatedCourse.status === 'available' ? 'Available' : 'Coming Soon'}
-                          </Badge>
+                          <Button
+                            size="sm"
+                            style={{
+                              backgroundColor:
+                                relatedCourse.status === "available" ? "#c34153" : "#c34153",
+                              color: relatedCourse.status === "available" ? "#fff" : "#fff",
+                              border: "none",
+                            }}
+                          >
+                            {relatedCourse.status === "available" ? "Available" : "Coming Soon"}
+                          </Button>
                         </div>
+
+
                         <Button
-                          variant="outline-primary"
+                          variant="outline"
                           size="sm"
                           className="w-100"
+                          style={{
+                            borderColor: "#ad2132",
+                            color: "#ad2132",
+                          }}
+                          onMouseOver={(e) => {
+                            e.target.style.backgroundColor = "#ad2132";
+                            e.target.style.color = "#fff";
+                          }}
+                          onMouseOut={(e) => {
+                            e.target.style.backgroundColor = "transparent";
+                            e.target.style.color = "#ad2132";
+                          }}
                           onClick={() => {
                             navigate(`/course/${relatedCourse._id}`);
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            window.scrollTo({ top: 0, behavior: "smooth" });
                           }}
                         >
                           View Details
@@ -590,6 +696,7 @@ const CourseDetail = () => {
               </Row>
             </Container>
           )}
+
         </main>
       </div>
       <Footer />

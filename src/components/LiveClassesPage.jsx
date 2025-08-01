@@ -60,12 +60,12 @@ const LiveClassesPage = () => {
             <section className="container py-5 position-relative my-5">
                 {/* Heading */}
                 <div className="mb-4">
-                    <h2 className="fw-bold text-dark mb-2">Live Classes</h2>
+                    <h2 className="fw-bold textcolor mb-2">Live Classes</h2>
                     <div
                         style={{
                             width: '180px',
                             height: '3px',
-                            backgroundColor: '#007860',
+                            backgroundColor: '#ad2132',
                             borderRadius: '999px',
                         }}
                     />
@@ -85,7 +85,7 @@ const LiveClassesPage = () => {
                                 <div key={cls._id} className="col-md-4">
                                     <div className="card h-100 shadow rounded-4 p-3 d-flex flex-column justify-content-between">
                                         <div className="mb-3">
-                                            <h5 className="fw-bold text-dark mb-1">{cls.title}</h5>
+                                            <h5 className="fw-bold textcolor mb-1">{cls.title}</h5>
                                             <p className="text-muted mb-2">{cls.description}</p>
 
                                             <div className="mb-1">
@@ -107,7 +107,7 @@ const LiveClassesPage = () => {
                                                 className="bg-light border d-flex flex-column align-items-center justify-content-center px-2 py-2 rounded"
                                                 style={{ width: '48%', borderColor: '#00000022' }}
                                             >
-                                                <MdOutlineTimer size={24} color="#007860" />
+                                                <MdOutlineTimer size={24} color="#ad2132" />
                                                 <small className="fw-medium mt-1">{cls.duration}</small>
                                             </div>
 
@@ -115,7 +115,7 @@ const LiveClassesPage = () => {
                                                 className="bg-light border d-flex flex-column align-items-center justify-content-center px-2 py-2 rounded"
                                                 style={{ width: '48%', borderColor: '#00000022' }}
                                             >
-                                                <SiGoogleclassroom size={24} color="#007860" />
+                                                <SiGoogleclassroom size={24} color="#ad2132" />
                                                 <small className="fw-medium mt-1">Live</small>
                                             </div>
                                         </div>
@@ -124,9 +124,9 @@ const LiveClassesPage = () => {
                                             href={cls.meetLink}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="btn text-white d-flex align-items-center justify-content-center gap-2"
+                                            className="btn bg-meroon d-flex align-items-center justify-content-center gap-2"
                                             style={{
-                                                backgroundColor: '#007860',
+                                                backgroundColor: '',
                                                 borderRadius: '999px',
                                                 fontWeight: '600',
                                                 height: '40px',

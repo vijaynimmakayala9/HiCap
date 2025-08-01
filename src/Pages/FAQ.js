@@ -39,13 +39,13 @@ const FAQ = () => {
           <Col>
             <div className="d-inline-block position-relative mb-3">
               <h2 className="fw-bold text-dark mb-1">
-                Frequently Asked <span style={{ color: "#064C89" }}>Questions</span>
+                Frequently Asked <span style={{ color: "#ad2132" }}>Questions</span>
               </h2>
               <div
                 style={{
                   width: "100px",
                   height: "5px",
-                  backgroundColor: "#064C89",
+                  backgroundColor: "#ad2132",
                   borderRadius: "999px",
                   position: "absolute",
                   left: "10%",
@@ -89,7 +89,7 @@ const FAQ = () => {
                     <h3 className="h5 fw-semibold text-dark mb-0">
                       {String(index + 1).padStart(2, '0')}. {faq.question}
                     </h3>
-                    <span className="text-primary ms-3">
+                    <span className="textcolor ms-3">
                       {openIndex === index ? (
                         <FaMinus />
                       ) : (

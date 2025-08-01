@@ -28,7 +28,7 @@ const Reviews = () => {
   return (
     <div className="container py-5">
       <h4 className="fw-bold mb-4 text-center">
-        What Our <span style={{ color: "#064C89" }}>Alumni</span> Speaks?
+        What Our <span style={{ color: "#ad2132" }}>Alumni</span> Speaks?
       </h4>
 
       {loading && <p className="text-center">Loading reviews...</p>}
@@ -59,7 +59,7 @@ const Reviews = () => {
                     style={{ width: '80px', height: '80px', objectFit: 'cover' }}
                   />
                   <div>
-                    <h6 className="mb-1 text-primary fw-bold">{review.name}</h6>
+                    <h6 className="mb-1 textcolor fw-bold">{review.name}</h6>
                     <div className="text-warning d-flex mb-2">
                       {Array.from(
                         { length: Number.isFinite(Number(review.rating)) ? Number(review.rating) : 5 },

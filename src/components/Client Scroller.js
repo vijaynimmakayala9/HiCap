@@ -47,7 +47,7 @@ const ClientScroller = () => {
             <div className="max-w-[600px] mx-auto mb-8 text-center">
                 <div className="inline-block text-start">
                     <h1 className="font-roboto font-bold text-2xl sm:text-3xl mb-2 text-black">
-                        Our Esteemed <span style={{ color: "#064C89" }}>Clients</span>
+                        Our Esteemed <span style={{ color: "#ad2132" }}>Clients</span>
                     </h1>
 
                     {/* Underline aligned to start of text */}
@@ -55,7 +55,7 @@ const ClientScroller = () => {
                         style={{
                             width: "100px",
                             height: "5px",
-                            backgroundColor: "#064C89",
+                            backgroundColor: "#ad2132",
                             borderRadius: "999px",
                             marginBottom: "12px",
                         }}

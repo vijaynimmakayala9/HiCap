@@ -55,7 +55,7 @@ const Counter = () => {
 
   return (
     <section className="py-5 position-relative" style={{ 
-      backgroundImage: 'url("/bgcounter.jpg")',
+      backgroundImage: 'url("/logo/bgcounter.jpg")',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
@@ -63,7 +63,8 @@ const Counter = () => {
     }}>
       {/* Blue overlay */}
       <div className="position-absolute top-0 start-0 w-100 h-100" style={{ 
-        backgroundColor: 'rgba(13, 110, 253, 0.7)' 
+        backgroundColor: 'rgba(173, 33, 50, 0.5)' // 0.5 is 50% opacity
+ 
       }}></div>
 
       <div className="container position-relative z-index-1">

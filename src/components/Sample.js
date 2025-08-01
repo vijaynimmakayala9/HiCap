@@ -94,7 +94,7 @@ const CourseAndFeatures = () => {
                       }}
                     >
                       <h2 className="fw-bold text-white text-uppercase mb-4 display-5">
-                        {slide.title.split(' ')[0]} <span className="text-primary">{slide.highlight}</span>
+                        {slide.title.split(' ')[0]} <span className="textcolor">{slide.highlight}</span>
                       </h2>
                       <p className="text-white fs-5 mb-4">
                         {slide.text}

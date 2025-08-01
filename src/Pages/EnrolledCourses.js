@@ -15,7 +15,9 @@ const EnrolledCourses = () => {
       .get(`https://hicap-backend-4rat.onrender.com/api/enrollments/${userId}`)
       .then((res) => {
         if (res.data.success) {
-          const filtered = res.data.data.filter((item) => item.status === 'enrolled');
+          const filtered = res.data.data.filter(
+            (item) => item.status === 'enrolled' && item.course
+          );
           setEnrolledCourses(filtered);
         }
         setLoading(false);
@@ -43,11 +45,11 @@ const EnrolledCourses = () => {
   const visibleCourses = enrolledCourses.slice(currentIndex, currentIndex + 3);
 
   return (
-    <div className="container mt-5 enrolled-courses">
+    <div className="container mt-5 enrolled-courses p-2">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h3 className="m-0 d-flex align-items-center">
-          <FaBook className="me-2 text-primary" />Enrolled Courses
-          
+          <FaBook className="me-2 textcolor" />
+          Enrolled Courses
         </h3>
         <div>
           <button className="btn btn-outline-secondary me-2" onClick={prevSlide}>
@@ -61,7 +63,7 @@ const EnrolledCourses = () => {
 
       {loading ? (
         <div className="text-center py-5">
-          <div className="spinner-border text-primary" role="status">
+          <div className="spinner-border textcolor" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>
@@ -69,33 +71,35 @@ const EnrolledCourses = () => {
         <div className="alert alert-info">No enrolled courses found.</div>
       ) : (
         <div className="row">
-          {visibleCourses.map(({ _id, course, createdAt }) => (
-            <div className="col-12 col-sm-12 col-md-4 mb-4" key={_id}>
-              <div className="card h-100 shadow-sm">
-                <img
-                  src={course.image}
-                  className="card-img-top"
-                  alt={course.name}
-                  style={{ height: '180px', objectFit: 'cover' }}
-                />
-                <div className="card-body d-flex flex-column">
-                  <h5 className="card-title">{course.name}</h5>
-                  <p className="card-text text-muted">{course.description}</p>
-                  <div className="mt-auto d-flex justify-content-between align-items-center">
-                    <span className="badge bg-primary">Enrolled</span>
-                    <small className="text-muted">
-                      {new Date(createdAt).toLocaleDateString()}
-                    </small>
+          {visibleCourses.map(({ _id, course, createdAt }) =>
+            course ? (
+              <div className="col-12 col-sm-12 col-md-4 mb-4" key={_id}>
+                <div className="card h-100 shadow">
+                  <img
+                    src={course.image}
+                    className="card-img-top"
+                    alt={course.name}
+                    style={{ height: '180px', objectFit: 'cover' }}
+                  />
+                  <div className="card-body d-flex flex-column">
+                    <h5 className="card-title">{course.name}</h5>
+                    <p className="card-text text-muted">{course.description}</p>
+                    <div className="mt-auto d-flex justify-content-between align-items-center">
+                      <span className="badge bg-meroonlight">Enrolled</span>
+                      <small className="text-muted">
+                        {new Date(createdAt).toLocaleDateString()}
+                      </small>
+                    </div>
+                  </div>
+                  <div className="card-footer border-top-0">
+                    <button className="btn btn-md bg-meroon w-100">
+                      Continue Learning
+                    </button>
                   </div>
                 </div>
-                <div className="card-footer bg-white border-top-0">
-                  <button className="btn btn-md btn-primary w-100" >{/* onClick={()=>Navigate('/dashboard/courseModule')} */}
-                    Continue Learning
-                  </button>
-                </div>
               </div>
-            </div>
-          ))}
+            ) : null
+          )}
         </div>
       )}
     </div>

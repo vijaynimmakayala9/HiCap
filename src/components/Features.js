@@ -30,13 +30,13 @@ const Features = () => {
         <div className="col-lg-8">
           <div className="d-inline-block position-relative mb-3">
             <h2 className="fw-bold text-dark mb-1">
-              Some great features of <span style={{ color: "#064C89" }}>TECHSTERKER</span>
+              Some great features of <span style={{ color: "#ad2132" }}>TECHSTERKER</span>
             </h2>
             <div
               style={{
                 width: "100px",
                 height: "5px",
-                backgroundColor: "#064C89",
+                backgroundColor: "#ad2132",
                 borderRadius: "999px",
                 position: "absolute",
                 left: "0",
@@ -66,7 +66,7 @@ const Features = () => {
             >
               {/* Border top effect on hover */}
               <div 
-                className={`position-absolute top-0 left-0 right-0 ${hoveredCard === index ? 'bg-primary' : ''}`}
+                className={`position-absolute top-0 left-0 right-0 ${hoveredCard === index ? 'bg-meroon' : ''}`}
                 style={{
                   height: '4px',
                   transition: 'all 0.3s ease',
@@ -76,8 +76,8 @@ const Features = () => {
               
               <div
                 className={`d-flex align-items-center justify-content-center mx-auto mb-4 rounded-circle ${hoveredCard === index
-                    ? 'bg-primary text-white'
-                    : 'bg-primary bg-opacity-10 text-primary'
+                    ? 'bg-meroon text-white'
+                    : 'bg-opacity-10 textcolor'
                   }`}
                 style={{
                   width: '70px',
@@ -88,7 +88,7 @@ const Features = () => {
               >
                 <i className={`bi ${iconList[index % iconList.length]}`}></i>
               </div>
-              <h5 className="fw-bold mb-3">{feature.title}</h5>
+              <h5 className="fw-bold mb-3 ">{feature.title}</h5>
               <p className="text-muted small">{feature.content}</p>
             </div>
           </div>

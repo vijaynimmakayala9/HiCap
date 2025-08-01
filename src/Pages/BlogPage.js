@@ -27,14 +27,14 @@ const BlogPage = () => {
         {/* Heading with green line, left aligned and smaller */}
         <div className="max-w-[600px] mb-12 mt-18">
           <h1 className="font-roboto font-bold text-3xl mb-2 mt-10 text-black">
-            Our Latest Blogs
+            Our Latest <span style={{ color: "#ad2132" }}>Blogs</span>
           </h1>
           <div
             style={{
               width: '216px',
               height: '3px',
               borderRadius: '20px',
-              backgroundColor: '#007860',
+              backgroundColor: '#ad2132',
             }}
           />
         </div>
@@ -81,6 +81,7 @@ const BlogPage = () => {
                     fontWeight: '600',
                     marginBottom: '8px',
                   }}
+                  className='textcolor'
                 >
                   {blog.title}
                 </h2>
@@ -101,7 +102,7 @@ const BlogPage = () => {
                 }}
                 title="Share this blog"
               >
-                <FaShareAlt />
+                <FaShareAlt className='textcolor' />
               </div>
             </div>
           ))}

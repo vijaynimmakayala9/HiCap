@@ -42,7 +42,7 @@ const AboutUS = () => {
     fetchData();
   }, []);
 
-  
+
 
   if (loading) return <div className="text-center py-5">Loading...</div>;
   if (error) return <div className="text-center py-5 text-danger">Error: {error}</div>;
@@ -54,7 +54,7 @@ const AboutUS = () => {
         style={{
           width: "100px",
           height: "4px",
-          backgroundColor: "#064C89",
+          backgroundColor: "#ad2132",
           borderRadius: "999px",
           position: "absolute",
           left: "0",
@@ -91,7 +91,7 @@ const AboutUS = () => {
           {/* Text Content */}
           <div className="col-lg-6">
             <div className="pe-lg-4">
-              <SectionHeading>WHY <span style={{ color: "#064C89" }}>TECHSTERKER</span></SectionHeading>
+              <SectionHeading>WHY <span style={{ color: "#ad2132" }}>TECHSTERKER</span></SectionHeading>
 
               <p className="mb-4" style={{ fontSize: '1.1rem', lineHeight: '1.6' }}>
                 Team TECHSTERKER carries decades of experience complemented with proven success track record encompassing various facets of Skilling industry, including:
@@ -117,7 +117,7 @@ const AboutUS = () => {
                         }}
                       >
                         <span className="fw-bold">0</span>
-                        <span className="fw-bold" style={{ color: "#064C89" }}>
+                        <span className="fw-bold" style={{ color: "#ad2132" }}>
                           {index + 1 < 10 ? `${index + 1}` : index + 1}
                         </span>
                       </h3>
@@ -126,13 +126,13 @@ const AboutUS = () => {
                         style={{
                           fontSize: '1rem',
                           lineHeight: '1.6',
-                          color: '#064C89',
+                          color: '#000000', // black text
                           fontWeight: '400',
                           padding: '1rem 1.25rem',
-                          backgroundColor: 'rgba(0, 119, 181, 0.08)',
+                          backgroundColor: '#f8d7da', // light maroon (Bootstrap danger-light)
                           borderRadius: '8px',
-                          borderLeft: '4px solid #0077B5',
-                          boxShadow: '0 2px 8px rgba(0, 119, 181, 0.15)',
+                          borderLeft: '4px solid #ad2132', // original maroon
+                          boxShadow: '0 2px 8px rgba(173, 33, 50, 0.15)', // maroon shadow
                           textAlign: 'left',
                           whiteSpace: 'pre-line',
                           margin: '0.5rem 0'
@@ -140,6 +140,7 @@ const AboutUS = () => {
                       >
                         {point}
                       </p>
+
                     </div>
                   </div>
                 ))}
@@ -153,15 +154,15 @@ const AboutUS = () => {
       {/* Vision & Mission */}
       <div className="row align-items-center mb-4 mb-md-5 g-4">
         <div className="col-md-6 order-md-1 order-2">
-          <SectionHeading ><span style={{ color: "#064C89" }}>VISION & MISSION</span></SectionHeading>
+          <SectionHeading ><span style={{ color: "#ad2132" }}>VISION & MISSION</span></SectionHeading>
           <div className="mb-3">
-            <h5 className="fw-bold" style={{ color: "#064C89" }}>Vision:</h5>
+            <h5 className="fw-bold" style={{ color: "#ad2132" }}>Vision:</h5>
             <p className="mb-0" style={{ fontSize: '1rem', lineHeight: '1.6' }}>
               To create a premier IT training center that equips people with skills for the future and turns them into self-assured professionals who make significant contributions to the digital world.
             </p>
           </div>
           <div>
-            <h5 className="fw-bold" style={{ color: "#064C89" }}>Mission:</h5>
+            <h5 className="fw-bold" style={{ color: "#ad2132" }}>Mission:</h5>
             <p className="mb-0" style={{ fontSize: '1rem', lineHeight: '1.6' }}>
               At TECHSTERKER, we're committed to giving our students career-growth resources, informed coaching, and continuous guidance. In order to help each student reach their career objectives, we aim to establish a vibrant learning atmosphere that fosters personal development, creativity, and critical thinking.
             </p>
@@ -181,7 +182,7 @@ const AboutUS = () => {
       {leadershipTeam.length > 0 && (
         <div className="mb-5">
           <div className="text-center mb-5">
-            <SectionHeading><span style={{ color: "#064C89" }}>LEADERSHIP</span> TEAM</SectionHeading>
+            <SectionHeading><span style={{ color: "#ad2132" }}>LEADERSHIP</span> TEAM</SectionHeading>
           </div>
           <div className="container px-0">
             {leadershipTeam.map((member, idx) => (
@@ -191,13 +192,13 @@ const AboutUS = () => {
                     src={member.image}
                     alt={member.name}
                     className="img-fluid rounded-circle"
-                    style={{ width: '220px', height: '220px', objectFit: 'cover', border: '4px solid #0077B5' }}
+                    style={{ width: '220px', height: '220px', objectFit: 'cover', border: '4px solid #c34153' }}
                   />
                 </div>
                 <div className="col-md-8">
                   <div className="p-3 p-md-4 rounded">
-                    <h4 className="fw-bold mb-2" ><span style={{ color: "#064C89" }}>{member.name}</span></h4>
-                    <h6 className="mb-3" style={{ color: "#0077B5" }}>- {member.role} -</h6>
+                    <h4 className="fw-bold mb-2" ><span style={{ color: "#ad2132" }}>{member.name}</span></h4>
+                    <h6 className="mb-3" style={{ color: "#c34153" }}>- {member.role} -</h6>
                     <p className="text-dark mb-0" style={{ fontSize: '1rem', lineHeight: '1.6' }}>{member.content}</p>
                   </div>
                 </div>
@@ -209,13 +210,13 @@ const AboutUS = () => {
 
       {/* Technical Team */}
       <div className="mb-5">
-        <SectionHeading><span style={{ color: "#064C89" }}>TECHNICAL</span> TEAM</SectionHeading>
+        <SectionHeading><span style={{ color: "#ad2132" }}>TECHNICAL</span> TEAM</SectionHeading>
         <div className="row align-items-center g-4">
           <div className="col-md-8">
 
             {technicalTeam && (
               <>
-                <h5 style={{color: "#000", fontWeight: "500", marginBottom: "1rem"}}>
+                <h5 style={{ color: "#000", fontWeight: "500", marginBottom: "1rem" }}>
                   The Force Driving Innovation and Impact:
                 </h5>
                 <p style={{ fontSize: '1rem', lineHeight: '1.6' }}>{technicalTeam.description2}</p>
@@ -234,7 +235,7 @@ const AboutUS = () => {
 
       {/* Global Classrooms */}
       <div className="mb-5">
-        <SectionHeading>GLOBAL <span style={{ color: "#064C89" }}>CLASSROOMS</span></SectionHeading>
+        <SectionHeading>GLOBAL <span style={{ color: "#ad2132" }}>CLASSROOMS</span></SectionHeading>
         {classroomData.map((item, index) => (
           <div className="mb-4" key={index}>
             <p style={{ fontSize: '1rem', lineHeight: '1.6' }}>{item.description3}</p>

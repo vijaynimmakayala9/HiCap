@@ -31,7 +31,7 @@ const Footer = () => {
           <div className="col-lg-3 col-md-6">
             <div className="mb-4">
               <img 
-                src='/logo/hicap-logo.png' 
+                src='/logo/hicaplogolight.png' 
                 alt="HICAP Logo" 
                 className="img-fluid mb-3" 
                 style={{ maxWidth: '180px' }} 

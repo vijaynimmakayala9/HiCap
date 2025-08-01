@@ -42,13 +42,13 @@ const DifferSection = () => {
 
               <div className="d-inline-block position-relative mb-3">
                 <h2 className="fw-bold  text-center text-lg-start">
-                  How we <span style={{ color: "#064C89" }}>differ</span> from others?
+                  How we <span style={{ color: "#ad2132" }}>differ</span> from others?
                 </h2>
                 <div
                   style={{
                     width: "140px",
                     height: "4px",
-                    backgroundColor: "#064C89",
+                    backgroundColor: "#ad2132",
                     borderRadius: "999px",
                     position: "absolute",
                     left: "0",
@@ -67,7 +67,7 @@ const DifferSection = () => {
                       transition: 'all 0.3s ease'
                     }}
                   >
-                    <div className="fs-4 me-3" style={{ color: "#064C89" }}>{feature.icon}</div>
+                    <div className="fs-4 me-3" style={{ color: "#ad2132" }}>{feature.icon}</div>
                     <div className="fw-medium">{feature.title}</div>
                   </div>
                 ))}

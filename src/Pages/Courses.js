@@ -133,7 +133,7 @@ const Courses = () => {
                                     </div>
                                     <div className="d-flex justify-content-between align-items-center mt-auto">
                                         <span className="text-success fw-bold">${price}</span>
-                                        <button className="btn btn-outline-primary btn-sm" onClick={() => handleEnrollClick({ title: name, _id })}>Enroll</button>
+                                        <button className="btn btn-outline-meroon btn-sm" onClick={() => handleEnrollClick({ title: name, _id })}>Enroll</button>
                                     </div>
                                     <button className="btn btn-primary btn-sm mt-2 w-100" onClick={() => handleCourseClick(_id)}>View Details</button>
                                 </div>

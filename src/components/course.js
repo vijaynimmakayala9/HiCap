@@ -64,12 +64,12 @@ const Course = () => {
         <section className="container py-5">
             <div className="mb-5 text-center">
                 <div className="d-inline-block position-relative mb-3">
-                    <h2 className="fw-bold display-6 mb-1">Recommended <span style={{ color: "#064C89" }}>Courses</span></h2>
+                    <h2 className="fw-bold display-6 mb-1">Recommended <span style={{ color: "#ad2132" }}>Courses</span></h2>
                     <div
                         style={{
                             width: "140px",
                             height: "4px",
-                            backgroundColor: "#064C89",
+                            backgroundColor: "#ad2132",
                             borderRadius: "999px",
                             position: "absolute",
                             left: "0",
@@ -94,7 +94,7 @@ const Course = () => {
                         >
                             {/* Border top effect on hover */}
                             <div 
-                                className={`position-absolute top-0 left-0 right-0 ${hoveredCard === _id ? 'bg-primary' : ''}`}
+                                className={`position-absolute top-0 left-0 right-0 ${hoveredCard === _id ? 'bg-meroon' : ''}`}
                                 style={{
                                     height: '4px',
                                     transition: 'all 0.3s ease',
@@ -115,12 +115,12 @@ const Course = () => {
                             </div>
 
                             <div className="card-body d-flex flex-column">
-                                <h5 className="card-title fw-bold"><span style={{ color: "#064C89" }}>{name}</span></h5>
+                                <h5 className="card-title fw-bold"><span style={{ color: "#ad2132" }}>{name}</span></h5>
                                 <p className="card-text text-muted" style={{ fontSize: '0.9rem' }}>
                                     {expandedCourses[_id] ? description : `${description?.substring(0, 100)}...`}
                                     {description?.length > 100 && (
                                         <button
-                                            className="btn btn-link text-primary p-0"
+                                            className="btn btn-link textcolor p-0"
                                             style={{ fontSize: '0.85rem' }}
                                             onClick={() => toggleDescription(_id)}
                                         >
@@ -131,22 +131,22 @@ const Course = () => {
 
                                 <div className="d-flex justify-content-between flex-wrap text-muted small mb-3 gap-3">
                                     <div className="d-flex align-items-center">
-                                        <FaRegClock className="me-1 text-primary" /> {duration || 'N/A'} Months
+                                        <FaRegClock className="me-1 textcolor" /> {duration || 'N/A'} Months
                                     </div>
                                     <div className="d-flex align-items-center">
-                                        <FaTasks className="me-1 text-primary" /> {noOfLessons || 0} Lessons
+                                        <FaTasks className="me-1 textcolor" /> {noOfLessons || 0} Lessons
                                     </div>
                                 </div>
 
                                 <div className="mt-auto d-flex justify-content-between align-items-center">
-                                    <span className="text-primary fw-bold">₹{price || 'Free'}</span>
+                                    <span className="textcolor fw-bold">₹{price || 'Free'}</span>
                                     <div className="d-flex align-items-center">
                                         <FaStar className="me-1 text-warning" /> {rating || 4.5}/5
                                     </div>
                                 </div>
                                 <br />
                                 <button
-                                    className="btn btn-outline-primary btn-sm"
+                                    className="btn btn-outline-meroon btn-sm"
                                     onClick={() => handleEnrollClick({ title: name, _id })}
                                 >
                                     Enroll Now

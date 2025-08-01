@@ -20,20 +20,20 @@ const AboutMagnitia = () => {
   }, []);
 
   return (
-    <section className="container py-4 py-md-5">
+    <section className="container py-4 py-md-5 mt-5" style={{backgroundColor: "#fffef2"}}>
       {aboutData ? (
         <div className="row align-items-center mb-4 mb-md-5 g-4">
           {/* Text Section */}
           <div className="col-md-6 order-md-1 order-2">
             <div className="position-relative mb-4">
               <h2 className="fw-bold mb-3">
-                About <span style={{ color: "#064C89" }}>TECHSTERKER</span> Institute
+                About <span style={{ color: "#ad2132" }}>TECHSTERKER</span> Institute
               </h2>
               <div
                 style={{
                   width: "150px",
                   height: "4px",
-                  backgroundColor: "#064C89",
+                  backgroundColor: "#ad2132",
                   borderRadius: "999px",
                   position: "absolute",
                   left: "0",
@@ -60,7 +60,7 @@ const AboutMagnitia = () => {
         </div>
       ) : (
         <div className="text-center py-5">
-          <div className="spinner-border text-primary" role="status">
+          <div className="spinner-border textcolor" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>
