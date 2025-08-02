@@ -1,35 +1,114 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import AboutMagnitia from "../Pages/AboutMagnitia";
 import Header from "../Pages/Header";
 import Footer from "../Pages/Footer";
-import { Container, Table, Button, ButtonGroup, Card, Row, Col } from "react-bootstrap";
-
-const batches = [
-  { title: "Testing Tools (Manual Testing, Selenium with AI, Java, Frameworks & Cucumber)", date: "26 June 2025", time: "10:30am to 11.30am", duration: "75 days", faculty: "Chary", type: "Live Online & Classroom Training" },
-  { title: "Testing Tools (Manual Testing, Selenium with AI, Java, Frameworks & Cucumber)", date: "07 July 2025", time: "9.30am to 10.30am", duration: "75 days", faculty: "Chary", type: "Live Online & Classroom Training" },
-  { title: "API Testing (WebServices, MicroServices, Rest Assured, and Postman)", date: "10 July 2025", time: "8am to 9.30am", duration: "50 days", faculty: "Anudeep", type: "Live Online Training" },
-  { title: "Selenium Powered with AI (Selenium powered with AI, Java, Frameworks & Cucumber)", date: "10 July 2025", time: "7:30am to 9am", duration: "60 days", faculty: "GC Reddy", type: "Live Online Training" },
-  { title: "Performance Testing with JMeter", date: "12 July 2025", time: "11am to 1pm", duration: "Weekend Batch", faculty: "Mani", type: "Live Online Training" },
-  { title: "Testing Tools (Manual Testing, Selenium with Java, Frameworks & Cucumber)", date: "16 July 2025", time: "5pm to 6.30pm", duration: "75 days", faculty: "Anudeep", type: "Live Online Training" },
-  { title: "Testing Tools (Manual Testing, Selenium with Java, Frameworks & Cucumber)", date: "24 July 2025", time: "7pm to 8.30pm", duration: "75 days", faculty: "Anudeep", type: "Live Online Training" },
-];
-
-const trainingTypes = [
-  { name: "All Batches", filter: () => true },
-  { name: "Regular Training", filter: (b) => b.type.includes("Classroom") && !b.duration.includes("Weekend") },
-  { name: "Online Training", filter: (b) => b.type.includes("Online") && !b.duration.includes("Weekend") },
-  { name: "Weekend Training", filter: (b) => b.duration.includes("Weekend") },
-  { name: "Full Stack", filter: (b) => b.title.includes("Full Stack") },
-];
+import { Container, Table, Button, ButtonGroup, Card, Spinner, Alert } from "react-bootstrap";
 
 const UpCommingBatches = () => {
   const [activeFilter, setActiveFilter] = useState("All Batches");
-  const [filteredBatches, setFilteredBatches] = useState(batches);
+  const [filteredBatches, setFilteredBatches] = useState([]);
+  const [allBatches, setAllBatches] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [trainingTypes, setTrainingTypes] = useState([]);
+
+  useEffect(() => {
+    const fetchBatches = async () => {
+      try {
+        const response = await axios.get('https://hicap-backend-4rat.onrender.com/api/upcomingBatch');
+        if (response.data.success && response.data.data.length > 0) {
+          const batches = response.data.data[0].allbatches;
+          setAllBatches(batches);
+          setFilteredBatches(batches);
+          
+          // Generate training types dynamically from the data
+          const uniqueCategories = [...new Set(batches.map(batch => batch.categorie))];
+          const uniqueTypes = [...new Set(batches.map(batch => batch.type))];
+          
+          const generatedTrainingTypes = [
+            { name: "All Batches", filter: () => true },
+            ...uniqueCategories.map(cat => ({
+              name: `${cat} Training`,
+              filter: (b) => b.categorie === cat
+            })),
+            ...uniqueTypes.map(type => ({
+              name: `${type} Training`,
+              filter: (b) => b.type === type
+            })),
+            { 
+              name: "Full Stack", 
+              filter: (b) => b.batchName.toLowerCase().includes("full stack") 
+            }
+          ];
+          
+          setTrainingTypes(generatedTrainingTypes);
+        } else {
+          setAllBatches([]);
+          setFilteredBatches([]);
+        }
+      } catch (err) {
+        setError(err.message);
+        console.error('Failed to fetch batches:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBatches();
+  }, []);
 
   const handleFilterClick = (type) => {
     setActiveFilter(type.name);
-    setFilteredBatches(batches.filter(type.filter));
+    setFilteredBatches(allBatches.filter(type.filter));
   };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  };
+
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <AboutMagnitia />
+        <Container className="my-5 text-center">
+          <Spinner animation="border" role="status" variant="danger">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+          <p className="mt-2">Loading upcoming batches...</p>
+        </Container>
+        <Footer />
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Header />
+        <AboutMagnitia />
+        <Container className="my-5 text-center">
+          <Alert variant="danger">
+            Failed to load batches: {error}
+          </Alert>
+          <Button 
+            variant="danger" 
+            onClick={() => window.location.reload()}
+            className="mt-3"
+          >
+            Retry
+          </Button>
+        </Container>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
@@ -37,7 +116,7 @@ const UpCommingBatches = () => {
       <AboutMagnitia />
 
       <Container className="my-5">
-        <h2 className="text-center mb-4 fw-bold" style={{ color: "#ad2132" }}>
+        <h2 className="text-center mb-4 fw-bold textcolor">
           Click below to view the batch details
         </h2>
 
@@ -45,47 +124,50 @@ const UpCommingBatches = () => {
           UPCOMING BATCHES
         </div>
 
-        <ButtonGroup className="d-flex flex-wrap justify-content-center py-3 border border-top-0" style={{ backgroundColor: "#f8d7da" }}>
+        <div className="d-flex flex-wrap justify-content-center py-3 border border-top-0">
           {trainingTypes.map((type) => (
             <Button
               key={type.name}
-              variant={activeFilter === type.name ? "" : "light"}
+              variant={activeFilter === type.name ? "danger" : "light"}
               onClick={() => handleFilterClick(type)}
-              className={`m-1 fw-medium ${activeFilter === type.name ? "text-white" : "text-dark"}`}
-              style={activeFilter === type.name ? { backgroundColor: "#c34153" } : {}}
+              className={`m-1 fw-medium ${activeFilter === type.name ? "text-white" : "textcolor"}`}
             >
               {type.name}
             </Button>
           ))}
-        </ButtonGroup>
+        </div>
 
         <div className="shadow-sm border border-top-0 rounded-bottom">
           <Table striped bordered hover responsive className="mb-0">
             <thead style={{ backgroundColor: "#ad2132" }}>
               <tr className="text-white text-uppercase">
-                <th>Batch Title</th>
-                <th>Date</th>
+                <th>Batch Name</th>
+                <th>Batch No</th>
+                <th>Start Date</th>
                 <th>Timings</th>
                 <th>Duration</th>
-                <th>Faculty</th>
+                <th>Mentor</th>
                 <th>Type</th>
+                <th>Category</th>
               </tr>
             </thead>
             <tbody>
               {filteredBatches.length > 0 ? (
                 filteredBatches.map((batch, index) => (
                   <tr key={index}>
-                    <td>{batch.title}</td>
-                    <td>{batch.date}</td>
-                    <td>{batch.time}</td>
+                    <td>{batch.batchName}</td>
+                    <td>{batch.batchNo}</td>
+                    <td>{formatDate(batch.date)}</td>
+                    <td>{batch.timing}</td>
                     <td>{batch.duration}</td>
-                    <td>{batch.faculty}</td>
+                    <td>{batch.mentor}</td>
                     <td>{batch.type}</td>
+                    <td>{batch.categorie}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="text-center text-muted py-3">
+                  <td colSpan="8" className="text-center text-muted py-3">
                     No batches found for the selected filter
                   </td>
                 </tr>
@@ -94,13 +176,13 @@ const UpCommingBatches = () => {
           </Table>
         </div>
 
-        <Card className="mt-4 border-0" style={{ backgroundColor: "#f8d7da" }}>
+        <Card className="mt-4 border-0">
           <Card.Body>
             <Card.Title style={{ color: "#ad2132" }}>Need Help Choosing a Batch?</Card.Title>
             <Card.Text>
               Contact our counselors at <strong>+91 1234567890</strong> or email us at <strong>info@Magnitia.com</strong> for personalized guidance.
             </Card.Text>
-            <Button style={{ backgroundColor: "#c34153", border: "none" }}>
+            <Button variant="danger">
               Request a Call Back
             </Button>
           </Card.Body>

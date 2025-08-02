@@ -1,64 +1,105 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Download, Book, Clock, Users } from 'lucide-react';
 import Header from './Header';
 import Footer from './Footer';
 import { jsPDF } from 'jspdf';
-
-const courseData = {
-  'AI & Machine Learning': {
-    instructor: 'Margarita',
-    lessons: 12,
-    duration: '40 Hours',
-    students: '1500+',
-    completion: 50,
-    description:
-      'AI Data Analyst Masters Training offers a comprehensive way to develop advanced data analysis and interpretation skills.',
-    image: 'https://img.freepik.com/free-vector/artificial-intelligence-technology-background_23-2148327745.jpg',
-  },
-  'Web Development': {
-    instructor: 'James Smith',
-    lessons: 18,
-    duration: '60 Hours',
-    students: '2500+',
-    completion: 75,
-    description:
-      'Full Stack Web Development course covers frontend, backend, and deployment using latest technologies.',
-    image: 'https://img.freepik.com/free-vector/gradient-software-development-concept_23-2148824393.jpg',
-  },
-  'Data Science': {
-    instructor: 'Sophia Lee',
-    lessons: 15,
-    duration: '50 Hours',
-    students: '1800+',
-    completion: 90,
-    description:
-      'Comprehensive Data Science training with Python, statistics, machine learning, and data visualization.',
-    image: 'https://img.freepik.com/free-vector/data-science-concept-illustration_114360-8541.jpg',
-  },
-};
-
+import axios from 'axios';
 
 const Certificate = () => {
-  const [selectedCourse, setSelectedCourse] = useState('AI & Machine Learning');
-  const course = courseData[selectedCourse];
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [apiData, setApiData] = useState(null);
+  const [enrollmentData, setEnrollmentData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const user = JSON.parse(sessionStorage.getItem('user'));
+  const userId = user?.id;
 
-  const generatePDF = () => {
-    const doc = new jsPDF();
-    doc.setFont('Roboto', 'normal');
-    doc.setFontSize(20);
-    doc.text('Certificate of Completion', 20, 20);
-    doc.setFontSize(16);
-    doc.text(`Course: ${selectedCourse}`, 20, 40);
-    doc.text(`Instructor: ${course.instructor}`, 20, 60);
-    doc.text(`Course Completed: ${course.completion}%`, 20, 80);
-    doc.text(`Duration: ${course.duration}`, 20, 100);
-    doc.text(`Lessons Completed: ${course.lessons}`, 20, 120);
-    doc.text(`Total Students: ${course.students}`, 20, 140);
-    doc.addImage('/certificate.png', 'PNG', 20, 160, 170, 50);
-    doc.setFontSize(12);
-    doc.text('Issued by: Your Company Name', 20, 220);
-    doc.save('certificate.pdf');
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch certificate data
+        const certResponse = await axios.get(`https://hicap-backend-4rat.onrender.com/api/Certificate/${userId}`);
+        setApiData(certResponse.data.data);
+        
+        // Fetch enrollment data
+        const enrollResponse = await axios.get(`https://hicap-backend-4rat.onrender.com/api/enrollments/${userId}`);
+        setEnrollmentData(enrollResponse.data.data[0]); // Take first course for now
+        
+        // Set the selected course to the enrolled course
+        if (enrollResponse.data.data.length > 0) {
+          setSelectedCourse({
+            name: enrollResponse.data.data[0].name,
+            instructor: 'Instructor Name', // You might want to get this from API
+            lessons: enrollResponse.data.data[0].noOfLessons,
+            duration: `${enrollResponse.data.data[0].duration} Months`,
+            students: `${enrollResponse.data.data[0].noOfStudents}+`,
+            completion: apiData?.enrollment?.performance 
+              ? Math.round((apiData.enrollment.performance.theoreticalPercentage + apiData.enrollment.performance.practicalPercentage) / 2)
+              : 0,
+            description: enrollResponse.data.data[0].description,
+            image: enrollResponse.data.data[0].image
+          });
+        }
+        
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+   const generatePDF = () => {
+    if (!apiData?.status?.image) return;
+    
+    const doc = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm'
+    });
+    
+    // Get the certificate image URL from API
+    const certImage = apiData.status.image;
+    
+    // Create a new image to get dimensions
+    const img = new Image();
+    img.src = certImage;
+    
+    img.onload = function() {
+      // Calculate dimensions to fit the PDF (A4 size: 297x210mm)
+      const ratio = Math.min(297 / img.width, 210 / img.height) * 0.9;
+      const width = img.width * ratio;
+      const height = img.height * ratio;
+      
+      // Center the image on the page
+      const x = (297 - width) / 2;
+      const y = (210 - height) / 2;
+      
+      // Add the image to PDF
+      doc.addImage(certImage, 'PNG', x, y, width, height);
+      doc.save('certificate.pdf');
+    };
+    
+    img.onerror = function() {
+      // Fallback to default image if API image fails to load
+      doc.addImage('/certificate.png', 'PNG', 10, 10, 277, 190);
+      doc.save('certificate.pdf');
+    };
   };
+
+  if (loading) {
+    return <div className="text-center py-5">Loading certificate data...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center py-5 text-danger">Error loading certificate: {error}</div>;
+  }
+
+  if (!selectedCourse) {
+    return <div className="text-center py-5">No enrolled courses found</div>;
+  }
 
   return (
     <>
@@ -66,30 +107,17 @@ const Certificate = () => {
 
       <div className="container-fluid px-3 px-md-5 py-4 py-md-5 my-5">
         <div className="mb-4 mt-5 mt-md-0">
-          <h1 className="fw-bold mb-2">Certificate</h1>
-          <div className="bg-success" style={{ width: '216px', height: '3px', borderRadius: '20px' }} />
-        </div>
-
-        <div className="mb-4">
-          <label className="form-label fw-semibold">Select Course</label>
-          <select
-            className="form-select"
-            value={selectedCourse}
-            onChange={(e) => setSelectedCourse(e.target.value)}
-          >
-            {Object.keys(courseData).map((course) => (
-              <option key={course} value={course}>{course}</option>
-            ))}
-          </select>
+          <h1 className="fw-bold mb-2 textcolor">Certificate</h1>
+          <div className="bg-meroon" style={{ width: '216px', height: '3px', borderRadius: '20px' }} />
         </div>
 
         <div className="card border-light shadow-sm mb-4 mb-md-5">
-          <div className="card-body p-4 p-md-5">
+          <div className="card-body p-4 p-md-5" style={{backgroundColor: "#f8d7da"}}>
             <div className="row align-items-center">
               <div className="col-12 col-md-2 text-center mb-4 mb-md-0">
                 <img
-                  src={course.image}
-                  alt={selectedCourse}
+                  src={selectedCourse.image}
+                  alt={selectedCourse.name}
                   className="img-fluid"
                   style={{
                     maxWidth: '100%',
@@ -99,25 +127,24 @@ const Certificate = () => {
                 />
               </div>
               <div className="col-12 col-md-10">
-                <h2 className="h3 fw-bold mb-3">{selectedCourse}</h2>
-                <p className="lead mb-4">{course.description}</p>
+                <h2 className="h3 fw-bold mb-3 textcolor">{selectedCourse.name}</h2>
+                <p className="lead mb-4">{selectedCourse.description}</p>
                 <div className="d-flex flex-wrap gap-3 gap-md-5">
                   <div className="d-flex align-items-center">
-                    <Book size={20} className="me-2" />
-                    <span>Lesson No: {course.lessons}</span>
+                    <Book size={20} className="me-2 textcolor" />
+                    <span>Lesson No: {selectedCourse.lessons}</span>
                   </div>
                   <div className="d-flex align-items-center">
-                    <Clock size={20} className="me-2" />
-                    <span>Duration: {course.duration}</span>
+                    <Clock size={20} className="me-2 textcolor" />
+                    <span>Duration: {selectedCourse.duration}</span>
                   </div>
                   <div className="d-flex align-items-center">
-                    <Users size={20} className="me-2" />
-                    <span>Students: {course.students}</span>
+                    <Users size={20} className="me-2 textcolor" />
+                    <span>Students: {selectedCourse.students}</span>
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
 
@@ -128,21 +155,24 @@ const Certificate = () => {
                 <h2 className="h4 fw-bold mb-3">Certificate Dashboard</h2>
                 <hr className="my-3" />
                 <h3 className="h5 fw-bold mb-2">Course Name:</h3>
-                <p className="h4 fw-bold mb-4">{selectedCourse}</p>
+                <p className="h4 fw-bold mb-4 textcolor">{selectedCourse.name}</p>
                 <hr className="my-3" />
-                <h3 className="h5 fw-bold mb-3 text-center">Course Completed:</h3>
-                <div className="text-center my-4">
-                  <div className="position-relative d-inline-block">
-                    <div className="progress-circle" style={{ width: '100px', height: '50px' }}>
-                      <div className="progress-circle-background"></div>
-                      <div
-                        className="progress-circle-foreground"
-                        style={{ width: `${course.completion}%` }}
-                      ></div>
-                      <div className="progress-circle-text">{course.completion}%</div>
+                {apiData?.enrollment?.performance && (
+                  <>
+                    <hr className="my-3" />
+                    <h3 className="h5 fw-bold mb-3">Performance Details:</h3>
+                    <div className="row">
+                      <div className="col-md-6">
+                        <p>Theoretical: {apiData.enrollment.performance.theoreticalPercentage}%</p>
+                        <p>Practical: {apiData.enrollment.performance.practicalPercentage}%</p>
+                      </div>
+                      <div className="col-md-6">
+                        <p>Grade: {apiData.enrollment.performance.grade}</p>
+                        <p>Feedback: {apiData.enrollment.performance.feedback}</p>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -151,14 +181,14 @@ const Certificate = () => {
             <div className="card border-light shadow-sm h-100">
               <div className="card-body p-4 d-flex flex-column align-items-center justify-content-between">
                 <img
-                  src="/certificate.png"
+                  src={apiData?.status?.image || '/certificate.png'}
                   alt="Certificate"
                   className="img-fluid mb-4"
                   style={{ maxHeight: '200px' }}
                 />
                 <button
                   onClick={generatePDF}
-                  className="btn btn-primary btn-lg d-flex align-items-center gap-2"
+                  className="btn gradient-button btn-lg d-flex align-items-center gap-2"
                 >
                   <span>Download</span>
                   <Download size={20} />

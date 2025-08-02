@@ -1,17 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Header from './Header';
 import Footer from './Footer';
 import { Upload } from 'lucide-react';
 
 const DoubtSession = () => {
   const [formData, setFormData] = useState({
-    course: '',
-    batch: '',
+    enrolledcourses: '',
+    batchNumber: '',
     mentor: '',
     date: '',
-    doubt: '',
+    description: '',
     image: null,
   });
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const user = JSON.parse(sessionStorage.getItem('user'));
+  const userId = user?.id;
+
+  useEffect(() => {
+    const fetchEnrolledCourses = async () => {
+      try {
+        const response = await axios.get(`https://hicap-backend-4rat.onrender.com/api/enrollments/${userId}`);
+        if (response.data.success) {
+          setEnrolledCourses(response.data.data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch enrolled courses:', err);
+        setError('Failed to load your enrolled courses. Please try again later.');
+      }
+    };
+    fetchEnrolledCourses();
+  }, [userId]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -22,10 +44,52 @@ const DoubtSession = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    alert('Ticket Raised!');
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('enrolledcourses', formData.enrolledcourses);
+      formDataToSend.append('batchNumber', formData.batchNumber);
+      formDataToSend.append('mentor', formData.mentor);
+      formDataToSend.append('date', new Date(formData.date).toISOString());
+      formDataToSend.append('description', formData.description);
+      if (formData.image) {
+        formDataToSend.append('image', formData.image);
+      }
+
+      const response = await axios.post(
+        'https://hicap-backend-4rat.onrender.com/api/doubtsession',
+        formDataToSend,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      );
+
+      if (response.data.success) {
+        setSuccess(true);
+        setFormData({
+          enrolledcourses: '',
+          batchNumber: '',
+          mentor: '',
+          date: '',
+          description: '',
+          image: null,
+        });
+      } else {
+        setError('Failed to submit doubt. Please try again.');
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'An error occurred. Please try again.');
+      console.error('Error submitting doubt:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -34,28 +98,40 @@ const DoubtSession = () => {
 
       {/* Title Section */}
       <div className="container mt-5 pt-5">
-        <h2 className="fw-bold text-dark">Doubt Session</h2>
-        <div className="bg-success" style={{ width: '200px', height: '3px', borderRadius: '5px' }}></div>
+        <h2 className="fw-bold textcolor">Doubt Session</h2>
+        <div className="bg-meroon" style={{ width: '200px', height: '3px', borderRadius: '5px' }}></div>
       </div>
 
       {/* Banner Section with Background Image */}
       <div
-        className="text-white text-center py-5 mt-4"
+        className="text-white text-center py-5 mt-4 "
         style={{
-          backgroundImage: 'url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSma23d2tvqOhwJa9RG6FPpRD4MOJluWyCo3A&s")',
+          backgroundImage: 'url("https://media.istockphoto.com/id/1072859840/vector/a-rectangular-creative-merry-christmas-red-self-chequered-checkered-background-vector-xmas.jpg?s=612x612&w=0&k=20&c=e5z3mCrP-WLXi8CWbpgVJ5Lg5uUin-uX6Hh8emHzb9M=")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
         }}
       >
         <div className="container py-5">
-          <h1 className="display-5 fw-bold">Got a Question? We’ve Got Your Back!</h1>
+          <h1 className="display-5 fw-bold">Got a Question? We've Got Your Back!</h1>
         </div>
       </div>
 
-
       {/* Main Section */}
       <div className="container my-5">
+        {success && (
+          <div className="alert alert-success alert-dismissible fade show" role="alert">
+            Your doubt has been submitted successfully!
+            <button type="button" className="btn-close" onClick={() => setSuccess(false)}></button>
+          </div>
+        )}
+        {error && (
+          <div className="alert alert-danger alert-dismissible fade show" role="alert">
+            {error}
+            <button type="button" className="btn-close" onClick={() => setError(null)}></button>
+          </div>
+        )}
+
         <div className="row align-items-center flex-column-reverse flex-lg-row">
           {/* Left: Image */}
           <div className="col-lg-6 mb-4 mb-lg-0 text-center">
@@ -68,35 +144,37 @@ const DoubtSession = () => {
 
           {/* Right: Form */}
           <div className="col-lg-6">
-            <div className="bg-success text-white p-4 rounded shadow">
+            <div className="bg-meroon text-white p-4 rounded shadow">
               <h4 className="text-uppercase fw-semibold">Get in touch</h4>
               <h2 className="fw-bold mb-4">Submit Your Academic Query</h2>
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="course" className="form-label">Course</label>
+                  <label htmlFor="enrolledcourses" className="form-label">Course</label>
                   <select
-                    name="course"
-                    id="course"
-                    value={formData.course}
+                    name="enrolledcourses"
+                    id="enrolledcourses"
+                    value={formData.enrolledcourses}
                     onChange={handleChange}
                     className="form-select"
                     required
                   >
                     <option value="">Select Course</option>
-                    <option value="AI & ML">AI & ML</option>
-                    <option value="Web Development">Web Development</option>
-                    <option value="Data Science">Data Science</option>
+                    {enrolledCourses.map((course) => (
+                      <option key={course._id} value={course._id}>
+                        {course.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="batch" className="form-label">Batch</label>
+                  <label htmlFor="batchNumber" className="form-label">Batch</label>
                   <input
                     type="text"
-                    name="batch"
+                    name="batchNumber"
                     className="form-control"
-                    value={formData.batch}
+                    value={formData.batchNumber}
                     onChange={handleChange}
                     placeholder="e.g., Jan 2025 Weekday"
                     required
@@ -129,12 +207,12 @@ const DoubtSession = () => {
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="doubt" className="form-label">Doubt Description</label>
+                  <label htmlFor="description" className="form-label">Doubt Description</label>
                   <textarea
-                    name="doubt"
+                    name="description"
                     className="form-control"
                     rows="3"
-                    value={formData.doubt}
+                    value={formData.description}
                     onChange={handleChange}
                     placeholder="Describe your doubt"
                     required
@@ -153,10 +231,19 @@ const DoubtSession = () => {
                       className="form-control d-none"
                     />
                   </label>
+                  {formData.image && (
+                    <div className="mt-2">
+                      <small>Selected: {formData.image.name}</small>
+                    </div>
+                  )}
                 </div>
 
-                <button type="submit" className="btn btn-light w-100 fw-bold">
-                  Raise Ticket
+                <button
+                  type="submit"
+                  className="btn btn-light w-100 fw-bold"
+                  disabled={loading}
+                >
+                  {loading ? 'Submitting...' : 'Raise Ticket'}
                 </button>
               </form>
             </div>

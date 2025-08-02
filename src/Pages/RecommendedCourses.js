@@ -9,8 +9,8 @@ const RecommendedCourses = () => {
   const [enrolledCategories, setEnrolledCategories] = useState([]);
   const navigate = useNavigate();
 
-  const userId = '68839831a3e1d9e110f71081'; // Replace with actual user ID logic
-
+  const user = JSON.parse(sessionStorage.getItem('user'));
+  const userId = user?.id;
   // Fetch enrolled courses and categories
   useEffect(() => {
     const fetchEnrollments = async () => {
