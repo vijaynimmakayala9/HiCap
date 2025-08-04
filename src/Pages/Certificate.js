@@ -6,42 +6,30 @@ import { jsPDF } from 'jspdf';
 import axios from 'axios';
 
 const Certificate = () => {
-  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedCourseIndex, setSelectedCourseIndex] = useState(0);
   const [apiData, setApiData] = useState(null);
-  const [enrollmentData, setEnrollmentData] = useState(null);
+  const [enrollmentData, setEnrollmentData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const user = JSON.parse(sessionStorage.getItem('user'));
   const userId = user?.id;
 
-  
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Fetch certificate data
-        const certResponse = await axios.get(`https://hicap-backend-4rat.onrender.com/api/Certificate/${userId}`);
+        const certResponse = await axios.get(
+          `https://hicap-backend-4rat.onrender.com/api/Certificate/${userId}`
+        );
         setApiData(certResponse.data.data);
-        
+
         // Fetch enrollment data
-        const enrollResponse = await axios.get(`https://hicap-backend-4rat.onrender.com/api/enrollments/${userId}`);
-        setEnrollmentData(enrollResponse.data.data[0]); // Take first course for now
-        
-        // Set the selected course to the enrolled course
-        if (enrollResponse.data.data.length > 0) {
-          setSelectedCourse({
-            name: enrollResponse.data.data[0].name,
-            instructor: 'Instructor Name', // You might want to get this from API
-            lessons: enrollResponse.data.data[0].noOfLessons,
-            duration: `${enrollResponse.data.data[0].duration} Months`,
-            students: `${enrollResponse.data.data[0].noOfStudents}+`,
-            completion: apiData?.enrollment?.performance 
-              ? Math.round((apiData.enrollment.performance.theoreticalPercentage + apiData.enrollment.performance.practicalPercentage) / 2)
-              : 0,
-            description: enrollResponse.data.data[0].description,
-            image: enrollResponse.data.data[0].image
-          });
-        }
-        
+        const enrollResponse = await axios.get(
+          `https://hicap-backend-4rat.onrender.com/api/enrollments/${userId}`
+        );
+        setEnrollmentData(enrollResponse.data.data || []);
+
         setLoading(false);
       } catch (err) {
         setError(err.message);
@@ -52,38 +40,41 @@ const Certificate = () => {
     fetchData();
   }, []);
 
-   const generatePDF = () => {
+  const selectedCourse = enrollmentData[selectedCourseIndex]
+    ? {
+        name: enrollmentData[selectedCourseIndex].name,
+        instructor: 'Instructor Name',
+        lessons: enrollmentData[selectedCourseIndex].noOfLessons,
+        duration: `${enrollmentData[selectedCourseIndex].duration} Months`,
+        students: `${enrollmentData[selectedCourseIndex].noOfStudents}+`,
+        description: enrollmentData[selectedCourseIndex].description,
+        image: enrollmentData[selectedCourseIndex].image,
+      }
+    : null;
+
+  const generatePDF = () => {
     if (!apiData?.status?.image) return;
-    
+
     const doc = new jsPDF({
       orientation: 'landscape',
-      unit: 'mm'
+      unit: 'mm',
     });
-    
-    // Get the certificate image URL from API
+
     const certImage = apiData.status.image;
-    
-    // Create a new image to get dimensions
     const img = new Image();
     img.src = certImage;
-    
-    img.onload = function() {
-      // Calculate dimensions to fit the PDF (A4 size: 297x210mm)
+
+    img.onload = function () {
       const ratio = Math.min(297 / img.width, 210 / img.height) * 0.9;
       const width = img.width * ratio;
       const height = img.height * ratio;
-      
-      // Center the image on the page
       const x = (297 - width) / 2;
       const y = (210 - height) / 2;
-      
-      // Add the image to PDF
       doc.addImage(certImage, 'PNG', x, y, width, height);
       doc.save('certificate.pdf');
     };
-    
-    img.onerror = function() {
-      // Fallback to default image if API image fails to load
+
+    img.onerror = function () {
       doc.addImage('/certificate.png', 'PNG', 10, 10, 277, 190);
       doc.save('certificate.pdf');
     };
@@ -111,8 +102,25 @@ const Certificate = () => {
           <div className="bg-meroon" style={{ width: '216px', height: '3px', borderRadius: '20px' }} />
         </div>
 
+        {enrollmentData.length > 1 && (
+          <div className="mb-4">
+            <label className="form-label fw-bold">Select Course:</label>
+            <select
+              className="form-select"
+              value={selectedCourseIndex}
+              onChange={(e) => setSelectedCourseIndex(Number(e.target.value))}
+            >
+              {enrollmentData.map((course, index) => (
+                <option key={course._id || index} value={index}>
+                  {course.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <div className="card border-light shadow-sm mb-4 mb-md-5">
-          <div className="card-body p-4 p-md-5" style={{backgroundColor: "#f8d7da"}}>
+          <div className="card-body p-4 p-md-5" style={{ backgroundColor: '#f8d7da' }}>
             <div className="row align-items-center">
               <div className="col-12 col-md-2 text-center mb-4 mb-md-0">
                 <img
@@ -159,7 +167,6 @@ const Certificate = () => {
                 <hr className="my-3" />
                 {apiData?.enrollment?.performance && (
                   <>
-                    <hr className="my-3" />
                     <h3 className="h5 fw-bold mb-3">Performance Details:</h3>
                     <div className="row">
                       <div className="col-md-6">
@@ -198,36 +205,6 @@ const Certificate = () => {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .progress-circle {
-          position: relative;
-          overflow: hidden;
-        }
-        .progress-circle-background {
-          width: 100px;
-          height: 50px;
-          background-color: #e9ecef;
-          border-top-left-radius: 100px;
-          border-top-right-radius: 100px;
-        }
-        .progress-circle-foreground {
-          position: absolute;
-          top: 0;
-          left: 0;
-          height: 50px;
-          background-color: #007860;
-          border-top-left-radius: 100px;
-        }
-        .progress-circle-text {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          font-weight: 600;
-          font-size: 1.25rem;
-        }
-      `}</style>
 
       <Footer />
     </>

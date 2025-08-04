@@ -18,6 +18,7 @@ import Dashboard from "./components/Dashboard";
 import AdminCourses from "./admin/AdminCourses";
 import PrivateRoute from "./components/PrivateRoute"; // ✅ import the wrapper
 import LiveClassesPage from "./components/LiveClassesPage";
+import CourseModule from "./admin/CourseModule";
 
 function App() {
   return (
@@ -39,7 +40,7 @@ function App() {
       <Route path="/dashboard/certificate" element={<PrivateRoute><Certificate /></PrivateRoute>} />
       <Route path="/dashboard/interviews" element={<PrivateRoute><Interviews /></PrivateRoute>} />
       <Route path="/dashboard/live-classes" element={<PrivateRoute><LiveClassesPage /></PrivateRoute>} />
-      <Route path="/admin" element={<AdminCourses />} />
+      <Route path="/coursemodule" element={<CourseModule />} />
     </Routes>
   );
 }

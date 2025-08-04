@@ -22,6 +22,7 @@ const GuestHeader = ({ onLogin }) => {
   const megaMenuRef = useRef();
   const coursesBtnRef = useRef();
   const resourcesBtnRef = useRef();
+  const resourcesDropdownRef = useRef();
   const navRef = useRef();
   const modalRef = useRef();
 
@@ -78,6 +79,15 @@ const GuestHeader = ({ onLogin }) => {
         setShowResourcesMenu(false);
       }
 
+      // Auto-close resources dropdown on large devices
+      if (
+        resourcesDropdownRef.current &&
+        !resourcesDropdownRef.current.contains(e.target) &&
+        (!resourcesBtnRef.current || !resourcesBtnRef.current.contains(e.target))
+      ) {
+        setShowResourcesMenu(false);
+      }
+
       if (modalRef.current && !modalRef.current.contains(e.target) && !e.target.classList.contains('login-button')) {
         setShowLoginModal(false);
       }
@@ -86,6 +96,27 @@ const GuestHeader = ({ onLogin }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Auto-close resources dropdown on mouse leave for large devices
+  useEffect(() => {
+    const handleMouseLeave = () => {
+      if (window.innerWidth >= 992) {
+        setTimeout(() => {
+          setShowResourcesMenu(false);
+        }, 100);
+      }
+    };
+
+    if (resourcesDropdownRef.current) {
+      resourcesDropdownRef.current.addEventListener('mouseleave', handleMouseLeave);
+    }
+
+    return () => {
+      if (resourcesDropdownRef.current) {
+        resourcesDropdownRef.current.removeEventListener('mouseleave', handleMouseLeave);
+      }
+    };
+  }, [showResourcesMenu]);
 
   const groupedCourses = {
     'High Rated Courses': Array.isArray(courses) ? courses.filter(course => course.isHighRated) : [],
@@ -159,132 +190,98 @@ const GuestHeader = ({ onLogin }) => {
   const MegaMenu = () => (
     <div
       ref={megaMenuRef}
-      className="position-absolute bg-white shadow-lg border rounded mt-2"
-      style={{
-        width: 'calc(100vw - 2rem)',
-        maxWidth: '900px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        zIndex: 1050,
-        maxHeight: '80vh',
-        overflowY: 'auto'
-      }}
+      className="mega-menu"
     >
-      <div className="p-4 p-lg-4">
-        <div className="row g-0">
-          {/* Categories Column */}
-          <div className="col-md-3 border-end pe-3">
-            <h6 className="fw-bold textcolor mb-3 fs-6">Course Categories</h6>
-            <ul className="list-unstyled">
-              {Object.keys(groupedCourses).map((category) => (
-                <li key={category} className="mb-2">
-                  <button
-                    className={`btn w-100 text-start px-3 py-2 rounded ${selectedCategory === category ? 'gradient-button' : 'text-dark'
-                      }`}
-                    style={{ fontSize: '14px' }}
-                    onClick={() => setSelectedCategory(category)}
-                  >
-                    {category}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
+      <div className="mega-menu-content">
+        <div className="categories-column">
+          <h6>Course Categories</h6>
+          <ul>
+            {Object.keys(groupedCourses).map((category) => (
+              <li key={category}>
+                <button
+                  className={`category-btn ${selectedCategory === category ? 'active' : ''}`}
+                  onClick={() => setSelectedCategory(category)}
+                >
+                  {category}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-          {/* Courses Column */}
-          <div className="col-md-9 ps-4">
-            <h6 className="fw-bold textcolor mb-3 fs-6">{selectedCategory}</h6>
-            <div className="row g-3">
-              {groupedCourses[selectedCategory]?.slice(0, 6).map((course) => (
-                <div key={course._id} className="col-md-6">
-                  <div
-                    className="d-flex gap-3 p-3 rounded hover-bg-light cursor-pointer"
-                    onClick={() => handleCourseClick(course._id)}
-                  >
-                    <div className="bg-light p-2 rounded flex-shrink-0">
-                      <div className="d-flex align-items-center justify-content-center  rounded"
-                        style={{ width: '36px', height: '36px' }}>
-                        <img src={course.image} className='img-fluid' />
-                      </div>
-                    </div>
-                    <div className="flex-grow-1 overflow-hidden">
-                      <div className="fw-medium text-truncate" style={{ fontSize: '14px' }}>
-                        {course.name}
-                      </div>
-                      <div className="d-flex align-items-center gap-2 text-muted mt-1" style={{ fontSize: '12px' }}>
-                        <span className="text-truncate">{course.category || 'N/A'}</span>
-                        <span>•</span>
-                        <span className="text-truncate">{course.duration || 0} months</span>
-                      </div>
+        <div className="courses-column">
+          <h6>{selectedCategory}</h6>
+          <div className="courses-grid">
+            {groupedCourses[selectedCategory]?.slice(0, 6).map((course) => (
+              <div key={course._id} className="course-item">
+                <div
+                  className="course-card"
+                  onClick={() => handleCourseClick(course._id)}
+                >
+                  <div className="course-image">
+                    <img src={course.image} alt={course.name} />
+                  </div>
+                  <div className="course-info">
+                    <div className="course-name">{course.name}</div>
+                    <div className="course-meta">
+                      <span>{course.category || 'N/A'}</span>
+                      <span>•</span>
+                      <span>{course.duration || 0} months</span>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-
-            {groupedCourses[selectedCategory]?.length === 0 && (
-              <div className="text-center py-4 text-muted">
-                No courses available in this category
               </div>
-            )}
+            ))}
           </div>
+
+          {groupedCourses[selectedCategory]?.length === 0 && (
+            <div className="no-courses">
+              No courses available in this category
+            </div>
+          )}
         </div>
+      </div>
 
-        <div className="border-top pt-4 mt-4">
-          <div className="row align-items-center g-3">
-            <div className="col-12 col-md-8">
-              <h6 className="fw-bold textcolor mb-2 fs-6">
-                Can't find what you're looking for?
-              </h6>
-              <p className="text-muted mb-0" style={{ fontSize: '13px' }}>
-                Browse our complete course catalog or talk to our advisors
-              </p>
-            </div>
-            <div className="col-12 col-md-4">
-              <div className="d-flex flex-column flex-md-row gap-2">
-                <button
-                  className="btn btn-outline-meroon btn-sm flex-fill"
-                  style={{ fontSize: '13px' }}
-                  onClick={() => {
-                    navigate('/courses');
-                    setShowCoursesMenu(false);
-                  }}
-                >
-                  View All Courses
-                </button>
-                <button
-                  className="btn gradient-button btn-sm flex-fill"
-                  style={{ fontSize: '13px' }}
-                  onClick={() => {
-                    navigate('/contactus');
-                    setShowCoursesMenu(false);
-                  }}
-                >
-                  Contact Advisor
-                </button>
-              </div>
-            </div>
-          </div>
+      <div className="mega-menu-footer">
+        <div className="footer-content">
+          <h6>Can't find what you're looking for?</h6>
+          <p>Browse our complete course catalog or talk to our advisors</p>
+        </div>
+        <div className="footer-actions">
+          <button
+            className="btn-outline"
+            onClick={() => {
+              navigate('/courses');
+              setShowCoursesMenu(false);
+            }}
+          >
+            View All Courses
+          </button>
+          <button
+            className="btn-primary"
+            onClick={() => {
+              navigate('/contactus');
+              setShowCoursesMenu(false);
+            }}
+          >
+            Contact Advisor
+          </button>
         </div>
       </div>
     </div>
   );
 
   const ResourcesDropdown = () => (
-    <div
-      className="position-absolute bg-white shadow-lg border rounded mt-2"
-      style={{
-        minWidth: '200px',
-        zIndex: 1050
-      }}
+    <div 
+      ref={resourcesDropdownRef}
+      className="resources-dropdown"
+      onMouseEnter={() => setShowResourcesMenu(true)}
     >
-      <ul className="list-unstyled p-2">
+      <ul>
         {menuItems.find(item => item.label === 'Resources').items.map((item, idx) => (
           <li key={idx}>
             <button
-              className={`btn w-100 text-start px-3 py-2 rounded ${location.pathname === item.path ? 'textcolor' : ''
-                }`}
-              style={{ fontSize: '14px' }}
+              className={`resource-item ${location.pathname === item.path ? 'active' : ''}`}
               onClick={() => {
                 handleNavigate(item.path);
                 setShowResourcesMenu(false);
@@ -299,32 +296,26 @@ const GuestHeader = ({ onLogin }) => {
   );
 
   const MobileMegaMenu = () => (
-    <div className="bg-light rounded p-3 mt-2">
+    <div className="mobile-mega-menu">
       {Object.entries(groupedCourses).map(([category, items]) => (
-        <div key={category} className="mb-3">
-          <h6 className="fw-bold text-muted mb-2" style={{ fontSize: '13px' }}>{category}</h6>
-          <ul className="list-unstyled ps-2">
+        <div key={category} className="mobile-category">
+          <h6>{category}</h6>
+          <ul>
             {items.slice(0, 3).map((course) => (
               <li
                 key={course._id}
-                className="mb-2 cursor-pointer"
+                className="mobile-course-item"
                 onClick={() => handleCourseClick(course._id)}
               >
-                <div className="d-flex align-items-start p-2 rounded hover-bg-white">
-                  <span className="bg-secondary p-1 rounded me-2 flex-shrink-0" style={{ width: '40px', height: '40px', overflow: 'hidden' }}>
-                    <img
-                      src={course.image}
-                      className="img-fluid rounded"
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      alt={course.name}
-                    />
-                  </span>
-
-                  <div className="flex-grow-1 overflow-hidden">
-                    <div className="fw-medium text-truncate" style={{ fontSize: '13px' }}>{course.name}</div>
-                    <div className="d-flex align-items-center gap-1 text-muted mt-1" style={{ fontSize: '11px' }}>
-                      <FaRegClock style={{ fontSize: '10px' }} />
-                      <span className="text-truncate">{course.category || 'N/A'}</span>
+                <div className="mobile-course-card">
+                  <div className="mobile-course-image">
+                    <img src={course.image} alt={course.name} />
+                  </div>
+                  <div className="mobile-course-info">
+                    <div className="mobile-course-name">{course.name}</div>
+                    <div className="mobile-course-meta">
+                      <FaRegClock />
+                      <span>{course.category || 'N/A'}</span>
                       <span>•</span>
                       <span>{course.duration || 0} months</span>
                     </div>
@@ -335,10 +326,9 @@ const GuestHeader = ({ onLogin }) => {
           </ul>
         </div>
       ))}
-      <div className="border-top pt-2 d-grid gap-2">
+      <div className="mobile-mega-menu-footer">
         <button
-          className="btn btn-outline-meroon btn-sm"
-          style={{ fontSize: '13px' }}
+          className="btn-outline"
           onClick={() => {
             navigate('/courses');
             setShowCoursesMenu(false);
@@ -348,8 +338,7 @@ const GuestHeader = ({ onLogin }) => {
           View All Courses
         </button>
         <button
-          className="btn btn-primary btn-sm"
-          style={{ fontSize: '13px' }}
+          className="btn-primary"
           onClick={() => {
             navigate('/contactus');
             setShowCoursesMenu(false);
@@ -364,66 +353,47 @@ const GuestHeader = ({ onLogin }) => {
 
   return (
     <>
-      <nav className={`navbar navbar-expand-lg navbar-light fixed-top ${isScrolled ? 'glass-morphism' : 'bg-white shadow-sm'}`} style={{ minHeight: '80px', zIndex: 1050, transition: 'all 0.3s ease' }}>
-        <div className="container-fluid px-3 px-md-4 px-lg-5">
-          <a
-            className="navbar-brand cursor-pointer"
-            onClick={() => navigate('/')}
-          >
+      <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
+        <div className="navbar-container">
+          <div className="navbar-brand" onClick={() => navigate('/')}>
             <img
               src="/logo/hicaplogo.png"
               alt="HiCap Logo"
-              className="img-fluid"
-              style={{ height: '50px' }}
+              className="logo"
             />
-          </a>
+          </div>
 
-          <div className="d-lg-none d-flex align-items-center gap-2" style={{ position: 'relative', zIndex: 1051 }}>
+          <div className="mobile-header-actions">
             <button
               onClick={() => setShowLoginModal(true)}
-              className="btn gradient-button btn-md"
-              style={{ whiteSpace: 'nowrap', fontSize: '14px', padding: '0.5rem 1.25rem' }}
+              className="login-btn-mobile"
             >
               Login
             </button>
             <button
-              className="btn gradient-button p-2"
+              className="menu-toggle"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle navigation"
-              style={{ width: '44px', height: '44px' }}
             >
               {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
             </button>
           </div>
 
-          <div
-            ref={navRef}
-            className="d-none d-lg-flex align-items-center justify-content-center gap-1 position-relative mx-auto"
-            onMouseEnter={() => {
-              setShowCoursesMenu(false);
-              setShowResourcesMenu(false);
-            }}
-          >
+          <div className="desktop-nav">
             {menuItems.map((item, idx) => {
               if (item.isMegaMenu) {
                 return (
                   <div
                     key={idx}
-                    className="position-relative"
+                    className="nav-item mega-menu-container"
                     onMouseEnter={() => setShowCoursesMenu(true)}
                   >
                     <span
                       ref={coursesBtnRef}
-                      className={`nav-link cursor-pointer d-flex align-items-center px-3 py-2 rounded ${location.pathname === item.path ? 'textcolor' : ''
-                        }`}
-                      style={{
-                        fontSize: '15px',
-                        fontWeight: 500,
-                        transition: 'all 0.2s ease'
-                      }}
+                      className={`nav-link ${showCoursesMenu ? 'active' : ''}`}
                       onClick={() => setShowCoursesMenu(!showCoursesMenu)}
                     >
-                      Courses <FaChevronDown className="ms-1" style={{ fontSize: '12px' }} />
+                      Courses <FaChevronDown className={`chevron ${showCoursesMenu ? 'rotate' : ''}`} />
                     </span>
                     {showCoursesMenu && <MegaMenu />}
                   </div>
@@ -432,21 +402,15 @@ const GuestHeader = ({ onLogin }) => {
                 return (
                   <div
                     key={idx}
-                    className="position-relative"
+                    className="nav-item dropdown-container"
                     onMouseEnter={() => setShowResourcesMenu(true)}
                   >
                     <span
                       ref={resourcesBtnRef}
-                      className={`nav-link cursor-pointer d-flex align-items-center px-3 py-2 rounded ${item.items.some(i => location.pathname === i.path) ? 'textcolor' : ''
-                        }`}
-                      style={{
-                        fontSize: '15px',
-                        fontWeight: 500,
-                        transition: 'all 0.2s ease'
-                      }}
+                      className={`nav-link ${showResourcesMenu ? 'active' : ''}`}
                       onClick={() => setShowResourcesMenu(!showResourcesMenu)}
                     >
-                      Resources <FaChevronDown className="ms-1" style={{ fontSize: '12px' }} />
+                      Resources <FaChevronDown className={`chevron ${showResourcesMenu ? 'rotate' : ''}`} />
                     </span>
                     {showResourcesMenu && <ResourcesDropdown />}
                   </div>
@@ -455,14 +419,8 @@ const GuestHeader = ({ onLogin }) => {
                 return (
                   <span
                     key={idx}
-                    className={`nav-link cursor-pointer px-3 py-2 rounded ${location.pathname === item.path ? 'textcolor' : ''
-                      }`}
+                    className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
                     onClick={() => handleNavigate(item.path)}
-                    style={{
-                      fontSize: '15px',
-                      fontWeight: 500,
-                      transition: 'all 0.2s ease'
-                    }}
                   >
                     {item.label}
                   </span>
@@ -472,223 +430,158 @@ const GuestHeader = ({ onLogin }) => {
 
             <button
               onClick={() => setShowLoginModal(true)}
-              className=" gradient-button btn-md ms-3 rounded-pill"
-              style={{ whiteSpace: 'nowrap', fontSize: '14px', padding: '0.5rem 1.25rem', fontWeight: 600, width: "150px", }}
+              className="desktop-login-btn"
             >
               Login
             </button>
           </div>
-
-          {isMobileMenuOpen && (
-            <div
-              className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"
-              style={{ zIndex: 1039, top: '80px' }}
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-          )}
-          <div
-            className={`d-lg-none position-fixed bg-white shadow-lg w-100 ${isMobileMenuOpen ? 'open' : 'closed'}`}
-            style={{
-              top: '80px',
-              left: 0,
-              right: 0,
-              height: 'calc(100vh - 80px)',
-              zIndex: 1040,
-              overflowY: 'auto',
-              transform: isMobileMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
-              transition: 'transform 0.3s ease',
-              paddingBottom: '20px'
-            }}
-          >
-            <div className="p-3">
-              {menuItems.map((item, idx) => {
-                if (item.isMegaMenu) {
-                  return (
-                    <div key={idx} className="mb-2">
-                      <div
-                        className="d-flex justify-content-between align-items-center fw-semibold text-dark mb-2 p-3 rounded"
-                        style={{
-                          fontSize: '16px',
-                          backgroundColor: showCoursesMenu ? '#f8f9fa' : 'white'
-                        }}
-                        onClick={() => setShowCoursesMenu(!showCoursesMenu)}
-                      >
-                        <span>{item.label}</span>
-                        <FaChevronDown
-                          style={{
-                            fontSize: '14px',
-                            transition: 'transform 0.3s ease',
-                            transform: showCoursesMenu ? 'rotate(180deg)' : 'rotate(0deg)'
-                          }}
-                        />
-                      </div>
-                      {showCoursesMenu && <MobileMegaMenu />}
-                    </div>
-                  );
-                } else if (item.isDropdown) {
-                  return (
-                    <div key={idx} className="mb-2">
-                      <div
-                        className="d-flex justify-content-between align-items-center fw-semibold text-dark mb-2 p-3 rounded"
-                        style={{
-                          fontSize: '16px',
-                          backgroundColor: showResourcesMenu ? '#f8f9fa' : 'white'
-                        }}
-                        onClick={() => setShowResourcesMenu(!showResourcesMenu)}
-                      >
-                        <span>{item.label}</span>
-                        <FaChevronDown
-                          style={{
-                            fontSize: '14px',
-                            transition: 'transform 0.3s ease',
-                            transform: showResourcesMenu ? 'rotate(180deg)' : 'rotate(0deg)'
-                          }}
-                        />
-                      </div>
-                      {showResourcesMenu && (
-                        <div className="ps-3">
-                          {item.items.map((subItem, subIdx) => (
-                            <div
-                              key={subIdx}
-                              className={`p-3 rounded mb-2 ${location.pathname === subItem.path ? 'bg-meroon text-white' : 'text-dark'
-                                }`}
-                              style={{
-                                fontSize: '16px',
-                                fontWeight: 500
-                              }}
-                              onClick={() => handleNavigate(subItem.path)}
-                            >
-                              {subItem.label}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div
-                      key={idx}
-                      className={`p-3 rounded mb-2 ${location.pathname === item.path ? 'bg-meroon text-white' : 'text-dark'
-                        }`}
-                      style={{
-                        fontSize: '16px',
-                        fontWeight: 500
-                      }}
-                      onClick={() => handleNavigate(item.path)}
-                    >
-                      {item.label}
-                    </div>
-                  );
-                }
-              })}
-              <button
-                onClick={() => setShowLoginModal(true)}
-                className="btn btn-md gradient-button w-100 mt-3 py-3"
-                style={{
-                  fontSize: '16px',
-                  fontWeight: 600,
-                  borderRadius: '8px'
-                }}
-              >
-                Login
-              </button>
-            </div>
-          </div>
         </div>
       </nav>
 
+      {/* Mobile Sidebar */}
+      <div className={`mobile-sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
+        <div className="sidebar-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>
+        <div className="sidebar-content">
+          <div className="sidebar-header">
+            <img
+              src="/logo/hicaplogo.png"
+              alt="HiCap Logo"
+              className="sidebar-logo"
+            />
+            <button 
+              className="sidebar-close"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <FaTimes />
+            </button>
+          </div>
+
+          <div className="sidebar-menu">
+            {menuItems.map((item, idx) => {
+              if (item.isMegaMenu) {
+                return (
+                  <div key={idx} className="sidebar-menu-item">
+                    <div 
+                      className="menu-title"
+                      onClick={() => setShowCoursesMenu(!showCoursesMenu)}
+                    >
+                      <span>{item.label}</span>
+                      <FaChevronDown className={`arrow ${showCoursesMenu ? 'rotate' : ''}`} />
+                    </div>
+                    {showCoursesMenu && <MobileMegaMenu />}
+                  </div>
+                );
+              } else if (item.isDropdown) {
+                return (
+                  <div key={idx} className="sidebar-menu-item">
+                    <div 
+                      className="menu-title"
+                      onClick={() => setShowResourcesMenu(!showResourcesMenu)}
+                    >
+                      <span>{item.label}</span>
+                      <FaChevronDown className={`arrow ${showResourcesMenu ? 'rotate' : ''}`} />
+                    </div>
+                    {showResourcesMenu && (
+                      <div className="submenu">
+                        {item.items.map((subItem, subIdx) => (
+                          <div
+                            key={subIdx}
+                            className={`submenu-item ${location.pathname === subItem.path ? 'active' : ''}`}
+                            onClick={() => handleNavigate(subItem.path)}
+                          >
+                            {subItem.label}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              } else {
+                return (
+                  <div
+                    key={idx}
+                    className={`sidebar-menu-item simple-item ${location.pathname === item.path ? 'active' : ''}`}
+                    onClick={() => handleNavigate(item.path)}
+                  >
+                    <span>{item.label}</span>
+                  </div>
+                );
+              }
+            })}
+          </div>
+
+          <div className="sidebar-footer">
+            <button
+              className="sidebar-login-btn"
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                setShowLoginModal(true);
+              }}
+            >
+              Login
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Login Modal */}
       {showLoginModal && (
-        <div className="modal-backdrop position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center p-3"
-          style={{ backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', zIndex: 1055 }}>
+        <div className="login-modal-backdrop">
           <div
             ref={modalRef}
-            className="bg-white rounded-3 shadow-lg p-4 w-100"
-            style={{
-              maxWidth: '420px',
-              animation: 'fadeIn 0.3s ease-in-out',
-              opacity: 1,
-              transform: 'scale(1)'
-            }}
+            className="login-modal-content"
           >
-            <div className="d-flex justify-content-between align-items-center mb-4">
-              <h4 className="textcolor mb-0" style={{ fontSize: '24px' }}>Login</h4>
+            <div className="modal-header">
+              <h4>Login</h4>
               <button
                 onClick={() => setShowLoginModal(false)}
-                className="btn-close"
-                aria-label="Close"
+                className="modal-close"
               ></button>
             </div>
 
             <form onSubmit={handleLoginSubmit}>
               {loginError && (
-                <div className="alert alert-danger" style={{ fontSize: '13px' }}>
+                <div className="alert-error">
                   {loginError}
                 </div>
               )}
 
-              <div className="mb-3">
-                <div className="input-group-icon" style={{ position: 'relative' }}>
+              <div className="form-group">
+                <div className="input-with-icon">
+                  <FaPhone className="input-icon" />
                   <input
                     type="tel"
                     name="phoneNumber"
                     value={loginData.phoneNumber}
                     onChange={handleLoginChange}
                     placeholder="Phone Number"
-                    className="form-control"
-                    style={{ paddingLeft: '2.5rem', fontSize: '14px' }}
                     required
                   />
-                  <FaPhone className="input-icon"
-                    style={{
-                      position: 'absolute',
-                      left: '0.75rem',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      zIndex: 10,
-                      color: '#6c757d',
-                      fontSize: '14px'
-                    }} />
                 </div>
               </div>
 
-              <div className="mb-4">
-                <div className="input-group-icon" style={{ position: 'relative' }}>
+              <div className="form-group">
+                <div className="input-with-icon">
+                  <FaLock className="input-icon" />
                   <input
                     type="password"
                     name="password"
                     value={loginData.password}
                     onChange={handleLoginChange}
                     placeholder="Password"
-                    className="form-control"
-                    style={{ paddingLeft: '2.5rem', fontSize: '14px' }}
                     required
                   />
-                  <FaLock className="input-icon"
-                    style={{
-                      position: 'absolute',
-                      left: '0.75rem',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      zIndex: 10,
-                      color: '#6c757d',
-                      fontSize: '14px'
-                    }} />
                 </div>
               </div>
 
               <button
                 type="submit"
                 disabled={isLoggingIn}
-                className={`btn w-100 d-flex align-items-center justify-content-center ${isLoggingIn ? 'bg-meroonlight' : 'gradient-button'
-                  }`}
-                style={{ fontSize: '15px', padding: '12px' }}
+                className={`login-submit-btn ${isLoggingIn ? 'loading' : ''}`}
               >
                 {isLoggingIn ? (
                   <>
-                    <div className="spinner-border spinner-border-sm me-2" role="status">
-                      <span className="visually-hidden">Loading...</span>
-                    </div>
+                    <span className="spinner"></span>
                     Logging in...
                   </>
                 ) : (
@@ -701,28 +594,714 @@ const GuestHeader = ({ onLogin }) => {
       )}
 
       <style jsx>{`
-        .nav-link:hover {
-          color: #ad2132 !important;
+        /* Base Styles */
+        .navbar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 80px;
+          background-color: white;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          z-index: 1050;
+          transition: all 0.3s ease;
         }
-        .dropdown-item:hover {
-          color: #ad2132 !important;
+        
+        .navbar.scrolled {
+          background: rgba(255, 255, 255, 0.9);
+          backdrop-filter: blur(10px);
         }
-        .hover-bg-light:hover {
-          background-color: #f8d7da !important;
+        
+        .navbar-container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          height: 100%;
+          padding: 0 20px;
+          max-width: 1400px;
+          margin: 0 auto;
         }
-        .cursor-pointer {
+        
+        .navbar-brand {
           cursor: pointer;
         }
-        .glass-morphism {
-          background: rgba(255, 255, 255, 0.2) !important;
-          backdrop-filter: blur(10px);
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        
+        .logo {
+          height: 50px;
         }
-        @media (max-width: 991.98px) {
-          .mobile-menu-container {
-            height: calc(100vh - 80px);
-            overflow-y: auto;
+        
+        /* Desktop Navigation */
+        .desktop-nav {
+          display: none;
+          align-items: center;
+          gap: 10px;
+        }
+        
+        @media (min-width: 992px) {
+          .desktop-nav {
+            display: flex;
           }
+        }
+        
+        .nav-item {
+          position: relative;
+        }
+        
+        .nav-link {
+          display: flex;
+          align-items: center;
+          padding: 10px 15px;
+          font-size: 15px;
+          font-weight: 500;
+          color: #333;
+          cursor: pointer;
+          border-radius: 6px;
+          transition: all 0.2s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+          color: #ad2132;
+        }
+        
+        .chevron {
+          margin-left: 5px;
+          font-size: 12px;
+          transition: transform 0.3s ease;
+        }
+        
+        .chevron.rotate {
+          transform: rotate(180deg);
+        }
+        
+        .desktop-login-btn {
+          margin-left: 15px;
+          padding: 10px 25px;
+          background: linear-gradient(135deg, #ad2132, #d32f2f);
+          color: white;
+          border: none;
+          border-radius: 30px;
+          font-weight: 600;
+          cursor: pointer;
+          white-space: nowrap;
+        }
+        
+        /* Mega Menu Styles */
+        .mega-menu {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          width: calc(100vw - 40px);
+          max-width: 900px;
+          background-color: white;
+          border-radius: 8px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+          z-index: 1050;
+          max-height: 80vh;
+          overflow-y: auto;
+        }
+        
+        .mega-menu-content {
+          display: flex;
+          padding: 20px;
+        }
+        
+        .categories-column {
+          flex: 0 0 25%;
+          padding-right: 20px;
+          border-right: 1px solid #eee;
+        }
+        
+        .categories-column h6 {
+          font-weight: bold;
+          color: #ad2132;
+          margin-bottom: 15px;
+          font-size: 16px;
+        }
+        
+        .categories-column ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+        
+        .categories-column li {
+          margin-bottom: 10px;
+        }
+        
+        .category-btn {
+          width: 100%;
+          padding: 10px 15px;
+          text-align: left;
+          background: none;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 14px;
+        }
+        
+        .category-btn:hover, .category-btn.active {
+          background: linear-gradient(135deg, #ad2132, #d32f2f);
+          color: white;
+        }
+        
+        .courses-column {
+          flex: 1;
+          padding-left: 20px;
+        }
+        
+        .courses-column h6 {
+          font-weight: bold;
+          color: #ad2132;
+          margin-bottom: 15px;
+          font-size: 16px;
+        }
+        
+        .courses-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 15px;
+        }
+        
+        .course-item {
+          cursor: pointer;
+        }
+        
+        .course-card {
+          display: flex;
+          gap: 15px;
+          padding: 15px;
+          border-radius: 8px;
+          transition: background-color 0.2s ease;
+        }
+        
+        .course-card:hover {
+          background-color: #f8d7da;
+        }
+        
+        .course-image {
+          flex-shrink: 0;
+          width: 40px;
+          height: 40px;
+          background-color: #f5f5f5;
+          border-radius: 6px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+        }
+        
+        .course-image img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        
+        .course-info {
+          flex-grow: 1;
+          overflow: hidden;
+        }
+        
+        .course-name {
+          font-weight: 500;
+          font-size: 14px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        
+        .course-meta {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          color: #666;
+          font-size: 12px;
+          margin-top: 5px;
+        }
+        
+        .no-courses {
+          text-align: center;
+          padding: 30px;
+          color: #666;
+        }
+        
+        .mega-menu-footer {
+          padding: 20px;
+          border-top: 1px solid #eee;
+        }
+        
+        .footer-content {
+          margin-bottom: 15px;
+        }
+        
+        .footer-content h6 {
+          font-weight: bold;
+          color: #ad2132;
+          margin-bottom: 5px;
+        }
+        
+        .footer-content p {
+          color: #666;
+          font-size: 13px;
+          margin: 0;
+        }
+        
+        .footer-actions {
+          display: flex;
+          gap: 10px;
+        }
+        
+        .btn-outline {
+          flex: 1;
+          padding: 8px;
+          background: none;
+          border: 1px solid #ad2132;
+          color: #ad2132;
+          border-radius: 4px;
+          font-size: 13px;
+          cursor: pointer;
+        }
+        
+        .btn-primary {
+          flex: 1;
+          padding: 8px;
+          background: linear-gradient(135deg, #ad2132, #d32f2f);
+          color: white;
+          border: none;
+          border-radius: 4px;
+          font-size: 13px;
+          cursor: pointer;
+        }
+        
+        /* Resources Dropdown */
+        .resources-dropdown {
+          position: absolute;
+          left: 0;
+          top: 100%;
+          min-width: 200px;
+          background-color: white;
+          border-radius: 8px;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+          z-index: 1050;
+        }
+        
+        .resources-dropdown ul {
+          list-style: none;
+          padding: 10px;
+          margin: 0;
+        }
+        
+        .resource-item {
+          width: 100%;
+          padding: 10px 15px;
+          text-align: left;
+          background: none;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 14px;
+        }
+        
+        .resource-item:hover, .resource-item.active {
+          color: #ad2132;
+          background-color: #f8d7da;
+        }
+        
+        /* Mobile Header */
+        .mobile-header-actions {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        
+        @media (min-width: 992px) {
+          .mobile-header-actions {
+            display: none;
+          }
+        }
+        
+        .login-btn-mobile {
+          padding: 8px 15px;
+          background: linear-gradient(135deg, #ad2132, #d32f2f);
+          color: white;
+          border: none;
+          border-radius: 4px;
+          font-size: 14px;
+          cursor: pointer;
+          white-space: nowrap;
+        }
+        
+        .menu-toggle {
+          width: 44px;
+          height: 44px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(135deg, #ad2132, #d32f2f);
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+        
+        /* Mobile Mega Menu */
+        .mobile-mega-menu {
+          padding: 15px;
+          background-color: #f8f9fa;
+          border-radius: 8px;
+          margin-top: 10px;
+        }
+        
+        .mobile-category {
+          margin-bottom: 20px;
+        }
+        
+        .mobile-category h6 {
+          font-weight: bold;
+          color: #666;
+          font-size: 13px;
+          margin-bottom: 10px;
+        }
+        
+        .mobile-category ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+        
+        .mobile-course-item {
+          margin-bottom: 10px;
+          cursor: pointer;
+        }
+        
+        .mobile-course-card {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 10px;
+          background-color: white;
+          border-radius: 6px;
+        }
+        
+        .mobile-course-image {
+          width: 40px;
+          height: 40px;
+          background-color: #eee;
+          border-radius: 4px;
+          overflow: hidden;
+          flex-shrink: 0;
+        }
+        
+        .mobile-course-image img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        
+        .mobile-course-info {
+          flex-grow: 1;
+          overflow: hidden;
+        }
+        
+        .mobile-course-name {
+          font-weight: 500;
+          font-size: 13px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        
+        .mobile-course-meta {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          color: #666;
+          font-size: 11px;
+          margin-top: 3px;
+        }
+        
+        .mobile-course-meta svg {
+          font-size: 10px;
+        }
+        
+        .mobile-mega-menu-footer {
+          display: grid;
+          gap: 10px;
+          padding-top: 10px;
+          border-top: 1px solid #ddd;
+        }
+        
+        /* Mobile Sidebar */
+        .mobile-sidebar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 1060;
+          pointer-events: none;
+        }
+        
+        .mobile-sidebar.open {
+          pointer-events: auto;
+        }
+        
+        .sidebar-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+        
+        .mobile-sidebar.open .sidebar-overlay {
+          opacity: 1;
+        }
+        
+        .sidebar-content {
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background-color: white;
+          transition: transform 0.3s ease;
+          display: flex;
+          flex-direction: column;
+        }
+        
+        .mobile-sidebar.open .sidebar-content {
+          transform: translateX(100%);
+        }
+        
+        .sidebar-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 20px;
+          border-bottom: 1px solid #eee;
+        }
+        
+        .sidebar-logo {
+          height: 40px;
+        }
+        
+        .sidebar-close {
+          background: none;
+          border: none;
+          font-size: 1.5rem;
+          color: #333;
+          cursor: pointer;
+        }
+        
+        .sidebar-menu {
+          flex-grow: 1;
+          overflow-y: auto;
+          padding: 10px 0;
+        }
+        
+        .sidebar-menu-item {
+          border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .sidebar-menu-item:last-child {
+          border-bottom: none;
+        }
+        
+        .sidebar-menu-item.simple-item {
+          padding: 16px 20px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        
+        .sidebar-menu-item.simple-item:hover,
+        .sidebar-menu-item.simple-item.active {
+          color: #ad2132;
+          background-color: #f8d7da;
+        }
+        
+        .sidebar-menu-item.simple-item span {
+          font-size: 16px;
+          font-weight: 500;
+        }
+        
+        .menu-title {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 16px 20px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        
+        .menu-title:hover {
+          background-color: #f8f9fa;
+        }
+        
+        .menu-title span {
+          font-size: 16px;
+          font-weight: 500;
+          color: #333;
+        }
+        
+        .arrow {
+          font-size: 14px;
+          color: #666;
+          transition: transform 0.3s ease;
+        }
+        
+        .arrow.rotate {
+          transform: rotate(180deg);
+        }
+        
+        .submenu {
+          background-color: #f8f9fa;
+          border-top: 1px solid #eee;
+        }
+        
+        .submenu-item {
+          padding: 12px 20px 12px 40px;
+          cursor: pointer;
+          font-size: 15px;
+          color: #555;
+          transition: all 0.2s ease;
+          border-bottom: 1px solid #e9ecef;
+        }
+        
+        .submenu-item:last-child {
+          border-bottom: none;
+        }
+        
+        .submenu-item:hover, 
+        .submenu-item.active {
+          color: #ad2132;
+          background-color: #fff;
+        }
+        
+        .sidebar-footer {
+          padding: 20px;
+          border-top: 1px solid #eee;
+        }
+        
+        .sidebar-login-btn {
+          width: 100%;
+          padding: 15px;
+          background: linear-gradient(135deg, #ad2132, #d32f2f);
+          color: white;
+          border: none;
+          border-radius: 6px;
+          font-weight: 600;
+          cursor: pointer;
+          font-size: 16px;
+        }
+        
+        /* Login Modal */
+        .login-modal-backdrop {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          backdrop-filter: blur(4px);
+          z-index: 1070;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+        }
+        
+        .login-modal-content {
+          background-color: white;
+          border-radius: 12px;
+          padding: 20px;
+          width: 100%;
+          max-width: 420px;
+          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+        }
+        
+        .modal-header h4 {
+          color: #ad2132;
+          margin: 0;
+        }
+        
+        .modal-close {
+          background: none;
+          border: none;
+          font-size: 1.2rem;
+          cursor: pointer;
+        }
+        
+        .alert-error {
+          padding: 10px;
+          background-color: #f8d7da;
+          color: #721c24;
+          border-radius: 4px;
+          margin-bottom: 15px;
+          font-size: 14px;
+        }
+        
+        .form-group {
+          margin-bottom: 20px;
+        }
+        
+        .input-with-icon {
+          position: relative;
+        }
+        
+        .input-icon {
+          position: absolute;
+          left: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #666;
+        }
+        
+        .input-with-icon input {
+          width: 100%;
+          padding: 12px 12px 12px 40px;
+          border: 1px solid #ddd;
+          border-radius: 6px;
+          font-size: 14px;
+        }
+        
+        .login-submit-btn {
+          width: 100%;
+          padding: 12px;
+          background: linear-gradient(135deg, #ad2132, #d32f2f);
+          color: white;
+          border: none;
+          border-radius: 6px;
+          font-weight: 600;
+          cursor: pointer;
+        }
+        
+        .login-submit-btn.loading {
+          opacity: 0.8;
+        }
+        
+        .spinner {
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          border-radius: 50%;
+          border-top-color: white;
+          animation: spin 1s ease-in-out infinite;
+          margin-right: 8px;
+        }
+        
+        @keyframes spin {
+          to { transform: rotate(360deg); }
         }
       `}</style>
     </>
@@ -744,7 +1323,7 @@ const UserHeader = ({ user, onLogout }) => {
     { label: 'Dashboard', path: '/dashboard', icon: FaUserCircle, shortLabel: 'Dashboard' },
     { label: 'Interviews', path: '/dashboard/interviews', icon: FaQuestionCircle, shortLabel: 'Interviews' },
     { label: 'Live Classes', path: '/dashboard/live-classes', icon: FaVideo, shortLabel: 'Live' },
-    { label: 'Course Module', path: '#', icon: FaBook, shortLabel: 'Courses' },
+    { label: 'Course Module', path: '/coursemodule', icon: FaBook, shortLabel: 'Courses' },
     { label: 'Doubt Session', path: '/dashboard/doubt-session', icon: FaQuestionCircle, shortLabel: 'Doubts' },
     { label: 'Certificate', path: '/dashboard/certificate', icon: FaCertificate, shortLabel: 'Cert' },
   ];
@@ -780,217 +1359,568 @@ const UserHeader = ({ user, onLogout }) => {
 
   return (
     <>
-      <nav className={`navbar navbar-expand-lg navbar-light fixed-top ${isScrolled ? 'glass-morphism' : 'bg-white shadow-sm'}`} style={{ minHeight: '80px', zIndex: 1050, transition: 'all 0.3s ease' }}>
-        <div className="container-fluid px-3 px-md-4 px-lg-5">
-          <a
-            className="navbar-brand cursor-pointer"
-            onClick={() => navigate('/dashboard')}
-          >
+      <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
+        <div className="navbar-container">
+          <div className="navbar-brand" onClick={() => navigate('/dashboard')}>
             <img
               src="/logo/hicaplogo.png"
               alt="HiCap Logo"
-              className="img-fluid"
-              style={{ height: '50px' }}
+              className="logo"
             />
-          </a>
+          </div>
 
-          <div className="d-lg-none d-flex align-items-center gap-2" style={{ position: 'relative', zIndex: 1051 }}>
-            <div className="dropdown" ref={mobileUserMenuRef}>
+          <div className="mobile-header-actions">
+            <div className="user-dropdown-mobile" ref={mobileUserMenuRef}>
               <button
-                className="btn btn-outline-meroon p-2 d-flex align-items-center gap-1"
-                type="button"
-                style={{ fontSize: '14px', padding: '0.6rem 1rem' }}
+                className="user-btn-mobile"
                 onClick={() => setShowMobileUserMenu(!showMobileUserMenu)}
               >
-                <FaUserCircle className='textcolor' style={{ fontSize: '16px' }} />
-                <FaChevronDown className={`${showMobileUserMenu ? 'rotate-180' : ''}`}
-                  style={{ fontSize: '12px', transform: showMobileUserMenu ? 'rotate(180deg)' : '', transition: 'transform 0.3s ease' }} />
+                <FaUserCircle className="user-icon" />
+                <FaChevronDown className={`chevron ${showMobileUserMenu ? 'rotate' : ''}`} />
               </button>
               {showMobileUserMenu && (
-                <div className="dropdown-menu show position-absolute end-0 mt-2"
-                  style={{ minWidth: '220px', zIndex: 1052 }}>
-                  <div className="px-3 py-3 bg-light border-bottom">
-                    <div className="fw-medium text-truncate" style={{ fontSize: '14px' }}>{user?.name || 'User'}</div>
-                    <div className="text-muted text-truncate" style={{ fontSize: '12px' }}>{user?.email || user?.phone}</div>
+                <div className="user-dropdown-menu">
+                  <div className="user-info">
+                    <div className="user-name">{user?.name || 'User'}</div>
+                    <div className="user-email">{user?.email || user?.phone}</div>
                   </div>
                   {dashboardMenuItems.map((item, idx) => {
                     const IconComponent = item.icon;
                     return (
                       <button
                         key={idx}
-                        className={`dropdown-item d-flex align-items-center gap-2 py-2 ${location.pathname === item.path ? 'textcolor ' : ''
-                          }`}
-                        style={{ fontSize: '14px' }}
+                        className={`dropdown-item ${location.pathname === item.path ? 'active' : ''}`}
                         onClick={() => handleNavigate(item.path)}
                       >
-                        <IconComponent style={{ fontSize: '14px' }} />
+                        <IconComponent className="dropdown-icon" />
                         <span>{item.label}</span>
                       </button>
                     );
                   })}
                   <div className="dropdown-divider"></div>
                   <button
-                    className="dropdown-item d-flex align-items-center gap-2 text-danger py-2"
-                    style={{ fontSize: '14px' }}
+                    className="dropdown-item logout"
                     onClick={onLogout}
                   >
-                    <FaSignOutAlt style={{ fontSize: '14px' }} />
-                    Logout
+                    <FaSignOutAlt className="dropdown-icon" />
+                    <span>Logout</span>
                   </button>
                 </div>
               )}
             </div>
             <button
-              className="btn btn-outline-meroon p-2"
+              className="menu-toggle"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle navigation"
-              style={{ width: '44px', height: '44px' }}
             >
-              {isMobileMenuOpen ? <FaTimes style={{ fontSize: '16px' }} /> : <FaBars style={{ fontSize: '16px' }} />}
+              {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
             </button>
           </div>
 
-          <nav className="d-none d-lg-flex align-items-center justify-content-center gap-2 mx-auto">
+          <div className="desktop-nav">
             {dashboardMenuItems.map((item, idx) => {
               const IconComponent = item.icon;
               return (
                 <button
                   key={idx}
-                  className={`btn btn-link text-decoration-none d-flex align-items-center gap-2 ${location.pathname === item.path
-                    ? 'textcolor '
-                    : 'text-muted'
-                    }`}
-                  style={{
-                    fontSize: '14px',
-                    fontWeight: 500,
-                    padding: '0.6rem 1rem',
-                    borderRadius: '8px',
-                    transition: 'all 0.2s ease'
-                  }}
+                  className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
                   onClick={() => handleNavigate(item.path)}
                 >
-                  <IconComponent style={{ fontSize: '14px' }} />
-                  <span className="d-none d-xl-inline">{item.label}</span>
-                  <span className="d-xl-none">{item.shortLabel}</span>
+                  <IconComponent className="nav-icon" />
+                  <span className="full-label">{item.label}</span>
+                  <span className="short-label">{item.shortLabel}</span>
                 </button>
               );
             })}
 
-            <div className="dropdown ms-3" ref={userMenuRef}>
+            <div className="user-dropdown" ref={userMenuRef}>
               <button
-                className="btn btn-outline-meroon d-flex align-items-center gap-2"
-                type="button"
-                style={{ fontSize: '14px', padding: '0.6rem 1rem' }}
+                className="user-btn"
                 onClick={() => setShowUserMenu(!showUserMenu)}
               >
-                <FaUserCircle className='' style={{ fontSize: '16px' }} />
-                <div className="d-none d-xl-block text-start" style={{ maxWidth: '140px' }}>
-                  <div className="fw-medium text-truncate" style={{ fontSize: '13px' }}>{user?.name || 'Account'}</div>
-                  <div className="text-truncate" style={{ fontSize: '11px' }}>{user?.email || user?.phone}</div>
+                <FaUserCircle className="user-icon" />
+                <div className="user-details">
+                  <div className="user-name">{user?.name || 'Account'}</div>
+                  <div className="user-email">{user?.email || user?.phone}</div>
                 </div>
-                <FaChevronDown className={`${showUserMenu ? 'rotate-180' : ''}`}
-                  style={{ fontSize: '12px', transform: showUserMenu ? 'rotate(180deg)' : '', transition: 'transform 0.3s ease' }} />
+                <FaChevronDown className={`chevron ${showUserMenu ? 'rotate' : ''}`} />
               </button>
               {showUserMenu && (
-                <div className="dropdown-menu show position-absolute end-0 mt-2"
-                  style={{ minWidth: '220px' }}>
-                  <div className="px-3 py-3 bg-light border-bottom">
-                    <div className="fw-medium text-truncate" style={{ fontSize: '14px' }}>{user?.name || 'User'}</div>
-                    <div className="text-muted text-truncate" style={{ fontSize: '12px' }}>{user?.email || user?.phone || 'Welcome!'}</div>
+                <div className="user-dropdown-menu">
+                  <div className="user-info">
+                    <div className="user-name">{user?.name || 'User'}</div>
+                    <div className="user-email">{user?.email || user?.phone || 'Welcome!'}</div>
                   </div>
                   <div className="dropdown-divider"></div>
                   <button
-                    className="dropdown-item d-flex align-items-center gap-2 text-danger py-2"
-                    style={{ fontSize: '14px' }}
+                    className="dropdown-item logout"
                     onClick={onLogout}
                   >
-                    <FaSignOutAlt style={{ fontSize: '14px' }} />
-                    Sign Out
+                    <FaSignOutAlt className="dropdown-icon" />
+                    <span>Sign Out</span>
                   </button>
                 </div>
               )}
-            </div>
-          </nav>
-
-          {isMobileMenuOpen && (
-            <div
-              className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"
-              style={{ zIndex: 1039, top: '80px' }}
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-          )}
-          <div
-            className={`d-lg-none position-fixed bg-white shadow-lg w-100 ${isMobileMenuOpen ? 'open' : 'closed'}`}
-            style={{
-              top: '80px',
-              left: 0,
-              right: 0,
-              height: 'calc(100vh - 80px)',
-              zIndex: 1040,
-              overflowY: 'auto',
-              transform: isMobileMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
-              transition: 'transform 0.3s ease'
-            }}
-          >
-            <div className="p-4">
-              <div className="d-flex align-items-center gap-3 p-4 bg-meroon-subtle rounded mb-4">
-                <FaUserCircle className="textcolor" style={{ fontSize: '2.5rem' }} />
-                <div className="flex-grow-1 overflow-hidden">
-                  <div className="fw-medium text-truncate" style={{ fontSize: '16px' }}>{user?.name || 'User'}</div>
-                  <div className="text-muted text-truncate" style={{ fontSize: '13px' }}>{user?.email || user?.phone}</div>
-                </div>
-              </div>
-
-              <div>
-                <h5 className="fw-bold border-bottom pb-3 mb-4" style={{ fontSize: '18px' }}>My Dashboard</h5>
-                {dashboardMenuItems.map((item, idx) => {
-                  const IconComponent = item.icon;
-                  return (
-                    <button
-                      key={idx}
-                      className={`btn w-100 text-start d-flex align-items-center gap-3 p-3 mb-3 rounded ${location.pathname === item.path
-                        ? 'btn-primary-subtle textcolor border-start border-primary border-4'
-                        : 'btn-light'
-                        }`}
-                      style={{ fontSize: '15px' }}
-                      onClick={() => handleNavigate(item.path)}
-                    >
-                      <IconComponent style={{ fontSize: '16px' }} />
-                      <span className="fw-medium">{item.label}</span>
-                    </button>
-                  );
-                })}
-
-                <button
-                  className="btn btn-outline-danger w-100 d-flex align-items-center gap-3 p-3 mt-4"
-                  style={{ fontSize: '15px' }}
-                  onClick={onLogout}
-                >
-                  <FaSignOutAlt style={{ fontSize: '16px' }} />
-                  <span className="fw-medium">Logout</span>
-                </button>
-              </div>
             </div>
           </div>
         </div>
       </nav>
 
+      {/* Mobile Sidebar */}
+      <div className={`mobile-sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
+        <div className="sidebar-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>
+        <div className="sidebar-content">
+          <div className="sidebar-header">
+            <img
+              src="/logo/hicaplogo.png"
+              alt="HiCap Logo"
+              className="sidebar-logo"
+            />
+            <button 
+              className="sidebar-close"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <FaTimes />
+            </button>
+          </div>
+
+          <div className="user-profile">
+            <div className="user-avatar">
+              <FaUserCircle />
+            </div>
+            <div className="user-details">
+              <div className="user-name">{user?.name || 'User'}</div>
+              <div className="user-email">{user?.email || user?.phone}</div>
+            </div>
+          </div>
+
+          <div className="sidebar-menu">
+            {dashboardMenuItems.map((item, idx) => {
+              const IconComponent = item.icon;
+              return (
+                <div
+                  key={idx}
+                  className={`menu-item ${location.pathname === item.path ? 'active' : ''}`}
+                  onClick={() => handleNavigate(item.path)}
+                >
+                  <IconComponent className="menu-icon" />
+                  <span>{item.label}</span>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="sidebar-footer">
+            <button
+              className="logout-btn"
+              onClick={onLogout}
+            >
+              <FaSignOutAlt className="logout-icon" />
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <style jsx>{`
-        .btn-link:hover {
-          color: #ad2132 !important;
-          background-color: #f8d7da !important;
+        /* Base Styles */
+        .navbar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 80px;
+          background-color: white;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          z-index: 1050;
+          transition: all 0.3s ease;
         }
-        .dropdown-item:hover {
-          color: #ad2132 !important;
-          background-color: #f8d7da !important;
+        
+        .navbar.scrolled {
+          background: rgba(255, 255, 255, 0.9);
+          backdrop-filter: blur(10px);
         }
-        .cursor-pointer {
+        
+        .navbar-container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          height: 100%;
+          padding: 0 20px;
+          max-width: 1400px;
+          margin: 0 auto;
+        }
+        
+        .navbar-brand {
           cursor: pointer;
         }
-        .glass-morphism {
-          background: rgba(255, 255, 255, 1) !important;
-          backdrop-filter: blur(10px);
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        
+        .logo {
+          height: 50px;
+        }
+        
+        /* Desktop Navigation */
+        .desktop-nav {
+          display: none;
+          align-items: center;
+          gap: 5px;
+        }
+        
+        @media (min-width: 992px) {
+          .desktop-nav {
+            display: flex;
+          }
+        }
+        
+        .nav-link {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 15px;
+          background: none;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 14px;
+          color: #666;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+          color: #ad2132;
+          background-color: #f8d7da;
+        }
+        
+        .nav-icon {
+          font-size: 16px;
+        }
+        
+        .short-label {
+          display: none;
+        }
+        
+        @media (max-width: 1200px) {
+          .full-label {
+            display: none;
+          }
+          .short-label {
+            display: inline;
+          }
+        }
+        
+        /* User Dropdown */
+        .user-dropdown {
+          position: relative;
+          margin-left: 10px;
+        }
+        
+        .user-btn {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 8px 12px;
+          background: none;
+          border: 1px solid #ddd;
+          border-radius: 30px;
+          cursor: pointer;
+        }
+        
+        .user-icon {
+          font-size: 20px;
+          color: #666;
+        }
+        
+        .user-details {
+          text-align: left;
+        }
+        
+        .user-name {
+          font-size: 13px;
+          font-weight: 500;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 120px;
+        }
+        
+        .user-email {
+          font-size: 11px;
+          color: #666;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 120px;
+        }
+        
+        .chevron {
+          font-size: 12px;
+          margin-left: 5px;
+          transition: transform 0.3s ease;
+        }
+        
+        .chevron.rotate {
+          transform: rotate(180deg);
+        }
+        
+        .user-dropdown-menu {
+          position: absolute;
+          right: 0;
+          top: 100%;
+          width: 220px;
+          background-color: white;
+          border-radius: 8px;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+          z-index: 1050;
+          margin-top: 10px;
+        }
+        
+        .user-info {
+          padding: 15px;
+          border-bottom: 1px solid #eee;
+        }
+        
+        .user-info .user-name {
+          font-weight: 600;
+          font-size: 14px;
+          max-width: 100%;
+        }
+        
+        .user-info .user-email {
+          font-size: 12px;
+          max-width: 100%;
+        }
+        
+        .dropdown-divider {
+          height: 1px;
+          background-color: #eee;
+          margin: 5px 0;
+        }
+        
+        .dropdown-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          width: 100%;
+          padding: 12px 15px;
+          background: none;
+          border: none;
+          text-align: left;
+          cursor: pointer;
+          font-size: 14px;
+        }
+        
+        .dropdown-item:hover {
+          background-color: #f8f9fa;
+          color: #ad2132;
+        }
+        
+        .dropdown-item.active {
+          color: #ad2132;
+        }
+        
+        .dropdown-item.logout {
+          color: #d32f2f;
+        }
+        
+        .dropdown-icon {
+          font-size: 14px;
+        }
+        
+        /* Mobile Header */
+        .mobile-header-actions {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        
+        @media (min-width: 992px) {
+          .mobile-header-actions {
+            display: none;
+          }
+        }
+        
+        .user-dropdown-mobile {
+          position: relative;
+        }
+        
+        .user-btn-mobile {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          padding: 8px 12px;
+          background: none;
+          border: 1px solid #ad2132;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+        
+        .user-icon {
+          color: #ad2132;
+          font-size: 16px;
+        }
+        
+        .user-dropdown-menu {
+          position: absolute;
+          right: 0;
+          top: 100%;
+          width: 220px;
+          background-color: white;
+          border-radius: 8px;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+          z-index: 1050;
+          margin-top: 10px;
+        }
+        
+        .menu-toggle {
+          width: 44px;
+          height: 44px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: none;
+          border: 1px solid #ad2132;
+          color: #ad2132;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+        
+        /* Mobile Sidebar */
+        .mobile-sidebar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 1060;
+          pointer-events: none;
+        }
+        
+        .mobile-sidebar.open {
+          pointer-events: auto;
+        }
+        
+        .sidebar-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+        
+        .mobile-sidebar.open .sidebar-overlay {
+          opacity: 1;
+        }
+        
+        .sidebar-content {
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background-color: white;
+          transition: transform 0.3s ease;
+          display: flex;
+          flex-direction: column;
+        }
+        
+        .mobile-sidebar.open .sidebar-content {
+          transform: translateX(100%);
+        }
+        
+        .sidebar-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 20px;
+          border-bottom: 1px solid #eee;
+        }
+        
+        .sidebar-logo {
+          height: 40px;
+        }
+        
+        .sidebar-close {
+          background: none;
+          border: none;
+          font-size: 1.5rem;
+          color: #333;
+          cursor: pointer;
+        }
+        
+        .user-profile {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          padding: 20px;
+          border-bottom: 1px solid #eee;
+        }
+        
+        .user-avatar {
+          font-size: 2.5rem;
+          color: #ad2132;
+        }
+        
+        .user-details {
+          flex-grow: 1;
+        }
+        
+        .user-name {
+          font-weight: 600;
+          margin-bottom: 5px;
+        }
+        
+        .user-email {
+          font-size: 0.9rem;
+          color: #666;
+        }
+        
+        .sidebar-menu {
+          flex-grow: 1;
+          overflow-y: auto;
+          padding: 10px 0;
+        }
+        
+        .menu-item {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          padding: 15px 20px;
+          cursor: pointer;
+        }
+        
+        .menu-item:hover, .menu-item.active {
+          background-color: #f8f9fa;
+          color: #ad2132;
+        }
+        
+        .menu-icon {
+          font-size: 1.2rem;
+        }
+        
+        .sidebar-footer {
+          padding: 20px;
+          border-top: 1px solid #eee;
+        }
+        
+        .logout-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          width: 100%;
+          padding: 15px;
+          background: none;
+          border: 1px solid #d32f2f;
+          color: #d32f2f;
+          border-radius: 6px;
+          font-weight: 600;
+          cursor: pointer;
+        }
+        
+        .logout-icon {
+          font-size: 1.2rem;
         }
       `}</style>
     </>
