@@ -1,215 +1,238 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { FiPlay, FiLock } from 'react-icons/fi';
-import { BsCheckCircleFill } from 'react-icons/bs';
+import { FiPlay, FiChevronDown, FiChevronRight } from 'react-icons/fi';
 import Footer from '../Pages/Footer';
 import Header from '../Pages/Header';
 
 const CourseModule = () => {
-  const [course, setCourse] = useState(null);
-  const [modules, setModules] = useState([]);
-  const [selectedVideo, setSelectedVideo] = useState(null);
-  const [completedVideos, setCompletedVideos] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(true);
-  const courseId = 'YOUR_COURSE_ID'; // Replace with actual course ID or get from URL params
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [expandedModules, setExpandedModules] = useState({});
 
   useEffect(() => {
-    const fetchCourseData = async () => {
+    const fetchModules = async () => {
       try {
-        // Fetch course details
-        const courseResponse = await axios.get(`https://hicap-backend-4rat.onrender.com/api/course1/${courseId}`);
-        setCourse(courseResponse.data);
+        const res = await axios.get('https://hicap-backend-4rat.onrender.com/api/courseModule');
+        setCourses(res.data.data);
 
-        // Fetch modules for the course
-        const modulesResponse = await axios.get(`https://hicap-backend-4rat.onrender.com/api/modules?courseId=${courseId}`);
-        setModules(modulesResponse.data);
-
-        // Fetch user's completed videos (replace with actual endpoint)
-        const completedResponse = await axios.get(`https://hicap-backend-4rat.onrender.com/api/user-progress`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
+        // Initialize expanded state for all modules
+        const initialExpanded = {};
+        res.data.data.forEach((course, courseIndex) => {
+          course.modules.forEach((module, moduleIndex) => {
+            if (typeof module === 'object' && !Array.isArray(module)) {
+              Object.keys(module).forEach(key => {
+                if (key !== '_id') {
+                  initialExpanded[`${courseIndex}-${moduleIndex}-${key}`] = false;
+                }
+              });
+            }
+          });
         });
-        setCompletedVideos(completedResponse.data.completedVideos || []);
+        setExpandedModules(initialExpanded);
 
-        // Set first video as selected by default
-        if (modulesResponse.data.length > 0 && modulesResponse.data[0].videos.length > 0) {
-          setSelectedVideo(modulesResponse.data[0].videos[0]);
+        // Automatically select the first available topic
+        for (const course of res.data.data) {
+          for (const module of course.modules) {
+            const moduleKeys = Object.keys(module);
+            for (const key of moduleKeys) {
+              if (Array.isArray(module[key]) && module[key].length > 0) {
+                setSelected({ ...module[key][0], name: module[key][0].topic });
+                // Expand the first module by default
+                setExpandedModules(prev => ({
+                  ...prev,
+                  [`0-0-${key}`]: true
+                }));
+                return;
+              }
+            }
+          }
         }
-      } catch (error) {
-        console.error('Error fetching course data:', error);
+      } catch (err) {
+        console.error('Error fetching course modules:', err);
       } finally {
         setLoading(false);
       }
     };
+    fetchModules();
+  }, []);
 
-    fetchCourseData();
-  }, [courseId]);
-
-  const handleVideoSelect = (video) => {
-    setSelectedVideo(video);
+  const toggleModule = (moduleKey) => {
+    setExpandedModules(prev => ({
+      ...prev,
+      [moduleKey]: !prev[moduleKey]
+    }));
   };
-
-  const markAsCompleted = async (videoId) => {
-    try {
-      await axios.post(`https://hicap-backend-4rat.onrender.com/api/mark-completed`, {
-        videoId,
-        courseId
-      }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      setCompletedVideos([...completedVideos, videoId]);
-    } catch (error) {
-      console.error('Error marking video as completed:', error);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="text-center py-5">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
-    <Header/>
-    <div className='mt-5'>
-    <div className="container-fluid py-5 my-5">
-      <div className="row">
-        {/* Left sidebar - Modules list */}
-        <div className="col-lg-3 col-md-4">
-          <div className="card shadow-sm mb-4">
-            <div className="card-header bg-primary text-white">
-              <h5 className="mb-0">{course?.name || 'Course Modules'}</h5>
-            </div>
-            <div className="card-body p-0">
-              <div className="list-group list-group-flush">
-                {modules.map((module, index) => (
-                  <div key={module._id} className="module-section">
-                    <div className="list-group-item bg-light fw-bold">
-                      Module {index + 1}: {module.name}
-                    </div>
-                    {module.videos.map((video) => (
-                      <button
-                        key={video._id}
-                        className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${selectedVideo?._id === video._id ? 'active' : ''}`}
-                        onClick={() => handleVideoSelect(video)}
-                      >
-                        <div className="d-flex align-items-center">
-                          <FiPlay className="me-2" />
-                          <span>{video.title}</span>
-                        </div>
-                        {completedVideos.includes(video._id) ? (
-                          <BsCheckCircleFill className="text-success" />
-                        ) : (
-                          <span className="badge bg-secondary">New</span>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
+      <Header />
+      <div className="container-fluid my-md-5 my-3 pt-md-5 pt-3">
+        <div className="row">
+          <div className="col-12">
+            <h2 className="fw-bold mb-3" style={{ color: '#800000' }}>
+              Course Section
+            </h2>
+            <div
+              className="rounded-pill mb-4"
+              style={{ width: '200px', height: '3px', backgroundColor: '#800000' }}
+            ></div>
+            
+            {/* Mobile Sidebar Toggle */}
+            <button 
+              className="btn btn-dark d-md-none mb-3"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
+              {sidebarOpen ? 'Hide Modules' : 'Show Modules'}
+            </button>
           </div>
-        </div>
 
-        {/* Main content - Video player and details */}
-        <div className="col-lg-9 col-md-8">
-          <div className="card shadow-sm mb-4">
-            <div className="card-body p-0">
-              {/* YouTube-style video player */}
-              <div className="ratio ratio-16x9">
-                {selectedVideo ? (
-                  <iframe
-                    src={`https://www.youtube.com/embed/${selectedVideo.youtubeId}?autoplay=1`}
-                    title={selectedVideo.title}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                ) : (
-                  <div className="d-flex justify-content-center align-items-center bg-dark text-white h-100">
-                    <div className="text-center">
-                      <FiPlay size={48} />
-                      <p className="mt-2">Select a video to play</p>
+          {/* Sidebar - Hidden on mobile when not open */}
+          <div className={`col-md-3 ${sidebarOpen ? 'd-block' : 'd-none d-md-block'}`}>
+            <div className="card mb-4 mb-md-0">
+              <div className="card-header bg-dark text-white">Course Modules</div>
+              <div className="card-body" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+                {loading ? (
+                  <div className="text-center">
+                    <div className="spinner-border text-primary" role="status">
+                      <span className="visually-hidden">Loading...</span>
                     </div>
                   </div>
+                ) : (
+                  courses.map((course, courseIndex) => (
+                    <div key={courseIndex} className="mb-3">
+                      <h5 className="d-flex align-items-center">
+                        <button 
+                          className="btn btn-sm btn-link p-0 me-2"
+                          onClick={() => toggleModule(`course-${courseIndex}`)}
+                        >
+                          {expandedModules[`course-${courseIndex}`] ? 
+                            <FiChevronDown /> : <FiChevronRight />}
+                        </button>
+                        {course?.course?.name || `Course ${courseIndex + 1}`}
+                      </h5>
+
+                      {expandedModules[`course-${courseIndex}`] && course.modules.map((module, moduleIndex) => (
+                        <div key={moduleIndex} className="mb-2 ps-3">
+                          {/* Handle object-style module (e.g., { module1: [...] }) */}
+                          {typeof module === 'object' && !Array.isArray(module) && Object.keys(module).map((key, kIndex) => {
+                            if (key === '_id') return null;
+
+                            const value = module[key];
+                            if (!Array.isArray(value)) return null;
+
+                            const moduleKey = `${courseIndex}-${moduleIndex}-${key}`;
+                            return (
+                              <div key={kIndex} className="mb-2">
+                                <div 
+                                  className="d-flex align-items-center text-primary text-uppercase fw-bold"
+                                  style={{ cursor: 'pointer' }}
+                                  onClick={() => toggleModule(moduleKey)}
+                                >
+                                  {expandedModules[moduleKey] ? 
+                                    <FiChevronDown className="me-1" /> : 
+                                    <FiChevronRight className="me-1" />}
+                                  {key}
+                                </div>
+                                {expandedModules[moduleKey] && (
+                                  <ul className="list-group mt-2">
+                                    {value.map((item, iIndex) => (
+                                      <li
+                                        key={iIndex}
+                                        className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${selected?.link === item.link ? 'active' : ''}`}
+                                        onClick={() => {
+                                          setSelected({ ...item, name: item.topic });
+                                          setSidebarOpen(false); // Close sidebar on mobile after selection
+                                        }}
+                                        style={{ cursor: 'pointer' }}
+                                      >
+                                        <div className="d-flex align-items-center">
+                                          <FiPlay className="me-2" />
+                                          <span className="text-truncate">{item.topic}</span>
+                                        </div>
+                                        <span className="badge bg-info">{item.duration}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                )}
+                              </div>
+                            );
+                          })}
+
+                          {/* Handle flat module object (e.g., { topic: "...", link: "..." }) */}
+                          {Array.isArray(course.modules) && module?.topic && (
+                            <ul className="list-group mt-2">
+                              <li
+                                className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${selected?.link === module.link ? 'active' : ''}`}
+                                onClick={() => {
+                                  setSelected({ ...module, name: module.topic });
+                                  setSidebarOpen(false); // Close sidebar on mobile after selection
+                                }}
+                                style={{ cursor: 'pointer' }}
+                              >
+                                <div className="d-flex align-items-center">
+                                  <FiPlay className="me-2" />
+                                  <span className="text-truncate">{module.topic}</span>
+                                </div>
+                                <span className="badge bg-info">{module.duration}</span>
+                              </li>
+                            </ul>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ))
                 )}
               </div>
             </div>
           </div>
 
-          {/* Video details and actions */}
-          {selectedVideo && (
-            <div className="card shadow-sm">
+          {/* Main Content */}
+          <div className="col-md-9">
+            <div className="card">
               <div className="card-body">
-                <div className="d-flex justify-content-between align-items-start mb-3">
-                  <h4>{selectedVideo.title}</h4>
-                  {!completedVideos.includes(selectedVideo._id) && (
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => markAsCompleted(selectedVideo._id)}
-                    >
-                      Mark as Completed
-                    </button>
-                  )}
-                </div>
-                <div className="d-flex align-items-center mb-3">
-                  <span className="badge bg-info me-2">
-                    {selectedVideo.duration} min
-                  </span>
-                  {completedVideos.includes(selectedVideo._id) && (
-                    <span className="badge bg-success">
-                      <BsCheckCircleFill className="me-1" />
-                      Completed
-                    </span>
-                  )}
-                </div>
-                <p>{selectedVideo.description}</p>
-
-                {/* Resources section */}
-                <div className="mt-4">
-                  <h5>Resources</h5>
-                  <ul className="list-group">
-                    {selectedVideo.resources?.map((resource, index) => (
-                      <li key={index} className="list-group-item">
-                        <a href={resource.url} target="_blank" rel="noopener noreferrer">
-                          {resource.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {selected ? (
+                  <>
+                    <div className="ratio ratio-16x9 mb-4">
+                      <iframe
+                        src={`https://www.youtube.com/embed/${selected.link || ''}?autoplay=1&mute=1`}
+                        title={selected.name}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="rounded"
+                      ></iframe>
+                    </div>
+                    <h4 className="mb-3">{selected.name}</h4>
+                    <div className="d-flex flex-wrap gap-3 mb-3">
+                      <span className="badge bg-secondary">
+                        <i className="bi bi-clock me-1"></i> {selected.duration}
+                      </span>
+                      <span className="badge bg-secondary">
+                        <i className="bi bi-calendar me-1"></i> {new Date(selected.date).toLocaleDateString()}
+                      </span>
+                    </div>
+                    {selected.description && (
+                      <div className="mt-3">
+                        <h5>Description</h5>
+                        <p>{selected.description}</p>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="text-center py-5">
+                    <div className="spinner-border text-primary" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                    <p className="mt-3">Loading course content...</p>
+                  </div>
+                )}
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
-
-      {/* Navigation between videos */}
-      {selectedVideo && (
-        <div className="row mt-4">
-          <div className="col-6">
-            <button className="btn btn-outline-primary w-100">
-              Previous Video
-            </button>
-          </div>
-          <div className="col-6">
-            <button className="btn btn-primary w-100">
-              Next Video
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-    </div>
-    <Footer/>
+      <Footer />
     </>
   );
 };

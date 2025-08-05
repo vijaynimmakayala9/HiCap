@@ -79,15 +79,6 @@ const GuestHeader = ({ onLogin }) => {
         setShowResourcesMenu(false);
       }
 
-      // Auto-close resources dropdown on large devices
-      if (
-        resourcesDropdownRef.current &&
-        !resourcesDropdownRef.current.contains(e.target) &&
-        (!resourcesBtnRef.current || !resourcesBtnRef.current.contains(e.target))
-      ) {
-        setShowResourcesMenu(false);
-      }
-
       if (modalRef.current && !modalRef.current.contains(e.target) && !e.target.classList.contains('login-button')) {
         setShowLoginModal(false);
       }
@@ -97,26 +88,36 @@ const GuestHeader = ({ onLogin }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Auto-close resources dropdown on mouse leave for large devices
+  // Auto-close dropdowns on mouse leave for large devices
   useEffect(() => {
     const handleMouseLeave = () => {
       if (window.innerWidth >= 992) {
         setTimeout(() => {
           setShowResourcesMenu(false);
+          setShowCoursesMenu(false);
         }, 100);
       }
     };
 
-    if (resourcesDropdownRef.current) {
-      resourcesDropdownRef.current.addEventListener('mouseleave', handleMouseLeave);
+    const resourcesElement = resourcesDropdownRef.current;
+    const megaMenuElement = megaMenuRef.current;
+
+    if (resourcesElement) {
+      resourcesElement.addEventListener('mouseleave', handleMouseLeave);
+    }
+    if (megaMenuElement) {
+      megaMenuElement.addEventListener('mouseleave', handleMouseLeave);
     }
 
     return () => {
-      if (resourcesDropdownRef.current) {
-        resourcesDropdownRef.current.removeEventListener('mouseleave', handleMouseLeave);
+      if (resourcesElement) {
+        resourcesElement.removeEventListener('mouseleave', handleMouseLeave);
+      }
+      if (megaMenuElement) {
+        megaMenuElement.removeEventListener('mouseleave', handleMouseLeave);
       }
     };
-  }, [showResourcesMenu]);
+  }, [showResourcesMenu, showCoursesMenu]);
 
   const groupedCourses = {
     'High Rated Courses': Array.isArray(courses) ? courses.filter(course => course.isHighRated) : [],
@@ -136,6 +137,7 @@ const GuestHeader = ({ onLogin }) => {
     navigate(path);
     setIsMobileMenuOpen(false);
     setShowResourcesMenu(false);
+    setShowCoursesMenu(false);
   };
 
   const handleLoginChange = (e) => {
@@ -191,6 +193,7 @@ const GuestHeader = ({ onLogin }) => {
     <div
       ref={megaMenuRef}
       className="mega-menu"
+      onMouseEnter={() => setShowCoursesMenu(true)}
     >
       <div className="mega-menu-content">
         <div className="categories-column">
@@ -249,7 +252,7 @@ const GuestHeader = ({ onLogin }) => {
         </div>
         <div className="footer-actions">
           <button
-            className="btn-outline"
+            className="btn btn-outline-meroon w-50"
             onClick={() => {
               navigate('/courses');
               setShowCoursesMenu(false);
@@ -258,7 +261,7 @@ const GuestHeader = ({ onLogin }) => {
             View All Courses
           </button>
           <button
-            className="btn-primary"
+            className="btn bg-meroon text-white w-50"
             onClick={() => {
               navigate('/contactus');
               setShowCoursesMenu(false);
@@ -281,7 +284,7 @@ const GuestHeader = ({ onLogin }) => {
         {menuItems.find(item => item.label === 'Resources').items.map((item, idx) => (
           <li key={idx}>
             <button
-              className={`resource-item ${location.pathname === item.path ? 'active' : ''}`}
+              className={`dropdown-item ${location.pathname === item.path ? 'active' : ''}`}
               onClick={() => {
                 handleNavigate(item.path);
                 setShowResourcesMenu(false);
@@ -328,7 +331,7 @@ const GuestHeader = ({ onLogin }) => {
       ))}
       <div className="mobile-mega-menu-footer">
         <button
-          className="btn-outline"
+          className="btn-outline-meroon"
           onClick={() => {
             navigate('/courses');
             setShowCoursesMenu(false);
@@ -338,7 +341,7 @@ const GuestHeader = ({ onLogin }) => {
           View All Courses
         </button>
         <button
-          className="btn-primary"
+          className="btn bg-meroon text-white"
           onClick={() => {
             navigate('/contactus');
             setShowCoursesMenu(false);
@@ -357,7 +360,7 @@ const GuestHeader = ({ onLogin }) => {
         <div className="navbar-container">
           <div className="navbar-brand" onClick={() => navigate('/')}>
             <img
-              src="/logo/hicaplogo.png"
+              src="/logo/hicapnewlogo.png"
               alt="HiCap Logo"
               className="logo"
             />
@@ -890,7 +893,7 @@ const GuestHeader = ({ onLogin }) => {
           margin: 0;
         }
         
-        .resource-item {
+        .dropdown-item {
           width: 100%;
           padding: 10px 15px;
           text-align: left;
@@ -899,9 +902,11 @@ const GuestHeader = ({ onLogin }) => {
           border-radius: 6px;
           cursor: pointer;
           font-size: 14px;
+          transition: all 0.2s ease;
         }
         
-        .resource-item:hover, .resource-item.active {
+        .dropdown-item:hover, 
+        .dropdown-item.active {
           color: #ad2132;
           background-color: #f8d7da;
         }
@@ -1363,7 +1368,7 @@ const UserHeader = ({ user, onLogout }) => {
         <div className="navbar-container">
           <div className="navbar-brand" onClick={() => navigate('/dashboard')}>
             <img
-              src="/logo/hicaplogo.png"
+              src="/logo/hicapnewlogo.png"
               alt="HiCap Logo"
               className="logo"
             />
