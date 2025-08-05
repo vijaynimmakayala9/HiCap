@@ -447,7 +447,7 @@ const GuestHeader = ({ onLogin }) => {
         <div className="sidebar-content">
           <div className="sidebar-header">
             <img
-              src="/logo/hicaplogo.png"
+              src="/logo/hicapnewlogo.png"
               alt="HiCap Logo"
               className="sidebar-logo"
             />
@@ -1477,7 +1477,7 @@ const UserHeader = ({ user, onLogout }) => {
         <div className="sidebar-content">
           <div className="sidebar-header">
             <img
-              src="/logo/hicaplogo.png"
+              src="/logo/hicapnewlogo.png"
               alt="HiCap Logo"
               className="sidebar-logo"
             />
