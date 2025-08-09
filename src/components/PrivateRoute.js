@@ -1,10 +1,12 @@
-// src/components/PrivateRoute.jsx
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from "react-router-dom";
 
-const PrivateRoute = ({ children }) => {
-  const user = JSON.parse(sessionStorage.getItem('user'));
-  return user ? children : <Navigate to="/" replace />;
+const PrivateRoute = ({ isAuthenticated, children }) => {
+  if (!isAuthenticated) {
+    // Redirect to home page if not authenticated
+    return <Navigate to="/" replace />;
+  }
+
+  return children ? children : <Outlet />;
 };
 
 export default PrivateRoute;

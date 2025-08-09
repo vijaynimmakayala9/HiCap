@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram } from 'react-icons/fa';
-import axios from 'axios';
 
 const Footer = () => {
   const [courses, setCourses] = useState([]);
@@ -10,12 +9,22 @@ const Footer = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get('https://hicap-backend-4rat.onrender.com/api/course1');
-        if (response.data.success) {
-          setCourses(response.data.data);
+        const response = await fetch('https://hicap-backend-4rat.onrender.com/api/course1');
+        const data = await response.json();
+        if (data.success) {
+          setCourses(data.data);
         }
       } catch (error) {
         console.error('Error fetching courses:', error);
+        // Mock data fallback
+        setCourses([
+          { _id: '1', name: 'Web Development' },
+          { _id: '2', name: 'Data Science' },
+          { _id: '3', name: 'Digital Marketing' },
+          { _id: '4', name: 'Mobile App Development' },
+          { _id: '5', name: 'Cloud Computing' },
+          { _id: '6', name: 'Cybersecurity' },
+        ]);
       } finally {
         setLoading(false);
       }
@@ -23,16 +32,24 @@ const Footer = () => {
 
     const fetchSocialLinks = async () => {
       try {
-        const response = await axios.get('https://hicap-backend-4rat.onrender.com/api/social-media');
-        if (response.data.success) {
+        const response = await fetch('https://hicap-backend-4rat.onrender.com/api/social-media');
+        const data = await response.json();
+        if (data.success) {
           const links = {};
-          response.data.data.forEach(item => {
+          data.data.forEach(item => {
             links[item.name.toLowerCase()] = item.link.startsWith('http') ? item.link : `https://${item.link}`;
           });
           setSocialLinks(links);
         }
       } catch (error) {
         console.error('Error fetching social links:', error);
+        // Mock data fallback
+        setSocialLinks({
+          facebook: 'https://facebook.com/hicap',
+          twitter: 'https://twitter.com/hicap',
+          linkedin: 'https://linkedin.com/company/hicap',
+          instagram: 'https://instagram.com/hicap'
+        });
       }
     };
 
@@ -41,149 +58,340 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer className="text-white pt-5 pb-3 mt-5"style={{backgroundColor: "#800000"}}>
-      <div className="container">
-        <div className="row g-4">
-          {/* Logo & Description */}
-          <div className="col-12 col-sm-6 col-lg-4">
-            <img
-              src="/logo/lightlogo.png"
-              alt="HICAP Logo"
-              className="img-fluid mb-3"
-              style={{ maxWidth: '300px' }}
-            />
-            <p className="small text-white-50">
-              HICAP is committed to excellence in training and skill development, empowering individuals to reach their professional goals through innovative and industry-relevant courses.
-            </p>
+    <footer className="footer" style={{ backgroundColor: '#800000' }}>
+      <div className="footer-content">
+        <div className="footer-grid">
+          {/* Training Courses */}
+          <div className="footer-section">
+            <h3 className="section-title">Training Courses</h3>
+            <ul className="footer-links">
+              {loading ? (
+                <li>Loading...</li>
+              ) : (
+                courses.slice(0, 8).map((course) => (
+                  <li key={course._id}>
+                    <a href="#" className="footer-link">{course.name}</a>
+                  </li>
+                ))
+              )}
+            </ul>
           </div>
 
-          {/* Training & Popular Courses */}
-          <div className="col-12 col-sm-6 col-lg-4">
-            <div className="row">
-              <div className="col-6">
-                <h6 className="fw-bold mb-3">Training Courses</h6>
-                <ul className="list-unstyled small">
-                  {loading ? (
-                    <li>Loading...</li>
-                  ) : (
-                    courses.slice(0, 4).map((course) => (
-                      <li key={course._id} className="mb-2">
-                        <a href="#" className="text-white-50 text-decoration-none hover-white">• {course.name}</a>
-                      </li>
-                    ))
-                  )}
-                </ul>
+          {/* Learning Resources */}
+          <div className="footer-section">
+            <h3 className="section-title">Learn</h3>
+            <ul className="footer-links">
+              <li><a href="#" className="footer-link">Training & Certification</a></li>
+              <li><a href="#" className="footer-link">Academy</a></li>
+              <li><a href="#" className="footer-link">Blog</a></li>
+              <li><a href="#" className="footer-link">Knowledge Base</a></li>
+              <li><a href="#" className="footer-link">Product Alternatives</a></li>
+              <li><a href="#" className="footer-link">Newsletter</a></li>
+            </ul>
+          </div>
+
+          {/* Community */}
+          <div className="footer-section">
+            <h3 className="section-title">Community</h3>
+            <ul className="footer-links">
+              <li><a href="#" className="footer-link">User Community</a></li>
+              <li><a href="#" className="footer-link">Customer Stories</a></li>
+              <li><a href="#" className="footer-link">Work with a Partner</a></li>
+              <li><a href="#" className="footer-link">HICAP for Startups</a></li>
+              <li><a href="#" className="footer-link">Affiliate Program</a></li>
+              <li><a href="#" className="footer-link">Humans of HICAP</a></li>
+            </ul>
+          </div>
+
+          {/* Company */}
+          <div className="footer-section">
+            <h3 className="section-title">Company</h3>
+            <ul className="footer-links">
+              <li><a href="/aboutus" className="footer-link">About Us</a></li>
+              <li><a href="#" className="footer-link">Our Story</a></li>
+              <li><a href="#" className="footer-link">Press</a></li>
+              <li><a href="#" className="footer-link">Events</a></li>
+              <li><a href="#" className="footer-link">Branding Assets</a></li>
+              <li><a href="#" className="footer-link">HICAP Schools</a></li>
+              <li><a href="#" className="footer-link">Service Status</a></li>
+              <li><a href="#" className="footer-link">Careers</a></li>
+            </ul>
+          </div>
+
+          {/* Contact Sales */}
+          <div className="footer-section">
+            <h3 className="section-title">Contact Sales</h3>
+            <div className="contact-info">
+              <div className="contact-item">
+                <span className="contact-label">Phone</span>
+                <a href="tel:+916299161616" className="contact-link">+91 6299 16 16 16</a>
               </div>
-              <div className="col-6">
-                <h6 className="fw-bold mb-3">Popular Courses</h6>
-                <ul className="list-unstyled small">
-                  {loading ? (
-                    <li>Loading...</li>
-                  ) : (
-                    courses.filter(c => c.isPopular).slice(0, 4).map((course) => (
-                      <li key={course._id} className="mb-2">
-                        <a href="#" className="text-white-50 text-decoration-none hover-white">• {course.name}</a>
-                      </li>
-                    ))
-                  )}
-                </ul>
+              <div className="contact-item">
+                <span className="contact-label">Email</span>
+                <a href="mailto:info@hicap.com" className="contact-link">info@hicap.com</a>
+              </div>
+              <div className="support-links">
+                <a href="#" className="support-link">Support →</a>
+                <a href="#" className="support-link">Talk to Concierge →</a>
               </div>
             </div>
           </div>
-
-          {/* Contact Info */}
-          <div className="col-12 col-lg-4">
-            <h6 className="fw-bold mb-3">Contact Us</h6>
-            <address className="small">
-              <p className="mb-2">
-                <strong>Plan No. MG-208, GSR Endava</strong>
-              </p>
-              <p className="mb-1">
-                <a href="tel:+916299161616" className="text-white text-decoration-none hover-white">+91 6299 16 16 16</a>
-              </p>
-              <p className="mb-0">
-                <a href="mailto:info@hicap.com" className="text-white text-decoration-none hover-white">info@hicap.com</a>
-              </p>
-            </address>
-          </div>
         </div>
 
-        <hr className="my-4" style={{ borderTop: '2px solid maroon' }} />
-
-        {/* Navigation Links */}
-        <div className="d-flex flex-wrap justify-content-center mb-4">
-          <a href="/" className="text-white text-decoration-none mx-2 my-1 hover-white">Home</a>
-          <a href="/aboutus" className="text-white text-decoration-none mx-2 my-1 hover-white">About Us</a>
-          <a href="#" className="text-white text-decoration-none mx-2 my-1 hover-white">Privacy Policy</a>
-          <a href="#" className="text-white text-decoration-none mx-2 my-1 hover-white">Terms & Conditions</a>
-        </div>
-
-        {/* Social Icons & Rights */}
-        <div className="text-center mb-3">
-          <div className="d-flex justify-content-center gap-3 mb-3">
-            {socialLinks.facebook && (
-              <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="social-icon facebook" aria-label="Facebook">
-                <FaFacebookF size={18} />
-              </a>
-            )}
+        {/* Social Media */}
+        <div className="social-section">
+          <div className="social-icons">
             {socialLinks.twitter && (
               <a href={socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="social-icon twitter" aria-label="Twitter">
-                <FaTwitter size={18} />
+                <FaTwitter />
               </a>
             )}
-            {socialLinks.linkedin && (
-              <a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="social-icon linkedin" aria-label="LinkedIn">
-                <FaLinkedinIn size={18} />
+            {socialLinks.facebook && (
+              <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="social-icon facebook" aria-label="Facebook">
+                <FaFacebookF />
               </a>
             )}
             {socialLinks.instagram && (
               <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="social-icon instagram" aria-label="Instagram">
-                <FaInstagram size={18} />
+                <FaInstagram />
+              </a>
+            )}
+            {socialLinks.linkedin && (
+              <a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="social-icon linkedin" aria-label="LinkedIn">
+                <FaLinkedinIn />
               </a>
             )}
           </div>
-          <p className="small text-white-50 mb-1">&copy; {new Date().getFullYear()} HICAP. All rights reserved.</p>
+        </div>
+
+        {/* Footer Links */}
+        <div className="footer-bottom-links">
+          <a href="/" className="bottom-link">HICAP Home</a>
+          <a href="#" className="bottom-link">Contact Us</a>
+          <a href="#" className="bottom-link">Security</a>
+          <a href="#" className="bottom-link">Compliance</a>
+          <a href="#" className="bottom-link">IPR Complaints</a>
+          <a href="#" className="bottom-link">Anti-spam Policy</a>
+          <a href="#" className="bottom-link">Terms of Service</a>
+          <a href="#" className="bottom-link">Privacy Policy</a>
+          <a href="#" className="bottom-link">Cookie Policy</a>
+          <a href="#" className="bottom-link">GDPR Compliance</a>
+          <a href="#" className="bottom-link">Abuse Policy</a>
+        </div>
+      </div>
+
+      {/* Bottom Section */}
+      <div className="footer-bottom">
+        <div className="footer-logo">
+          <img
+            src="/logo/lightlogo.png"
+            alt="HICAP Logo"
+            className="logo-image"
+          />
+        </div>
+        <div className="copyright">
+          © {new Date().getFullYear()}, HICAP Corporation Pvt. Ltd. All Rights Reserved.
         </div>
       </div>
 
       <style jsx>{`
-        .hover-white:hover {
-          color: white !important;
-          text-decoration: underline !important;
+        .footer {
+          background-color: #800000;
+          padding: 60px 0 0;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          color: white;
+        }
+
+        .footer-content {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 20px;
+        }
+
+        .footer-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 40px;
+          margin-bottom: 40px;
+        }
+
+        .footer-section {
+          min-width: 200px;
+        }
+
+        .section-title {
+          font-size: 16px;
+          font-weight: 600;
+          margin-bottom: 20px;
+          color: white;
+        }
+
+        .footer-links {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+
+        .footer-links li {
+          margin-bottom: 12px;
+        }
+
+        .footer-link {
+          color: rgba(255, 255, 255, 0.7);
+          text-decoration: none;
+          font-size: 14px;
+          transition: color 0.2s ease;
+        }
+
+        .footer-link:hover {
+          color: white;
+          text-decoration: underline;
+        }
+
+        .contact-info {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .contact-item {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .contact-label {
+          font-weight: 600;
+          font-size: 14px;
+          color: white;
+        }
+
+        .contact-link {
+          color: white;
+          text-decoration: underline;
+          font-size: 14px;
+        }
+
+        .support-links {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          margin-top: 8px;
+        }
+
+        .support-link {
+          color: white;
+          text-decoration: none;
+          font-size: 14px;
+          font-weight: 500;
+        }
+
+        .support-link:hover {
+          text-decoration: underline;
+        }
+
+        .social-section {
+          display: flex;
+          justify-content: center;
+          margin: 40px 0;
+        }
+
+        .social-icons {
+          display: flex;
+          gap: 16px;
         }
 
         .social-icon {
           display: flex;
           align-items: center;
           justify-content: center;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
-          width: 36px;
-          height: 36px;
-          transition: transform 0.3s ease;
+          transition: transform 0.2s ease;
+          text-decoration: none;
+          font-size: 18px;
+          background-color: white;
         }
 
         .social-icon:hover {
           transform: scale(1.1);
         }
 
-        .facebook {
-          color: #3b5998;
-          background-color: white;
-        }
-
         .twitter {
           color: #1da1f2;
-          background-color: white;
         }
 
-        .linkedin {
-          color: #0077b5;
-          background-color: white;
+        .facebook {
+          color: #1877f2;
         }
 
         .instagram {
           color: #e1306c;
-          background-color: white;
+        }
+
+        .linkedin {
+          color: #0077b5;
+        }
+
+        .footer-bottom-links {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 20px;
+          margin: 40px 0;
+          padding: 20px 0;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .bottom-link {
+          color: rgba(255, 255, 255, 0.7);
+          text-decoration: none;
+          font-size: 14px;
+          white-space: nowrap;
+        }
+
+        .bottom-link:hover {
+          color: white;
+          text-decoration: underline;
+        }
+
+        .footer-bottom {
+          background-color: rgba(0, 0, 0, 0.2);
+          padding: 30px 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 15px;
+        }
+
+        .footer-logo .logo-image {
+          height: 40px;
+          max-width: 200px;
+          object-fit: contain;
+        }
+
+        .copyright {
+          color: rgba(255, 255, 255, 0.7);
+          font-size: 14px;
+          text-align: center;
+        }
+
+        @media (max-width: 768px) {
+          .footer-grid {
+            grid-template-columns: 1fr;
+            gap: 30px;
+          }
+
+          .footer-bottom-links {
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+          }
+
+          .social-icons {
+            justify-content: center;
+          }
         }
       `}</style>
     </footer>

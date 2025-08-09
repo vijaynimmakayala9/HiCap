@@ -8,7 +8,7 @@ const AboutSection = () => {
     <>
       <Header />
 
-      <div style={{ maxWidth: '1440px', margin: '40px auto', padding: '0 24px' }}>
+      <div style={{ maxWidth: '1440px', margin: '10px auto', padding: '0 24px' }}>
         {/* Render AboutUs component */}
         <AboutUs />
       </div>

@@ -9,7 +9,7 @@ const OurMentorsPage = () => {
 
   useEffect(() => {
     axios
-      .get('https://hicap-backend-4rat.onrender.com/api/our-mentor')
+      .get('https://hicap-backend-4rat.onrender.com/api/our-mentor/Mentor')
       .then(res => setMentors(res.data.data || []))
       .catch(err => console.error('Mentor API error:', err));
 

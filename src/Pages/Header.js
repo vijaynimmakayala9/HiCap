@@ -29,8 +29,8 @@ const GuestHeader = ({ onLogin }) => {
   const menuItems = [
     { label: 'Home', path: '/' },
     { label: 'About Us', path: '/aboutus' },
-    { label: 'Courses', isMegaMenu: true },
     { label: 'Upcoming Batches', path: '/upcommingbatches' },
+    { label: 'Courses', isMegaMenu: true },
     {
       label: 'Resources',
       isDropdown: true,
@@ -275,7 +275,7 @@ const GuestHeader = ({ onLogin }) => {
   );
 
   const ResourcesDropdown = () => (
-    <div 
+    <div
       ref={resourcesDropdownRef}
       className="resources-dropdown"
       onMouseEnter={() => setShowResourcesMenu(true)}
@@ -451,7 +451,7 @@ const GuestHeader = ({ onLogin }) => {
               alt="HiCap Logo"
               className="sidebar-logo"
             />
-            <button 
+            <button
               className="sidebar-close"
               onClick={() => setIsMobileMenuOpen(false)}
             >
@@ -464,7 +464,7 @@ const GuestHeader = ({ onLogin }) => {
               if (item.isMegaMenu) {
                 return (
                   <div key={idx} className="sidebar-menu-item">
-                    <div 
+                    <div
                       className="menu-title"
                       onClick={() => setShowCoursesMenu(!showCoursesMenu)}
                     >
@@ -477,7 +477,7 @@ const GuestHeader = ({ onLogin }) => {
               } else if (item.isDropdown) {
                 return (
                   <div key={idx} className="sidebar-menu-item">
-                    <div 
+                    <div
                       className="menu-title"
                       onClick={() => setShowResourcesMenu(!showResourcesMenu)}
                     >
@@ -660,10 +660,23 @@ const GuestHeader = ({ onLogin }) => {
           cursor: pointer;
           border-radius: 6px;
           transition: all 0.2s ease;
+          margin: 0 5px;
+          position: relative;
         }
         
         .nav-link:hover, .nav-link.active {
           color: #ad2132;
+        }
+        
+        .nav-link:not(:last-child):after {
+          content: '';
+          position: absolute;
+          right: -10px;
+          top: 50%;
+          transform: translateY(-50%);
+          height: 20px;
+          width: 1px;
+          background-color: #ddd;
         }
         
         .chevron {
@@ -1309,6 +1322,7 @@ const GuestHeader = ({ onLogin }) => {
           to { transform: rotate(360deg); }
         }
       `}</style>
+
     </>
   );
 };
@@ -1481,7 +1495,7 @@ const UserHeader = ({ user, onLogout }) => {
               alt="HiCap Logo"
               className="sidebar-logo"
             />
-            <button 
+            <button
               className="sidebar-close"
               onClick={() => setIsMobileMenuOpen(false)}
             >
@@ -1588,11 +1602,24 @@ const UserHeader = ({ user, onLogout }) => {
           cursor: pointer;
           font-size: 14px;
           color: #666;
+          margin: 0 5px;
+          position: relative;
         }
         
         .nav-link:hover, .nav-link.active {
           color: #ad2132;
           background-color: #f8d7da;
+        }
+        
+        .nav-link:not(:last-child):after {
+          content: '';
+          position: absolute;
+          right: -10px;
+          top: 50%;
+          transform: translateY(-50%);
+          height: 20px;
+          width: 1px;
+          background-color: #ddd;
         }
         
         .nav-icon {
@@ -1949,12 +1976,14 @@ const Header = () => {
     setIsLoggedIn(true);
     setUser(userData);
     sessionStorage.setItem('user', JSON.stringify(userData));
+    window.dispatchEvent(new Event('storage')); // Trigger update
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUser(null);
-    sessionStorage.removeItem('user');
+    sessionStorage.removeItem("user");
+    window.dispatchEvent(new Event('storage')); // Trigger update
     navigate('/');
   };
 

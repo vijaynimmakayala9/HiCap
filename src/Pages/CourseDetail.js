@@ -13,11 +13,13 @@ import {
   FaStar,
   FaStarHalfAlt,
   FaRegStar,
-  FaBookOpen
+  FaBookOpen,
+  FaMeetup
 } from 'react-icons/fa';
 import Footer from './Footer';
 import Header from './Header';
-import { Container, Row, Col, Card, Button, Badge, Accordion } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, Modal, Badge, Accordion } from 'react-bootstrap';
+import FlashContact from '../components/FlashContact';
 
 const Counter = ({ end, duration = 1000, suffix = '' }) => {
   const [count, setCount] = useState(0);
@@ -69,6 +71,42 @@ const CourseDetail = () => {
   const [error, setError] = useState(null);
   const [openFAQIndex, setOpenFAQIndex] = useState(null);
   const navigate = useNavigate();
+
+  const [show, setShow] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [phone, setPhone] = useState("");
+
+  const handleShow = () => setShow(true);
+  const handleClose = () => {
+    setShow(false);
+    setOtpSent(false);
+    setOtp("");
+    setPhone("");
+  };
+
+  const sendOtp = () => {
+    if (!phone) {
+      alert("Please enter your WhatsApp number.");
+      return;
+    }
+    // Here you would integrate WhatsApp OTP sending logic (API call)
+    console.log("Sending OTP to:", phone);
+    setOtpSent(true);
+  };
+
+  const verifyOtp = () => {
+    // Here you would integrate OTP verification API call
+    if (otp === "1234") {
+      alert("OTP verified! Starting syllabus downloading...");
+      window.open("/course_syllabus.pdf", "_blank");
+      handleClose();
+    } else {
+      alert("Invalid OTP. Please try again.");
+    }
+  };
+
+  const [role, setRole] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -219,16 +257,16 @@ const CourseDetail = () => {
                   <div className="d-flex flex-wrap gap-2 mb-4">
                     <button
                       type="button"
-                      className="d-flex align-items-center gap-2 px-3 py-1 border-0 rounded-pill"
+                      className="d-flex small align-items-center gap-2 px-3 py-1 border-0 rounded-pill"
                       style={{ backgroundColor: "#c34153", color: "#fff" }}
                     >
                       <FaRegClock className="fs-6" />
-                      {course.duration}
+                      {course.duration} Months
                     </button>
 
                     <button
                       type="button"
-                      className="d-flex align-items-center gap-2 px-3 py-1 border-0 rounded-pill"
+                      className="d-flex small align-items-center gap-2 px-3 py-1 border-0 rounded-pill"
                       style={{ backgroundColor: "#c34153", color: "#fff" }}
                     >
                       <FaUserGraduate className="fs-6" />
@@ -237,11 +275,20 @@ const CourseDetail = () => {
 
                     <button
                       type="button"
-                      className="d-flex align-items-center gap-2 px-3 py-1 border-0 rounded-pill"
+                      className="d-flex small align-items-center gap-2 px-3 py-1 border-0 rounded-pill"
                       style={{ backgroundColor: "#c34153", color: "#fff" }}
                     >
                       <FaBook className="fs-6" />
                       {course.noOfLessons} Lessons
+                    </button>
+
+                    <button
+                      type="button"
+                      className="d-flex small align-items-center gap-2 px-3 py-1 border-0 rounded-pill"
+                      style={{ backgroundColor: "#c34153", color: "#fff" }}
+                    >
+                      <FaMeetup className="fs-6" />
+                      {course.mode}
                     </button>
                   </div>
 
@@ -256,10 +303,13 @@ const CourseDetail = () => {
                   </div>
 
                   <div className="d-flex flex-column flex-sm-row gap-3">
-                    <button className="btn btn-lg gradient-button">
+                    <button className="btn btn-md gradient-button">
                       Enroll Now - ${course.price}
                     </button>
-                    <button className="btn btn-lg btn-outline-meroon">
+                    <button
+                      className="btn btn-md btn-outline-meroon"
+                      onClick={handleShow}
+                    >
                       Download Syllabus
                     </button>
                   </div>
@@ -270,7 +320,7 @@ const CourseDetail = () => {
             </Row>
           </Container>
 
-          {/* Stats Cards */}
+          {/* Stats Cards
           <Container className="py-4">
             <Row className="g-3">
               <Col sm={4}>
@@ -301,9 +351,9 @@ const CourseDetail = () => {
                 </Card>
               </Col>
             </Row>
-          </Container>
+          </Container> */}
 
-          {/* Features and Training Options */}
+          {/* Features and Who Can Learn */}
           <Container className="py-4">
             <Row className="g-4">
               {/* What You'll Get */}
@@ -320,15 +370,99 @@ const CourseDetail = () => {
                     <Row className="g-2">
                       {course.features.map((feature, index) => (
                         <Col xs={12} sm={6} key={index}>
+                          <div className="position-relative h-100">
+                            <Card className="border-0 shadow-sm h-100">
+                              <Card.Body className="d-flex align-items-center gap-3 p-2">
+                                <img
+                                  src={feature.image}
+                                  alt={feature.title}
+                                  className="img-fluid rounded-circle"
+                                  style={{ width: '48px', height: '48px', objectFit: 'cover' }}
+                                />
+                                <h4 className="mb-0 small text-dark flex-grow-1">
+                                  {feature.title}
+                                </h4>
+                              </Card.Body>
+                            </Card>
+
+                            {/* Hover overlay */}
+                            <div
+                              className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-center p-2"
+                              style={{
+                                backgroundColor: "rgba(0,0,0,0.75)",
+                                color: "#fff",
+                                opacity: 0,
+                                transition: "opacity 0.3s ease",
+                                borderRadius: "0.375rem",
+                              }}
+                            >
+                              <small>{feature.description}</small>
+                            </div>
+                          </div>
+
+                          {/* Hover effect with CSS */}
+                          <style jsx>{`
+                  .position-relative:hover div.position-absolute {
+                    opacity: 1;
+                  }
+                `}</style>
+                        </Col>
+                      ))}
+                    </Row>
+                  </Card.Body>
+                </Card>
+              </Col>
+
+              {/* Who Can Learn */}
+              <Col lg={6}>
+                <Card className="border-0 shadow-sm h-100">
+                  <Card.Body>
+                    <Card.Title
+                      className="border-bottom pb-2"
+                      style={{ color: "#ad2132", fontSize: "1.25rem", fontWeight: '600' }}
+                    >
+                      Who Can Learn
+                    </Card.Title>
+                    <Row className="g-3">
+                      {[
+                        {
+                          image: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+                          title: "Students & Freshers",
+                          description: "Ideal for those starting their career and seeking strong foundational skills."
+                        },
+                        {
+                          image: "https://cdn-icons-png.flaticon.com/512/1053/1053244.png",
+                          title: "Working Professionals",
+                          description: "Upgrade your skills or pivot your career into high-demand roles."
+                        },
+                        {
+                          image: "https://cdn-icons-png.flaticon.com/512/190/190411.png",
+                          title: "Freelancers",
+                          description: "Enhance your service offering and land better-paying projects."
+                        },
+                        {
+                          image: "https://cdn-icons-png.flaticon.com/512/706/706830.png",
+                          title: "Entrepreneurs",
+                          description: "Gain practical knowledge to grow and manage your own business more effectively."
+                        }
+                      ].map((learner, index) => (
+                        <Col xs={12} sm={6} key={index}>
                           <Card className="border-0 shadow-sm h-100">
-                            <Card.Body className="d-flex align-items-center gap-3 p-2">
+                            <Card.Body className="d-flex gap-3">
                               <img
-                                src={feature.image}
-                                alt={feature.title}
-                                className="img-fluid rounded-circle"
+                                src={learner.image}
+                                alt={learner.title}
+                                className="rounded-circle border border-2 border-info"
                                 style={{ width: '48px', height: '48px', objectFit: 'cover' }}
                               />
-                              <h4 className="mb-0 small text-dark flex-grow-1">{feature.title}</h4>
+                              <div>
+                                <h5 className="mb-1" style={{ color: "#ad2132" }}>
+                                  {learner.title}
+                                </h5>
+                                <h6 className="small text-muted mb-0">
+                                  {learner.description}
+                                </h6>
+                              </div>
                             </Card.Body>
                           </Card>
                         </Col>
@@ -337,78 +471,11 @@ const CourseDetail = () => {
                   </Card.Body>
                 </Card>
               </Col>
-
-              {/* Training Options */}
-              <Col lg={6}>
-                <Card className="border-0 shadow-sm h-100">
-                  <Card.Body>
-                    <Card.Title
-                      className="d-flex align-items-center mb-3 pb-1 border-bottom"
-                      style={{ fontWeight: '600', fontSize: '1.25rem', color: "#ad2132" }}
-                    >
-                      <FaChalkboardTeacher className="me-2" size={20} />
-                      Training Options
-                    </Card.Title>
-
-                    <div className="mb-3">
-                      <p className="small fw-semibold mb-1">Mode:</p>
-                      <button
-                        type="button"
-                        className="btn btn-sm text-capitalize rounded-pill px-3 py-1 border-0"
-                        style={{ backgroundColor: "#c34153", color: "#fff" }}
-                      >
-                        {course.mode}
-                      </button>
-                    </div>
-
-                    <div className="mb-3">
-                      <p className="small fw-semibold mb-1">Status:</p>
-                      <button
-                        type="button"
-                        className="btn btn-sm rounded-pill px-3 py-1 border-0"
-                        style={{
-                          backgroundColor: course.status === 'available' ? "#c34153" : "#c34153",
-                          color: course.status === 'available' ? "#fff" : "#000"
-                        }}
-                      >
-                        {course.status === 'available' ? 'Available Now' : 'Coming Soon'}
-                      </button>
-                    </div>
-
-                    <div className="mb-3">
-                      <p className="small fw-semibold mb-1">Price:</p>
-                      <h4 style={{ color: "#ad2132" }}>₹{course.price}</h4>
-                    </div>
-
-                    <div className="d-flex flex-wrap gap-1">
-                      {course.isPopular && (
-                        <button
-                          type="button"
-                          className="btn btn-sm rounded-pill px-3 py-1 border-0"
-                          style={{ backgroundColor: "#c34153", color: "#fff" }}
-                        >
-                          Popular Course
-                        </button>
-                      )}
-                      {course.isHighRated && (
-                        <button
-                          type="button"
-                          className="btn btn-sm rounded-pill px-3 py-1 border-0"
-                          style={{ backgroundColor: "#c34153", color: "#fff" }}
-                        >
-                          Top Rated
-                        </button>
-                      )}
-                    </div>
-                  </Card.Body>
-                </Card>
-              </Col>
-
             </Row>
           </Container>
 
 
-          {/* Learning Objectives */}
+          {/* Learning Objectives
           <Container className="py-4">
             <Card className="border-0">
               <Card.Body>
@@ -446,7 +513,7 @@ const CourseDetail = () => {
                 </Row>
               </Card.Body>
             </Card>
-          </Container>
+          </Container> */}
 
 
 
@@ -486,7 +553,158 @@ const CourseDetail = () => {
           )}
 
 
-          {/* Who Can Learn */}
+          <section className="py-5 bg-light shadow-sm" id="contact">
+            <div className="container">
+              {/* Heading */}
+              <div className="text-center mb-5">
+                <h2 className="fw-bold textcolor">Get in Touch</h2>
+                <p className="text-muted">
+                  Whether you’re a student or a professional, we’d love to hear from you.
+                </p>
+              </div>
+
+              {/* Form Card */}
+              <div className="row justify-content-center">
+                <div className="col-lg-8">
+                  <div className="card shadow-sm border-0">
+                    <div className="card-body p-4 p-sm-5">
+                      <Form>
+                        {/* Name */}
+                        <Form.Group className="mb-3">
+                          <Form.Label className="fw-semibold">Full Name</Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="Enter your full name"
+                            required
+                          />
+                        </Form.Group>
+
+                        {/* Email */}
+                        <Form.Group className="mb-3">
+                          <Form.Label className="fw-semibold">Email Address</Form.Label>
+                          <Form.Control
+                            type="email"
+                            placeholder="Enter your email"
+                            required
+                          />
+                        </Form.Group>
+
+                        {/* Phone */}
+                        <Form.Group className="mb-3">
+                          <Form.Label className="fw-semibold">Phone Number</Form.Label>
+                          <Form.Control
+                            type="tel"
+                            placeholder="+1 234 567 890"
+                            required
+                          />
+                        </Form.Group>
+
+                        {/* Type */}
+                        <Form.Group className="mb-3">
+                          <Form.Label className="fw-semibold">I am a</Form.Label>
+                          <Form.Select
+                            value={role}
+                            onChange={(e) => setRole(e.target.value)}
+                            required
+                          >
+                            <option value="">Select...</option>
+                            <option value="student">Student</option>
+                            <option value="professional">Professional</option>
+                          </Form.Select>
+                        </Form.Group>
+
+                        {/* Extra Fields: Student */}
+                        {role === "student" && (
+                          <>
+                            <Form.Group className="mb-3">
+                              <Form.Label className="fw-semibold">College Name</Form.Label>
+                              <Form.Control
+                                type="text"
+                                placeholder="e.g., XYZ University"
+                                required
+                              />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                              <Form.Label className="fw-semibold">Branch</Form.Label>
+                              <Form.Control
+                                type="text"
+                                placeholder="e.g., Computer Science"
+                                required
+                              />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                              <Form.Label className="fw-semibold">Year of Passed Out</Form.Label>
+                              <Form.Control
+                                type="text"
+                                placeholder="e.g., Final Year"
+                                required
+                              />
+                            </Form.Group>
+                          </>
+                        )}
+
+                        {/* Extra Fields: Professional */}
+                        {role === "professional" && (
+                          <>
+                            <Form.Group className="mb-3">
+                              <Form.Label className="fw-semibold">Company Name</Form.Label>
+                              <Form.Control
+                                type="text"
+                                placeholder="e.g., ABC Corporation"
+                                required
+                              />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                              <Form.Label className="fw-semibold">Role</Form.Label>
+                              <Form.Control
+                                type="text"
+                                placeholder="e.g., Software Engineer"
+                                required
+                              />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                              <Form.Label className="fw-semibold">Experience (in years)</Form.Label>
+                              <Form.Control
+                                type="number"
+                                placeholder="e.g., 3"
+                                required
+                              />
+                            </Form.Group>
+                          </>
+                        )}
+
+                        {/* Message */}
+                        <Form.Group className="mb-4">
+                          <Form.Label className="fw-semibold">Message</Form.Label>
+                          <Form.Control
+                            as="textarea"
+                            rows={4}
+                            placeholder="Write your query or message here"
+                            required
+                          />
+                        </Form.Group>
+
+                        {/* Submit */}
+                        <div className="d-grid">
+                          <Button
+                            type="submit"
+                            className="gradient-button fw-semibold py-2"
+                          >
+                            Send Message
+                          </Button>
+                        </div>
+                      </Form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+
+
+
+          {/* Who Can Learn
           <Container className="py-4">
             <Card className="border-0 shadow-sm">
               <Card.Body>
@@ -539,7 +757,7 @@ const CourseDetail = () => {
           </Container>
 
           {/* Course Information */}
-          <Container className="py-4">
+          {/* <Container className="py-4">
             <Card className="border-0 shadow-sm">
               <Card.Body>
                 <Card.Title className="border-bottom pb-2" style={{ color: "#ad2132", fontSize: "1.75rem" }}>
@@ -583,7 +801,7 @@ const CourseDetail = () => {
                 </Row>
               </Card.Body>
             </Card>
-          </Container>
+          </Container> */}
 
           {/* Related Courses */}
           {relatedCourses.length > 0 && (
@@ -699,6 +917,66 @@ const CourseDetail = () => {
 
         </main>
       </div>
+
+      <Modal
+        show={show}
+        onHide={handleClose}
+        centered
+        size="md"
+      >
+        <Modal.Header closeButton className="border-bottom-0 justify-content-center">
+          <Modal.Title className="fw-bold textcolor text-center">
+            Download Syllabus
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body className="px-3 px-sm-4">
+          {!otpSent ? (
+            <Form className="text-center">
+              <Form.Group className="mb-4 text-start">
+                <Form.Label className="fw-semibold">Enter WhatsApp Number</Form.Label>
+                <Form.Control
+                  type="tel"
+                  placeholder="+1 234 567 890"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="py-2"
+                />
+              </Form.Group>
+              <div className="d-grid">
+                <Button
+                  className="gradient-button fw-semibold py-2"
+                  onClick={sendOtp}
+                >
+                  Send OTP
+                </Button>
+              </div>
+            </Form>
+          ) : (
+            <Form className="text-center">
+              <Form.Group className="mb-4 text-start">
+                <Form.Label className="fw-semibold">Enter OTP</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="4-digit OTP"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  className="py-2"
+                />
+              </Form.Group>
+              <div className="d-grid">
+                <Button
+                  className="gradient-button fw-semibold py-2"
+                  onClick={verifyOtp}
+                >
+                  Verify & Download
+                </Button>
+              </div>
+            </Form>
+          )}
+        </Modal.Body>
+      </Modal>
+      <FlashContact />
       <Footer />
     </>
   );
