@@ -20,6 +20,7 @@ import Footer from './Footer';
 import Header from './Header';
 import { Container, Row, Col, Card, Button, Form, Modal, Badge, Accordion } from 'react-bootstrap';
 import FlashContact from '../components/FlashContact';
+import CourseEnquiryModal from '../components/EnrollModal';
 
 const Counter = ({ end, duration = 1000, suffix = '' }) => {
   const [count, setCount] = useState(0);
@@ -71,6 +72,7 @@ const CourseDetail = () => {
   const [error, setError] = useState(null);
   const [openFAQIndex, setOpenFAQIndex] = useState(null);
   const navigate = useNavigate();
+  const [showEnquiryModal, setShowEnquiryModal] = useState(false);
 
   const [show, setShow] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
@@ -162,6 +164,9 @@ const CourseDetail = () => {
   const toggleFAQ = (index) => {
     setOpenFAQIndex(openFAQIndex === index ? null : index);
   };
+  const handleEnroll = () => {
+    setShowEnquiryModal(true);
+  }
 
   if (loading) return (
     <div className="min-vh-100 d-flex align-items-center justify-content-center">
@@ -221,7 +226,14 @@ const CourseDetail = () => {
                     variant="top"
                     src={course.image}
                     alt={course.name}
-                    className="rounded-3 border-3 border-white img-fluid"
+                    className="rounded-3 img-fluid"
+                    style={{
+                      maxWidth: "100%",
+                      height: "auto",
+                      border: "2px solid maroon", // Thin maroon border
+                      boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)", // Maroon shadow
+                      transition: "transform 0.3s ease, box-shadow 0.3s ease" // Hover effect
+                    }}
                   />
                   {/* <Badge bg="white" text="primary" className="position-absolute bottom-0 start-0 m-3 shadow-sm fw-bold">
                     New Batch Starting Soon!
@@ -303,8 +315,8 @@ const CourseDetail = () => {
                   </div>
 
                   <div className="d-flex flex-column flex-sm-row gap-3">
-                    <button className="btn btn-md gradient-button">
-                      Enroll Now - ${course.price}
+                    <button className="btn btn-md gradient-button" onClick={handleEnroll}>
+                      Enroll Now
                     </button>
                     <button
                       className="btn btn-md btn-outline-meroon"
@@ -978,6 +990,10 @@ const CourseDetail = () => {
       </Modal>
       <FlashContact />
       <Footer />
+      <CourseEnquiryModal
+        show={showEnquiryModal}
+        handleClose={() => setShowEnquiryModal(false)}
+      />
     </>
   );
 };

@@ -32,13 +32,16 @@ const GuestHeader = ({ onLogin }) => {
     { label: 'Upcoming Batches', path: '/upcommingbatches' },
     { label: 'Courses', isMegaMenu: true },
     {
-      label: 'Resources',
+      label: 'Services',
       isDropdown: true,
       items: [
+        { label: 'Resume Building', path: '/resumebuilding' },
+        { label: 'Mockup Interviews', path: '/mockups' },
+        { label: 'Live Projects', path: '/liveprojects' },
+        { label: 'Placements Assistance', path: '/placements' },
         { label: 'FAQs', path: '/faqs' },
         { label: 'Blog', path: '/blog' },
-        { label: 'Our Mentors', path: '/ourmentors' },
-        { label: 'Clients', path: '/clients' }
+        { label: 'Our Mentors', path: '/ourmentors' }
       ]
     },
     { label: 'Contact Us', path: '/contactus' }
@@ -281,7 +284,7 @@ const GuestHeader = ({ onLogin }) => {
       onMouseEnter={() => setShowResourcesMenu(true)}
     >
       <ul>
-        {menuItems.find(item => item.label === 'Resources').items.map((item, idx) => (
+        {menuItems.find(item => item.label === 'Services').items.map((item, idx) => (
           <li key={idx}>
             <button
               className={`dropdown-item ${location.pathname === item.path ? 'active' : ''}`}
@@ -413,7 +416,7 @@ const GuestHeader = ({ onLogin }) => {
                       className={`nav-link ${showResourcesMenu ? 'active' : ''}`}
                       onClick={() => setShowResourcesMenu(!showResourcesMenu)}
                     >
-                      Resources <FaChevronDown className={`chevron ${showResourcesMenu ? 'rotate' : ''}`} />
+                      Services <FaChevronDown className={`chevron ${showResourcesMenu ? 'rotate' : ''}`} />
                     </span>
                     {showResourcesMenu && <ResourcesDropdown />}
                   </div>

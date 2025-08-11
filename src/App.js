@@ -18,6 +18,10 @@ import PrivateRoute from "./components/PrivateRoute";
 import LiveClassesPage from "./components/LiveClassesPage";
 import CourseModule from "./admin/CourseModule";
 import StickyContactButtons from "./models/StickyContactHoverClick";
+import ResumeBuilding from "./services/ResumeBuild";
+import MockInterviews from "./services/MockupInterviews";
+import LiveProjects from "./services/LiveProjects";
+import PlacementAssistance from "./services/PlacementsAssistance";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -69,6 +73,10 @@ function App() {
         <Route path="/courses" element={<Courses />} />
         <Route path="/course/:id" element={<CourseDetail />} />
         <Route path="/clients" element={<Clients />} />
+        <Route path="/resumebuilding" element={<ResumeBuilding />} />
+        <Route path="/mockups" element={<MockInterviews />} />
+        <Route path="/liveprojects" element={<LiveProjects />} />
+        <Route path="/placements" element={<PlacementAssistance />} />
 
         {/* Protected Routes */}
         <Route

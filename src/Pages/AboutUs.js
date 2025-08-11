@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import AboutMagnitia from './AboutMagnitia';
+import AboutTechsterker from './AboutTerchsterker';
 
 const AboutUS = () => {
   const [leadershipTeam, setLeadershipTeam] = useState([]);
@@ -66,7 +66,7 @@ const AboutUS = () => {
 
   return (
     <section className="container py-4 py-md-5">
-      <AboutMagnitia />
+      <AboutTechsterker />
 
       {/* Why TECHSTERKER */}
       <div className="container py-4 py-md-5">
@@ -79,10 +79,11 @@ const AboutUS = () => {
                 alt="Why Choose TECHSTERKER"
                 className="img-fluid rounded-4 w-100"
                 style={{
-                  height: '100%',
-                  minHeight: '400px',
-                  objectFit: 'cover',
-                  objectPosition: 'center'
+                  maxWidth: "100%",
+                  height: "auto",
+                  border: "1px solid maroon", // Thin maroon border
+                  boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)", // Maroon shadow
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease" // Hover effect
                 }}
               />
             </div>
@@ -173,9 +174,16 @@ const AboutUS = () => {
             src="https://www.Magnitia.com/images/mision1.png"
             alt="Vision Mission"
             className="img-fluid rounded"
-            style={{ maxWidth: '100%', height: 'auto' }}
+            style={{
+              maxWidth: "100%",
+              height: "auto",
+              border: "1px solid maroon", // Thin maroon border
+              boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)", // Maroon shadow
+              transition: "transform 0.3s ease, box-shadow 0.3s ease" // Hover effect
+            }}
           />
         </div>
+
       </div>
 
       {/* Leadership Team */}
@@ -225,9 +233,16 @@ const AboutUS = () => {
           </div>
           <div className="col-md-4 text-center">
             <img
-              src={technicalTeam?.image2 || "https://www.Magnitia.com/images/gallery/institute9.jpg"}
+              src={technicalTeam?.image2 || "https://www.Techsterker.com/images/gallery/institute9.jpg"}
               alt="Technical Team"
-              className="img-fluid rounded shadow-sm"
+              className="img-fluid rounded"
+              style={{
+                maxWidth: "100%",
+                height: "auto",
+                border: "1px solid maroon", // Thin maroon border
+                boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)", // Maroon shadow
+                transition: "transform 0.3s ease, box-shadow 0.3s ease" // Hover effect
+              }}
             />
           </div>
         </div>
@@ -245,8 +260,15 @@ const AboutUS = () => {
                   <img
                     src={imgUrl}
                     alt={`Global Classroom ${i + 1}`}
-                    className="img-fluid rounded shadow-sm w-100"
-                    style={{ height: "200px", objectFit: "cover" }}
+                    className="img-fluid rounded w-100"
+                    style={{
+      maxWidth: "100%",
+      height: "200px",
+      objectFit: 'cover',
+      border: "1px solid maroon", // Thin maroon border
+      boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)", // Maroon shadow
+      transition: "transform 0.3s ease, box-shadow 0.3s ease" // Hover effect
+    }}
                   />
                 </div>
               ))}

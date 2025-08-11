@@ -113,6 +113,10 @@
   color: #c34153 !important;
 }
 
+.meroon-back {
+  background-color: #ad2132!important;
+}
+
 .bg-meroon {
   background-color: #ad2132 !important;
   color: #fff!important;
@@ -160,3 +164,14 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
 } */
+
+
+.img-maroon-shadow {
+  box-shadow: 0 10px 20px rgba(128, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.img-maroon-shadow:hover {
+  box-shadow: 0 15px 30px rgba(128, 0, 0, 0.4);
+  transform: translateY(-5px); /* Optional hover effect */
+}

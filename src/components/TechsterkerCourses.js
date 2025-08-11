@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const MagnitiaCourses = () => {
+const TechsterkerCourses = () => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
 
@@ -32,7 +32,11 @@ const MagnitiaCourses = () => {
     objectFit: 'cover',
     display: 'block',
     margin: '0 auto',
+    boxShadow: '0 10px 20px rgba(128, 0, 0, 0.3)',
+    border: '2px solid maroon',
+    transition: 'transform 0.3s ease, box-shadow 0.3s ease'
   };
+  
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -79,13 +83,11 @@ const MagnitiaCourses = () => {
             <div
               style={containerStyle}
               className="rounded"
-              onMouseEnter={(e) => handleHover(e, true)}
-              onMouseLeave={(e) => handleHover(e, false)}
             >
               <img
                 src={course.image}
                 alt={course.title}
-                className="img-fluid"
+                className="img-fluid rounded"
                 style={imageStyle}
               />
             </div>
@@ -97,4 +99,4 @@ const MagnitiaCourses = () => {
   );
 };
 
-export default MagnitiaCourses;
+export default TechsterkerCourses;

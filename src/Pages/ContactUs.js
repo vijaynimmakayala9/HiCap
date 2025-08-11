@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaPhoneAlt, FaEnvelope, FaPlus, FaMinus } from 'react-icons/fa';
 import Header from './Header';
 import Footer from './Footer';
-import AboutMagnitia from './AboutMagnitia';
+import AboutTechsterker from './AboutTerchsterker';
 import Swal from 'sweetalert2';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -96,7 +96,7 @@ const ContactUs = () => {
       <Header />
 
       <Container fluid className="px-0">
-        <AboutMagnitia />
+        <AboutTechsterker />
       </Container>
 
       <Container className="py-5">
@@ -265,15 +265,15 @@ const ContactUs = () => {
                     </p>
                     <p className="text-dark">
                       <strong>Email :</strong>{' '}
-                      <a href="mailto:info@Magnitia.com" className="text-meroon fw-semibold">
-                        info@Magnitia.com
+                      <a href="mailto:info@Techsterker.com" className="text-meroon fw-semibold">
+                        info@Techsterker.com
                       </a>
                     </p>
                   </div>
                   <div className="ratio ratio-16x9">
                     <iframe
-                      title="Magnitia IT Map"
-                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.3433657893185!2d78.39761891418862!3d17.44246400523407!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9156ed0e6b8f%3A0x8ac1071d0275821f!2sMagnitia%20-%20IT%20Training%20Institute!5e0!3m2!1sen!2sin!4v1659340731616!5m2!1sen!2sin"
+                      title="Techsterker IT Map"
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.3433657893185!2d78.39761891418862!3d17.44246400523407!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9156ed0e6b8f%3A0x8ac1071d0275821f!2sTechsterker%20-%20IT%20Training%20Institute!5e0!3m2!1sen!2sin!4v1659340731616!5m2!1sen!2sin"
                       allowFullScreen
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"

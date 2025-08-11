@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import AboutMagnitia from "../Pages/AboutMagnitia";
+import AboutTechsterker from "../Pages/AboutTerchsterker";
 import Header from "../Pages/Header";
 import Footer from "../Pages/Footer";
 import { Container, Table, Button, Card, Spinner, Alert, Row, Col } from "react-bootstrap";
-import { Globe, Award, Clock, Users, BookOpen, Briefcase } from 'react-feather';
+import { Globe, Award, Clock, Users, BookOpen, Briefcase, TrendingUp, Target, Zap } from 'react-feather';
+import CourseEnquiryModal from '../components/EnrollModal';
 
 const UpCommingBatches = () => {
-  const [activeFilter, setActiveFilter] = useState("All Batches");
+  const [activeFilter, setActiveFilter] = useState("All Categories");
   const [filteredBatches, setFilteredBatches] = useState([]);
   const [allBatches, setAllBatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [trainingTypes, setTrainingTypes] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [showEnquiryModal, setShowEnquiryModal] = useState(false);
 
   useEffect(() => {
     const fetchBatches = async () => {
@@ -22,28 +24,10 @@ const UpCommingBatches = () => {
           const batches = response.data.data[0].allbatches;
           setAllBatches(batches);
           setFilteredBatches(batches);
-          
-          // Generate training types dynamically from available categories and types
-          const availableCategories = [...new Set(batches.map(batch => batch.categorie))];
-          const availableTypes = [...new Set(batches.map(batch => batch.type))];
-          
-          const generatedTrainingTypes = [
-            { name: "All Batches", filter: () => true },
-            ...availableCategories.map(cat => ({
-              name: `${cat} Batches`,
-              filter: (b) => b.categorie === cat
-            })),
-            ...availableTypes.map(type => ({
-              name: `${type} Training`,
-              filter: (b) => b.type === type
-            })),
-            { 
-              name: "Full Stack", 
-              filter: (b) => b.batchName.toLowerCase().includes("full stack") 
-            }
-          ];
-          
-          setTrainingTypes(generatedTrainingTypes);
+
+          // Unique categories
+          const uniqueCategories = [...new Set(batches.map(batch => batch.categorie))];
+          setCategories(["All Categories", ...uniqueCategories]);
         } else {
           setAllBatches([]);
           setFilteredBatches([]);
@@ -59,10 +43,18 @@ const UpCommingBatches = () => {
     fetchBatches();
   }, []);
 
-  const handleFilterClick = (type) => {
-    setActiveFilter(type.name);
-    setFilteredBatches(allBatches.filter(type.filter));
+  const handleFilterClick = (category) => {
+    setActiveFilter(category);
+    if (category === "All Categories") {
+      setFilteredBatches(allBatches);
+    } else {
+      setFilteredBatches(allBatches.filter(batch => batch.categorie === category));
+    }
   };
+
+  const handleEnroll = () => {
+    setShowEnquiryModal(true);
+  }
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -77,7 +69,7 @@ const UpCommingBatches = () => {
     return (
       <>
         <Header />
-        <AboutMagnitia />
+        <AboutTechsterker />
         <Container className="my-5 text-center">
           <Spinner animation="border" role="status" variant="danger">
             <span className="visually-hidden">Loading...</span>
@@ -93,13 +85,13 @@ const UpCommingBatches = () => {
     return (
       <>
         <Header />
-        <AboutMagnitia />
+        <AboutTechsterker />
         <Container className="my-5 text-center">
           <Alert variant="danger">
             Failed to load batches: {error}
           </Alert>
-          <Button 
-            variant="danger" 
+          <Button
+            variant="danger"
             onClick={() => window.location.reload()}
             className="mt-3"
           >
@@ -114,13 +106,13 @@ const UpCommingBatches = () => {
   return (
     <>
       <Header />
-      <AboutMagnitia />
+      <AboutTechsterker />
 
       <Container className="my-5">
         {/* Why Choose Us Section */}
         <section className="mb-5">
           <h2 className="text-center mb-4 fw-bold" style={{ color: "#ad2132" }}>
-            Why Choose Magnitia for Your Tech Education?
+            Why Choose Techsterker for Your Tech Education?
           </h2>
           <Row>
             <Col md={4} className="mb-4">
@@ -159,31 +151,7 @@ const UpCommingBatches = () => {
           </Row>
         </section>
 
-        {/* International Students Section */}
-        <section className="mb-5 p-4 rounded" style={{ backgroundColor: "#f8f9fa" }}>
-          <Row className="align-items-center">
-            <Col md={6}>
-              <h3 className="fw-bold mb-3" style={{ color: "#ad2132" }}>International Students Welcome!</h3>
-              <p className="mb-4">
-                Magnitia offers specialized support for students coming from abroad:
-              </p>
-              <ul className="list-unstyled">
-                <li className="mb-2"><Globe className="me-2" color="#ad2132" />Flexible timing options for different time zones</li>
-                <li className="mb-2"><Users className="me-2" color="#ad2132" />Dedicated support for visa documentation</li>
-                <li className="mb-2"><Clock className="me-2" color="#ad2132" />Recorded sessions available 24/7</li>
-              </ul>
-              <Button variant="danger">Contact International Admissions</Button>
-            </Col>
-            <Col md={6} className="text-center">
-              <img 
-                src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1" 
-                alt="International students" 
-                className="img-fluid rounded"
-                style={{ maxHeight: "300px" }}
-              />
-            </Col>
-          </Row>
-        </section>
+        
 
         {/* Upcoming Batches Section */}
         <section>
@@ -196,14 +164,14 @@ const UpCommingBatches = () => {
           </div>
 
           <div className="d-flex flex-wrap justify-content-center py-3 border border-top-0">
-            {trainingTypes.map((type) => (
+            {categories.map((cat) => (
               <Button
-                key={type.name}
-                variant={activeFilter === type.name ? "danger" : "outline-danger"}
-                onClick={() => handleFilterClick(type)}
-                className={`m-1 fw-medium ${activeFilter === type.name ? "text-white" : ""}`}
+                key={cat}
+                variant={activeFilter === cat ? "danger" : "outline-danger"}
+                onClick={() => handleFilterClick(cat)}
+                className={`m-1 fw-medium ${activeFilter === cat ? "text-white" : ""}`}
               >
-                {type.name}
+                {cat}
               </Button>
             ))}
           </div>
@@ -239,7 +207,7 @@ const UpCommingBatches = () => {
                 ) : (
                   <tr>
                     <td colSpan="8" className="text-center text-muted py-3">
-                      No batches found for the selected filter
+                      No batches found for the selected category
                     </td>
                   </tr>
                 )}
@@ -248,14 +216,40 @@ const UpCommingBatches = () => {
           </div>
         </section>
 
+        {/* International Students Section */}
+        <section className="my-5 p-4 rounded" style={{ backgroundColor: "#f8f9fa" }}>
+          <Row className="align-items-center">
+            <Col md={6}>
+              <h3 className="fw-bold mb-3" style={{ color: "#ad2132" }}>International Students Welcome!</h3>
+              <p className="mb-4">
+                Techsterker offers specialized support for students coming from abroad:
+              </p>
+              <ul className="list-unstyled">
+                <li className="mb-2"><Globe className="me-2" color="#ad2132" />Flexible timing options for different time zones</li>
+                <li className="mb-2"><Users className="me-2" color="#ad2132" />Possible for Time adjustments</li>
+                <li className="mb-2"><Clock className="me-2" color="#ad2132" />Recorded sessions available 24/7</li>
+              </ul>
+              <Button variant="danger">Contact International Admissions</Button>
+            </Col>
+            <Col md={6} className="text-center">
+              <img
+                src="/abroad.png"
+                alt="International students"
+                className="img-fluid rounded shadow-md"
+                style={{ maxHeight: "300px" }}
+              />
+            </Col>
+          </Row>
+        </section>
+
         {/* Call to Action Section */}
         <Card className="mt-5 border-0 shadow">
           <Card.Body className="text-center p-4">
             <h3 className="mb-3" style={{ color: "#ad2132" }}>Ready to Start Your Tech Journey?</h3>
             <p className="mb-4 lead">
-              Join hundreds of successful students who launched their tech careers with Magnitia
+              Join hundreds of successful students who launched their tech careers with Techsterker
             </p>
-            <Button variant="danger" size="lg" className="me-3">
+            <Button variant="danger" size="lg" className="me-3" onClick={handleEnroll}>
               Enroll Now
             </Button>
             <Button variant="outline-danger" size="lg">
@@ -263,8 +257,59 @@ const UpCommingBatches = () => {
             </Button>
           </Card.Body>
         </Card>
+
+        {/* New Motivational Section */}
+        <section className="mt-5 mb-5">
+          <h2 className="text-center fw-bold mb-4" style={{ color: "#ad2132" }}>
+            Why Professionals & Students Choose Us
+          </h2>
+          <Row>
+            <Col md={4} className="mb-4">
+              <Card className="h-100 border-0 shadow-md text-center">
+                <Card.Body>
+                  <TrendingUp size={48} className="mb-3" color="#ad2132" />
+                  <Card.Title>Boost Your Career</Card.Title>
+                  <Card.Text>
+                    Whether you're a fresher or an experienced professional, our courses are designed to upgrade your skills for high-paying roles.
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={4} className="mb-4">
+              <Card className="h-100 border-0 shadow-sm text-center">
+                <Card.Body>
+                  <Target size={48} className="mb-3" color="#ad2132" />
+                  <Card.Title>Goal-Oriented Learning</Card.Title>
+                  <Card.Text>
+                    Our programs focus on real industry requirements, helping you achieve your dream role faster.
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={4} className="mb-4">
+              <Card className="h-100 border-0 shadow-sm text-center">
+                <Card.Body>
+                  <Zap size={48} className="mb-3" color="#ad2132" />
+                  <Card.Title>Fast-Track Programs</Card.Title>
+                  <Card.Text>
+                    Short on time? Our intensive courses help you master new technologies quickly without compromising quality.
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+          <div className="text-center mt-4">
+            <Button variant="danger" size="lg">
+              Join Now and Transform Your Future
+            </Button>
+          </div>
+        </section>
       </Container>
 
+      <CourseEnquiryModal
+        show={showEnquiryModal}
+        handleClose={() => setShowEnquiryModal(false)}
+      />
       <Footer />
     </>
   );

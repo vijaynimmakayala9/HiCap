@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import CourseEnquiryModal from "./EnrollModal";
 
 const CourseAndFeatures = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const carouselRef = useRef(null);
   const intervalRef = useRef(null);
+  const [showEnquiryModal, setShowEnquiryModal] = useState(false);
 
   const courses = [
     {
@@ -98,39 +100,45 @@ const CourseAndFeatures = () => {
     setIsPaused(false);
   };
 
+  const handleEnroll = () => {
+    setShowEnquiryModal(true);
+  }
+
+
   return (
-    <section className="py-5 mt-5" >
-      <div className="container">
-        {/* <div className="text-center mb-5">
+    <>
+      <section className="py-5 mt-5" >
+        <div className="container">
+          {/* <div className="text-center mb-5">
           <h2 className="display-5 fw-bold">Our Featured Courses</h2>
           <p className="text-muted lead">Learn from industry experts with real-world experience</p>
         </div> */}
 
-        <div
-          id="courseCarousel"
-          className="carousel slide"
-          ref={carouselRef}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <div className="carousel-inner">
-            {courses.map((course, index) => (
-              <div key={index} className={`carousel-item ${index === activeIndex ? 'active' : ''}`}>
-                <div className="row g-4 align-items-center">
-                  <div className="col-lg-6">
-                    <img
-                      src={course.image}
-                      alt={course.title}
-                      className="img-fluid rounded-3 shadow-lg"
-                      style={{ height: '400px', width: '100%', objectFit: 'cover' }}
-                    />
-                  </div>
-                  <div className="col-lg-6">
-                    <div className="ps-lg-4">
-                      <h3 className="fw-bold mb-3 display-6" >IT <span style={{ color: "#ad2132"}} >TRAINING</span> AND <span style={{ color: "#ad2132"}} >SKILL</span> DEVELOPMENT”</h3>
-                      <p className=" mb-4 ">{course.description}</p>
+          <div
+            id="courseCarousel"
+            className="carousel slide"
+            ref={carouselRef}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <div className="carousel-inner">
+              {courses.map((course, index) => (
+                <div key={index} className={`carousel-item ${index === activeIndex ? 'active' : ''}`}>
+                  <div className="row g-4 align-items-center">
+                    <div className="col-lg-6">
+                      <img
+                        src={course.image}
+                        alt={course.title}
+                        className="img-fluid rounded-3 shadow-lg"
+                        style={{ height: '400px', width: '100%', objectFit: 'cover' }}
+                      />
+                    </div>
+                    <div className="col-lg-6">
+                      <div className="ps-lg-4">
+                        <h3 className="fw-bold mb-3 display-6" >IT <span style={{ color: "#ad2132" }} >TRAINING</span> AND <span style={{ color: "#ad2132" }} >SKILL</span> DEVELOPMENT”</h3>
+                        <p className=" mb-4 ">{course.description}</p>
 
-                      {/* <ul className="mb-4">
+                        {/* <ul className="mb-4">
                         {course.features.map((feature, i) => (
                           <li key={i} className="mb-2">
                             <i className="bi bi-check-circle-fill textcolor me-2"></i>
@@ -139,20 +147,20 @@ const CourseAndFeatures = () => {
                         ))}
                       </ul> */}
 
-                      <div className="d-flex justify-content-lg-end justify-content-start">
-                        <button className=" gradient-button btn-md px-4 py-3 rounded-pill fw-bold" style={{width: "200px"}}>
-                          {course.buttonText}
-                        </button>
-                      </div>
+                        <div className="d-flex justify-content-lg-end justify-content-start">
+                          <button className=" gradient-button btn-md px-4 py-3 rounded-pill fw-bold" onClick={handleEnroll} style={{ width: "200px" }}>
+                            {course.buttonText}
+                          </button>
+                        </div>
 
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          {/* <div className="d-flex justify-content-center mt-4">
+            {/* <div className="d-flex justify-content-center mt-4">
             {courses.map((_, index) => (
               <button
                 key={index}
@@ -174,8 +182,8 @@ const CourseAndFeatures = () => {
             ))}
           </div> */}
 
-          {/* Controls */}
-          {/* <button 
+            {/* Controls */}
+            {/* <button 
             className="carousel-control-prev" 
             type="button" 
             onClick={() => goToSlide((activeIndex - 1 + courses.length) % courses.length)}
@@ -191,13 +199,13 @@ const CourseAndFeatures = () => {
             <span className="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
             <span className="visually-hidden">Next</span>
           </button> */}
+          </div>
         </div>
-      </div>
 
 
 
-      {/* Custom CSS */}
-      <style jsx>{`
+        {/* Custom CSS */}
+        <style jsx>{`
         .carousel-control-prev,
         .carousel-control-next {
           width: auto;
@@ -230,7 +238,13 @@ const CourseAndFeatures = () => {
           transition: transform 0.6s ease-in-out;
         }
       `}</style>
-    </section>
+      </section>
+      <CourseEnquiryModal
+        show={showEnquiryModal}
+        handleClose={() => setShowEnquiryModal(false)}
+      />
+    </>
+
   );
 };
 

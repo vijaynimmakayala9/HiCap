@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const AboutMagnitia = () => {
+const AboutTechsterker = () => {
   const [aboutData, setAboutData] = useState(null);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const AboutMagnitia = () => {
   }, []);
 
   return (
-    <section className="container py-4 py-md-5 mt-5" style={{backgroundColor: "#fffef2"}}>
+    <section className="container py-4 py-md-5 mt-5" style={{ backgroundColor: "#fffef2" }}>
       {aboutData ? (
         <div className="row align-items-center mb-4 mb-md-5 g-4">
           {/* Text Section */}
@@ -42,7 +42,7 @@ const AboutMagnitia = () => {
               ></div>
             </div>
             <p className="text-muted mb-4">{aboutData.content1}</p>
-            
+
           </div>
 
           {/* Image Section */}
@@ -51,10 +51,18 @@ const AboutMagnitia = () => {
               <img
                 src={aboutData.image1}
                 alt="About TECHSTERKER"
-                className="img-fluid rounded-4 shadow-sm w-100"
-                style={{ height: "auto", maxHeight: "400px", objectFit: "cover" }}
+                className="img-fluid rounded-4 w-100"
+                style={{
+                  maxWidth: "100%",
+                  height: "auto",
+                  maxHeight: '400px',
+                  objectFit: "cover",
+                  border: "1px solid maroon", // Thin maroon border
+                  boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)", // Maroon shadow
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease" // Hover effect
+                }}
               />
-              
+
             </div>
           </div>
         </div>
@@ -69,4 +77,4 @@ const AboutMagnitia = () => {
   );
 };
 
-export default AboutMagnitia;
+export default AboutTechsterker;

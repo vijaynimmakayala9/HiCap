@@ -165,19 +165,20 @@ const Footer = () => {
         </div>
 
         {/* Footer Links */}
-        <div className="footer-bottom-links">
-          <a href="/" className="bottom-link">HICAP Home</a>
-          <a href="#" className="bottom-link">Contact Us</a>
-          <a href="#" className="bottom-link">Security</a>
-          <a href="#" className="bottom-link">Compliance</a>
-          <a href="#" className="bottom-link">IPR Complaints</a>
-          <a href="#" className="bottom-link">Anti-spam Policy</a>
-          <a href="#" className="bottom-link">Terms of Service</a>
-          <a href="#" className="bottom-link">Privacy Policy</a>
-          <a href="#" className="bottom-link">Cookie Policy</a>
-          <a href="#" className="bottom-link">GDPR Compliance</a>
-          <a href="#" className="bottom-link">Abuse Policy</a>
+        <div className="footer-bottom-links d-flex flex-wrap justify-content-center gap-3 py-3">
+          <a href="/" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">HICAP Home</a>
+          <a href="#" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">Contact Us</a>
+          <a href="#" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">Security</a>
+          <a href="#" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">Compliance</a>
+          <a href="#" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">IPR Complaints</a>
+          <a href="#" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">Anti-spam Policy</a>
+          <a href="#" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">Terms of Service</a>
+          <a href="#" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">Privacy Policy</a>
+          <a href="#" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">Cookie Policy</a>
+          <a href="#" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">GDPR Compliance</a>
+          <a href="#" className="bottom-link text-light text-decoration-none">Abuse Policy</a>
         </div>
+
       </div>
 
       {/* Bottom Section */}

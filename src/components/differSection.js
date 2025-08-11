@@ -62,7 +62,7 @@ const DifferSection = () => {
                     key={idx}
                     className="col d-flex align-items-center p-3"
                     style={{
-                      
+
                       borderRadius: '8px',
                       transition: 'all 0.3s ease'
                     }}
@@ -86,12 +86,13 @@ const DifferSection = () => {
                 <img
                   src="/logo/differ.jpeg"
                   alt="Standing out from the crowd"
-                  className="img-fluid rounded-3 shadow-sm"
+                  className="img-fluid rounded-3 "
                   style={{
-                    maxHeight: '350px',
-                    width: '100%',
-                    objectFit: 'cover',
-                    border: '5px solid white'
+                    maxWidth: "100%",
+                    height: "auto",
+                    border: "2px solid maroon", // Thin maroon border
+                    boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)", // Maroon shadow
+                    transition: "transform 0.3s ease, box-shadow 0.3s ease" // Hover effect
                   }}
                 />
               </div>

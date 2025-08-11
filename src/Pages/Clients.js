@@ -1,4 +1,4 @@
-import AboutMagnitia from "./AboutMagnitia";
+import AboutTechsterker from "./AboutTerchsterker";
 import Footer from "./Footer";
 import Header from "./Header";
 import ClientScroller from "../components/Client Scroller";
@@ -8,7 +8,7 @@ const Clients = ()=>{
         <>
         <Header/>
         <div className="mt-5">
-        <AboutMagnitia/>
+        <AboutTechsterker/>
         <ClientScroller/>
         </div>
         <Footer/>

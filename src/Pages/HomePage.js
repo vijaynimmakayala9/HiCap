@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import Dashboard from "../components/Dashboard";
 import axios from "axios";
 import Reviews from "../components/Reviews";
-import MagnitiaCourses from '../components/magnitiaCourses'
+import TechsterkerCourses from '../components/TechsterkerCourses'
 import ClientScroller from "../components/Client Scroller";
 import Counter from "../components/Counter";
 
@@ -55,7 +55,7 @@ const HomePage = () => {
         <>
           <CourseAndFeatures />
           <ClientScroller/>
-          <MagnitiaCourses/>
+          <TechsterkerCourses/>
           <Features />
           <Counter/>
           <Course />
