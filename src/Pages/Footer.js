@@ -58,7 +58,7 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer className="footer" style={{ backgroundColor: '#800000' }}>
+    <footer className="footer" style={{ backgroundColor: '#800000', width: '100vw' }}>
       <div className="footer-content">
         <div className="footer-grid">
           {/* Training Courses */}
@@ -165,20 +165,21 @@ const Footer = () => {
         </div>
 
         {/* Footer Links */}
-        <div className="footer-bottom-links d-flex flex-wrap justify-content-center gap-3 py-3">
-          <a href="/" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">HICAP Home</a>
-          <a href="#" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">Contact Us</a>
-          <a href="#" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">Security</a>
-          <a href="#" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">Compliance</a>
-          <a href="#" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">IPR Complaints</a>
-          <a href="#" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">Anti-spam Policy</a>
-          <a href="#" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">Terms of Service</a>
-          <a href="#" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">Privacy Policy</a>
-          <a href="#" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">Cookie Policy</a>
-          <a href="#" className="bottom-link text-light text-decoration-none border-end border-secondary pe-3">GDPR Compliance</a>
-          <a href="#" className="bottom-link text-light text-decoration-none">Abuse Policy</a>
+        <div className="footer-bottom-links">
+          <div className="links-container">
+            <a href="/" className="bottom-link">HICAP Home</a>
+            <a href="#" className="bottom-link">Contact Us</a>
+            <a href="#" className="bottom-link">Security</a>
+            <a href="#" className="bottom-link">Compliance</a>
+            <a href="#" className="bottom-link">IPR Complaints</a>
+            <a href="#" className="bottom-link">Anti-spam Policy</a>
+            <a href="#" className="bottom-link">Terms of Service</a>
+            <a href="#" className="bottom-link">Privacy Policy</a>
+            <a href="#" className="bottom-link">Cookie Policy</a>
+            <a href="#" className="bottom-link">GDPR Compliance</a>
+            <a href="#" className="bottom-link">Abuse Policy</a>
+          </div>
         </div>
-
       </div>
 
       {/* Bottom Section */}
@@ -201,12 +202,15 @@ const Footer = () => {
           padding: 60px 0 0;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
           color: white;
+          width: 100vw;
+          margin-left: calc(-50vw + 50%);
         }
 
         .footer-content {
           max-width: 1200px;
           margin: 0 auto;
           padding: 0 20px;
+          width: 100%;
         }
 
         .footer-grid {
@@ -300,6 +304,8 @@ const Footer = () => {
         .social-icons {
           display: flex;
           gap: 16px;
+          flex-wrap: wrap;
+          justify-content: center;
         }
 
         .social-icon {
@@ -336,13 +342,19 @@ const Footer = () => {
         }
 
         .footer-bottom-links {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          gap: 20px;
           margin: 40px 0;
           padding: 20px 0;
           border-top: 1px solid rgba(255, 255, 255, 0.1);
+          width: 100%;
+        }
+
+        .links-container {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 12px 20px;
+          max-width: 1200px;
+          margin: 0 auto;
         }
 
         .bottom-link {
@@ -350,6 +362,12 @@ const Footer = () => {
           text-decoration: none;
           font-size: 14px;
           white-space: nowrap;
+          padding: 0 10px;
+          border-right: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .bottom-link:last-child {
+          border-right: none;
         }
 
         .bottom-link:hover {
@@ -364,6 +382,7 @@ const Footer = () => {
           flex-direction: column;
           align-items: center;
           gap: 15px;
+          width: 100%;
         }
 
         .footer-logo .logo-image {
@@ -378,20 +397,47 @@ const Footer = () => {
           text-align: center;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
           .footer-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+
+        @media (max-width: 768px) {
+          .footer {
+            padding: 40px 0 0;
+          }
+          
+          .footer-grid {
+            grid-template-columns: repeat(2, 1fr);
             gap: 30px;
           }
+        }
 
-          .footer-bottom-links {
+        @media (max-width: 480px) {
+          .footer-grid {
+            grid-template-columns: 1fr;
+          }
+          
+          .footer-section {
+            text-align: center;
+          }
+          
+          .footer-links {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          
+          .links-container {
             flex-direction: column;
             align-items: center;
             gap: 12px;
           }
-
-          .social-icons {
-            justify-content: center;
+          
+          .bottom-link {
+            border-right: none;
+            padding: 5px 0;
           }
         }
       `}</style>

@@ -7,7 +7,7 @@ const MockInterviews = () => {
     return (
         <>
             <Header />
-            <section className="mt-5 py-5 bg-white">
+            <section className="mt-5 py-5 bg-light">
                 <Container>
                     <Row className="align-items-center">
                         {/* Image Section */}
@@ -17,20 +17,24 @@ const MockInterviews = () => {
                                 alt="Mock Interview Practice"
                                 className="img-fluid rounded img-hover-effect"
                                 style={{
-                                    border: "2px solid #ad2132",
-                                    boxShadow: "0 10px 20px rgba(173, 33, 50, 0.3)"
+                                    border: "1.5px solid #ad2132",
+                                    borderRadius: "12px",
+                                    boxShadow: "0 15px 25px rgba(173, 33, 50, 0.25)",
+                                    transition: "transform 0.4s ease, box-shadow 0.4s ease"
                                 }}
                             />
                         </Col>
 
                         {/* Text Section */}
                         <Col lg={6} className="order-lg-2 order-1">
-                            <h2 className="fw-bold textcolor mb-3">
-                                Industry-Standard Mock Interviews
+                            <h2 className="fw-bold textcolor mb-3 display-6">
+                                <span style={{ color: "#ad2132" }}>Industry-Standard</span> Mock Interviews
                             </h2>
-                            <p className="lead text-muted">
-                                Gain confidence with realistic mock interviews conducted by hiring managers
-                                and technical experts from top companies.
+                            <p className="lead text-muted mb-4" style={{ lineHeight: "1.8" }}>
+                                Mock interviews simulate <strong>real job interviews</strong> to help you
+                                respond confidently, improve communication, and get valuable feedback.
+                                Being well-prepared boosts your confidence, reduces anxiety, and improves
+                                your chances of landing the job.
                             </p>
                             <ul className="mb-4">
                                 <li className="textcolorlight">✅ Technical & HR interview preparation</li>
@@ -38,112 +42,99 @@ const MockInterviews = () => {
                                 <li className="textcolorlight">✅ Recorded sessions for self-review</li>
                                 <li className="textcolorlight">✅ Company-specific interview patterns</li>
                             </ul>
-                            <Button variant="meroon" size="lg" className="gradient-button">
-                                Schedule Mock Interview
+                            <Button
+                                size="lg"
+                                style={{
+                                    background: "linear-gradient(90deg, #ad2132, #d63447)",
+                                    border: "none",
+                                    padding: "12px 25px",
+                                    borderRadius: "50px",
+                                    fontWeight: "600",
+                                    color: "#fff",
+                                    boxShadow: "0 6px 15px rgba(173, 33, 50, 0.4)",
+                                    transition: "transform 0.3s ease, box-shadow 0.3s ease"
+                                }}
+                                onMouseOver={(e) => {
+                                    e.target.style.transform = "translateY(-3px)";
+                                    e.target.style.boxShadow = "0 10px 20px rgba(173, 33, 50, 0.5)";
+                                }}
+                                onMouseOut={(e) => {
+                                    e.target.style.transform = "translateY(0)";
+                                    e.target.style.boxShadow = "0 6px 15px rgba(173, 33, 50, 0.4)";
+                                }}
+                            >
+                                Contact Us
                             </Button>
                         </Col>
                     </Row>
 
                     {/* Features Cards */}
                     <Row className="mt-5 g-4">
-                        <Col md={4}>
-                            <Card className="h-100 shadow-sm border-0 card-hover-effect">
-                                <Card.Body>
-                                    <div className="icon-box mb-3">
-                                        <div className="icon-circle bg-meroonlight">
-                                            <i className="fas fa-code text-white"></i>
-                                        </div>
+                        {[
+                            {
+                                icon: "fas fa-code",
+                                title: "Technical Rounds",
+                                text: "Technical coaching bridges the gap between your daily work and interview-ready expertise in algorithms, debugging, and scalable architectures."
+                            },
+                            {
+                                icon: "fas fa-users",
+                                title: "HR Rounds",
+                                text: "HR round preparation polishes your communication, behavioral responses, and cultural fit to make a lasting positive impression."
+                            },
+                            {
+                                icon: "fas fa-chart-line",
+                                title: "Performance Analytics",
+                                text: "Performance analytics transforms raw data into actionable insights, optimizing strategies and driving measurable business growth."
+                            }
+                        ].map((card, idx) => (
+                            <Col md={4} key={idx}>
+                                <Card className="h-100 shadow-sm border-0 card-hover-effect text-center p-3">
+                                    <div
+                                        className="icon-circle mb-3 mx-auto"
+                                        style={{
+                                            background: "linear-gradient(135deg, #ad2132, #d6404b)",
+                                            width: "65px",
+                                            height: "65px",
+                                            borderRadius: "50%",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            fontSize: "1.5rem",
+                                            boxShadow: "0 5px 15px rgba(173, 33, 50, 0.3)"
+                                        }}
+                                    >
+                                        <i className={`${card.icon} text-white`}></i>
                                     </div>
-                                    <Card.Title className="textcolor fw-bold">
-                                        Technical Rounds
-                                    </Card.Title>
-                                    <Card.Text>
-                                        Practice coding challenges, system design, and problem-solving
-                                        with industry experts.
-                                    </Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                        <Col md={4}>
-                            <Card className="h-100 shadow-sm border-0 card-hover-effect">
-                                <Card.Body>
-                                    <div className="icon-box mb-3">
-                                        <div className="icon-circle bg-meroonlight">
-                                            <i className="fas fa-users text-white"></i>
-                                        </div>
-                                    </div>
-                                    <Card.Title className="textcolor fw-bold">
-                                        HR Rounds
-                                    </Card.Title>
-                                    <Card.Text>
-                                        Master behavioral questions, salary negotiation, and
-                                        communication skills.
-                                    </Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                        <Col md={4}>
-                            <Card className="h-100 shadow-sm border-0 card-hover-effect">
-                                <Card.Body>
-                                    <div className="icon-box mb-3">
-                                        <div className="icon-circle bg-meroonlight">
-                                            <i className="fas fa-chart-line text-white"></i>
-                                        </div>
-                                    </div>
-                                    <Card.Title className="textcolor fw-bold">
-                                        Performance Analytics
-                                    </Card.Title>
-                                    <Card.Text>
-                                        Detailed feedback report with strengths and areas for improvement.
-                                    </Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Col>
+                                    <Card.Title className="textcolor fw-bold">{card.title}</Card.Title>
+                                    <Card.Text>{card.text}</Card.Text>
+                                </Card>
+                            </Col>
+                        ))}
                     </Row>
                 </Container>
             </section>
             <Footer />
-            <style >{`
-            /* Card Hover Effect */
-.card-hover-effect {
-    transition: all 0.3s ease;
-    border: 1px solid rgba(173, 33, 50, 0.1) !important;
-}
 
-.card-hover-effect:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(173, 33, 50, 0.2) !important;
-    border-color: rgba(173, 33, 50, 0.3) !important;
-}
+            {/* Styles */}
+            <style>
+                {`
+                /* Card Hover Effect */
+                .card-hover-effect {
+                    transition: all 0.3s ease;
+                    background-color: #fff;
+                }
+                .card-hover-effect:hover {
+                    transform: translateY(-6px);
+                    box-shadow: 0 15px 35px rgba(173, 33, 50, 0.15) !important;
+                }
 
-/* Image Hover Effect */
-.img-hover-effect {
-    transition: all 0.3s ease;
-}
-
-.img-hover-effect:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(173, 33, 50, 0.4) !important;
-}
-
-/* Icon Styling */
-.icon-circle {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-}
-
-.icon-box {
-    transition: all 0.3s ease;
-}
-
-.card-hover-effect:hover .icon-box {
-    transform: scale(1);
-}`}</style>
+                /* Image Hover Effect */
+                .img-hover-effect:hover {
+                    transform: scale(1.03);
+                    box-shadow: 0 20px 40px rgba(173, 33, 50, 0.35) !important;
+                }
+                `}
+            </style>
         </>
     );
 };

@@ -118,40 +118,46 @@ const UpCommingBatches = () => {
             <Col md={4} className="mb-4">
               <Card className="h-100 border-0 shadow-sm">
                 <Card.Body className="text-center">
-                  <Award size={48} className="mb-3" color="#ad2132" />
+                  <Award size={48} className="d-block mx-auto mb-3" color="#ad2132" />
                   <Card.Title>Industry Expert Mentors</Card.Title>
                   <Card.Text>
-                    Learn from professionals with 10+ years of real-world experience in top tech companies.
+                    Gain knowledge from industry expert mentors with years of hands-on experience.
+                    They guide you with practical insights to help you excel in your IT career.
                   </Card.Text>
                 </Card.Body>
               </Card>
             </Col>
+
             <Col md={4} className="mb-4">
               <Card className="h-100 border-0 shadow-sm">
                 <Card.Body className="text-center">
-                  <Briefcase size={48} className="mb-3" color="#ad2132" />
+                  <Briefcase size={48} className="d-block mx-auto mb-3" color="#ad2132" />
                   <Card.Title>100% Placement Assistance</Card.Title>
                   <Card.Text>
-                    Our dedicated placement team helps you land your dream job with resume prep and mock interviews.
+                    Receive 100% placement assistance with dedicated career guidance and interview preparation.
+                    We connect you with top recruiters to kickstart your professional journey.
                   </Card.Text>
                 </Card.Body>
               </Card>
             </Col>
+
             <Col md={4} className="mb-4">
               <Card className="h-100 border-0 shadow-sm">
                 <Card.Body className="text-center">
-                  <BookOpen size={48} className="mb-3" color="#ad2132" />
+                  <BookOpen size={48} className="d-block mx-auto mb-3" color="#ad2132" />
                   <Card.Title>Hands-on Projects</Card.Title>
                   <Card.Text>
-                    Build real-world applications and add them to your portfolio during the course.
+                    Work on real-time, hands-on projects to apply your learning in practical scenarios.
+                    Gain the confidence and experience needed to solve real industry challenges.
                   </Card.Text>
                 </Card.Body>
               </Card>
             </Col>
           </Row>
+
         </section>
 
-        
+
 
         {/* Upcoming Batches Section */}
         <section>
@@ -267,37 +273,42 @@ const UpCommingBatches = () => {
             <Col md={4} className="mb-4">
               <Card className="h-100 border-0 shadow-md text-center">
                 <Card.Body>
-                  <TrendingUp size={48} className="mb-3" color="#ad2132" />
+                  <TrendingUp size={48} className="d-block mx-auto mb-3" color="#ad2132" />
                   <Card.Title>Boost Your Career</Card.Title>
                   <Card.Text>
-                    Whether you're a fresher or an experienced professional, our courses are designed to upgrade your skills for high-paying roles.
+                    “Boost your career with the right skills and opportunities to reach new heights.Unlock your potential and take the next step toward success."
                   </Card.Text>
                 </Card.Body>
               </Card>
             </Col>
+
             <Col md={4} className="mb-4">
               <Card className="h-100 border-0 shadow-sm text-center">
                 <Card.Body>
-                  <Target size={48} className="mb-3" color="#ad2132" />
+                  <Target size={48} className="d-block mx-auto mb-3" color="#ad2132" />
                   <Card.Title>Goal-Oriented Learning</Card.Title>
                   <Card.Text>
-                    Our programs focus on real industry requirements, helping you achieve your dream role faster.
+                    "Goal-oriented learning helps you focus on clear objectives and achieve results faster.
+                    Stay committed, stay focused, and turn your goals into reality."
+
                   </Card.Text>
                 </Card.Body>
               </Card>
             </Col>
+
             <Col md={4} className="mb-4">
               <Card className="h-100 border-0 shadow-sm text-center">
                 <Card.Body>
-                  <Zap size={48} className="mb-3" color="#ad2132" />
+                  <Zap size={48} className="d-block mx-auto mb-3" color="#ad2132" />
                   <Card.Title>Fast-Track Programs</Card.Title>
                   <Card.Text>
-                    Short on time? Our intensive courses help you master new technologies quickly without compromising quality.
+                    "Fast-track programs accelerate your learning and career growth in less time.Gain skills quickly and move ahead with confidence."
                   </Card.Text>
                 </Card.Body>
               </Card>
             </Col>
           </Row>
+
           <div className="text-center mt-4">
             <Button variant="danger" size="lg">
               Join Now and Transform Your Future

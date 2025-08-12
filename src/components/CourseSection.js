@@ -11,8 +11,8 @@ const CourseAndFeatures = () => {
 
   const courses = [
     {
-      title: "“IT TRAINING AND SKILL DEVELOPMENT",
-      description: "This IT Fundamentals Training Course provides a comprehensive introduction to the core concepts of Information Technology. Designed for beginners and professionals seeking foundational knowledge, the course covers computer hardware, software, networking, databases, cybersecurity, and cloud computing.Through a mix of theoretical instruction and hands- on practice, participants will learn how IT systems work together to support business operations.",
+      title: "Empowering Careers through IT Training & Skill Development",
+      description: "Start out on an engrossing adventure where skill development and IT training are transformed into a lush learning environment. This program helps students navigate the maze of contemporary technology by integrating a complex mosaic of technical know-how, soft skills, and industrial insights. Each chapter is a creative firestorm where experience and knowledge blend to go beyond conventional education. Our colorful curriculum pushes you to go deeper, take on challenges, and ultimately emerge industry-ready, whether you're just beginning out or want to advance.",
       image: "/1.png",
       buttonText: "Enroll Now",
       // features: [
@@ -22,8 +22,8 @@ const CourseAndFeatures = () => {
       // ]
     },
     {
-      title: "IT TRAINING AND SKILL DEVELOPMENT",
-      description: "This IT Fundamentals Training Course provides a comprehensive introduction to the core concepts of Information Technology. Designed for beginners and professionals seeking foundational knowledge, the course covers computer hardware, software, networking, databases, cybersecurity, and cloud computing.Through a mix of theoretical instruction and hands- on practice, participants will learn how IT systems work together to support business operations.",
+      title: "Transforming Futures with IT Excellence",
+      description: "Our extensive IT training and skill development programs can help you take the next step.  Our courses, particularly are designed for students, new graduates, and professionals, combine state-of-the-art technology with hands-on training.  By helping you become proficient in coding and hone your problem-solving skills, we equip you to succeed in the cutthroat IT sector of today.",
       image: "/2.png",
       buttonText: "Enroll Now",
       // features: [
@@ -33,8 +33,8 @@ const CourseAndFeatures = () => {
       // ]
     },
     {
-      title: "IT TRAINING AND SKILL DEVELOPMENT",
-      description: "This IT Fundamentals Training Course provides a comprehensive introduction to the core concepts of Information Technology. Designed for beginners and professionals seeking foundational knowledge, the course covers computer hardware, software, networking, databases, cybersecurity, and cloud computing.Through a mix of theoretical instruction and hands- on practice, participants will learn how IT systems work together to support business operations.",
+      title: "Innovate, Learn, and Lead in IT",
+      description: "Our information technology classes offer real-world, industry-driven learning opportunities in addition to textbook instruction.  To be able to meet your evolving company requirements, we concentrate on giving you the newest abilities, resources, and techniques.  With our expert-led sessions and individualized mentoring, you will be able to lead, innovate, and adapt whether your goal is to launch your IT career or take it to the next level.",
       image: "/3.png",
       buttonText: "Enroll Now",
       // features: [
@@ -135,7 +135,23 @@ const CourseAndFeatures = () => {
                     </div>
                     <div className="col-lg-6">
                       <div className="ps-lg-4">
-                        <h3 className="fw-bold mb-3 display-6" >IT <span style={{ color: "#ad2132" }} >TRAINING</span> AND <span style={{ color: "#ad2132" }} >SKILL</span> DEVELOPMENT”</h3>
+                        <h4
+                          className="fw-bold mb-3"
+                          style={{ fontSize: "1.8rem", lineHeight: "1.3" }}
+                        >
+                          “{course.title.split(" ").map((word, i) => (
+                            <span
+                              key={i}
+                              style={{
+                                color: i % 2 === 0 ? "#ad2132" : "#000",
+                              }}
+                            >
+                              {word}{" "}
+                            </span>
+                          ))}”
+                        </h4>
+
+
                         <p className=" mb-4 ">{course.description}</p>
 
                         {/* <ul className="mb-4">

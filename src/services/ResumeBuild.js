@@ -7,10 +7,10 @@ const ResumeBuilding = () => {
     return (
         <>
             <Header />
-            <section className="mt-5 py-5 bg-light">
+            <section className="mt-5 py-5" style={{ background: "linear-gradient(135deg, #fff 0%, #fef6f7 100%)" }}>
                 <Container>
                     <Row className="align-items-center">
-                        {/* Image Section with Maroon Shadow */}
+                        {/* Image Section */}
                         <Col lg={6} className="mb-4 mb-lg-0">
                             <img
                                 src="https://www.write-right.in/wp-content/uploads/2023/06/image-24.png"
@@ -19,94 +19,83 @@ const ResumeBuilding = () => {
                                 style={{
                                     maxWidth: "100%",
                                     height: "auto",
-                                    border: "2px solid #ad2132", // Maroon border
-                                    boxShadow: "0 10px 20px rgba(173, 33, 50, 0.3)", // Maroon shadow
+                                    border: "2px solid #ad2132",
+                                    borderRadius: "20px",
+                                    boxShadow: "0 20px 40px rgba(173, 33, 50, 0.25)",
                                 }}
                             />
                         </Col>
 
                         {/* Text Section */}
                         <Col lg={6}>
-                            <h2 className="fw-bold textcolor mb-3">
-                                About Techsterker Institute
+                            <h2 className="fw-bold mb-4" style={{ color: "#ad2132", fontSize: "2.2rem", lineHeight: "1.4" }}>
+                                Creating a resume is a crucial first or next step in your career.
                             </h2>
-                            <p className="lead text-muted">
-                                We help you craft a professional, ATS-friendly resume that stands
-                                out in today's competitive job market. Our experts ensure your
-                                resume highlights your skills, achievements, and career goals to
-                                impress employers.
+                            <p className="lead text-muted mb-4">
+                                Use it as your personal marketing tool to highlight your accomplishments and abilities.
+                                A well-structured CV grabs attention in seconds — precise, impactful, and tailored to your dream role.
                             </p>
-                            <ul className="mb-4">
-                                <li className="textcolorlight">✅ Personalized resume writing</li>
-                                <li className="textcolorlight">✅ LinkedIn profile optimization</li>
-                                <li className="textcolorlight">✅ Career counseling sessions</li>
-                                <li className="textcolorlight">✅ Interview preparation tips</li>
+                            <ul className="mb-4" style={{ listStyle: "none", paddingLeft: "0" }}>
+                                {[
+                                    "✅ Highlight your most relevant skills and experience.",
+                                    "✅ Use clean, readable formatting and professional language.",
+                                    "✅ Show measurable achievements to prove your impact.",
+                                    "✅ Avoid unnecessary details that distract.",
+                                    "✅ Keep it updated with your latest skills and roles.",
+                                    "✅ A strong CV increases your interview chances."
+                                ].map((item, idx) => (
+                                    <li key={idx} className="mb-2 text-secondary">{item}</li>
+                                ))}
                             </ul>
-                            <Button variant="meroon" size="lg" className="gradient-button">
-                                Get Your Resume Now
+                            <Button
+                                size="lg"
+                                style={{
+                                    background: "linear-gradient(90deg, #ad2132, #d63447)",
+                                    border: "none",
+                                    padding: "12px 25px",
+                                    borderRadius: "50px",
+                                    fontWeight: "600",
+                                    color: "#fff",
+                                    boxShadow: "0 6px 15px rgba(173, 33, 50, 0.4)",
+                                    transition: "transform 0.3s ease, box-shadow 0.3s ease"
+                                }}
+                                onMouseOver={(e) => {
+                                    e.target.style.transform = "translateY(-3px)";
+                                    e.target.style.boxShadow = "0 10px 20px rgba(173, 33, 50, 0.5)";
+                                }}
+                                onMouseOut={(e) => {
+                                    e.target.style.transform = "translateY(0)";
+                                    e.target.style.boxShadow = "0 6px 15px rgba(173, 33, 50, 0.4)";
+                                }}
+                            >
+                                Contact Us
                             </Button>
                         </Col>
                     </Row>
 
-                    {/* Services Cards with Hover Effects */}
+                    {/* Services Cards */}
                     <Row className="mt-5 g-4">
-                        <Col md={4}>
-                            <Card className="h-100 shadow-sm border-0 card-hover-effect">
-                                <Card.Body>
-                                    <div className="icon-box mb-3">
-                                        <div className="icon-circle bg-meroonlight">
-                                            <i className="fas fa-search text-white"></i>
+                        {[
+                            { icon: "fas fa-search", title: "ATS-Optimized Resumes", text: "ATS-optimized resumes use targeted keywords and clean formatting to pass automated screening and land more interviews" },
+                            { icon: "fas fa-paint-brush", title: "Modern Design", text: "Minimalist layouts, bold typography, and subtle color accents create a polished yet contemporary resume design." },
+                            { icon: "fas fa-user-tie", title: "Expert Guidance", text: "Expert resume guidance transforms your experience into a compelling career story that opens doors." }
+                        ].map((service, idx) => (
+                            <Col md={4} key={idx}>
+                                <Card className="h-100 shadow-sm border-0 card-hover-effect text-center p-4" style={{ borderRadius: "15px" }}>
+                                    <Card.Body>
+                                        <div className="icon-circle mb-3" style={{ background: "#ad2132", width: "60px", height: "60px", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%" }}>
+                                            <i className={`${service.icon} text-white`} style={{ fontSize: "1.5rem", color: "#ad2132" }}></i>
                                         </div>
-                                    </div>
-                                    <Card.Title className="textcolor fw-bold">
-                                        ATS-Optimized Resumes
-                                    </Card.Title>
-                                    <Card.Text>
-                                        Ensure your resume passes applicant tracking systems and gets
-                                        noticed by recruiters.
-                                    </Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                        <Col md={4}>
-                            <Card className="h-100 shadow-sm border-0 card-hover-effect">
-                                <Card.Body>
-                                    <div className="icon-box mb-3">
-                                        <div className="icon-circle bg-meroonlight">
-                                            <i className="fas fa-paint-brush text-white"></i>
-                                        </div>
-                                    </div>
-                                    <Card.Title className="textcolor fw-bold">
-                                        Modern Design
-                                    </Card.Title>
-                                    <Card.Text>
-                                        Professionally designed layouts that make a strong first
-                                        impression on hiring managers.
-                                    </Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                        <Col md={4}>
-                            <Card className="h-100 shadow-sm border-0 card-hover-effect">
-                                <Card.Body>
-                                    <div className="icon-box mb-3">
-                                        <div className="icon-circle bg-meroonlight">
-                                            <i className="fas fa-user-tie text-white"></i>
-                                        </div>
-                                    </div>
-                                    <Card.Title className="textcolor fw-bold">
-                                        Expert Guidance
-                                    </Card.Title>
-                                    <Card.Text>
-                                        Work with industry experts who understand the job market and
-                                        recruitment trends.
-                                    </Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Col>
+                                        <Card.Title className="textcolor fw-bold mb-3" style={{ fontSize: "1.2rem" }}>{service.title}</Card.Title>
+                                        <Card.Text className="text-muted">{service.text}</Card.Text>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        ))}
                     </Row>
                 </Container>
             </section>
+
             <Footer />
             <style >{`
             /* Card Hover Effect */

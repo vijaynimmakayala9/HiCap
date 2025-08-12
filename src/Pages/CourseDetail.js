@@ -230,7 +230,7 @@ const CourseDetail = () => {
                     style={{
                       maxWidth: "100%",
                       height: "auto",
-                      border: "2px solid maroon", // Thin maroon border
+                      border: "0.5px solid maroon", // Thin maroon border
                       boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)", // Maroon shadow
                       transition: "transform 0.3s ease, box-shadow 0.3s ease" // Hover effect
                     }}
@@ -440,22 +440,22 @@ const CourseDetail = () => {
                         {
                           image: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
                           title: "Students & Freshers",
-                          description: "Ideal for those starting their career and seeking strong foundational skills."
+                          description: "Perfect for career starters building rock-solid foundations through practical, industry-aligned training."
                         },
                         {
                           image: "https://cdn-icons-png.flaticon.com/512/1053/1053244.png",
                           title: "Working Professionals",
-                          description: "Upgrade your skills or pivot your career into high-demand roles."
+                          description: "Give your career a powerful restart with practical, industry-driven upskilling."
                         },
                         {
                           image: "https://cdn-icons-png.flaticon.com/512/190/190411.png",
                           title: "Freelancers",
-                          description: "Enhance your service offering and land better-paying projects."
+                          description: "Freelancers can sharpen their competitive edge with high-demand skills and client-winning strategies to grow their independent careers."
                         },
                         {
                           image: "https://cdn-icons-png.flaticon.com/512/706/706830.png",
                           title: "Entrepreneurs",
-                          description: "Gain practical knowledge to grow and manage your own business more effectively."
+                          description: "Entrepreneurs accelerate growth by mastering scalable systems, data-driven decisions, and leadership strategies to outpace competitors."
                         }
                       ].map((learner, index) => (
                         <Col xs={12} sm={6} key={index}>

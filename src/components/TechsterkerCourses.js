@@ -33,7 +33,7 @@ const TechsterkerCourses = () => {
     display: 'block',
     margin: '0 auto',
     boxShadow: '0 10px 20px rgba(128, 0, 0, 0.3)',
-    border: '2px solid maroon',
+    border: '0.5px solid maroon',
     transition: 'transform 0.3s ease, box-shadow 0.3s ease'
   };
   

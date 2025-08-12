@@ -77,11 +77,11 @@ const AboutUS = () => {
               <img
                 src="https://www.magnitia.com/images/abt-bghh.jpg"
                 alt="Why Choose TECHSTERKER"
-                className="img-fluid rounded-4 w-100"
+                className="img-fluid rounded w-100"
                 style={{
                   maxWidth: "100%",
                   height: "auto",
-                  border: "1px solid maroon", // Thin maroon border
+                  border: "0.5px solid maroon", // Thin maroon border
                   boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)", // Maroon shadow
                   transition: "transform 0.3s ease, box-shadow 0.3s ease" // Hover effect
                 }}
@@ -177,7 +177,7 @@ const AboutUS = () => {
             style={{
               maxWidth: "100%",
               height: "auto",
-              border: "1px solid maroon", // Thin maroon border
+              border: "0.5px solid maroon", // Thin maroon border
               boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)", // Maroon shadow
               transition: "transform 0.3s ease, box-shadow 0.3s ease" // Hover effect
             }}
@@ -227,7 +227,7 @@ const AboutUS = () => {
                 <h5 style={{ color: "#000", fontWeight: "500", marginBottom: "1rem" }}>
                   The Force Driving Innovation and Impact:
                 </h5>
-                <p style={{ fontSize: '1rem', lineHeight: '1.6' }}>{technicalTeam.description2}</p>
+                <p style={{ fontSize: '1rem', lineHeight: '1.6' }}>Our people are Techsterker greatest asset: a vibrant group of competent tech specialists, well-known high-impact trainers, driven entrepreneurs, and effective managers.  Each member contributes their impressive professional achievements, a wealth of expertise, and the admiration of other people in the field.  Together, we are a formidable force dedicated to influencing the direction of IT skill development, spurring innovation, and leaving a lasting impression on the sector.</p>
               </>
             )}
           </div>
@@ -239,7 +239,7 @@ const AboutUS = () => {
               style={{
                 maxWidth: "100%",
                 height: "auto",
-                border: "1px solid maroon", // Thin maroon border
+                border: "0.5px solid maroon", // Thin maroon border
                 boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)", // Maroon shadow
                 transition: "transform 0.3s ease, box-shadow 0.3s ease" // Hover effect
               }}
@@ -248,34 +248,7 @@ const AboutUS = () => {
         </div>
       </div>
 
-      {/* Global Classrooms */}
-      <div className="mb-5">
-        <SectionHeading>GLOBAL <span style={{ color: "#ad2132" }}>CLASSROOMS</span></SectionHeading>
-        {classroomData.map((item, index) => (
-          <div className="mb-4" key={index}>
-            <p style={{ fontSize: '1rem', lineHeight: '1.6' }}>{item.description3}</p>
-            <div className="row g-3">
-              {item.image3.map((imgUrl, i) => (
-                <div className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" key={i}>
-                  <img
-                    src={imgUrl}
-                    alt={`Global Classroom ${i + 1}`}
-                    className="img-fluid rounded w-100"
-                    style={{
-      maxWidth: "100%",
-      height: "200px",
-      objectFit: 'cover',
-      border: "1px solid maroon", // Thin maroon border
-      boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)", // Maroon shadow
-      transition: "transform 0.3s ease, box-shadow 0.3s ease" // Hover effect
-    }}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
+
     </section>
   );
 };
