@@ -307,13 +307,13 @@ const GuestHeader = ({ onLogin }) => {
         <div key={category} className="mobile-category">
           <h6>{category}</h6>
           <ul>
-            {items.slice(0, 3).map((course) => (
+            {items.map((course) => (
               <li
                 key={course._id}
                 className="mobile-course-item"
-                onClick={() => handleCourseClick(course._id)}
+               
               >
-                <div className="mobile-course-card">
+                <div className="mobile-course-card"  onClick={() => handleCourseClick(course._id)}>
                   <div className="mobile-course-image">
                     <img src={course.image} alt={course.name} />
                   </div>
@@ -606,7 +606,7 @@ const GuestHeader = ({ onLogin }) => {
           top: 0;
           left: 0;
           width: 100%;
-          height: 80px;
+          height: 70px;
           background-color: white;
           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
           z-index: 1050;
@@ -656,30 +656,38 @@ const GuestHeader = ({ onLogin }) => {
         .nav-link {
           display: flex;
           align-items: center;
-          padding: 10px 15px;
-          font-size: 15px;
+          padding: 15px 20px; /* Increased padding for larger size */
+          font-size: 16px; /* Increased font size */
           font-weight: 500;
           color: #333;
           cursor: pointer;
           border-radius: 6px;
           transition: all 0.2s ease;
-          margin: 0 5px;
+          margin: 0 10px; /* Increased margin */
           position: relative;
+          height: 100%;
         }
         
         .nav-link:hover, .nav-link.active {
           color: #ad2132;
         }
         
-        .nav-link:not(:last-child):after {
+        /* Always show the margin line between menu items */
+        .nav-link:after {
           content: '';
           position: absolute;
           right: -10px;
           top: 50%;
           transform: translateY(-50%);
-          height: 20px;
+          height: 30px; /* Increased height */
           width: 1px;
           background-color: #ddd;
+        }
+        
+        /* Remove margin line for the last item */
+        .desktop-login-btn:after,
+        .nav-item:last-child .nav-link:after {
+          display: none;
         }
         
         .chevron {
@@ -694,12 +702,13 @@ const GuestHeader = ({ onLogin }) => {
         
         .desktop-login-btn {
           margin-left: 15px;
-          padding: 10px 25px;
+          padding: 12px 30px; /* Increased padding */
           background: linear-gradient(135deg, #ad2132, #d32f2f);
           color: white;
           border: none;
           border-radius: 30px;
           font-weight: 600;
+          font-size: 16px; /* Increased font size */
           cursor: pointer;
           white-space: nowrap;
         }
@@ -1598,12 +1607,12 @@ const UserHeader = ({ user, onLogout }) => {
           display: flex;
           align-items: center;
           gap: 8px;
-          padding: 10px 15px;
+          padding: 15px 20px; /* Increased padding */
           background: none;
           border: none;
           border-radius: 6px;
           cursor: pointer;
-          font-size: 14px;
+          font-size: 16px; /* Increased font size */
           color: #666;
           margin: 0 5px;
           position: relative;
@@ -1614,15 +1623,22 @@ const UserHeader = ({ user, onLogout }) => {
           background-color: #f8d7da;
         }
         
-        .nav-link:not(:last-child):after {
+        /* Always show the margin line between menu items */
+        .nav-link:after {
           content: '';
           position: absolute;
           right: -10px;
           top: 50%;
           transform: translateY(-50%);
-          height: 20px;
+          height: 30px; /* Increased height */
           width: 1px;
           background-color: #ddd;
+        }
+        
+        /* Remove margin line for the last item */
+        .user-dropdown:after,
+        .nav-link:last-child:after {
+          display: none;
         }
         
         .nav-icon {

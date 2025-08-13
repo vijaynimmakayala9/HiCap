@@ -13,7 +13,7 @@ const CourseAndFeatures = () => {
     {
       title: "Empowering Careers through IT Training & Skill Development",
       description: "Start out on an engrossing adventure where skill development and IT training are transformed into a lush learning environment. This program helps students navigate the maze of contemporary technology by integrating a complex mosaic of technical know-how, soft skills, and industrial insights. Each chapter is a creative firestorm where experience and knowledge blend to go beyond conventional education. Our colorful curriculum pushes you to go deeper, take on challenges, and ultimately emerge industry-ready, whether you're just beginning out or want to advance.",
-      image: "/1.png",
+      image: "/b1.png",
       buttonText: "Enroll Now",
       // features: [
       //   "12-week intensive program",
@@ -130,7 +130,14 @@ const CourseAndFeatures = () => {
                         src={course.image}
                         alt={course.title}
                         className="img-fluid rounded-3 shadow-lg"
-                        style={{ height: '400px', width: '100%', objectFit: 'cover' }}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          border: "0.5px solid #ad2132",
+                          borderRadius: "20px",
+                          boxShadow: "0 20px 40px rgba(173, 33, 50, 0.25)",
+                        }}
                       />
                     </div>
                     <div className="col-lg-6">

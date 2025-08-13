@@ -17,7 +17,7 @@ const MockInterviews = () => {
                                 alt="Mock Interview Practice"
                                 className="img-fluid rounded img-hover-effect"
                                 style={{
-                                    border: "1.5px solid #ad2132",
+                                    border: "0.5px solid #ad2132",
                                     borderRadius: "12px",
                                     boxShadow: "0 15px 25px rgba(173, 33, 50, 0.25)",
                                     transition: "transform 0.4s ease, box-shadow 0.4s ease"

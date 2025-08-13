@@ -226,23 +226,54 @@ const UpCommingBatches = () => {
         <section className="my-5 p-4 rounded" style={{ backgroundColor: "#f8f9fa" }}>
           <Row className="align-items-center">
             <Col md={6}>
-              <h3 className="fw-bold mb-3" style={{ color: "#ad2132" }}>International Students Welcome!</h3>
-              <p className="mb-4">
-                Techsterker offers specialized support for students coming from abroad:
+              <h3 className="fw-bold mb-3" style={{ color: "#ad2132" }}>
+                🌏 Welcome, International Students!
+              </h3>
+              <p className="mb-4" style={{ fontSize: "1rem", lineHeight: "1.6" }}>
+                At <strong>Techsterker</strong>, we provide dedicated support for students joining us from around the world:
               </p>
-              <ul className="list-unstyled">
-                <li className="mb-2"><Globe className="me-2" color="#ad2132" />Flexible timing options for different time zones</li>
-                <li className="mb-2"><Users className="me-2" color="#ad2132" />Possible for Time adjustments</li>
-                <li className="mb-2"><Clock className="me-2" color="#ad2132" />Recorded sessions available 24/7</li>
+              <ul className="list-unstyled" style={{ fontSize: "1rem", lineHeight: "1.6" }}>
+                <li className="mb-3 d-flex align-items-center">
+                  <Globe color="#ad2132" size={20} className="me-2 flex-shrink-0" />
+                  <span>Flexible scheduling to accommodate various time zones</span>
+                </li>
+                <li className="mb-3 d-flex align-items-center">
+                  <Users color="#ad2132" size={20} className="me-2 flex-shrink-0" />
+                  <span>Customized time adjustments available upon request</span>
+                </li>
+                <li className="mb-3 d-flex align-items-center">
+                  <Clock color="#ad2132" size={20} className="me-2 flex-shrink-0" />
+                  <span>Access recorded sessions anytime, 24/7</span>
+                </li>
               </ul>
-              <Button variant="danger">Contact International Admissions</Button>
+              <Button
+                variant="danger"
+                size="sm"
+                style={{
+                  backgroundColor: "#ad2132",
+                  border: "none",
+                  borderRadius: "8px",
+                  padding: "10px 20px",
+                }}
+              >
+                Contact International Admissions
+              </Button>
             </Col>
+
+
             <Col md={6} className="text-center">
               <img
-                src="/abroad.png"
+                src="/abroad.jpg"
                 alt="International students"
                 className="img-fluid rounded shadow-md"
-                style={{ maxHeight: "300px" }}
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  objectFit: "cover",
+                  border: "0.5px solid #ad2132",
+                  borderRadius: "20px",
+                  boxShadow: "0 20px 40px rgba(173, 33, 50, 0.25)",
+                }}
               />
             </Col>
           </Row>
@@ -255,10 +286,10 @@ const UpCommingBatches = () => {
             <p className="mb-4 lead">
               Join hundreds of successful students who launched their tech careers with Techsterker
             </p>
-            <Button variant="danger" size="lg" className="me-3" onClick={handleEnroll}>
+            <Button variant="danger" size="sm" className="me-3" onClick={handleEnroll}>
               Enroll Now
             </Button>
-            <Button variant="outline-danger" size="lg">
+            <Button variant="outline-danger" size="sm">
               Speak with a Counselor
             </Button>
           </Card.Body>

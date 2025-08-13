@@ -91,6 +91,22 @@
 }
 
 
+/* index.css or App.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+body {
+  font-family: sans-serif !important;
+  margin: 0;
+  padding: 0;
+  background-color: #fefefe; /* Optional: clean background */
+}
+
+*:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 
 
 

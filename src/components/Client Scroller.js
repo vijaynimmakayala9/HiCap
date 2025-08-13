@@ -118,7 +118,7 @@ const ClientScrollerBootstrap = () => {
   }, [visibleCount, originalCount]); // restart loop if visibleCount or length changes
 
   return (
-    <section className="container mb-4 py-5 bg-light">
+    <section className="container mb-4 py-5 bg-white">
       <div className="text-center mb-4">
         <h2 className="fw-bold text-dark">
           Our Esteemed <span style={{ color: "#ad2132" }}>Clients</span>

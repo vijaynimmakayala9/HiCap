@@ -19,7 +19,7 @@ const ResumeBuilding = () => {
                                 style={{
                                     maxWidth: "100%",
                                     height: "auto",
-                                    border: "2px solid #ad2132",
+                                    border: "0.5px solid #ad2132",
                                     borderRadius: "20px",
                                     boxShadow: "0 20px 40px rgba(173, 33, 50, 0.25)",
                                 }}

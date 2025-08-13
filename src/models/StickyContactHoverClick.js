@@ -79,12 +79,13 @@ const StickyContactButtons = () => {
       <div
         className="position-fixed d-flex flex-column align-items-end"
         style={{ right: 0, top: '50%', transform: 'translateY(-50%)', zIndex: 1050 }}
+        onMouseEnter={() => setIsExpanded(true)}
         onMouseLeave={() => {
           setIsExpanded(false);
           setHoveredIcon(null);
         }}
       >
-        {/* Main Vertical Enquiry Button - Always visible but conditionally rendered */}
+        {/* Main Vertical Enquiry Button */}
         {!isExpanded && (
           <div
             className="bg-danger text-white fw-bold text-center"
@@ -99,14 +100,12 @@ const StickyContactButtons = () => {
               height: 'auto',
               cursor: 'pointer'
             }}
-            onClick={() => setIsExpanded(true)}
-            onMouseEnter={() => setIsExpanded(true)}
           >
             ENQUIRY NOW
           </div>
         )}
 
-        {/* Expanded Icons - Only shown when isExpanded is true */}
+        {/* Expanded Icons */}
         {isExpanded && (
           <div className="d-flex flex-column bg-danger" style={{ borderBottomLeftRadius: '5px' }}>
             {/* Request Call */}
@@ -120,7 +119,6 @@ const StickyContactButtons = () => {
               onClick={() => {
                 setShowCallModal(true);
                 setIsExpanded(false);
-                setHoveredIcon(null);
               }}
               onMouseEnter={() => setHoveredIcon('call')}
               onMouseLeave={() => setHoveredIcon(null)}
@@ -148,7 +146,6 @@ const StickyContactButtons = () => {
               onClick={() => {
                 setShowContactModal(true);
                 setIsExpanded(false);
-                setHoveredIcon(null);
               }}
               onMouseEnter={() => setHoveredIcon('contact')}
               onMouseLeave={() => setHoveredIcon(null)}

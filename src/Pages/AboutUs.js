@@ -75,7 +75,7 @@ const AboutUS = () => {
           <div className="col-lg-6">
             <div className="h-100">
               <img
-                src="https://www.magnitia.com/images/abt-bghh.jpg"
+                src="/why.jpg"
                 alt="Why Choose TECHSTERKER"
                 className="img-fluid rounded w-100"
                 style={{
@@ -171,7 +171,7 @@ const AboutUS = () => {
         </div>
         <div className="col-md-6 order-md-2 order-1 d-flex align-items-center justify-content-center">
           <img
-            src="https://www.Magnitia.com/images/mision1.png"
+            src="/mv.jpg"
             alt="Vision Mission"
             className="img-fluid rounded"
             style={{
@@ -220,7 +220,7 @@ const AboutUS = () => {
       <div className="mb-5">
         <SectionHeading><span style={{ color: "#ad2132" }}>TECHNICAL</span> TEAM</SectionHeading>
         <div className="row align-items-center g-4">
-          <div className="col-md-8">
+          <div className="col-md-6">
 
             {technicalTeam && (
               <>
@@ -231,7 +231,7 @@ const AboutUS = () => {
               </>
             )}
           </div>
-          <div className="col-md-4 text-center">
+          <div className="col-md-6 text-center">
             <img
               src={technicalTeam?.image2 || "https://www.Techsterker.com/images/gallery/institute9.jpg"}
               alt="Technical Team"

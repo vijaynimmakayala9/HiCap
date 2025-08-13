@@ -256,7 +256,7 @@ const CourseDetail = () => {
                   </h1>
                   <p
                     className="lead mb-4"
-                    style={{ color: "#000", fontWeight: 420 }}
+                    style={{ color: "#000" }}
                   >
                     {course.description}
                   </p>
@@ -578,7 +578,7 @@ const CourseDetail = () => {
               {/* Form Card */}
               <div className="row justify-content-center">
                 <div className="col-lg-8">
-                  <div className="card shadow-sm border-0">
+                  <div className="card shadow-sm border-0 shadow-sm">
                     <div className="card-body p-4 p-sm-5">
                       <Form>
                         {/* Name */}

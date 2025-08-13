@@ -63,7 +63,7 @@ const Footer = () => {
         <div className="footer-grid">
           {/* Training Courses */}
           <div className="footer-section">
-            <h3 className="section-title">Training Courses</h3>
+            <h3 className="section-title fw-bold">Training Courses</h3>
             <ul className="footer-links">
               {loading ? (
                 <li>Loading...</li>
@@ -79,7 +79,7 @@ const Footer = () => {
 
           {/* Learning Resources */}
           <div className="footer-section">
-            <h3 className="section-title">Learn</h3>
+            <h3 className="section-title fw-bold">Learn</h3>
             <ul className="footer-links">
               <li><a href="#" className="footer-link">Training & Certification</a></li>
               <li><a href="#" className="footer-link">Academy</a></li>
@@ -92,7 +92,7 @@ const Footer = () => {
 
           {/* Community */}
           <div className="footer-section">
-            <h3 className="section-title">Community</h3>
+            <h3 className="section-title fw-bold">Community</h3>
             <ul className="footer-links">
               <li><a href="#" className="footer-link">User Community</a></li>
               <li><a href="#" className="footer-link">Customer Stories</a></li>
@@ -105,7 +105,7 @@ const Footer = () => {
 
           {/* Company */}
           <div className="footer-section">
-            <h3 className="section-title">Company</h3>
+            <h3 className="section-title fw-bold">Company</h3>
             <ul className="footer-links">
               <li><a href="/aboutus" className="footer-link">About Us</a></li>
               <li><a href="#" className="footer-link">Our Story</a></li>
@@ -120,7 +120,7 @@ const Footer = () => {
 
           {/* Contact Sales */}
           <div className="footer-section">
-            <h3 className="section-title">Contact Sales</h3>
+            <h3 className="section-title fw-bold">Contact Sales</h3>
             <div className="contact-info">
               <div className="contact-item">
                 <span className="contact-label">Phone</span>
@@ -238,11 +238,11 @@ const Footer = () => {
         }
 
         .footer-links li {
-          margin-bottom: 12px;
+          margin-bottom: 6px;
         }
 
         .footer-link {
-          color: rgba(255, 255, 255, 0.7);
+          color: white;
           text-decoration: none;
           font-size: 14px;
           transition: color 0.2s ease;
@@ -322,29 +322,34 @@ const Footer = () => {
         }
 
         .social-icon:hover {
-          transform: scale(1.1);
+          transform: scale(1.5);
+          color: #ad2132;
         }
 
         .twitter {
-          color: #1da1f2;
+          // color: #1da1f2;
+          color:#000;
         }
 
         .facebook {
-          color: #1877f2;
+          // color: #1877f2;
+           color:#000;
         }
 
         .instagram {
-          color: #e1306c;
+          // color: #e1306c;
+           color:#000;
         }
 
         .linkedin {
-          color: #0077b5;
+          // color: #0077b5;
+           color:#000;
         }
 
         .footer-bottom-links {
           margin: 40px 0;
           padding: 20px 0;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          // border-top: 1px solid rgba(255, 255, 255, 0.1);
           width: 100%;
         }
 
@@ -358,7 +363,7 @@ const Footer = () => {
         }
 
         .bottom-link {
-          color: rgba(255, 255, 255, 0.7);
+          color: white;
           text-decoration: none;
           font-size: 14px;
           white-space: nowrap;
@@ -376,7 +381,7 @@ const Footer = () => {
         }
 
         .footer-bottom {
-          background-color: rgba(0, 0, 0, 0.2);
+          // background-color: rgba(0, 0, 0, 0.2);
           padding: 30px 0;
           display: flex;
           flex-direction: column;
@@ -392,7 +397,7 @@ const Footer = () => {
         }
 
         .copyright {
-          color: rgba(255, 255, 255, 0.7);
+          color: white;
           font-size: 14px;
           text-align: center;
         }

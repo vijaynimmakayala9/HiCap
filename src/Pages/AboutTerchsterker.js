@@ -20,7 +20,7 @@ const AboutTechsterker = () => {
   }, []);
 
   return (
-    <section className="container py-4 py-md-5 mt-5" style={{ backgroundColor: "#fffef2" }}>
+    <section className="container py-4 py-md-5 mt-5">
       {aboutData ? (
         <div className="row align-items-center mb-4 mb-md-5 g-4">
           {/* Text Section */}

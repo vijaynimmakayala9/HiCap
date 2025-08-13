@@ -17,7 +17,7 @@ const PlacementAssistance = () => {
                                 alt="Placement Assistance"
                                 className="img-fluid rounded img-hover-effect"
                                 style={{
-                                    border: "2px solid #ad2132",
+                                    border: "0.5px solid #ad2132",
                                     boxShadow: "0 10px 20px rgba(173, 33, 50, 0.3)"
                                 }}
                             />
