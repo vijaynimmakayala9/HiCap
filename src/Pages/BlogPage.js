@@ -29,14 +29,14 @@ const BlogPage = () => {
           <h1 className="font-roboto font-bold text-3xl mb-2 mt-10 text-black">
             Our Latest <span style={{ color: "#ad2132" }}>Blogs</span>
           </h1>
-          <div
+          {/* <div
             style={{
               width: '216px',
               height: '3px',
               borderRadius: '20px',
               backgroundColor: '#ad2132',
             }}
-          />
+          /> */}
         </div>
 
         <div

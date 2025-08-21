@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaBars, FaTimes, FaChevronDown, FaUserGraduate, FaRegClock, FaUserCircle, FaSignOutAlt, FaPhone, FaLock, FaVideo, FaBook, FaQuestionCircle, FaCertificate } from 'react-icons/fa';
+import ContactUsModal from '../models/ContactUsModal';
 
 const GuestHeader = ({ onLogin }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -25,6 +26,8 @@ const GuestHeader = ({ onLogin }) => {
   const resourcesDropdownRef = useRef();
   const navRef = useRef();
   const modalRef = useRef();
+
+  const [showContactModal, setShowContactModal] = useState(false);
 
   const menuItems = [
     { label: 'Home', path: '/' },
@@ -137,11 +140,18 @@ const GuestHeader = ({ onLogin }) => {
   };
 
   const handleNavigate = (path) => {
+  if (path === "/contactus") {
+    // open modal instead of navigating
+    setShowContactModal(true);
+  } else {
     navigate(path);
-    setIsMobileMenuOpen(false);
-    setShowResourcesMenu(false);
-    setShowCoursesMenu(false);
-  };
+  }
+
+  // close menus regardless
+  setIsMobileMenuOpen(false);
+  setShowResourcesMenu(false);
+  setShowCoursesMenu(false);
+};
 
   const handleLoginChange = (e) => {
     const { name, value } = e.target;
@@ -308,12 +318,11 @@ const GuestHeader = ({ onLogin }) => {
           <h6>{category}</h6>
           <ul>
             {items.map((course) => (
-              <li
-                key={course._id}
-                className="mobile-course-item"
-               
-              >
-                <div className="mobile-course-card"  onClick={() => handleCourseClick(course._id)}>
+              <li key={course._id} className="mobile-course-item">
+                <div
+                  className="mobile-course-card"
+                  onClick={() => handleCourseClick(course._id)}
+                >
                   <div className="mobile-course-image">
                     <img src={course.image} alt={course.name} />
                   </div>
@@ -363,7 +372,7 @@ const GuestHeader = ({ onLogin }) => {
         <div className="navbar-container">
           <div className="navbar-brand" onClick={() => navigate('/')}>
             <img
-              src="/logo/hicapnewlogo.png"
+              src="/logo/smalllogo.png"
               alt="HiCap Logo"
               className="logo"
             />
@@ -599,6 +608,11 @@ const GuestHeader = ({ onLogin }) => {
         </div>
       )}
 
+      <ContactUsModal
+        show={showContactModal}
+        onHide={() => setShowContactModal(false)}
+      />
+
       <style jsx>{`
         /* Base Styles */
         .navbar {
@@ -633,7 +647,7 @@ const GuestHeader = ({ onLogin }) => {
         }
         
         .logo {
-          height: 50px;
+          height: 40px;
         }
         
         /* Desktop Navigation */
@@ -1394,7 +1408,7 @@ const UserHeader = ({ user, onLogout }) => {
         <div className="navbar-container">
           <div className="navbar-brand" onClick={() => navigate('/dashboard')}>
             <img
-              src="/logo/hicapnewlogo.png"
+              src="/logo/smalllogo.png"
               alt="HiCap Logo"
               className="logo"
             />
@@ -1503,7 +1517,7 @@ const UserHeader = ({ user, onLogout }) => {
         <div className="sidebar-content">
           <div className="sidebar-header">
             <img
-              src="/logo/hicapnewlogo.png"
+              src="/logo/smalllogo.png"
               alt="HiCap Logo"
               className="sidebar-logo"
             />
@@ -1587,7 +1601,7 @@ const UserHeader = ({ user, onLogout }) => {
         }
         
         .logo {
-          height: 50px;
+          height: 40px;
         }
         
         /* Desktop Navigation */
@@ -1695,7 +1709,7 @@ const UserHeader = ({ user, onLogout }) => {
         
         .user-email {
           font-size: 11px;
-          color: #666;
+          color: 666;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -1952,7 +1966,7 @@ const UserHeader = ({ user, onLogout }) => {
         
         .sidebar-footer {
           padding: 20px;
-          border-top: 1px solid #eee;
+          border-top: 1px solid 'eee';
         }
         
         .logout-btn {

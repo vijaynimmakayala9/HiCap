@@ -383,8 +383,17 @@ const CourseDetail = () => {
                       {course.features.map((feature, index) => (
                         <Col xs={12} sm={6} key={index}>
                           <div className="position-relative h-100">
-                            <Card className="border-0 shadow-sm h-100">
-                              <Card.Body className="d-flex align-items-center gap-3 p-2">
+                            {/* Info Card Style */}
+                            <Card
+                              className="h-100"
+                              style={{
+                                backgroundColor: '#f8d7da', // light maroon background
+                                borderLeft: '4px solid #ad2132', // maroon accent line
+                                borderRadius: '8px',
+                                boxShadow: '0 2px 8px rgba(173, 33, 50, 0.15)', // soft maroon shadow
+                              }}
+                            >
+                              <Card.Body className="d-flex align-items-center gap-3 p-3">
                                 <img
                                   src={feature.image}
                                   alt={feature.title}
@@ -405,7 +414,7 @@ const CourseDetail = () => {
                                 color: "#fff",
                                 opacity: 0,
                                 transition: "opacity 0.3s ease",
-                                borderRadius: "0.375rem",
+                                borderRadius: "8px",
                               }}
                             >
                               <small>{feature.description}</small>
@@ -414,10 +423,10 @@ const CourseDetail = () => {
 
                           {/* Hover effect with CSS */}
                           <style jsx>{`
-                  .position-relative:hover div.position-absolute {
-                    opacity: 1;
-                  }
-                `}</style>
+              .position-relative:hover div.position-absolute {
+                opacity: 1;
+              }
+            `}</style>
                         </Col>
                       ))}
                     </Row>
@@ -425,8 +434,9 @@ const CourseDetail = () => {
                 </Card>
               </Col>
 
+
               {/* Who Can Learn */}
-              <Col lg={6}>
+              <Col xs={12} lg={6}>
                 <Card className="border-0 shadow-sm h-100">
                   <Card.Body>
                     <Card.Title

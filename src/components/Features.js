@@ -28,11 +28,11 @@ const Features = () => {
     <div className="container-fluid py-5 my-4 bg-white">
       <div className="row justify-content-center text-center mb-4">
         <div className="col-lg-8">
-          <div className="d-inline-block position-relative mb-3">
+          <div className="d-inline-block position-relative ">
             <h2 className="fw-bold text-dark mb-1">
               Some great features of <span style={{ color: "#ad2132" }}>TECHSTERKER</span>
             </h2>
-            <div
+            {/* <div
               style={{
                 width: "100px",
                 height: "5px",
@@ -42,12 +42,12 @@ const Features = () => {
                 left: "0",
                 bottom: "-6px",
               }}
-            ></div>
+            ></div> */}
           </div>
           <p className="text-muted mb-0">
-            Advanced training programs on leading IT Technologies offered in multiple formats that offer flexibility in learning
+            Advanced training programs on leading IT Technologies offered in Online that offer flexibility in learning
             <br className="d-none d-md-block" />
-            <strong>(Classroom / Live online / Recorded - Weekdays / Weekends)</strong>
+            {/* <strong>(Classroom / Live online / Recorded - Weekdays / Weekends)</strong> */}
           </p>
         </div>
       </div>

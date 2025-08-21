@@ -74,10 +74,10 @@ const CourseModule = () => {
             <h2 className="fw-bold mb-3" style={{ color: '#800000' }}>
               Course Section
             </h2>
-            <div
+            {/* <div
               className="rounded-pill mb-4"
               style={{ width: '200px', height: '3px', backgroundColor: '#800000' }}
-            ></div>
+            ></div> */}
             
             {/* Mobile Sidebar Toggle */}
             <button 

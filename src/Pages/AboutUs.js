@@ -50,7 +50,7 @@ const AboutUS = () => {
   const SectionHeading = ({ children }) => (
     <div className="d-inline-block position-relative mb-4">
       <h2 className="fw-bold text-uppercase mb-3">{children}</h2>
-      <div
+      {/* <div
         style={{
           width: "100px",
           height: "4px",
@@ -60,7 +60,7 @@ const AboutUS = () => {
           left: "0",
           bottom: "-6px",
         }}
-      ></div>
+      ></div> */}
     </div>
   );
 
@@ -217,7 +217,7 @@ const AboutUS = () => {
       )}
 
       {/* Technical Team */}
-      <div className="mb-5">
+      {/* <div className="mb-5">
         <SectionHeading><span style={{ color: "#ad2132" }}>TECHNICAL</span> TEAM</SectionHeading>
         <div className="row align-items-center g-4">
           <div className="col-md-6">
@@ -246,7 +246,7 @@ const AboutUS = () => {
             />
           </div>
         </div>
-      </div>
+      </div> */}
 
 
     </section>

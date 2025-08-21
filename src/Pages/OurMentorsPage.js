@@ -30,7 +30,7 @@ const OurMentorsPage = () => {
             <h2 className="fw-bold text-dark mb-1">
               Our <span style={{ color: "#ad2132" }}>Mentors</span>
             </h2>
-            <div
+            {/* <div
               style={{
                 width: "100px",
                 height: "5px",
@@ -40,7 +40,7 @@ const OurMentorsPage = () => {
                 left: "0",  // Changed from 50% to 0
                 bottom: "-6px",
               }}
-            ></div>
+            ></div> */}
           </div>
           <p className="lead text-secondary">
             Learn from industry experts with real-world experience
@@ -85,7 +85,7 @@ const OurMentorsPage = () => {
               <h2 className="fw-bold text-dark mb-1">
                 Why Choose Our <span style={{ color: "#ad2132" }}>Mentors?</span>
               </h2>
-              <div
+              {/* <div
                 style={{
                   width: "100px",
                   height: "5px",
@@ -95,7 +95,7 @@ const OurMentorsPage = () => {
                   left: "0",  // Changed from 50% to 0
                   bottom: "-6px",
                 }}
-              ></div>
+              ></div> */}
             </div>
           </div>
 

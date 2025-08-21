@@ -17,14 +17,12 @@ const ClientScrollerBootstrap = () => {
   // ----------------------------------------------------------------
 
   const logos = [
-    "/logos/aws.png",
-    "/logos/google.png",
-    "/logos/microsoft.png",
-    "/logos/meta.png",
-    "/logos/ibm.png",
-    "/logos/tcs.png",
-    "/logos/infosys.png",
-    "/logos/oracle.png",
+    "/logos/pms.png",
+    "/logos/one.png",
+    "/logos/cns.png",
+    "/logos/bng.png",
+    "/logos/qrn.jpg",
+    "/logos/od.png"
   ];
 
   // duplicate logos for seamless wrap
@@ -123,7 +121,7 @@ const ClientScrollerBootstrap = () => {
         <h2 className="fw-bold text-dark">
           Our Esteemed <span style={{ color: "#ad2132" }}>Clients</span>
         </h2>
-        <div
+        {/* <div
           style={{
             width: "100px",
             height: "5px",
@@ -131,7 +129,7 @@ const ClientScrollerBootstrap = () => {
             borderRadius: "999px",
             margin: "0.75rem auto",
           }}
-        />
+        /> */}
         <p className="text-muted small">
           Some of the companies we've helped recruit excellent applicants over the years
         </p>

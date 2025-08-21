@@ -65,7 +65,7 @@ const Course = () => {
             <div className="mb-5 text-center">
                 <div className="d-inline-block position-relative mb-3">
                     <h2 className="fw-bold display-6 mb-1">Recommended <span style={{ color: "#ad2132" }}>Courses</span></h2>
-                    <div
+                    {/* <div
                         style={{
                             width: "140px",
                             height: "4px",
@@ -75,7 +75,7 @@ const Course = () => {
                             left: "0",
                             bottom: "-4px",
                         }}
-                    ></div>
+                    ></div> */}
                 </div>
                 <p>Upskill yourself through classroom & online training with the latest technologies in the IT industry from the Best Software Training Institute in Hyderabad- TECHSTERKER</p>
             </div>

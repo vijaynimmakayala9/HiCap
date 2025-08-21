@@ -97,7 +97,7 @@ const Interviews = () => {
       <div className="container py-5 my-5 bg-light">
         <div className="mb-4">
           <h1 className="display-6 fw-bold textcolor">Interviews</h1>
-          <div className="bg-meroon" style={{ width: '200px', height: '3px', borderRadius: '20px' }}></div>
+          {/* <div className="bg-meroon" style={{ width: '200px', height: '3px', borderRadius: '20px' }}></div> */}
         </div>
         {interviews.length === 0 ? (
           <div className="text-center py-5">

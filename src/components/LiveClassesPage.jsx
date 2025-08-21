@@ -61,14 +61,14 @@ const LiveClassesPage = () => {
                 {/* Heading */}
                 <div className="mb-4">
                     <h2 className="fw-bold textcolor mb-2">Live Classes</h2>
-                    <div
+                    {/* <div
                         style={{
                             width: '180px',
                             height: '3px',
                             backgroundColor: '#ad2132',
                             borderRadius: '999px',
                         }}
-                    />
+                    /> */}
                 </div>
 
                 {/* Content */}

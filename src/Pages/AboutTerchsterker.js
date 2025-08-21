@@ -29,7 +29,7 @@ const AboutTechsterker = () => {
               <h2 className="fw-bold mb-3">
                 About <span style={{ color: "#ad2132" }}>TECHSTERKER</span> Institute
               </h2>
-              <div
+              {/* <div
                 style={{
                   width: "150px",
                   height: "4px",
@@ -39,7 +39,7 @@ const AboutTechsterker = () => {
                   left: "0",
                   bottom: "-8px",
                 }}
-              ></div>
+              ></div> */}
             </div>
             <p className="text-muted mb-4">{aboutData.content1}</p>
 

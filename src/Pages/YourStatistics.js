@@ -106,7 +106,7 @@ const YourStatistics = () => {
       <div className="row mb-4 align-items-center">
         <div className="col-md-8">
           <h2 className="fw-bold mb-2">Your Course Performance</h2>
-          <div style={{ width: '180px', height: '5px', backgroundColor: '#ad2132', borderRadius: '20px' }} />
+          {/* <div style={{ width: '180px', height: '5px', backgroundColor: '#ad2132', borderRadius: '20px' }} /> */}
         </div>
         <div className="col-md-4 mt-3 mt-md-0">
           <select

@@ -69,10 +69,10 @@ const RecommendedCourses = () => {
           <h2 className="fw-bold mb-3" style={{ color: '#800000' }}>
             Recommended Courses
           </h2>
-          <div
+          {/* <div
             className="rounded-pill mb-4"
             style={{ width: '200px', height: '3px', backgroundColor: '#800000' }}
-          ></div>
+          ></div> */}
 
           <div className="row g-4 mb-5">
             {enrolledCourses.map((course, idx) => (

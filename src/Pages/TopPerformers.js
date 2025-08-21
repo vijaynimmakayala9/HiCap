@@ -87,7 +87,7 @@ const TopPerformers = () => {
                     <h1 className="fw-bold mb-3">
                         {selectedCourse ? `Top Performers in ${selectedCourse.name}` : 'Top Performers'}
                     </h1>
-                    <div className="bg-meroon rounded-pill" style={{ width: '250px', height: '4px' }}></div>
+                    {/* <div className="bg-meroon rounded-pill" style={{ width: '250px', height: '4px' }}></div> */}
                 </div>
             </div>
 

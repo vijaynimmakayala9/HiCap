@@ -93,18 +93,41 @@
 
 /* index.css or App.css */
 
+/* Import Poppins font */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap'); */
+
 
 body {
   font-family: sans-serif !important;
   margin: 0;
   padding: 0;
-  background-color: #fefefe; /* Optional: clean background */
+  background-color: #fefefe;
+  /* Clean background */
+}
+body p li h3 h4 h5 h6 a{
+  font-weight: 400 !important;
 }
 
+/* Improve focus styles for accessibility */
 *:focus {
   outline: none !important;
   box-shadow: none !important;
+  /* box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.5); */
+  /* Blue focus ring */
+  border-radius: 4px;
+}
+
+/* Global text selection style */
+::selection {
+  background-color: #ad2132; /* light maroon */
+  color: #fff; /* text stays black for readability */
+}
+
+::-moz-selection {
+  background-color: #ad2132; /* Firefox support */
+  color: #fff;
 }
 
 
@@ -125,17 +148,18 @@ body {
 .textcolor {
   color: #ad2132 !important;
 }
+
 .textcolorlight {
   color: #c34153 !important;
 }
 
 .meroon-back {
-  background-color: #ad2132!important;
+  background-color: #ad2132 !important;
 }
 
 .bg-meroon {
   background-color: #ad2132 !important;
-  color: #fff!important;
+  color: #fff !important;
 }
 
 .bg-meroonlight {
@@ -189,5 +213,6 @@ body {
 
 .img-maroon-shadow:hover {
   box-shadow: 0 15px 30px rgba(128, 0, 0, 0.4);
-  transform: translateY(-5px); /* Optional hover effect */
+  transform: translateY(-5px);
+  /* Optional hover effect */
 }

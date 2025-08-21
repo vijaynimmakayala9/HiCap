@@ -161,7 +161,7 @@ const Certificate = () => {
               <Award size={32} className="text-danger me-3" />
               <div>
                 <h1 className="h2 fw-bold text-dark">Certificate Dashboard</h1>
-                <div className="bg-danger" style={{ width: '128px', height: '4px' }}></div>
+                {/* <div className="bg-danger" style={{ width: '128px', height: '4px' }}></div> */}
               </div>
             </div>
           </div>

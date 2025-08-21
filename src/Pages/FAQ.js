@@ -41,7 +41,7 @@ const FAQ = () => {
               <h2 className="fw-bold text-dark mb-1">
                 Frequently Asked <span style={{ color: "#ad2132" }}>Questions</span>
               </h2>
-              <div
+              {/* <div
                 style={{
                   width: "100px",
                   height: "5px",
@@ -52,7 +52,7 @@ const FAQ = () => {
                   transform: "translateX(-50%)",
                   bottom: "-6px",
                 }}
-              ></div>
+              ></div> */}
             </div>
           </Col>
         </Row>

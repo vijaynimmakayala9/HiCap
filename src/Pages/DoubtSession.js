@@ -99,7 +99,7 @@ const DoubtSession = () => {
       {/* Title Section */}
       <div className="container mt-5 pt-5">
         <h2 className="fw-bold textcolor">Doubt Session</h2>
-        <div className="bg-meroon" style={{ width: '200px', height: '3px', borderRadius: '5px' }}></div>
+        {/* <div className="bg-meroon" style={{ width: '200px', height: '3px', borderRadius: '5px' }}></div> */}
       </div>
 
       {/* Banner Section with Background Image */}
