@@ -4,7 +4,7 @@ import AboutTechsterker from "../Pages/AboutTerchsterker";
 import Header from "../Pages/Header";
 import Footer from "../Pages/Footer";
 import { Container, Table, Button, Card, Spinner, Alert, Row, Col } from "react-bootstrap";
-import { Globe, Award, Clock, Users, BookOpen, Briefcase, TrendingUp, Target, Zap } from 'react-feather';
+import { Globe, Award, Clock, Users } from 'react-feather';
 import CourseEnquiryModal from '../components/EnrollModal';
 
 const UpCommingBatches = () => {
@@ -16,31 +16,47 @@ const UpCommingBatches = () => {
   const [categories, setCategories] = useState([]);
   const [showEnquiryModal, setShowEnquiryModal] = useState(false);
 
+  // new API states
+  const [upcomingCards, setUpcomingCards] = useState([]);
+  const [whyChooseCards, setWhyChooseCards] = useState([]);
+
   useEffect(() => {
-    const fetchBatches = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get('https://hicap-backend-4rat.onrender.com/api/upcomingBatch');
-        if (response.data.success && response.data.data.length > 0) {
-          const batches = response.data.data[0].allbatches;
+        // batches
+        const batchesRes = await axios.get('https://hicap-backend-4rat.onrender.com/api/upcomingBatch');
+        if (batchesRes.data.success && batchesRes.data.data.length > 0) {
+          const batches = batchesRes.data.data[0].allbatches;
           setAllBatches(batches);
           setFilteredBatches(batches);
-
-          // Unique categories
           const uniqueCategories = [...new Set(batches.map(batch => batch.categorie))];
           setCategories(["All Categories", ...uniqueCategories]);
         } else {
           setAllBatches([]);
           setFilteredBatches([]);
         }
+
+        // upcoming section
+        const upcomingRes = await axios.get("https://hicap-backend-4rat.onrender.com/api/upcoming");
+        if (upcomingRes.data.success && upcomingRes.data.data.length > 0) {
+          setUpcomingCards(upcomingRes.data.data[0].upcoming);
+        }
+
+        // why choose section
+        const whyRes = await axios.get("https://hicap-backend-4rat.onrender.com/api/whychooses");
+        if (whyRes.data.success && whyRes.data.data.length > 0) {
+          setWhyChooseCards(whyRes.data.data[0].whyChoose);
+        }
+
       } catch (err) {
         setError(err.message);
-        console.error('Failed to fetch batches:', err);
+        console.error('Failed to fetch:', err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBatches();
+    fetchData();
   }, []);
 
   const handleFilterClick = (category) => {
@@ -54,7 +70,7 @@ const UpCommingBatches = () => {
 
   const handleEnroll = () => {
     setShowEnquiryModal(true);
-  }
+  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -88,7 +104,7 @@ const UpCommingBatches = () => {
         <AboutTechsterker />
         <Container className="my-5 text-center">
           <Alert variant="danger">
-            Failed to load batches: {error}
+            Failed to load data: {error}
           </Alert>
           <Button
             variant="danger"
@@ -109,55 +125,30 @@ const UpCommingBatches = () => {
       <AboutTechsterker />
 
       <Container className="my-5">
-        {/* Why Choose Us Section */}
+        {/* Why Choose Us Section (API) */}
         <section className="mb-5">
           <h2 className="text-center mb-4 fw-bold" style={{ color: "#ad2132" }}>
             Why Choose Techsterker for Your Tech Education?
           </h2>
           <Row>
-            <Col md={4} className="mb-4">
-              <Card className="h-100 border-0 shadow-sm">
-                <Card.Body className="text-center">
-                  <Award size={48} className="d-block mx-auto mb-3" color="#ad2132" />
-                  <Card.Title>Industry Expert Mentors</Card.Title>
-                  <Card.Text>
-                    Gain knowledge from industry expert mentors with years of hands-on experience.
-                    They guide you with practical insights to help you excel in your IT career.
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-
-            <Col md={4} className="mb-4">
-              <Card className="h-100 border-0 shadow-sm">
-                <Card.Body className="text-center">
-                  <Briefcase size={48} className="d-block mx-auto mb-3" color="#ad2132" />
-                  <Card.Title>100% Placement Assistance</Card.Title>
-                  <Card.Text>
-                    Receive 100% placement assistance with dedicated career guidance and interview preparation.
-                    We connect you with top recruiters to kickstart your professional journey.
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-
-            <Col md={4} className="mb-4">
-              <Card className="h-100 border-0 shadow-sm">
-                <Card.Body className="text-center">
-                  <BookOpen size={48} className="d-block mx-auto mb-3" color="#ad2132" />
-                  <Card.Title>Hands-on Projects</Card.Title>
-                  <Card.Text>
-                    Work on real-time, hands-on projects to apply your learning in practical scenarios.
-                    Gain the confidence and experience needed to solve real industry challenges.
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
+            {upcomingCards.map((card) => (
+              <Col md={4} className="mb-4" key={card._id}>
+                <Card className="h-100 border-0 shadow-sm">
+                  <Card.Body className="text-center">
+                    <img
+                      src={card.image}
+                      alt={card.title}
+                      className="d-block mx-auto mb-3"
+                      style={{ width: "60px", height: "60px", objectFit: "contain" }}
+                    />
+                    <Card.Title>{card.title}</Card.Title>
+                    <Card.Text>{card.content}</Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
           </Row>
-
         </section>
-
-
 
         {/* Upcoming Batches Section */}
         <section>
@@ -260,7 +251,6 @@ const UpCommingBatches = () => {
               </Button>
             </Col>
 
-
             <Col md={6} className="text-center">
               <img
                 src="/abroad.jpg"
@@ -289,59 +279,38 @@ const UpCommingBatches = () => {
             <Button variant="danger" size="sm" className="me-3" onClick={handleEnroll}>
               Enroll Now
             </Button>
-            <Button variant="outline-danger" size="sm">
+            <Button as="a" href="tel:9876543211" variant="outline-danger" size="sm">
               Speak with a Counselor
             </Button>
           </Card.Body>
         </Card>
 
-        {/* New Motivational Section */}
+        {/* Why Professionals & Students Choose Us (API) */}
         <section className="mt-5 mb-5">
           <h2 className="text-center fw-bold mb-4" style={{ color: "#ad2132" }}>
             Why Professionals & Students Choose Us
           </h2>
           <Row>
-            <Col md={4} className="mb-4">
-              <Card className="h-100 border-0 shadow-md text-center">
-                <Card.Body>
-                  <TrendingUp size={48} className="d-block mx-auto mb-3" color="#ad2132" />
-                  <Card.Title>Boost Your Career</Card.Title>
-                  <Card.Text>
-                    “Boost your career with the right skills and opportunities to reach new heights.Unlock your potential and take the next step toward success."
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-
-            <Col md={4} className="mb-4">
-              <Card className="h-100 border-0 shadow-sm text-center">
-                <Card.Body>
-                  <Target size={48} className="d-block mx-auto mb-3" color="#ad2132" />
-                  <Card.Title>Goal-Oriented Learning</Card.Title>
-                  <Card.Text>
-                    "Goal-oriented learning helps you focus on clear objectives and achieve results faster.
-                    Stay committed, stay focused, and turn your goals into reality."
-
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-
-            <Col md={4} className="mb-4">
-              <Card className="h-100 border-0 shadow-sm text-center">
-                <Card.Body>
-                  <Zap size={48} className="d-block mx-auto mb-3" color="#ad2132" />
-                  <Card.Title>Fast-Track Programs</Card.Title>
-                  <Card.Text>
-                    "Fast-track programs accelerate your learning and career growth in less time.Gain skills quickly and move ahead with confidence."
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
+            {whyChooseCards.map((card) => (
+              <Col md={4} className="mb-4" key={card._id}>
+                <Card className="h-100 border-0 shadow-sm text-center">
+                  <Card.Body>
+                    <img
+                      src={card.image}
+                      alt={card.title}
+                      className="d-block mx-auto mb-3"
+                      style={{ width: "60px", height: "60px", objectFit: "contain" }}
+                    />
+                    <Card.Title>{card.title}</Card.Title>
+                    <Card.Text>{card.content}</Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
           </Row>
 
           <div className="text-center mt-4">
-            <Button variant="danger" size="lg">
+            <Button variant="danger" size="lg" onClick={handleEnroll}>
               Join Now and Transform Your Future
             </Button>
           </div>

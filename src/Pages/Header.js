@@ -325,7 +325,7 @@ const GuestHeader = ({ onLogin }) => {
         <div key={category} className="mobile-category">
           <h6>{category}</h6>
           <ul>
-            {items.map((course) => (
+            {items.slice(0, 6).map((course) => (
               <li key={course._id} className="mobile-course-item">
                 <div
                   className="mobile-course-card"

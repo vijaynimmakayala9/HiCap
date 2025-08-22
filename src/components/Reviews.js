@@ -12,7 +12,7 @@ const Reviews = () => {
 
   const fetchReviews = async () => {
     try {
-      const res = await axios.get('https://hicap-backend-4rat.onrender.com/api/Review');
+      const res = await axios.get('https://hicap-backend-4rat.onrender.com/api/Reviews');
       setReviews(res.data.data);
     } catch (err) {
       setError('Failed to load reviews.');
