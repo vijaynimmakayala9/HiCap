@@ -166,7 +166,6 @@ const Courses = () => {
             <section className="container py-5 my-5">
                 <div className="mb-4 text-center text-md-start">
                     <h1 className="fw-bold display-6 textcolor">Available Courses</h1>
-                    <div className="bg-meroon rounded-pill mx-auto mx-md-0" style={{ width: '216px', height: '3px' }}></div>
                 </div>
 
                 <div className="row">
@@ -199,10 +198,10 @@ const Courses = () => {
                                         <div className="d-flex align-items-center"><FaStar className="me-1 text-warning" /> {rating || 0}/5</div>
                                     </div>
                                     <div className="d-flex justify-content-between align-items-center mt-auto">
-                                        <span className="textcolor fw-bold">${price}</span>
-                                        <button className="btn btn-outline-meroon btn-sm" onClick={() => handleEnrollClick({ title: name, _id })}>Enroll</button>
+                                        {/* <span className="textcolor fw-bold">₹{price}</span> */}
+                                        <button className="btn btn-outline-meroon btn-sm w-100" onClick={() => handleEnrollClick({ title: name, _id })}>Enroll</button>
                                     </div>
-                                    <button className="btn btn-primary btn-sm mt-2 w-100" onClick={() => handleCourseClick(_id)}>View Details</button>
+                                    <button className="btn gradient-button btn-sm mt-2 w-100" onClick={() => handleCourseClick(_id)}>View Details</button>
                                 </div>
                             </div>
                         </div>

@@ -139,7 +139,7 @@ const Course = () => {
                                 </div>
 
                                 <div className="mt-auto d-flex justify-content-between align-items-center">
-                                    <span className="textcolor fw-bold">₹{price || 'Free'}</span>
+                                    {/* <span className="textcolor fw-bold">₹{price || 'Free'}</span> */}
                                     <div className="d-flex align-items-center">
                                         <FaStar className="me-1 text-warning" /> {rating || 4.5}/5
                                     </div>

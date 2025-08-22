@@ -257,18 +257,19 @@ const Footer = () => {
         </div>
 
         {/* ===== Bottom Section ===== */}
-        <div className="border-0 border-secondary mt-3 py-3 d-flex flex-column flex-md-row justify-content-between align-items-center">
-          <img
-            src="/logo/lightlogo.png"
-            alt="HICAP Logo"
-            className="mb-2 mb-md-0"
-            style={{ height: "auto", maxWidth: "250px" }}
-          />
-          <small className="text-white-50 text-center">
-            © {new Date().getFullYear()}, HICAP Corporation Pvt. Ltd. All Rights
-            Reserved.
-          </small>
+        <div className="mt-3 py-3 flex flex-col md:flex-row justify-center items-center border-0">
+          <div className="text-center">
+            <img
+              src="/logo/lightlogo.png"
+              alt="HICAP Logo"
+              className="mb-2 md:mb-0 mx-auto max-w-[250px] h-auto"
+            />
+            <small className="block text-gray-400">
+              © {new Date().getFullYear()}, Hicap Edtech Private Limited. All Rights Reserved.
+            </small>
+          </div>
         </div>
+
       </div>
 
       {/* CSS for hover underline */}

@@ -4,6 +4,9 @@ import { FaBars, FaTimes, FaChevronDown, FaUserGraduate, FaRegClock, FaUserCircl
 import ContactUsModal from '../models/ContactUsModal';
 
 const GuestHeader = ({ onLogin }) => {
+  const [showMobileCoursesMenu, setShowMobileCoursesMenu] = useState(false);
+  const [showMobileResourcesMenu, setShowMobileResourcesMenu] = useState(false);
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [courses, setCourses] = useState([]);
   const [showCoursesMenu, setShowCoursesMenu] = useState(false);
@@ -134,24 +137,26 @@ const GuestHeader = ({ onLogin }) => {
   };
 
   const handleCourseClick = (id) => {
+    console.log('Course clicked, ID:', id);
     navigate(`/course/${id}`);
     setShowCoursesMenu(false);
     setIsMobileMenuOpen(false);
   };
 
   const handleNavigate = (path) => {
-  if (path === "/contactus") {
-    // open modal instead of navigating
-    setShowContactModal(true);
-  } else {
-    navigate(path);
-  }
+    if (path === "/contactus") {
+      // open modal instead of navigating
+      setShowContactModal(true);
+    } else {
+      navigate(path);
+    }
 
-  // close menus regardless
-  setIsMobileMenuOpen(false);
-  setShowResourcesMenu(false);
-  setShowCoursesMenu(false);
-};
+    // close menus regardless
+    setIsMobileMenuOpen(false);
+    setShowResourcesMenu(false);
+    setShowCoursesMenu(false);
+  };
+
 
   const handleLoginChange = (e) => {
     const { name, value } = e.target;
@@ -232,7 +237,10 @@ const GuestHeader = ({ onLogin }) => {
               <div key={course._id} className="course-item">
                 <div
                   className="course-card"
-                  onClick={() => handleCourseClick(course._id)}
+                  onClick={() => {
+                    handleCourseClick(course._id);
+                    setIsMobileMenuOpen(false);
+                  }}
                 >
                   <div className="course-image">
                     <img src={course.image} alt={course.name} />
@@ -321,7 +329,10 @@ const GuestHeader = ({ onLogin }) => {
               <li key={course._id} className="mobile-course-item">
                 <div
                   className="mobile-course-card"
-                  onClick={() => handleCourseClick(course._id)}
+                  onClick={() => {
+                    console.log('Mobile course clicked:', course._id);
+                    handleCourseClick(course._id);
+                  }}
                 >
                   <div className="mobile-course-image">
                     <img src={course.image} alt={course.name} />
@@ -390,7 +401,7 @@ const GuestHeader = ({ onLogin }) => {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle navigation"
             >
-              {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+              {isMobileMenuOpen ? <FaTimes /> : <FaBars className="bars" />}
             </button>
           </div>
 
@@ -478,12 +489,12 @@ const GuestHeader = ({ onLogin }) => {
                   <div key={idx} className="sidebar-menu-item">
                     <div
                       className="menu-title"
-                      onClick={() => setShowCoursesMenu(!showCoursesMenu)}
+                      onClick={() => setShowMobileCoursesMenu(!showMobileCoursesMenu)}
                     >
                       <span>{item.label}</span>
-                      <FaChevronDown className={`arrow ${showCoursesMenu ? 'rotate' : ''}`} />
+                      <FaChevronDown className={`arrow ${showMobileCoursesMenu ? 'rotate' : ''}`} />
                     </div>
-                    {showCoursesMenu && <MobileMegaMenu />}
+                    {showMobileCoursesMenu && <MobileMegaMenu />}
                   </div>
                 );
               } else if (item.isDropdown) {
@@ -491,12 +502,12 @@ const GuestHeader = ({ onLogin }) => {
                   <div key={idx} className="sidebar-menu-item">
                     <div
                       className="menu-title"
-                      onClick={() => setShowResourcesMenu(!showResourcesMenu)}
+                      onClick={() => setShowMobileResourcesMenu(!showMobileResourcesMenu)}
                     >
                       <span>{item.label}</span>
-                      <FaChevronDown className={`arrow ${showResourcesMenu ? 'rotate' : ''}`} />
+                      <FaChevronDown className={`arrow ${showMobileResourcesMenu ? 'rotate' : ''}`} />
                     </div>
-                    {showResourcesMenu && (
+                    {showMobileResourcesMenu && (
                       <div className="submenu">
                         {item.items.map((subItem, subIdx) => (
                           <div
@@ -538,6 +549,7 @@ const GuestHeader = ({ onLogin }) => {
           </div>
         </div>
       </div>
+
 
       {/* Login Modal */}
       {showLoginModal && (
@@ -613,7 +625,7 @@ const GuestHeader = ({ onLogin }) => {
         onHide={() => setShowContactModal(false)}
       />
 
-      <style jsx>{`
+      <style >{`
         /* Base Styles */
         .navbar {
           position: fixed;
@@ -646,9 +658,27 @@ const GuestHeader = ({ onLogin }) => {
           cursor: pointer;
         }
         
-        .logo {
-          height: 40px;
-        }
+/* default logo (mobile, desktop, etc.) */
+.logo {
+  max-height: 40px;   /* adjust for small screens */
+  width: auto;
+}
+
+/* larger screens (desktop) */
+@media (min-width: 768px) {
+  .logo {
+    max-height: 35px;
+  }
+}
+
+/* exactly iPad Pro resolution (1024x1366) */
+@media (min-width: 1024px) and (max-width: 1366px) {
+  .logo {
+    content: url("/logo/hicaplogo.png");  /* 👈 swap logo */
+    max-height: 65px;
+  }
+}
+
         
         /* Desktop Navigation */
         .desktop-nav {
@@ -1567,7 +1597,7 @@ const UserHeader = ({ user, onLogout }) => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style >{`
         /* Base Styles */
         .navbar {
           position: fixed;
