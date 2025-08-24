@@ -60,6 +60,17 @@ const ContactUsModal = ({ show, onHide }) => {
           </div>
           <div className="modal-footer">
             <button className="btn btn-danger" onClick={onHide}>Send Message</button>
+            {/*
+            <button className="btn btn-danger">
+  <a
+    href="https://mail.google.com/mail/?view=cm&fs=1&to=info@techsterker.com"
+    target="_blank"
+    className="ms-1 text-white text-decoration-none"
+  >
+    Email Me
+  </a>
+</button>
+            */}
             <button className="btn btn-secondary" onClick={onHide}>Cancel</button>
           </div>
         </div>

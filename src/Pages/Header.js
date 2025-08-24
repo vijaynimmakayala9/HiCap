@@ -6,7 +6,6 @@ import ContactUsModal from '../models/ContactUsModal';
 const GuestHeader = ({ onLogin }) => {
   const [showMobileCoursesMenu, setShowMobileCoursesMenu] = useState(false);
   const [showMobileResourcesMenu, setShowMobileResourcesMenu] = useState(false);
-
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [courses, setCourses] = useState([]);
   const [showCoursesMenu, setShowCoursesMenu] = useState(false);
@@ -29,14 +28,15 @@ const GuestHeader = ({ onLogin }) => {
   const resourcesDropdownRef = useRef();
   const navRef = useRef();
   const modalRef = useRef();
+  const coursesTimeoutRef = useRef();
+  const resourcesTimeoutRef = useRef();
 
   const [showContactModal, setShowContactModal] = useState(false);
 
   const menuItems = [
-    { label: 'Home', path: '/' },
-    { label: 'About Us', path: '/aboutus' },
-    { label: 'Upcoming Batches', path: '/upcommingbatches' },
+    
     { label: 'Courses', isMegaMenu: true },
+    { label: 'Upcoming Batches', path: '/upcommingbatches' },
     {
       label: 'Services',
       isDropdown: true,
@@ -50,7 +50,7 @@ const GuestHeader = ({ onLogin }) => {
         { label: 'Our Mentors', path: '/ourmentors' }
       ]
     },
-    { label: 'Contact Us', path: '/contactus' }
+    { label: 'Company', path: '/aboutus' }
   ];
 
   useEffect(() => {
@@ -97,36 +97,56 @@ const GuestHeader = ({ onLogin }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Auto-close dropdowns on mouse leave for large devices
+  // Improved menu closing logic with proper timeout management
+  const handleCoursesMouseEnter = () => {
+    if (coursesTimeoutRef.current) {
+      clearTimeout(coursesTimeoutRef.current);
+    }
+    if (resourcesTimeoutRef.current) {
+      clearTimeout(resourcesTimeoutRef.current);
+    }
+    setShowCoursesMenu(true);
+    setShowResourcesMenu(false);
+  };
+
+  const handleCoursesMouseLeave = () => {
+    if (window.innerWidth >= 992) {
+      coursesTimeoutRef.current = setTimeout(() => {
+        setShowCoursesMenu(false);
+      }, 300);
+    }
+  };
+
+  const handleResourcesMouseEnter = () => {
+    if (coursesTimeoutRef.current) {
+      clearTimeout(coursesTimeoutRef.current);
+    }
+    if (resourcesTimeoutRef.current) {
+      clearTimeout(resourcesTimeoutRef.current);
+    }
+    setShowResourcesMenu(true);
+    setShowCoursesMenu(false);
+  };
+
+  const handleResourcesMouseLeave = () => {
+    if (window.innerWidth >= 992) {
+      resourcesTimeoutRef.current = setTimeout(() => {
+        setShowResourcesMenu(false);
+      }, 300);
+    }
+  };
+
+  // Clean up timeouts on unmount
   useEffect(() => {
-    const handleMouseLeave = () => {
-      if (window.innerWidth >= 992) {
-        setTimeout(() => {
-          setShowResourcesMenu(false);
-          setShowCoursesMenu(false);
-        }, 100);
-      }
-    };
-
-    const resourcesElement = resourcesDropdownRef.current;
-    const megaMenuElement = megaMenuRef.current;
-
-    if (resourcesElement) {
-      resourcesElement.addEventListener('mouseleave', handleMouseLeave);
-    }
-    if (megaMenuElement) {
-      megaMenuElement.addEventListener('mouseleave', handleMouseLeave);
-    }
-
     return () => {
-      if (resourcesElement) {
-        resourcesElement.removeEventListener('mouseleave', handleMouseLeave);
+      if (coursesTimeoutRef.current) {
+        clearTimeout(coursesTimeoutRef.current);
       }
-      if (megaMenuElement) {
-        megaMenuElement.removeEventListener('mouseleave', handleMouseLeave);
+      if (resourcesTimeoutRef.current) {
+        clearTimeout(resourcesTimeoutRef.current);
       }
     };
-  }, [showResourcesMenu, showCoursesMenu]);
+  }, []);
 
   const groupedCourses = {
     'High Rated Courses': Array.isArray(courses) ? courses.filter(course => course.isHighRated) : [],
@@ -145,18 +165,15 @@ const GuestHeader = ({ onLogin }) => {
 
   const handleNavigate = (path) => {
     if (path === "/contactus") {
-      // open modal instead of navigating
       setShowContactModal(true);
     } else {
       navigate(path);
     }
 
-    // close menus regardless
     setIsMobileMenuOpen(false);
     setShowResourcesMenu(false);
     setShowCoursesMenu(false);
   };
-
 
   const handleLoginChange = (e) => {
     const { name, value } = e.target;
@@ -210,17 +227,18 @@ const GuestHeader = ({ onLogin }) => {
   const MegaMenu = () => (
     <div
       ref={megaMenuRef}
-      className="mega-menu"
-      onMouseEnter={() => setShowCoursesMenu(true)}
+      className="absolute left-1/2 transform -translate-x-1/2 w-[calc(100vw-40px)] max-w-[900px] bg-white rounded-lg shadow-xl z-50 max-h-[80vh] overflow-y-auto"
+      onMouseEnter={handleCoursesMouseEnter}
+      onMouseLeave={handleCoursesMouseLeave}
     >
-      <div className="mega-menu-content">
-        <div className="categories-column">
-          <h6>Course Categories</h6>
-          <ul>
+      <div className="flex p-5">
+        <div className="flex-none w-1/4 pr-5 border-r border-gray-200">
+          <h6 className="font-bold text-[#ad2132] mb-4 text-base">Course Categories</h6>
+          <ul className="list-none p-0 m-0">
             {Object.keys(groupedCourses).map((category) => (
-              <li key={category}>
+              <li key={category} className="mb-2">
                 <button
-                  className={`category-btn ${selectedCategory === category ? 'active' : ''}`}
+                  className={`w-full text-left p-2.5 rounded-md text-sm ${selectedCategory === category ? 'bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white' : 'bg-transparent hover:bg-gray-100'}`}
                   onClick={() => setSelectedCategory(category)}
                 >
                   {category}
@@ -230,24 +248,24 @@ const GuestHeader = ({ onLogin }) => {
           </ul>
         </div>
 
-        <div className="courses-column">
-          <h6>{selectedCategory}</h6>
-          <div className="courses-grid">
+        <div className="flex-1 pl-5">
+          <h6 className="font-bold text-[#ad2132] mb-4 text-base">{selectedCategory}</h6>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {groupedCourses[selectedCategory]?.slice(0, 6).map((course) => (
-              <div key={course._id} className="course-item">
+              <div key={course._id} className="cursor-pointer">
                 <div
-                  className="course-card"
+                  className="flex gap-4 p-4 rounded-lg transition-colors hover:bg-[#f8d7da]"
                   onClick={() => {
                     handleCourseClick(course._id);
                     setIsMobileMenuOpen(false);
                   }}
                 >
-                  <div className="course-image">
-                    <img src={course.image} alt={course.name} />
+                  <div className="flex-shrink-0 w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+                    <img src={course.image} alt={course.name} className="w-full h-full object-cover" />
                   </div>
-                  <div className="course-info">
-                    <div className="course-name">{course.name}</div>
-                    <div className="course-meta">
+                  <div className="flex-grow overflow-hidden">
+                    <div className="font-medium text-sm whitespace-nowrap overflow-hidden text-ellipsis">{course.name}</div>
+                    <div className="flex items-center gap-1 text-gray-600 text-xs mt-1">
                       <span>{course.category || 'N/A'}</span>
                       <span>•</span>
                       <span>{course.duration || 0} months</span>
@@ -259,21 +277,21 @@ const GuestHeader = ({ onLogin }) => {
           </div>
 
           {groupedCourses[selectedCategory]?.length === 0 && (
-            <div className="no-courses">
+            <div className="text-center p-8 text-gray-600">
               No courses available in this category
             </div>
           )}
         </div>
       </div>
 
-      <div className="mega-menu-footer">
-        <div className="footer-content">
-          <h6>Can't find what you're looking for?</h6>
-          <p>Browse our complete course catalog or talk to our advisors</p>
+      <div className="p-5 border-t border-gray-200">
+        <div className="mb-4">
+          <h6 className="font-bold text-[#ad2132] mb-1">Can't find what you're looking for?</h6>
+          <p className="text-gray-600 text-sm m-0">Browse our complete course catalog or talk to our advisors</p>
         </div>
-        <div className="footer-actions">
+        <div className="flex flex-col sm:flex-row gap-2.5">
           <button
-            className="btn btn-outline-meroon w-50"
+            className="flex-1 p-2 bg-transparent border border-[#ad2132] text-[#ad2132] rounded text-sm cursor-pointer hover:bg-[#ad2132] hover:text-white transition-colors"
             onClick={() => {
               navigate('/courses');
               setShowCoursesMenu(false);
@@ -282,7 +300,7 @@ const GuestHeader = ({ onLogin }) => {
             View All Courses
           </button>
           <button
-            className="btn bg-meroon text-white w-50"
+            className="flex-1 p-2 bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded text-sm cursor-pointer hover:opacity-90 transition-opacity"
             onClick={() => {
               navigate('/contactus');
               setShowCoursesMenu(false);
@@ -298,14 +316,15 @@ const GuestHeader = ({ onLogin }) => {
   const ResourcesDropdown = () => (
     <div
       ref={resourcesDropdownRef}
-      className="resources-dropdown"
-      onMouseEnter={() => setShowResourcesMenu(true)}
+      className="absolute left-0 top-full min-w-[200px] bg-white rounded-lg shadow-lg z-50"
+      onMouseEnter={handleResourcesMouseEnter}
+      onMouseLeave={handleResourcesMouseLeave}
     >
-      <ul>
+      <ul className="list-none p-2.5 m-0">
         {menuItems.find(item => item.label === 'Services').items.map((item, idx) => (
           <li key={idx}>
             <button
-              className={`dropdown-item ${location.pathname === item.path ? 'active' : ''}`}
+              className={`w-full text-left p-2.5 rounded-md text-sm transition-all hover:bg-[#f8d7da] hover:text-[#ad2132] ${location.pathname === item.path ? 'text-[#ad2132] bg-[#f8d7da]' : 'bg-transparent'}`}
               onClick={() => {
                 handleNavigate(item.path);
                 setShowResourcesMenu(false);
@@ -320,27 +339,27 @@ const GuestHeader = ({ onLogin }) => {
   );
 
   const MobileMegaMenu = () => (
-    <div className="mobile-mega-menu">
+    <div className="p-4 bg-gray-50 rounded-lg mt-2.5">
       {Object.entries(groupedCourses).map(([category, items]) => (
-        <div key={category} className="mobile-category">
-          <h6>{category}</h6>
-          <ul>
+        <div key={category} className="mb-5">
+          <h6 className="font-bold text-gray-600 text-sm mb-2.5">{category}</h6>
+          <ul className="list-none p-0 m-0">
             {items.slice(0, 6).map((course) => (
-              <li key={course._id} className="mobile-course-item">
+              <li key={course._id} className="mb-2.5 cursor-pointer">
                 <div
-                  className="mobile-course-card"
+                  className="flex items-center gap-2.5 p-2.5 bg-white rounded-md hover:bg-[#f8d7da] transition-colors"
                   onClick={() => {
                     console.log('Mobile course clicked:', course._id);
                     handleCourseClick(course._id);
                   }}
                 >
-                  <div className="mobile-course-image">
-                    <img src={course.image} alt={course.name} />
+                  <div className="w-10 h-10 bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
+                    <img src={course.image} alt={course.name} className="w-full h-full object-cover" />
                   </div>
-                  <div className="mobile-course-info">
-                    <div className="mobile-course-name">{course.name}</div>
-                    <div className="mobile-course-meta">
-                      <FaRegClock />
+                  <div className="flex-grow overflow-hidden">
+                    <div className="font-medium text-sm whitespace-nowrap overflow-hidden text-ellipsis">{course.name}</div>
+                    <div className="flex items-center gap-1 text-gray-600 text-xs mt-0.5">
+                      <FaRegClock className="text-[10px]" />
                       <span>{course.category || 'N/A'}</span>
                       <span>•</span>
                       <span>{course.duration || 0} months</span>
@@ -352,9 +371,9 @@ const GuestHeader = ({ onLogin }) => {
           </ul>
         </div>
       ))}
-      <div className="mobile-mega-menu-footer">
+      <div className="grid gap-2.5 pt-2.5 border-t border-gray-300">
         <button
-          className="btn-outline-meroon"
+          className="p-2 bg-transparent border border-[#ad2132] text-[#ad2132] rounded cursor-pointer hover:bg-[#ad2132] hover:text-white transition-colors"
           onClick={() => {
             navigate('/courses');
             setShowCoursesMenu(false);
@@ -364,7 +383,7 @@ const GuestHeader = ({ onLogin }) => {
           View All Courses
         </button>
         <button
-          className="btn bg-meroon text-white"
+          className="p-2 bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded cursor-pointer hover:opacity-90 transition-opacity"
           onClick={() => {
             navigate('/contactus');
             setShowCoursesMenu(false);
@@ -379,25 +398,25 @@ const GuestHeader = ({ onLogin }) => {
 
   return (
     <>
-      <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
-        <div className="navbar-container">
-          <div className="navbar-brand" onClick={() => navigate('/')}>
+      <nav className={`fixed top-0 left-0 w-full h-[70px] bg-white shadow-md z-50 transition-all ${isScrolled ? 'bg-white/90 backdrop-blur-md' : ''}`}>
+        <div className="flex justify-between items-center h-full px-4 sm:px-5 max-w-[1400px] mx-auto">
+          <div className="cursor-pointer" onClick={() => navigate('/')}>
             <img
               src="/logo/smalllogo.png"
               alt="HiCap Logo"
-              className="logo"
+              className="max-h-10 md:max-h-11 w-auto"
             />
           </div>
 
-          <div className="mobile-header-actions">
+          <div className="flex items-center gap-2.5 md:hidden">
             <button
               onClick={() => setShowLoginModal(true)}
-              className="login-btn-mobile"
+              className="px-3.5 py-2 bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded text-sm cursor-pointer whitespace-nowrap hover:opacity-90 transition-opacity"
             >
               Login
             </button>
             <button
-              className="menu-toggle"
+              className="w-11 h-11 flex items-center justify-center bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded cursor-pointer hover:opacity-90 transition-opacity"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle navigation"
             >
@@ -405,58 +424,80 @@ const GuestHeader = ({ onLogin }) => {
             </button>
           </div>
 
-          <div className="desktop-nav">
+          <div className="hidden lg:flex items-center gap-0">
             {menuItems.map((item, idx) => {
               if (item.isMegaMenu) {
                 return (
                   <div
                     key={idx}
-                    className="nav-item mega-menu-container"
-                    onMouseEnter={() => setShowCoursesMenu(true)}
+                    className="relative"
+                    onMouseEnter={handleCoursesMouseEnter}
+                    onMouseLeave={handleCoursesMouseLeave}
                   >
                     <span
                       ref={coursesBtnRef}
-                      className={`nav-link ${showCoursesMenu ? 'active' : ''}`}
-                      onClick={() => setShowCoursesMenu(!showCoursesMenu)}
+                      className={`flex items-center px-5 py-4 text-base font-medium text-gray-800 cursor-pointer rounded-md transition-all relative mr-2 ${showCoursesMenu ? 'text-[#ad2132]' : 'hover:text-[#ad2132]'}`}
+                      onClick={() => {
+                        setShowCoursesMenu(!showCoursesMenu);
+                        setShowResourcesMenu(false);
+                      }}
                     >
-                      Courses <FaChevronDown className={`chevron ${showCoursesMenu ? 'rotate' : ''}`} />
+                      Courses <FaChevronDown className={`ml-1.5 text-xs transition-transform ${showCoursesMenu ? 'rotate-180' : ''}`} />
                     </span>
                     {showCoursesMenu && <MegaMenu />}
+                    {/* Vertical divider line */}
+                    <div className="absolute right-[-10px] top-1/2 transform -translate-y-1/2 h-6 w-px bg-gray-300"></div>
                   </div>
                 );
               } else if (item.isDropdown) {
                 return (
                   <div
                     key={idx}
-                    className="nav-item dropdown-container"
-                    onMouseEnter={() => setShowResourcesMenu(true)}
+                    className="relative"
+                    onMouseEnter={handleResourcesMouseEnter}
+                    onMouseLeave={handleResourcesMouseLeave}
                   >
                     <span
                       ref={resourcesBtnRef}
-                      className={`nav-link ${showResourcesMenu ? 'active' : ''}`}
-                      onClick={() => setShowResourcesMenu(!showResourcesMenu)}
+                      className={`flex items-center px-5 py-4 text-base font-medium text-gray-800 cursor-pointer rounded-md transition-all relative mr-2 ${showResourcesMenu ? 'text-[#ad2132]' : 'hover:text-[#ad2132]'}`}
+                      onClick={() => {
+                        setShowResourcesMenu(!showResourcesMenu);
+                        setShowCoursesMenu(false);
+                      }}
                     >
-                      Services <FaChevronDown className={`chevron ${showResourcesMenu ? 'rotate' : ''}`} />
+                      Services <FaChevronDown className={`ml-1.5 text-xs transition-transform ${showResourcesMenu ? 'rotate-180' : ''}`} />
                     </span>
                     {showResourcesMenu && <ResourcesDropdown />}
+                    {/* Vertical divider line */}
+                    <div className="absolute right-[-10px] top-1/2 transform -translate-y-1/2 h-6 w-px bg-gray-300"></div>
                   </div>
                 );
               } else {
                 return (
-                  <span
-                    key={idx}
-                    className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
-                    onClick={() => handleNavigate(item.path)}
-                  >
-                    {item.label}
-                  </span>
+                  <div key={idx} className="relative flex items-center">
+                    <span
+                      className={`px-5 py-4 text-base font-medium cursor-pointer rounded-md transition-colors ${location.pathname === item.path
+                          ? 'text-[#ad2132]'
+                          : 'text-gray-800 hover:text-[#ad2132]'
+                        }`}
+                      onClick={() => handleNavigate(item.path)}
+                    >
+                      {item.label}
+                    </span>
+
+                    {/* Vertical divider line - hide for last item */}
+                    {idx < menuItems.length - 1 && (
+                      <div className="h-6 w-px bg-gray-300 ml-2"></div>
+                    )}
+                  </div>
+
                 );
               }
             })}
 
             <button
               onClick={() => setShowLoginModal(true)}
-              className="desktop-login-btn"
+              className="ml-2 px-8 py-2 bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded-full font-semibold text-base cursor-pointer whitespace-nowrap hover:opacity-90 transition-opacity"
             >
               Login
             </button>
@@ -465,54 +506,60 @@ const GuestHeader = ({ onLogin }) => {
       </nav>
 
       {/* Mobile Sidebar */}
-      <div className={`mobile-sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
-        <div className="sidebar-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>
-        <div className="sidebar-content">
-          <div className="sidebar-header">
+      <div className={`fixed top-0 left-0 w-full h-full z-[1060] pointer-events-none ${isMobileMenuOpen ? 'pointer-events-auto' : ''}`}>
+        <div className={`absolute top-0 left-0 w-full h-full bg-black/50 transition-opacity ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'}`} onClick={() => setIsMobileMenuOpen(false)}></div>
+        <div className={`absolute top-0 left-[-100%] w-full h-full bg-white transition-transform flex flex-col ${isMobileMenuOpen ? 'translate-x-full' : ''}`}>
+          <div className="flex justify-between items-center p-5 border-b border-gray-200">
             <img
               src="/logo/hicapnewlogo.png"
               alt="HiCap Logo"
-              className="sidebar-logo"
+              className="h-10"
             />
             <button
-              className="sidebar-close"
+              className="bg-transparent border-none text-2xl text-gray-800 cursor-pointer hover:text-[#ad2132] transition-colors"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <FaTimes />
             </button>
           </div>
 
-          <div className="sidebar-menu">
+          <div className="flex-grow overflow-y-auto py-2.5">
             {menuItems.map((item, idx) => {
               if (item.isMegaMenu) {
                 return (
-                  <div key={idx} className="sidebar-menu-item">
+                  <div key={idx} className="border-b border-gray-100 last:border-b-0">
                     <div
-                      className="menu-title"
-                      onClick={() => setShowMobileCoursesMenu(!showMobileCoursesMenu)}
+                      className="flex justify-between items-center p-4 cursor-pointer transition-all hover:bg-gray-50"
+                      onClick={() => {
+                        setShowMobileCoursesMenu(!showMobileCoursesMenu);
+                        setShowMobileResourcesMenu(false);
+                      }}
                     >
-                      <span>{item.label}</span>
-                      <FaChevronDown className={`arrow ${showMobileCoursesMenu ? 'rotate' : ''}`} />
+                      <span className="text-base font-medium text-gray-800">{item.label}</span>
+                      <FaChevronDown className={`text-sm text-gray-600 transition-transform ${showMobileCoursesMenu ? 'rotate-180' : ''}`} />
                     </div>
                     {showMobileCoursesMenu && <MobileMegaMenu />}
                   </div>
                 );
               } else if (item.isDropdown) {
                 return (
-                  <div key={idx} className="sidebar-menu-item">
+                  <div key={idx} className="border-b border-gray-100 last:border-b-0">
                     <div
-                      className="menu-title"
-                      onClick={() => setShowMobileResourcesMenu(!showMobileResourcesMenu)}
+                      className="flex justify-between items-center p-4 cursor-pointer transition-all hover:bg-gray-50"
+                      onClick={() => {
+                        setShowMobileResourcesMenu(!showMobileResourcesMenu);
+                        setShowMobileCoursesMenu(false);
+                      }}
                     >
-                      <span>{item.label}</span>
-                      <FaChevronDown className={`arrow ${showMobileResourcesMenu ? 'rotate' : ''}`} />
+                      <span className="text-base font-medium text-gray-800">{item.label}</span>
+                      <FaChevronDown className={`text-sm text-gray-600 transition-transform ${showMobileResourcesMenu ? 'rotate-180' : ''}`} />
                     </div>
                     {showMobileResourcesMenu && (
-                      <div className="submenu">
+                      <div className="bg-gray-50 border-t border-gray-200">
                         {item.items.map((subItem, subIdx) => (
                           <div
                             key={subIdx}
-                            className={`submenu-item ${location.pathname === subItem.path ? 'active' : ''}`}
+                            className={`p-3 pl-10 cursor-pointer text-sm text-gray-700 transition-all border-b border-gray-100 last:border-b-0 hover:bg-white hover:text-[#ad2132] ${location.pathname === subItem.path ? 'text-[#ad2132] bg-white' : ''}`}
                             onClick={() => handleNavigate(subItem.path)}
                           >
                             {subItem.label}
@@ -526,19 +573,19 @@ const GuestHeader = ({ onLogin }) => {
                 return (
                   <div
                     key={idx}
-                    className={`sidebar-menu-item simple-item ${location.pathname === item.path ? 'active' : ''}`}
+                    className={`p-4 cursor-pointer transition-all border-b border-gray-100 last:border-b-0 hover:bg-gray-50 hover:text-[#ad2132] ${location.pathname === item.path ? 'text-[#ad2132] bg-[#f8d7da]' : ''}`}
                     onClick={() => handleNavigate(item.path)}
                   >
-                    <span>{item.label}</span>
+                    <span className="text-base font-medium">{item.label}</span>
                   </div>
                 );
               }
             })}
           </div>
 
-          <div className="sidebar-footer">
+          <div className="p-5 border-t border-gray-200">
             <button
-              className="sidebar-login-btn"
+              className="w-full p-4 bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded-md font-semibold cursor-pointer text-base hover:opacity-90 transition-opacity"
               onClick={() => {
                 setIsMobileMenuOpen(false);
                 setShowLoginModal(true);
@@ -550,835 +597,90 @@ const GuestHeader = ({ onLogin }) => {
         </div>
       </div>
 
-
       {/* Login Modal */}
       {showLoginModal && (
-        <div className="login-modal-backdrop">
-          <div
-            ref={modalRef}
-            className="login-modal-content"
-          >
-            <div className="modal-header">
-              <h4>Login</h4>
-              <button
-                onClick={() => setShowLoginModal(false)}
-                className="modal-close"
-              ></button>
-            </div>
+  <div className="fixed top-0 left-0 w-full h-full bg-black/50 backdrop-blur-sm z-[1070] flex items-center justify-center p-3 sm:p-5">
+    <div
+      ref={modalRef}
+      className="bg-white rounded-xl p-4 sm:p-6 w-full max-w-[360px] sm:max-w-[420px] shadow-xl"
+    >
+      {/* Header */}
+      <div className="flex justify-between items-center mb-4 sm:mb-6">
+        <h4 className="text-[#ad2132] text-lg sm:text-xl font-semibold m-0">
+          Login
+        </h4>
+        <button
+          onClick={() => setShowLoginModal(false)}
+          className="bg-transparent border-none text-lg sm:text-xl cursor-pointer hover:text-gray-600 transition-colors"
+        >
+          <FaTimes />
+        </button>
+      </div>
 
-            <form onSubmit={handleLoginSubmit}>
-              {loginError && (
-                <div className="alert-error">
-                  {loginError}
-                </div>
-              )}
+      {/* Form */}
+      <form onSubmit={handleLoginSubmit}>
+        {loginError && (
+          <div className="p-2.5 bg-[#f8d7da] text-[#721c24] rounded mb-4 text-sm sm:text-base">
+            {loginError}
+          </div>
+        )}
 
-              <div className="form-group">
-                <div className="input-with-icon">
-                  <FaPhone className="input-icon" />
-                  <input
-                    type="tel"
-                    name="phoneNumber"
-                    value={loginData.phoneNumber}
-                    onChange={handleLoginChange}
-                    placeholder="Phone Number"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <div className="input-with-icon">
-                  <FaLock className="input-icon" />
-                  <input
-                    type="password"
-                    name="password"
-                    value={loginData.password}
-                    onChange={handleLoginChange}
-                    placeholder="Password"
-                    required
-                  />
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={isLoggingIn}
-                className={`login-submit-btn ${isLoggingIn ? 'loading' : ''}`}
-              >
-                {isLoggingIn ? (
-                  <>
-                    <span className="spinner"></span>
-                    Logging in...
-                  </>
-                ) : (
-                  'Login'
-                )}
-              </button>
-            </form>
+        {/* Phone Input */}
+        <div className="mb-4 sm:mb-5">
+          <div className="relative">
+            <FaPhone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 text-sm sm:text-base" />
+            <input
+              type="tel"
+              name="phoneNumber"
+              value={loginData.phoneNumber}
+              onChange={handleLoginChange}
+              placeholder="Phone Number"
+              required
+              className="w-full p-2.5 sm:p-3 pl-9 sm:pl-10 border border-gray-300 rounded-md text-sm sm:text-base focus:border-[#ad2132] focus:outline-none focus:ring-1 focus:ring-[#ad2132] transition-colors"
+            />
           </div>
         </div>
-      )}
+
+        {/* Password Input */}
+        <div className="mb-4 sm:mb-5">
+          <div className="relative">
+            <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 text-sm sm:text-base" />
+            <input
+              type="password"
+              name="password"
+              value={loginData.password}
+              onChange={handleLoginChange}
+              placeholder="Password"
+              required
+              className="w-full p-2.5 sm:p-3 pl-9 sm:pl-10 border border-gray-300 rounded-md text-sm sm:text-base focus:border-[#ad2132] focus:outline-none focus:ring-1 focus:ring-[#ad2132] transition-colors"
+            />
+          </div>
+        </div>
+
+        {/* Button */}
+        <button
+          type="submit"
+          disabled={isLoggingIn}
+          className={`w-full p-2.5 sm:p-3 bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded-md font-semibold text-sm sm:text-base cursor-pointer hover:opacity-90 transition-opacity ${isLoggingIn ? 'opacity-80' : ''}`}
+        >
+          {isLoggingIn ? (
+            <>
+              <span className="inline-block w-4 h-4 border-2 border-white/30 rounded-full border-t-white animate-spin mr-2"></span>
+              Logging in...
+            </>
+          ) : (
+            'Login'
+          )}
+        </button>
+      </form>
+    </div>
+  </div>
+)}
 
       <ContactUsModal
         show={showContactModal}
         onHide={() => setShowContactModal(false)}
       />
-
-      <style >{`
-        /* Base Styles */
-        .navbar {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 70px;
-          background-color: white;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-          z-index: 1050;
-          transition: all 0.3s ease;
-        }
-        
-        .navbar.scrolled {
-          background: rgba(255, 255, 255, 0.9);
-          backdrop-filter: blur(10px);
-        }
-        
-        .navbar-container {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          height: 100%;
-          padding: 0 20px;
-          max-width: 1400px;
-          margin: 0 auto;
-        }
-        
-        .navbar-brand {
-          cursor: pointer;
-        }
-        
-/* default logo (mobile, desktop, etc.) */
-.logo {
-  max-height: 40px;   /* adjust for small screens */
-  width: auto;
-}
-
-/* larger screens (desktop) */
-@media (min-width: 768px) {
-  .logo {
-    max-height: 35px;
-  }
-}
-
-/* exactly iPad Pro resolution (1024x1366) */
-@media (min-width: 1024px) and (max-width: 1366px) {
-  .logo {
-    content: url("/logo/hicaplogo.png");  /* 👈 swap logo */
-    max-height: 65px;
-  }
-}
-
-        
-        /* Desktop Navigation */
-        .desktop-nav {
-          display: none;
-          align-items: center;
-          gap: 10px;
-        }
-        
-        @media (min-width: 992px) {
-          .desktop-nav {
-            display: flex;
-          }
-        }
-        
-        .nav-item {
-          position: relative;
-        }
-        
-        .nav-link {
-          display: flex;
-          align-items: center;
-          padding: 15px 20px; /* Increased padding for larger size */
-          font-size: 16px; /* Increased font size */
-          font-weight: 500;
-          color: #333;
-          cursor: pointer;
-          border-radius: 6px;
-          transition: all 0.2s ease;
-          margin: 0 10px; /* Increased margin */
-          position: relative;
-          height: 100%;
-        }
-        
-        .nav-link:hover, .nav-link.active {
-          color: #ad2132;
-        }
-        
-        /* Always show the margin line between menu items */
-        .nav-link:after {
-          content: '';
-          position: absolute;
-          right: -10px;
-          top: 50%;
-          transform: translateY(-50%);
-          height: 30px; /* Increased height */
-          width: 1px;
-          background-color: #ddd;
-        }
-        
-        /* Remove margin line for the last item */
-        .desktop-login-btn:after,
-        .nav-item:last-child .nav-link:after {
-          display: none;
-        }
-        
-        .chevron {
-          margin-left: 5px;
-          font-size: 12px;
-          transition: transform 0.3s ease;
-        }
-        
-        .chevron.rotate {
-          transform: rotate(180deg);
-        }
-        
-        .desktop-login-btn {
-          margin-left: 15px;
-          padding: 12px 30px; /* Increased padding */
-          background: linear-gradient(135deg, #ad2132, #d32f2f);
-          color: white;
-          border: none;
-          border-radius: 30px;
-          font-weight: 600;
-          font-size: 16px; /* Increased font size */
-          cursor: pointer;
-          white-space: nowrap;
-        }
-        
-        /* Mega Menu Styles */
-        .mega-menu {
-          position: absolute;
-          left: 50%;
-          transform: translateX(-50%);
-          width: calc(100vw - 40px);
-          max-width: 900px;
-          background-color: white;
-          border-radius: 8px;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-          z-index: 1050;
-          max-height: 80vh;
-          overflow-y: auto;
-        }
-        
-        .mega-menu-content {
-          display: flex;
-          padding: 20px;
-        }
-        
-        .categories-column {
-          flex: 0 0 25%;
-          padding-right: 20px;
-          border-right: 1px solid #eee;
-        }
-        
-        .categories-column h6 {
-          font-weight: bold;
-          color: #ad2132;
-          margin-bottom: 15px;
-          font-size: 16px;
-        }
-        
-        .categories-column ul {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
-        
-        .categories-column li {
-          margin-bottom: 10px;
-        }
-        
-        .category-btn {
-          width: 100%;
-          padding: 10px 15px;
-          text-align: left;
-          background: none;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-          font-size: 14px;
-        }
-        
-        .category-btn:hover, .category-btn.active {
-          background: linear-gradient(135deg, #ad2132, #d32f2f);
-          color: white;
-        }
-        
-        .courses-column {
-          flex: 1;
-          padding-left: 20px;
-        }
-        
-        .courses-column h6 {
-          font-weight: bold;
-          color: #ad2132;
-          margin-bottom: 15px;
-          font-size: 16px;
-        }
-        
-        .courses-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 15px;
-        }
-        
-        .course-item {
-          cursor: pointer;
-        }
-        
-        .course-card {
-          display: flex;
-          gap: 15px;
-          padding: 15px;
-          border-radius: 8px;
-          transition: background-color 0.2s ease;
-        }
-        
-        .course-card:hover {
-          background-color: #f8d7da;
-        }
-        
-        .course-image {
-          flex-shrink: 0;
-          width: 40px;
-          height: 40px;
-          background-color: #f5f5f5;
-          border-radius: 6px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          overflow: hidden;
-        }
-        
-        .course-image img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-        
-        .course-info {
-          flex-grow: 1;
-          overflow: hidden;
-        }
-        
-        .course-name {
-          font-weight: 500;
-          font-size: 14px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        
-        .course-meta {
-          display: flex;
-          align-items: center;
-          gap: 5px;
-          color: #666;
-          font-size: 12px;
-          margin-top: 5px;
-        }
-        
-        .no-courses {
-          text-align: center;
-          padding: 30px;
-          color: #666;
-        }
-        
-        .mega-menu-footer {
-          padding: 20px;
-          border-top: 1px solid #eee;
-        }
-        
-        .footer-content {
-          margin-bottom: 15px;
-        }
-        
-        .footer-content h6 {
-          font-weight: bold;
-          color: #ad2132;
-          margin-bottom: 5px;
-        }
-        
-        .footer-content p {
-          color: #666;
-          font-size: 13px;
-          margin: 0;
-        }
-        
-        .footer-actions {
-          display: flex;
-          gap: 10px;
-        }
-        
-        .btn-outline {
-          flex: 1;
-          padding: 8px;
-          background: none;
-          border: 1px solid #ad2132;
-          color: #ad2132;
-          border-radius: 4px;
-          font-size: 13px;
-          cursor: pointer;
-        }
-        
-        .btn-primary {
-          flex: 1;
-          padding: 8px;
-          background: linear-gradient(135deg, #ad2132, #d32f2f);
-          color: white;
-          border: none;
-          border-radius: 4px;
-          font-size: 13px;
-          cursor: pointer;
-        }
-        
-        /* Resources Dropdown */
-        .resources-dropdown {
-          position: absolute;
-          left: 0;
-          top: 100%;
-          min-width: 200px;
-          background-color: white;
-          border-radius: 8px;
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-          z-index: 1050;
-        }
-        
-        .resources-dropdown ul {
-          list-style: none;
-          padding: 10px;
-          margin: 0;
-        }
-        
-        .dropdown-item {
-          width: 100%;
-          padding: 10px 15px;
-          text-align: left;
-          background: none;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-          font-size: 14px;
-          transition: all 0.2s ease;
-        }
-        
-        .dropdown-item:hover, 
-        .dropdown-item.active {
-          color: #ad2132;
-          background-color: #f8d7da;
-        }
-        
-        /* Mobile Header */
-        .mobile-header-actions {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-        
-        @media (min-width: 992px) {
-          .mobile-header-actions {
-            display: none;
-          }
-        }
-        
-        .login-btn-mobile {
-          padding: 8px 15px;
-          background: linear-gradient(135deg, #ad2132, #d32f2f);
-          color: white;
-          border: none;
-          border-radius: 4px;
-          font-size: 14px;
-          cursor: pointer;
-          white-space: nowrap;
-        }
-        
-        .menu-toggle {
-          width: 44px;
-          height: 44px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: linear-gradient(135deg, #ad2132, #d32f2f);
-          color: white;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-        
-        /* Mobile Mega Menu */
-        .mobile-mega-menu {
-          padding: 15px;
-          background-color: #f8f9fa;
-          border-radius: 8px;
-          margin-top: 10px;
-        }
-        
-        .mobile-category {
-          margin-bottom: 20px;
-        }
-        
-        .mobile-category h6 {
-          font-weight: bold;
-          color: #666;
-          font-size: 13px;
-          margin-bottom: 10px;
-        }
-        
-        .mobile-category ul {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
-        
-        .mobile-course-item {
-          margin-bottom: 10px;
-          cursor: pointer;
-        }
-        
-        .mobile-course-card {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 10px;
-          background-color: white;
-          border-radius: 6px;
-        }
-        
-        .mobile-course-image {
-          width: 40px;
-          height: 40px;
-          background-color: #eee;
-          border-radius: 4px;
-          overflow: hidden;
-          flex-shrink: 0;
-        }
-        
-        .mobile-course-image img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-        
-        .mobile-course-info {
-          flex-grow: 1;
-          overflow: hidden;
-        }
-        
-        .mobile-course-name {
-          font-weight: 500;
-          font-size: 13px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        
-        .mobile-course-meta {
-          display: flex;
-          align-items: center;
-          gap: 5px;
-          color: #666;
-          font-size: 11px;
-          margin-top: 3px;
-        }
-        
-        .mobile-course-meta svg {
-          font-size: 10px;
-        }
-        
-        .mobile-mega-menu-footer {
-          display: grid;
-          gap: 10px;
-          padding-top: 10px;
-          border-top: 1px solid #ddd;
-        }
-        
-        /* Mobile Sidebar */
-        .mobile-sidebar {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 1060;
-          pointer-events: none;
-        }
-        
-        .mobile-sidebar.open {
-          pointer-events: auto;
-        }
-        
-        .sidebar-overlay {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.5);
-          opacity: 0;
-          transition: opacity 0.3s ease;
-        }
-        
-        .mobile-sidebar.open .sidebar-overlay {
-          opacity: 1;
-        }
-        
-        .sidebar-content {
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background-color: white;
-          transition: transform 0.3s ease;
-          display: flex;
-          flex-direction: column;
-        }
-        
-        .mobile-sidebar.open .sidebar-content {
-          transform: translateX(100%);
-        }
-        
-        .sidebar-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 20px;
-          border-bottom: 1px solid #eee;
-        }
-        
-        .sidebar-logo {
-          height: 40px;
-        }
-        
-        .sidebar-close {
-          background: none;
-          border: none;
-          font-size: 1.5rem;
-          color: #333;
-          cursor: pointer;
-        }
-        
-        .sidebar-menu {
-          flex-grow: 1;
-          overflow-y: auto;
-          padding: 10px 0;
-        }
-        
-        .sidebar-menu-item {
-          border-bottom: 1px solid #f5f5f5;
-        }
-        
-        .sidebar-menu-item:last-child {
-          border-bottom: none;
-        }
-        
-        .sidebar-menu-item.simple-item {
-          padding: 16px 20px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-        
-        .sidebar-menu-item.simple-item:hover,
-        .sidebar-menu-item.simple-item.active {
-          color: #ad2132;
-          background-color: #f8d7da;
-        }
-        
-        .sidebar-menu-item.simple-item span {
-          font-size: 16px;
-          font-weight: 500;
-        }
-        
-        .menu-title {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 16px 20px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-        
-        .menu-title:hover {
-          background-color: #f8f9fa;
-        }
-        
-        .menu-title span {
-          font-size: 16px;
-          font-weight: 500;
-          color: #333;
-        }
-        
-        .arrow {
-          font-size: 14px;
-          color: #666;
-          transition: transform 0.3s ease;
-        }
-        
-        .arrow.rotate {
-          transform: rotate(180deg);
-        }
-        
-        .submenu {
-          background-color: #f8f9fa;
-          border-top: 1px solid #eee;
-        }
-        
-        .submenu-item {
-          padding: 12px 20px 12px 40px;
-          cursor: pointer;
-          font-size: 15px;
-          color: #555;
-          transition: all 0.2s ease;
-          border-bottom: 1px solid #e9ecef;
-        }
-        
-        .submenu-item:last-child {
-          border-bottom: none;
-        }
-        
-        .submenu-item:hover, 
-        .submenu-item.active {
-          color: #ad2132;
-          background-color: #fff;
-        }
-        
-        .sidebar-footer {
-          padding: 20px;
-          border-top: 1px solid #eee;
-        }
-        
-        .sidebar-login-btn {
-          width: 100%;
-          padding: 15px;
-          background: linear-gradient(135deg, #ad2132, #d32f2f);
-          color: white;
-          border: none;
-          border-radius: 6px;
-          font-weight: 600;
-          cursor: pointer;
-          font-size: 16px;
-        }
-        
-        /* Login Modal */
-        .login-modal-backdrop {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.5);
-          backdrop-filter: blur(4px);
-          z-index: 1070;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 20px;
-        }
-        
-        .login-modal-content {
-          background-color: white;
-          border-radius: 12px;
-          padding: 20px;
-          width: 100%;
-          max-width: 420px;
-          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-        }
-        
-        .modal-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 20px;
-        }
-        
-        .modal-header h4 {
-          color: #ad2132;
-          margin: 0;
-        }
-        
-        .modal-close {
-          background: none;
-          border: none;
-          font-size: 1.2rem;
-          cursor: pointer;
-        }
-        
-        .alert-error {
-          padding: 10px;
-          background-color: #f8d7da;
-          color: #721c24;
-          border-radius: 4px;
-          margin-bottom: 15px;
-          font-size: 14px;
-        }
-        
-        .form-group {
-          margin-bottom: 20px;
-        }
-        
-        .input-with-icon {
-          position: relative;
-        }
-        
-        .input-icon {
-          position: absolute;
-          left: 12px;
-          top: 50%;
-          transform: translateY(-50%);
-          color: #666;
-        }
-        
-        .input-with-icon input {
-          width: 100%;
-          padding: 12px 12px 12px 40px;
-          border: 1px solid #ddd;
-          border-radius: 6px;
-          font-size: 14px;
-        }
-        
-        .login-submit-btn {
-          width: 100%;
-          padding: 12px;
-          background: linear-gradient(135deg, #ad2132, #d32f2f);
-          color: white;
-          border: none;
-          border-radius: 6px;
-          font-weight: 600;
-          cursor: pointer;
-        }
-        
-        .login-submit-btn.loading {
-          opacity: 0.8;
-        }
-        
-        .spinner {
-          display: inline-block;
-          width: 16px;
-          height: 16px;
-          border: 2px solid rgba(255, 255, 255, 0.3);
-          border-radius: 50%;
-          border-top-color: white;
-          animation: spin 1s ease-in-out infinite;
-          margin-right: 8px;
-        }
-        
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
-
     </>
   );
 };
@@ -1434,57 +736,57 @@ const UserHeader = ({ user, onLogout }) => {
 
   return (
     <>
-      <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
-        <div className="navbar-container">
-          <div className="navbar-brand" onClick={() => navigate('/dashboard')}>
+      <nav className={`fixed top-0 left-0 w-full h-20 bg-white shadow-md z-50 transition-all ${isScrolled ? 'bg-white/90 backdrop-blur-md' : ''}`}>
+        <div className="flex justify-between items-center h-full px-4 sm:px-5 max-w-[1400px] mx-auto">
+          <div className="cursor-pointer" onClick={() => navigate('/dashboard')}>
             <img
-              src="/logo/smalllogo.png"
+              src="/logo/hicaplogo.png"
               alt="HiCap Logo"
-              className="logo"
+              className="h-10"
             />
           </div>
 
-          <div className="mobile-header-actions">
-            <div className="user-dropdown-mobile" ref={mobileUserMenuRef}>
+          <div className="flex items-center gap-2.5 lg:hidden">
+            <div className="relative" ref={mobileUserMenuRef}>
               <button
-                className="user-btn-mobile"
+                className="flex items-center gap-1.5 px-3 py-2 bg-transparent border border-[#ad2132] rounded cursor-pointer hover:bg-[#f8d7da] transition-colors"
                 onClick={() => setShowMobileUserMenu(!showMobileUserMenu)}
               >
-                <FaUserCircle className="user-icon" />
-                <FaChevronDown className={`chevron ${showMobileUserMenu ? 'rotate' : ''}`} />
+                <FaUserCircle className="text-[#ad2132] text-base" />
+                <FaChevronDown className={`text-xs transition-transform ${showMobileUserMenu ? 'rotate-180' : ''}`} />
               </button>
               {showMobileUserMenu && (
-                <div className="user-dropdown-menu">
-                  <div className="user-info">
-                    <div className="user-name">{user?.name || 'User'}</div>
-                    <div className="user-email">{user?.email || user?.phone}</div>
+                <div className="absolute right-0 top-full w-56 bg-white rounded-lg shadow-lg z-50 mt-2.5">
+                  <div className="p-4 border-b border-gray-200">
+                    <div className="font-semibold text-sm truncate max-w-full">{user?.name || 'User'}</div>
+                    <div className="text-gray-600 text-xs truncate max-w-full">{user?.email || user?.phone}</div>
                   </div>
                   {dashboardMenuItems.map((item, idx) => {
                     const IconComponent = item.icon;
                     return (
                       <button
                         key={idx}
-                        className={`dropdown-item ${location.pathname === item.path ? 'active' : ''}`}
+                        className={`flex items-center gap-2.5 w-full p-3 bg-transparent border-none text-left cursor-pointer text-sm hover:bg-[#f8d7da] hover:text-[#ad2132] transition-colors ${location.pathname === item.path ? 'text-[#ad2132]' : ''}`}
                         onClick={() => handleNavigate(item.path)}
                       >
-                        <IconComponent className="dropdown-icon" />
+                        <IconComponent className="text-sm" />
                         <span>{item.label}</span>
                       </button>
                     );
                   })}
-                  <div className="dropdown-divider"></div>
+                  <div className="h-px bg-gray-200 my-1.5"></div>
                   <button
-                    className="dropdown-item logout"
+                    className="flex items-center gap-2.5 w-full p-3 bg-transparent border-none text-left cursor-pointer text-sm text-[#d32f2f] hover:bg-[#f8d7da] transition-colors"
                     onClick={onLogout}
                   >
-                    <FaSignOutAlt className="dropdown-icon" />
+                    <FaSignOutAlt className="text-sm" />
                     <span>Logout</span>
                   </button>
                 </div>
               )}
             </div>
             <button
-              className="menu-toggle"
+              className="w-11 h-11 flex items-center justify-center bg-transparent border border-[#ad2132] text-[#ad2132] rounded cursor-pointer hover:bg-[#f8d7da] transition-colors"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle navigation"
             >
@@ -1492,46 +794,51 @@ const UserHeader = ({ user, onLogout }) => {
             </button>
           </div>
 
-          <div className="desktop-nav">
+          <div className="hidden lg:flex items-center gap-0">
             {dashboardMenuItems.map((item, idx) => {
               const IconComponent = item.icon;
               return (
-                <button
-                  key={idx}
-                  className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
-                  onClick={() => handleNavigate(item.path)}
-                >
-                  <IconComponent className="nav-icon" />
-                  <span className="full-label">{item.label}</span>
-                  <span className="short-label">{item.shortLabel}</span>
-                </button>
+                <div key={idx} className="relative">
+                  <button
+                    className={`flex items-center gap-2 px-5 py-4 bg-transparent border-none rounded-md cursor-pointer text-base hover:text-[#ad2132] hover:bg-[#f8d7da] transition-colors ${location.pathname === item.path ? 'text-[#ad2132] bg-[#f8d7da]' : 'text-gray-600'}`}
+                    onClick={() => handleNavigate(item.path)}
+                  >
+                    <IconComponent className="text-base" />
+                    <span className="hidden xl:inline">{item.label}</span>
+                    <span className="xl:hidden">{item.shortLabel}</span>
+                  </button>
+                  {/* Vertical divider line - hide for last item */}
+                  {idx < dashboardMenuItems.length - 1 && (
+                    <div className="absolute right-[-10px] top-1/2 transform -translate-y-1/2 h-6 w-px bg-gray-300"></div>
+                  )}
+                </div>
               );
             })}
 
-            <div className="user-dropdown" ref={userMenuRef}>
+            <div className="relative ml-2.5" ref={userMenuRef}>
               <button
-                className="user-btn"
+                className="flex items-center gap-2.5 px-3 py-2 bg-transparent border border-gray-300 rounded-full cursor-pointer hover:border-[#ad2132] hover:bg-[#f8d7da] transition-colors"
                 onClick={() => setShowUserMenu(!showUserMenu)}
               >
-                <FaUserCircle className="user-icon" />
-                <div className="user-details">
-                  <div className="user-name">{user?.name || 'Account'}</div>
-                  <div className="user-email">{user?.email || user?.phone}</div>
+                <FaUserCircle className="text-xl text-gray-600" />
+                <div className="text-left">
+                  <div className="text-sm font-medium truncate max-w-[120px]">{user?.name || 'Account'}</div>
+                  <div className="text-xs text-gray-600 truncate max-w-[120px]">{user?.email || user?.phone}</div>
                 </div>
-                <FaChevronDown className={`chevron ${showUserMenu ? 'rotate' : ''}`} />
+                <FaChevronDown className={`text-xs transition-transform ${showUserMenu ? 'rotate-180' : ''}`} />
               </button>
               {showUserMenu && (
-                <div className="user-dropdown-menu">
-                  <div className="user-info">
-                    <div className="user-name">{user?.name || 'User'}</div>
-                    <div className="user-email">{user?.email || user?.phone || 'Welcome!'}</div>
+                <div className="absolute right-0 top-full w-56 bg-white rounded-lg shadow-lg z-50 mt-2.5">
+                  <div className="p-4 border-b border-gray-200">
+                    <div className="font-semibold text-sm truncate max-w-full">{user?.name || 'User'}</div>
+                    <div className="text-gray-600 text-xs truncate max-w-full">{user?.email || user?.phone || 'Welcome!'}</div>
                   </div>
-                  <div className="dropdown-divider"></div>
+                  <div className="h-px bg-gray-200 my-1.5"></div>
                   <button
-                    className="dropdown-item logout"
+                    className="flex items-center gap-2.5 w-full p-3 bg-transparent border-none text-left cursor-pointer text-sm text-[#d32f2f] hover:bg-[#f8d7da] transition-colors"
                     onClick={onLogout}
                   >
-                    <FaSignOutAlt className="dropdown-icon" />
+                    <FaSignOutAlt className="text-sm" />
                     <span>Sign Out</span>
                   </button>
                 </div>
@@ -1542,482 +849,60 @@ const UserHeader = ({ user, onLogout }) => {
       </nav>
 
       {/* Mobile Sidebar */}
-      <div className={`mobile-sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
-        <div className="sidebar-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>
-        <div className="sidebar-content">
-          <div className="sidebar-header">
+      <div className={`fixed top-0 left-0 w-full h-full z-[1060] pointer-events-none ${isMobileMenuOpen ? 'pointer-events-auto' : ''}`}>
+        <div className={`absolute top-0 left-0 w-full h-full bg-black/50 transition-opacity ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'}`} onClick={() => setIsMobileMenuOpen(false)}></div>
+        <div className={`absolute top-0 left-[-100%] w-full h-full bg-white transition-transform flex flex-col ${isMobileMenuOpen ? 'translate-x-full' : ''}`}>
+          <div className="flex justify-between items-center p-5 border-b border-gray-200">
             <img
               src="/logo/smalllogo.png"
               alt="HiCap Logo"
-              className="sidebar-logo"
+              className="h-10"
             />
             <button
-              className="sidebar-close"
+              className="bg-transparent border-none text-2xl text-gray-800 cursor-pointer hover:text-[#ad2132] transition-colors"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <FaTimes />
             </button>
           </div>
 
-          <div className="user-profile">
-            <div className="user-avatar">
+          <div className="flex items-center gap-4 p-5 border-b border-gray-200">
+            <div className="text-4xl text-[#ad2132]">
               <FaUserCircle />
             </div>
-            <div className="user-details">
-              <div className="user-name">{user?.name || 'User'}</div>
-              <div className="user-email">{user?.email || user?.phone}</div>
+            <div className="flex-grow">
+              <div className="font-semibold mb-1">{user?.name || 'User'}</div>
+              <div className="text-sm text-gray-600">{user?.email || user?.phone}</div>
             </div>
           </div>
 
-          <div className="sidebar-menu">
+          <div className="flex-grow overflow-y-auto py-2.5">
             {dashboardMenuItems.map((item, idx) => {
               const IconComponent = item.icon;
               return (
                 <div
                   key={idx}
-                  className={`menu-item ${location.pathname === item.path ? 'active' : ''}`}
+                  className={`flex items-center gap-4 p-4 cursor-pointer hover:bg-gray-50 hover:text-[#ad2132] transition-colors ${location.pathname === item.path ? 'bg-gray-50 text-[#ad2132]' : ''}`}
                   onClick={() => handleNavigate(item.path)}
                 >
-                  <IconComponent className="menu-icon" />
+                  <IconComponent className="text-xl" />
                   <span>{item.label}</span>
                 </div>
               );
             })}
           </div>
 
-          <div className="sidebar-footer">
+          <div className="p-5 border-t border-gray-200">
             <button
-              className="logout-btn"
+              className="flex items-center justify-center gap-2.5 w-full p-4 bg-transparent border border-[#d32f2f] text-[#d32f2f] rounded-md font-semibold cursor-pointer hover:bg-[#f8d7da] transition-colors"
               onClick={onLogout}
             >
-              <FaSignOutAlt className="logout-icon" />
+              <FaSignOutAlt className="text-xl" />
               <span>Logout</span>
             </button>
           </div>
         </div>
       </div>
-
-      <style >{`
-        /* Base Styles */
-        .navbar {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 80px;
-          background-color: white;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-          z-index: 1050;
-          transition: all 0.3s ease;
-        }
-        
-        .navbar.scrolled {
-          background: rgba(255, 255, 255, 0.9);
-          backdrop-filter: blur(10px);
-        }
-        
-        .navbar-container {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          height: 100%;
-          padding: 0 20px;
-          max-width: 1400px;
-          margin: 0 auto;
-        }
-        
-        .navbar-brand {
-          cursor: pointer;
-        }
-        
-        .logo {
-          height: 40px;
-        }
-        
-        /* Desktop Navigation */
-        .desktop-nav {
-          display: none;
-          align-items: center;
-          gap: 5px;
-        }
-        
-        @media (min-width: 992px) {
-          .desktop-nav {
-            display: flex;
-          }
-        }
-        
-        .nav-link {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 15px 20px; /* Increased padding */
-          background: none;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-          font-size: 16px; /* Increased font size */
-          color: #666;
-          margin: 0 5px;
-          position: relative;
-        }
-        
-        .nav-link:hover, .nav-link.active {
-          color: #ad2132;
-          background-color: #f8d7da;
-        }
-        
-        /* Always show the margin line between menu items */
-        .nav-link:after {
-          content: '';
-          position: absolute;
-          right: -10px;
-          top: 50%;
-          transform: translateY(-50%);
-          height: 30px; /* Increased height */
-          width: 1px;
-          background-color: #ddd;
-        }
-        
-        /* Remove margin line for the last item */
-        .user-dropdown:after,
-        .nav-link:last-child:after {
-          display: none;
-        }
-        
-        .nav-icon {
-          font-size: 16px;
-        }
-        
-        .short-label {
-          display: none;
-        }
-        
-        @media (max-width: 1200px) {
-          .full-label {
-            display: none;
-          }
-          .short-label {
-            display: inline;
-          }
-        }
-        
-        /* User Dropdown */
-        .user-dropdown {
-          position: relative;
-          margin-left: 10px;
-        }
-        
-        .user-btn {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 8px 12px;
-          background: none;
-          border: 1px solid #ddd;
-          border-radius: 30px;
-          cursor: pointer;
-        }
-        
-        .user-icon {
-          font-size: 20px;
-          color: #666;
-        }
-        
-        .user-details {
-          text-align: left;
-        }
-        
-        .user-name {
-          font-size: 13px;
-          font-weight: 500;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          max-width: 120px;
-        }
-        
-        .user-email {
-          font-size: 11px;
-          color: 666;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          max-width: 120px;
-        }
-        
-        .chevron {
-          font-size: 12px;
-          margin-left: 5px;
-          transition: transform 0.3s ease;
-        }
-        
-        .chevron.rotate {
-          transform: rotate(180deg);
-        }
-        
-        .user-dropdown-menu {
-          position: absolute;
-          right: 0;
-          top: 100%;
-          width: 220px;
-          background-color: white;
-          border-radius: 8px;
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-          z-index: 1050;
-          margin-top: 10px;
-        }
-        
-        .user-info {
-          padding: 15px;
-          border-bottom: 1px solid #eee;
-        }
-        
-        .user-info .user-name {
-          font-weight: 600;
-          font-size: 14px;
-          max-width: 100%;
-        }
-        
-        .user-info .user-email {
-          font-size: 12px;
-          max-width: 100%;
-        }
-        
-        .dropdown-divider {
-          height: 1px;
-          background-color: #eee;
-          margin: 5px 0;
-        }
-        
-        .dropdown-item {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          width: 100%;
-          padding: 12px 15px;
-          background: none;
-          border: none;
-          text-align: left;
-          cursor: pointer;
-          font-size: 14px;
-        }
-        
-        .dropdown-item:hover {
-          background-color: #f8f9fa;
-          color: #ad2132;
-        }
-        
-        .dropdown-item.active {
-          color: #ad2132;
-        }
-        
-        .dropdown-item.logout {
-          color: #d32f2f;
-        }
-        
-        .dropdown-icon {
-          font-size: 14px;
-        }
-        
-        /* Mobile Header */
-        .mobile-header-actions {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-        
-        @media (min-width: 992px) {
-          .mobile-header-actions {
-            display: none;
-          }
-        }
-        
-        .user-dropdown-mobile {
-          position: relative;
-        }
-        
-        .user-btn-mobile {
-          display: flex;
-          align-items: center;
-          gap: 5px;
-          padding: 8px 12px;
-          background: none;
-          border: 1px solid #ad2132;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-        
-        .user-icon {
-          color: #ad2132;
-          font-size: 16px;
-        }
-        
-        .user-dropdown-menu {
-          position: absolute;
-          right: 0;
-          top: 100%;
-          width: 220px;
-          background-color: white;
-          border-radius: 8px;
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-          z-index: 1050;
-          margin-top: 10px;
-        }
-        
-        .menu-toggle {
-          width: 44px;
-          height: 44px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: none;
-          border: 1px solid #ad2132;
-          color: #ad2132;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-        
-        /* Mobile Sidebar */
-        .mobile-sidebar {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 1060;
-          pointer-events: none;
-        }
-        
-        .mobile-sidebar.open {
-          pointer-events: auto;
-        }
-        
-        .sidebar-overlay {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.5);
-          opacity: 0;
-          transition: opacity 0.3s ease;
-        }
-        
-        .mobile-sidebar.open .sidebar-overlay {
-          opacity: 1;
-        }
-        
-        .sidebar-content {
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background-color: white;
-          transition: transform 0.3s ease;
-          display: flex;
-          flex-direction: column;
-        }
-        
-        .mobile-sidebar.open .sidebar-content {
-          transform: translateX(100%);
-        }
-        
-        .sidebar-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 20px;
-          border-bottom: 1px solid #eee;
-        }
-        
-        .sidebar-logo {
-          height: 40px;
-        }
-        
-        .sidebar-close {
-          background: none;
-          border: none;
-          font-size: 1.5rem;
-          color: #333;
-          cursor: pointer;
-        }
-        
-        .user-profile {
-          display: flex;
-          align-items: center;
-          gap: 15px;
-          padding: 20px;
-          border-bottom: 1px solid #eee;
-        }
-        
-        .user-avatar {
-          font-size: 2.5rem;
-          color: #ad2132;
-        }
-        
-        .user-details {
-          flex-grow: 1;
-        }
-        
-        .user-name {
-          font-weight: 600;
-          margin-bottom: 5px;
-        }
-        
-        .user-email {
-          font-size: 0.9rem;
-          color: #666;
-        }
-        
-        .sidebar-menu {
-          flex-grow: 1;
-          overflow-y: auto;
-          padding: 10px 0;
-        }
-        
-        .menu-item {
-          display: flex;
-          align-items: center;
-          gap: 15px;
-          padding: 15px 20px;
-          cursor: pointer;
-        }
-        
-        .menu-item:hover, .menu-item.active {
-          background-color: #f8f9fa;
-          color: #ad2132;
-        }
-        
-        .menu-icon {
-          font-size: 1.2rem;
-        }
-        
-        .sidebar-footer {
-          padding: 20px;
-          border-top: 1px solid 'eee';
-        }
-        
-        .logout-btn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 10px;
-          width: 100%;
-          padding: 15px;
-          background: none;
-          border: 1px solid #d32f2f;
-          color: #d32f2f;
-          border-radius: 6px;
-          font-weight: 600;
-          cursor: pointer;
-        }
-        
-        .logout-icon {
-          font-size: 1.2rem;
-        }
-      `}</style>
     </>
   );
 };
@@ -2039,14 +924,14 @@ const Header = () => {
     setIsLoggedIn(true);
     setUser(userData);
     sessionStorage.setItem('user', JSON.stringify(userData));
-    window.dispatchEvent(new Event('storage')); // Trigger update
+    window.dispatchEvent(new Event('storage'));
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUser(null);
     sessionStorage.removeItem("user");
-    window.dispatchEvent(new Event('storage')); // Trigger update
+    window.dispatchEvent(new Event('storage'));
     navigate('/');
   };
 

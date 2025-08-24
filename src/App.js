@@ -77,6 +77,7 @@ function App() {
         <Route path="/mockups" element={<MockInterviews />} />
         <Route path="/liveprojects" element={<LiveProjects />} />
         <Route path="/placements" element={<PlacementAssistance />} />
+        
 
         {/* Protected Routes */}
         <Route

@@ -30,7 +30,7 @@ const Features = () => {
         <div className="col-lg-8">
           <div className="d-inline-block position-relative ">
             <h2 className="fw-bold text-dark mb-1">
-              Some great features of <span style={{ color: "#ad2132" }}>TECHSTERKER</span>
+              Key Takeaways of <span style={{ color: "#ad2132" }}>TECHSTERKER</span>
             </h2>
             {/* <div
               style={{
@@ -86,7 +86,7 @@ const Features = () => {
                   transition: 'all 0.3s ease'
                 }}
               >
-                <i className={`bi ${iconList[index % iconList.length]}`}></i>
+                <i className={`bi ${iconList[index % iconList.length]} fs-1`}></i>
               </div>
               <h5 className="fw-bold mb-3 ">{feature.title}</h5>
               <p className="text-muted small">{feature.content}</p>

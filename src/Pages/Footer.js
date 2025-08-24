@@ -67,76 +67,12 @@ const Footer = () => {
 
   return (
     <footer className="meroon-back text-white pt-5">
-      <div className="container">
+      <div className="container ">
         {/* ===== Main Footer Content ===== */}
         <div className="row gy-4">
-          {/* Training Courses */}
-          <div className="col-6 col-md-4 col-lg-3">
-            <h6 className="fw-bold mb-3 fs-6 fs-md-5">Trending Courses</h6>
-            <ul className="list-unstyled">
-              {loading ? (
-                <li className="text-white-50">Loading...</li>
-              ) : (
-                courses.slice(0, 4).map((course) => (
-                  <li key={course._id}>
-                    <a
-                      href="#"
-                      className="text-white text-decoration-none fs-6 link-hover"
-                    >
-                      {course.name}
-                    </a>
-                  </li>
-                ))
-              )}
-            </ul>
-          </div>
-
-          {/* Learn */}
-          <div className="col-6 col-md-4 col-lg-2">
-            <h6 className="fw-bold mb-3 fs-6 fs-md-5">Learn</h6>
-            <ul className="list-unstyled">
-              {[
-                "Training & Certification",
-                "Academy",
-                "Blog",
-                "Knowledge Base",
-              ].map((item, idx) => (
-                <li key={idx}>
-                  <a
-                    href="#"
-                    className="text-white text-decoration-none fs-6 link-hover"
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Community */}
-          <div className="col-6 col-md-4 col-lg-2">
-            <h6 className="fw-bold mb-3 fs-6 fs-md-5">Community</h6>
-            <ul className="list-unstyled">
-              {[
-                "User Community",
-                "Customer Stories",
-                "Work with a Partner",
-                "HICAP for Startups",
-              ].map((item, idx) => (
-                <li key={idx}>
-                  <a
-                    href="#"
-                    className="text-white text-decoration-none fs-6 link-hover"
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
+          
           {/* Company */}
-          <div className="col-6 col-md-4 col-lg-2">
+          <div className="col-6 col-md-4 col-lg-3">
             <h6 className="fw-bold mb-3 fs-6 fs-md-5">Company</h6>
             <ul className="list-unstyled">
               <li>
@@ -160,9 +96,33 @@ const Footer = () => {
             </ul>
           </div>
 
+          {/* Community */}
+          <div className="col-6 col-md-4 col-lg-3">
+            <h6 className="fw-bold mb-3 fs-6 fs-md-5">Community</h6>
+            <ul className="list-unstyled">
+              {[
+                "User Community",
+                "Customer Stories",
+                "Work with a Partner",
+                "HICAP for Startups",
+              ].map((item, idx) => (
+                <li key={idx}>
+                  <a
+                    href="#"
+                    className="text-white text-decoration-none fs-6 link-hover"
+                  >
+                    {item}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          
+
           {/* Contact Sales */}
-          <div className="col-6 col-md-4 col-lg-2">
-            <h6 className="fw-bold mb-3 fs-6 fs-md-5">Contact Sales</h6>
+          <div className="col-6 col-md-4 col-lg-3">
+            <h6 className="fw-bold mb-3 fs-6 fs-md-5">Contact </h6>
             <p className="mb-1 fw-semibold">Phone</p>
             <a
               href="tel:+916299161616"

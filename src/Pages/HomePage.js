@@ -13,6 +13,7 @@ import Reviews from "../components/Reviews";
 import TechsterkerCourses from '../components/TechsterkerCourses'
 import ClientScroller from "../components/Client Scroller";
 import Counter from "../components/Counter";
+import HeroSection from "../newone/Hero";
 
 const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -53,7 +54,8 @@ const HomePage = () => {
 
       {!isLoggedIn ? (
         <>
-          <CourseAndFeatures />
+          {/* <CourseAndFeatures /> */}
+          <HeroSection/>
           <ClientScroller/>
           <TechsterkerCourses/>
           <Features />

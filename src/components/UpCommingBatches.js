@@ -85,7 +85,7 @@ const UpCommingBatches = () => {
     return (
       <>
         <Header />
-        <AboutTechsterker />
+        {/* <AboutTechsterker /> */}
         <Container className="my-5 text-center">
           <Spinner animation="border" role="status" variant="danger">
             <span className="visually-hidden">Loading...</span>
@@ -101,8 +101,8 @@ const UpCommingBatches = () => {
     return (
       <>
         <Header />
-        <AboutTechsterker />
-        <Container className="my-5 text-center">
+        {/* <AboutTechsterker /> */}
+        <Container className="my-5 text-center mt-5">
           <Alert variant="danger">
             Failed to load data: {error}
           </Alert>
@@ -122,11 +122,12 @@ const UpCommingBatches = () => {
   return (
     <>
       <Header />
-      <AboutTechsterker />
+      <div className="mt-5">
+        {/* <AboutTechsterker /> */}
 
-      <Container className="my-5">
+      <Container className="my-5 mt-5">
         {/* Why Choose Us Section (API) */}
-        <section className="mb-5">
+        {/* <section className="mb-5">
           <h2 className="text-center mb-4 fw-bold" style={{ color: "#ad2132" }}>
             Why Choose Techsterker for Your Tech Education?
           </h2>
@@ -148,11 +149,11 @@ const UpCommingBatches = () => {
               </Col>
             ))}
           </Row>
-        </section>
+        </section> */}
 
         {/* Upcoming Batches Section */}
         <section>
-          <h2 className="text-center mb-4 fw-bold" style={{ color: "#ad2132" }}>
+          <h2 className="text-center mb-4 fw-bold mt-5" style={{ color: "#ad2132" }}>
             Click below to view the batch details
           </h2>
 
@@ -286,7 +287,7 @@ const UpCommingBatches = () => {
         </Card>
 
         {/* Why Professionals & Students Choose Us (API) */}
-        <section className="mt-5 mb-5">
+        {/* <section className="mt-5 mb-5">
           <h2 className="text-center fw-bold mb-4" style={{ color: "#ad2132" }}>
             Why Professionals & Students Choose Us
           </h2>
@@ -314,13 +315,14 @@ const UpCommingBatches = () => {
               Join Now and Transform Your Future
             </Button>
           </div>
-        </section>
+        </section> */}
       </Container>
 
       <CourseEnquiryModal
         show={showEnquiryModal}
         handleClose={() => setShowEnquiryModal(false)}
       />
+      </div>
       <Footer />
     </>
   );
