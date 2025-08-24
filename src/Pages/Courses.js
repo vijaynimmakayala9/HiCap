@@ -3,6 +3,7 @@ import { FaRegClock, FaTasks, FaStar } from 'react-icons/fa';
 import Header from './Header';
 import { useNavigate } from 'react-router-dom';
 import CourseEnquiryModal from '../components/EnrollModal';
+import Footer from './Footer';
 
 const Courses = () => {
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ const Courses = () => {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const response = await fetch('https://hicap-backend-4rat.onrender.com/api/course1');
+                const response = await fetch('https://hicap-backend-4rat.onrender.com/api/coursecontroller');
                 const data = await response.json();
                 if (response.ok) {
                     setCourses(data.data);
@@ -122,8 +123,8 @@ const Courses = () => {
                         <li className={`page-item ${currentPage === totalPages ? "active" : ""}`}>
                             <button
                                 className={`page-link ${currentPage === totalPages
-                                        ? "bg-meroon"
-                                        : "textcolor border-danger"
+                                    ? "bg-meroon"
+                                    : "textcolor border-danger"
                                     }`}
                                 onClick={() => setCurrentPage(totalPages)}
                             >
@@ -210,7 +211,7 @@ const Courses = () => {
 
                 {renderPagination()}
             </section>
-
+            <Footer />
             <CourseEnquiryModal
                 show={showEnquiryModal}
                 handleClose={() => setShowEnquiryModal(false)}

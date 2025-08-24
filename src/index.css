@@ -121,12 +121,12 @@ body p li h3 h4 h5 h6 a{
 
 /* Global text selection style */
 ::selection {
-  background-color: #ad2132; /* light maroon */
+  background-color: #c34153; /* light maroon */
   color: #fff; /* text stays black for readability */
 }
 
 ::-moz-selection {
-  background-color: #ad2132; /* Firefox support */
+  background-color: #c34153; /* Firefox support */
   color: #fff;
 }
 

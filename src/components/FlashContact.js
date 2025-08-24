@@ -7,15 +7,15 @@ const FlashContact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`We will call you soon on: ${phone}`);
+    alert(`Our counselor will contact you soon on: ${phone}`);
   };
 
   return (
     <section className="flash-contact-section py-5">
       <div className="container text-center text-white">
-        <h2 className="fw-bold mb-2">📞 Request a Call</h2>
+        <h2 className="fw-bold mb-2">📞 Call a Counselor</h2>
         <p className="mb-4">
-          Leave your number and our team will get in touch with you shortly.
+          Leave your number and our counselor will reach out to guide you shortly.
         </p>
         <Form
           onSubmit={handleSubmit}
@@ -34,7 +34,7 @@ const FlashContact = () => {
             />
           </InputGroup>
           <Button type="submit" className="gradient-button px-4 fw-semibold">
-            Send Request
+            Request Call
           </Button>
         </Form>
       </div>

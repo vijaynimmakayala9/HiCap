@@ -51,13 +51,17 @@ const Course = () => {
                 {/* Courses Grid */}
                 {Array.isArray(courses) && courses.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        {courses.slice(0,4).map(({ _id, name, duration, noOfLessons, rating, description }) => (
+                        {courses.slice(0, 4).map(({ _id, name, image, category, duration, noOfLessons, rating, description }) => (
                             <div
                                 key={_id}
                                 className="bg-white/30 backdrop-blur-md rounded-xl shadow-lg p-6 flex flex-col justify-between border border-white/20 hover:shadow-2xl hover:bg-white/40 transition-all duration-300 transform hover:scale-105"
                             >
-                                <div className="pb-4 border-b border-white/20 mb-4">
-                                    <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
+                                <div className="pb-4 border-b border-white/20 mb-4 d-flex gap-3">
+                                    <img src={image} className='img-fluid rounded-circle' style={{ height: "50px", width: "50px" }} />
+                                    <div className=''>
+                                        <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
+                                        <p className="text-sm font-semibold text-gray-500">{category}</p>
+                                    </div>
                                 </div>
                                 <div className="flex-grow">
                                     <p className="text-sm text-gray-800 mb-4">{description}</p>
@@ -81,11 +85,11 @@ const Course = () => {
                                         className="flex-1 py-2 px-4 rounded-md border border-red-300 font-medium hover:bg-gray-200 transition-colors mb-2 sm:mb-0"
                                         onClick={() => navigate(`/course/${_id}`)}
                                     >
-                                        Curriculum
+                                        View Details
                                     </button>
                                     <button
                                         className="flex-1 py-2 px-4 rounded-md text-white font-medium bg-red-700 hover:bg-red-800 transition-colors"
-                                        onClick={() => {/* Handle enroll logic here */}}
+                                        onClick={() => {/* Handle enroll logic here */ }}
                                     >
                                         Enroll Now
                                     </button>

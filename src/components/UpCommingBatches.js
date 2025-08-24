@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import AboutTechsterker from "../Pages/AboutTerchsterker";
 import Header from "../Pages/Header";
 import Footer from "../Pages/Footer";
-import { Container, Table, Button, Card, Spinner, Alert, Row, Col } from "react-bootstrap";
+import { Container, Table, Button, Card, Spinner, Alert, Row, Col, Modal } from "react-bootstrap";
 import { Globe, Clock, Users } from 'react-feather';
 import CourseEnquiryModal from '../components/EnrollModal';
 
@@ -16,19 +15,21 @@ const UpCommingBatches = () => {
   const [categories, setCategories] = useState([]);
   const [showEnquiryModal, setShowEnquiryModal] = useState(false);
 
+  // New state for the flash modal
+  const [showFlashModal, setShowFlashModal] = useState(true);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const batchesRes = await axios.get('https://hicap-backend-4rat.onrender.com/api/upcomingBatch');
 
         if (batchesRes.data.success && batchesRes.data.data.length > 0) {
-          // ✅ Normalize keys (camelCase)
           const batches = batchesRes.data.data[0].allbatches.map(b => ({
             batchNo: b.batchNo,
             date: b.date,
             timing: b.timing,
             duration: b.duration,
-            category: b.categorie, // fixed key
+            category: b.categorie,
           }));
 
           setAllBatches(batches);
@@ -126,7 +127,7 @@ const UpCommingBatches = () => {
               Click below to view the batch details
             </h2>
 
-            <div className="text-white text-center py-3 fw-semibold rounded-top" style={{ backgroundColor: "#ad2132" }}>
+            <div className="text-white text-center py-3 fw-semibold rounded-top" style={{ backgroundColor: "#c34153" }}>
               UPCOMING BATCHES
             </div>
 
@@ -144,7 +145,7 @@ const UpCommingBatches = () => {
             </div>
 
             <div className="shadow-sm border border-top-0 rounded-bottom">
-              <Table striped bordered hover responsive className="mb-0">
+              <Table bordered hover responsive className="mb-0">
                 <thead style={{ backgroundColor: "#ad2132" }}>
                   <tr className="text-white text-uppercase">
                     <th>Batch No</th>
@@ -176,6 +177,57 @@ const UpCommingBatches = () => {
               </Table>
             </div>
           </section>
+
+          {/* Flash Banner Section */}
+          <section
+            className="my-4 p-4 rounded d-flex flex-column flex-md-row align-items-center justify-content-between text-center text-md-start"
+            style={{
+              background: "linear-gradient(90deg, #c34153, #c34153)", // bright gradient
+              color: "#fff",
+              border: "2px solid #ad2132",
+              boxShadow: "0 8px 20px rgba(0,0,0,0.25)",
+              animation: "flashSlide 1s ease-in-out", // subtle entrance animation
+            }}
+          >
+            <div className="mb-3 mb-md-0">
+              <h4 className="fw-bold mb-2" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
+                🌟 One-on-One Mentorship Session!
+              </h4>
+              <p className="mb-0" style={{ fontSize: "1rem", textShadow: "0.5px 0.5px 1px rgba(0,0,0,0.3)" }}>
+                Secure your personal guidance with our expert instructors. Limited seats available!
+              </p>
+            </div>
+            <div>
+              <Button
+                variant="light"
+                size="md"
+                className="fw-bold px-4 py-2"
+                style={{
+                  color: "#ad2132",
+                  backgroundColor: "#fff",
+                  borderRadius: "30px",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+                  transition: "transform 0.2s",
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+                onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                onClick={() => window.location.href = "tel:9876543211"}
+              >
+                Call a Counselor Now
+              </Button>
+            </div>
+
+            {/* Animation Keyframes */}
+            <style>
+              {`
+      @keyframes flashSlide {
+        0% { opacity: 0; transform: translateY(-20px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+    `}
+            </style>
+          </section>
+
 
           {/* International Students Section */}
           <section className="my-5 p-4 rounded" style={{ backgroundColor: "#f8f9fa" }}>

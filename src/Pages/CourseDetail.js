@@ -14,7 +14,9 @@ import {
   FaStarHalfAlt,
   FaRegStar,
   FaBookOpen,
-  FaMeetup
+  FaMeetup,
+  FaTools,
+  FaCode
 } from 'react-icons/fa';
 import Footer from './Footer';
 import Header from './Header';
@@ -114,7 +116,7 @@ const CourseDetail = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('https://hicap-backend-4rat.onrender.com/api/course1');
+        const response = await fetch('https://hicap-backend-4rat.onrender.com/api/coursecontroller');
         const coursesData = await response.json();
 
         if (coursesData.success) {
@@ -209,7 +211,7 @@ const CourseDetail = () => {
     </div>
   );
 
-  const relatedCourses = allCourses.filter(c => c._id !== id).slice(0, 3);
+  const relatedCourses = allCourses.filter(c => c._id !== id).slice(0, 4);
 
   return (
     <>
@@ -235,9 +237,6 @@ const CourseDetail = () => {
                       transition: "transform 0.3s ease, box-shadow 0.3s ease" // Hover effect
                     }}
                   />
-                  {/* <Badge bg="white" text="primary" className="position-absolute bottom-0 start-0 m-3 shadow-sm fw-bold">
-                    New Batch Starting Soon!
-                  </Badge> */}
                 </div>
               </Col>
               {/* Text Content */}
@@ -262,9 +261,7 @@ const CourseDetail = () => {
                   </p>
 
 
-                  <div className="mb-3">
-                    <StarRating rating={course.rating} reviewCount={course.reviewCount} />
-                  </div>
+                  
 
                   <div className="d-flex flex-wrap gap-2 mb-4">
                     <button
@@ -327,43 +324,9 @@ const CourseDetail = () => {
                   </div>
                 </div>
               </Col>
-
-
             </Row>
           </Container>
 
-          {/* Stats Cards
-          <Container className="py-4">
-            <Row className="g-3">
-              <Col sm={4}>
-                <Card className="border-0 shadow-sm text-center py-3  bg-opacity-10" style={{ backgroundColor: "#fcebed" }}>
-                  <FaUserGraduate className="textcolor fs-3 mb-2 mx-auto" />
-                  <h3 style={{ color: "#ad2132" }}>
-                    <Counter end={course.noOfStudents} suffix="+" />
-                  </h3>
-                  <p className="small textcolor mb-0 fw-bold">Students Enrolled</p>
-                </Card>
-              </Col>
-              <Col sm={4}>
-                <Card className="border-0 shadow-sm text-center py-3 bg-opacity-10" style={{ backgroundColor: "#fcebed" }}>
-                  <FaBookOpen className="textcolor fs-3 mb-2 mx-auto" />
-                  <h3 style={{ color: "#ad2132" }}>
-                    <Counter end={course.noOfLessons} />
-                  </h3>
-                  <p className="small textcolor mb-0 fw-bold">Lessons</p>
-                </Card>
-              </Col>
-              <Col sm={4}>
-                <Card className="border-0 shadow-sm text-center py-3  bg-opacity-10" style={{ backgroundColor: "#fcebed" }}>
-                  <FaStar className="text-warning fs-3 mb-2 mx-auto" />
-                  <h3 style={{ color: "#ad2132" }}>
-                    {course.rating}/5
-                  </h3>
-                  <p className="small textcolor mb-0 fw-bold">Reviews</p>
-                </Card>
-              </Col>
-            </Row>
-          </Container> */}
 
           {/* Features and Who Can Learn */}
           <Container className="py-4">
@@ -423,10 +386,10 @@ const CourseDetail = () => {
 
                           {/* Hover effect with CSS */}
                           <style jsx>{`
-              .position-relative:hover div.position-absolute {
-                opacity: 1;
-              }
-            `}</style>
+                            .position-relative:hover div.position-absolute {
+                              opacity: 1;
+                            }
+                          `}</style>
                         </Col>
                       ))}
                     </Row>
@@ -496,47 +459,35 @@ const CourseDetail = () => {
             </Row>
           </Container>
 
-
-          {/* Learning Objectives
-          <Container className="py-4">
-            <Card className="border-0">
-              <Card.Body>
-                <Card.Title
-                  className="border-0 pb-3 fw-bold"
-                  style={{ color: "#ad2132", fontSize: "1.75rem" }}
-                >
-                  Learning Objectives
-                </Card.Title>
-
-                <Row className="g-4">
-                  {course.courseObject?.map((item, index) => (
-                    <Col xs={12} sm={6} lg={4} key={index}>
-                      <Card
-                        className="border-0 h-100 shadow-sm rounded-4"
-                        style={{ backgroundColor: "#fcebed" }} // soft light merron
-                      >
-                        <Card.Body>
-                          <Card.Title
-                            className="fs-6 fw-semibold mb-2"
-                            style={{ color: "#ad2132", letterSpacing: "0.3px" }}
-                          >
-                            {item.title || `Objective ${index + 1}`}
-                          </Card.Title>
-                          <Card.Text
-                            className="text-muted small"
-                            style={{ lineHeight: "1.5", fontSize: "0.95rem" }}
-                          >
-                            {item.content}
-                          </Card.Text>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                  ))}
-                </Row>
-              </Card.Body>
-            </Card>
-          </Container> */}
-
+          {/* Tools & Platforms Section */}
+          {course.toolsImages && course.toolsImages.length > 0 && (
+            <Container className="py-4">
+              <Card className="border-0 shadow-sm">
+                <Card.Body className="p-4">
+                  <Card.Title className="d-flex align-items-center mb-4" style={{ color: "#ad2132" }}>
+                    <FaTools className="me-2" />
+                    Tools & Platforms You'll Learn
+                  </Card.Title>
+                  <div className="d-flex flex-wrap justify-content-center gap-4">
+                    {course.toolsImages.map((tool, index) => (
+                      <div key={index} className="text-center" style={{ width: "80px" }}>
+                        <img
+                          src={tool}
+                          alt={`Tool ${index}`}
+                          className="img-fluid mb-2"
+                          style={{
+                            height: "50px",
+                            objectFit: "contain",
+                            transition: "filter 0.3s ease"
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </Card.Body>
+              </Card>
+            </Container>
+          )}
 
 
           {/* FAQs */}
@@ -574,14 +525,58 @@ const CourseDetail = () => {
             </Container>
           )}
 
+          {/* Reviews Section (Directly after FAQs) */}
+          {course.reviews && course.reviews.length > 0 && (
+            <Container className="py-5">
+              <h3 className="mb-4 text-center" style={{ color: "#ad2132" }}>
+                Alumni Reviews
+              </h3>
+              <Row className="g-4">
+                {course.reviews.map((review) => (
+                  <Col xs={12} md={6} key={review._id}>
+                    <Card className="h-100 shadow border-0">
+                      <Card.Body>
+                        <div className="d-flex align-items-start">
+                          <img
+                            src={review.image}
+                            alt={review.name}
+                            className="rounded-circle me-3"
+                            style={{ width: "60px", height: "60px", objectFit: "cover" }}
+                          />
+                          <div className="flex-grow-1">
+                            <div className="d-flex justify-content-between align-items-center">
+                              <h6 className="mb-1 fw-bold">{review.name}</h6>
+                              <div className="d-flex">
+                                {[1, 2, 3, 4, 5].map((i) =>
+                                  i <= Math.floor(review.rating) ? (
+                                    <FaStar key={i} className="text-warning me-1" />
+                                  ) : i - review.rating <= 0.5 ? (
+                                    <FaStarHalfAlt key={i} className="text-warning me-1" />
+                                  ) : (
+                                    <FaRegStar key={i} className="text-muted me-1" />
+                                  )
+                                )}
+                              </div>
+                            </div>
+                            <p className="text-muted mt-2 mb-0">{review.content}</p>
+                          </div>
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                ))}
+              </Row>
+            </Container>
+          )}
 
-          <section className="py-5 bg-light shadow-sm" id="contact">
+
+          <section className="py-5 bg-light" id="contact">
             <div className="container">
               {/* Heading */}
               <div className="text-center mb-5">
                 <h2 className="fw-bold textcolor">Get in Touch</h2>
                 <p className="text-muted">
-                  Whether you’re a student or a professional, we’d love to hear from you.
+                  Whether you're a student or a professional, we'd love to hear from you.
                 </p>
               </div>
 
@@ -724,211 +719,88 @@ const CourseDetail = () => {
           </section>
 
 
-
-
-          {/* Who Can Learn
-          <Container className="py-4">
-            <Card className="border-0 shadow-sm">
-              <Card.Body>
-                <Card.Title className="border-bottom pb-2" style={{ color: "#ad2132", fontSize: "1.75rem" }}>
-                  Who Can Learn
-                </Card.Title>
-                <Row className="g-3">
-                  {[
-                    {
-                      image: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-                      title: "Students & Freshers",
-                      description: "Ideal for those starting their career and seeking strong foundational skills."
-                    },
-                    {
-                      image: "https://cdn-icons-png.flaticon.com/512/1053/1053244.png",
-                      title: "Working Professionals",
-                      description: "Upgrade your skills or pivot your career into high-demand roles."
-                    },
-                    {
-                      image: "https://cdn-icons-png.flaticon.com/512/190/190411.png",
-                      title: "Freelancers",
-                      description: "Enhance your service offering and land better-paying projects."
-                    },
-                    {
-                      image: "https://cdn-icons-png.flaticon.com/512/706/706830.png",
-                      title: "Entrepreneurs",
-                      description: "Gain practical knowledge to grow and manage your own business more effectively."
-                    }
-                  ].map((learner, index) => (
-                    <Col xs={12} sm={6} key={index}>
-                      <Card className="border-0 shadow-sm h-100">
-                        <Card.Body className="d-flex gap-3">
-                          <img
-                            src={learner.image}
-                            alt={learner.title}
-                            className="rounded-circle border border-2 border-info"
-                            style={{ width: '48px', height: '48px', objectFit: 'cover' }}
-                          />
-                          <div>
-                            <h5 className="" style={{ color: "#ad2132" }}>{learner.title}</h5>
-                            <h6 className="small text-muted mb-0">{learner.description}</h6>
-                          </div>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                  ))}
-                </Row>
-              </Card.Body>
-            </Card>
-          </Container>
-
-          {/* Course Information */}
-          {/* <Container className="py-4">
-            <Card className="border-0 shadow-sm">
-              <Card.Body>
-                <Card.Title className="border-bottom pb-2" style={{ color: "#ad2132", fontSize: "1.75rem" }}>
-                  Course Information
-                </Card.Title>
-                <Row>
-                  <Col md={6}>
-                    <h5 className="" style={{ color: "#ad2132" }}>Course Statistics</h5>
-                    <ul className="list-unstyled">
-                      <li className="d-flex justify-content-between py-2 border-bottom">
-                        <span className="text-dark">Course Category:</span>
-                        <span className="fw-semibold">{course.category}</span>
-                      </li>
-                      <li className="d-flex justify-content-between py-2 border-bottom">
-                        <span className="text-dark">Subcategory:</span>
-                        <span className="fw-semibold">{course.subcategory}</span>
-                      </li>
-                      <li className="d-flex justify-content-between py-2 border-bottom">
-                        <span className="text-dark">Average Rating:</span>
-                        <span className="fw-semibold">{course.rating}/5.0</span>
-                      </li>
-                      <li className="d-flex justify-content-between py-2 border-bottom">
-                        <span className="text-dark">Total Reviews:</span>
-                        <span className="fw-semibold">{course.reviewCount.toLocaleString()}</span>
-                      </li>
-                    </ul>
-                  </Col>
-                  <Col md={6}>
-                    <h5 className="" style={{ color: "#ad2132" }}>Technical Details</h5>
-                    <ul className="list-unstyled">
-                      <li className="d-flex justify-content-between py-2 border-bottom">
-                        <span className="text-dark">Total Lessons:</span>
-                        <span className="fw-semibold">{course.noOfLessons}</span>
-                      </li>
-                      <li className="d-flex justify-content-between py-2 border-bottom">
-                        <span className="text-dark">Enrolled Students:</span>
-                        <span className="fw-semibold">{course.noOfStudents.toLocaleString()}</span>
-                      </li>
-                    </ul>
-                  </Col>
-                </Row>
-              </Card.Body>
-            </Card>
-          </Container> */}
-
-          {/* Related Courses */}
+          {/* Related Courses - Updated Format */}
           {relatedCourses.length > 0 && (
-            <Container className="py-4">
+            <Container className="py-4 bg-light">
               <h2 className="mb-4" style={{ color: "#ad2132" }}>
                 You May Also Like
               </h2>
               <Row className="g-4">
                 {relatedCourses.map((relatedCourse) => (
-                  <Col xs={12} sm={6} lg={4} key={relatedCourse._id}>
-                    <Card className="h-100 shadow-sm border-0">
-                      <Card.Img
-                        variant="top"
-                        src={relatedCourse.image}
-                        alt={relatedCourse.name}
-                        style={{ height: "180px", objectFit: "cover" }}
-                      />
-                      <Card.Body>
-                        <div className="d-flex justify-content-between mb-2">
-                          <Card.Title
-                            className="fs-6 mb-0 fw-semibold"
-                            style={{ color: "#ad2132" }}
-                          >
-                            {relatedCourse.name}
-                          </Card.Title>
-                          <span className="fw-bold" style={{ color: "#ad2132" }}>
-                            ${relatedCourse.price}
-                          </span>
+                  <Col xs={12} sm={6} lg={6} key={relatedCourse._id}>
+                    <Card className="h-100 border-0 shadow-sm" style={{
+                      background: 'rgba(255, 255, 255, 0.3)',
+                      backdropFilter: 'blur(10px)',
+                      borderRadius: '16px'
+                    }}>
+                      <Card.Body className="p-4 d-flex flex-column">
+
+                        <div className="d-flex align-items-center gap-3">
+                          <img
+                            src={relatedCourse.image} // replace with actual image property
+                            alt={relatedCourse.name}
+                            className="rounded-circle img-fluid"
+                            style={{ width: "50px", height: "50px", objectFit: "cover" }}
+                          />
+                          <div>
+                            <Card.Title className="mb-1 fw-semibold" style={{ color: "#ad2132" }}>
+                              {relatedCourse.name}
+                            </Card.Title>
+                            {relatedCourse.category && (
+                              <small className="text-muted">{relatedCourse.category}</small>
+                            )}
+                          </div>
                         </div>
 
-                        <StarRating
-                          rating={relatedCourse.rating}
-                          reviewCount={relatedCourse.reviewCount}
-                        />
-
-                        <div className="d-flex flex-wrap gap-1 my-2">
-                          <small className="text-muted d-flex align-items-center">
-                            <FaRegClock className="me-1" /> {relatedCourse.duration}
-                          </small>
-                          <small className="text-muted d-flex align-items-center">
-                            <FaUserGraduate className="me-1" /> {relatedCourse.noOfStudents}+
-                          </small>
-                          <small className="text-muted d-flex align-items-center">
-                            <FaBook className="me-1" /> {relatedCourse.noOfLessons}
-                          </small>
-                        </div>
-
-                        <Card.Text className="small text-dark mb-3">
+                        <Card.Text className="small text-dark mb-4 flex-grow-1">
                           {relatedCourse.description}
                         </Card.Text>
 
-                        <div className="d-flex flex-wrap gap-1 mb-3">
-                          {relatedCourse.isPopular && (
-                            <Button
-                              size="sm"
-                              style={{ backgroundColor: "#c34153", color: "#fff", border: "none" }}
-                            >
-                              Popular
-                            </Button>
-                          )}
-                          {relatedCourse.isHighRated && (
-                            <Button
-                              size="sm"
-                              style={{ backgroundColor: "#c34153", color: "#fff", border: "none" }}
-                            >
-                              Top Rated
-                            </Button>
-                          )}
-                          <Button
-                            size="sm"
-                            style={{
-                              backgroundColor:
-                                relatedCourse.status === "available" ? "#c34153" : "#c34153",
-                              color: relatedCourse.status === "available" ? "#fff" : "#fff",
-                              border: "none",
-                            }}
-                          >
-                            {relatedCourse.status === "available" ? "Available" : "Coming Soon"}
-                          </Button>
+                        <div className="d-flex align-items-center text-sm text-muted mb-4 gap-4 flex-wrap">
+                          <div className="d-flex align-items-center">
+                            <FaRegClock className="me-2" style={{ color: "#ad2132" }} />
+                            <span>{relatedCourse.duration}</span>
+                          </div>
+                          <div className="d-flex align-items-center">
+                            <FaCode className="me-2" style={{ color: "#ad2132" }} />
+                            <span>{relatedCourse.mode} </span>
+                          </div>
+                          {/* <div className="d-flex align-items-center">
+                            <FaStar className="me-2 text-warning" />
+                            <span>{relatedCourse.rating}/5</span>
+                          </div> */}
                         </div>
 
-
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="w-100"
-                          style={{
-                            borderColor: "#ad2132",
-                            color: "#ad2132",
-                          }}
-                          onMouseOver={(e) => {
-                            e.target.style.backgroundColor = "#ad2132";
-                            e.target.style.color = "#fff";
-                          }}
-                          onMouseOut={(e) => {
-                            e.target.style.backgroundColor = "transparent";
-                            e.target.style.color = "#ad2132";
-                          }}
-                          onClick={() => {
-                            navigate(`/course/${relatedCourse._id}`);
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                          }}
-                        >
-                          View Details
-                        </Button>
+                        <div className="d-flex justify-content-between gap-2 flex-wrap">
+                          <Button
+                            variant="outline"
+                            className="flex-grow-1"
+                            style={{
+                              borderColor: "#ad2132",
+                              color: "#ad2132",
+                            }}
+                            onMouseOver={(e) => {
+                              e.target.style.backgroundColor = "#ad2132";
+                              e.target.style.color = "#fff";
+                            }}
+                            onMouseOut={(e) => {
+                              e.target.style.backgroundColor = "transparent";
+                              e.target.style.color = "#ad2132";
+                            }}
+                            onClick={() => {
+                              navigate(`/course/${relatedCourse._id}`);
+                              window.scrollTo({ top: 0, behavior: "smooth" });
+                            }}
+                          >
+                            View Details
+                          </Button>
+                          <Button
+                            className="flex-grow-1 gradient-button"
+                            onClick={() => setShowEnquiryModal(true)}
+                          >
+                            Enroll Now
+                          </Button>
+                        </div>
                       </Card.Body>
                     </Card>
                   </Col>
@@ -940,6 +812,7 @@ const CourseDetail = () => {
         </main>
       </div>
 
+      {/* Syllabus Download Modal */}
       <Modal
         show={show}
         onHide={handleClose}
@@ -998,7 +871,8 @@ const CourseDetail = () => {
           )}
         </Modal.Body>
       </Modal>
-      <FlashContact />
+
+      {/* <FlashContact /> */}
       <Footer />
       <CourseEnquiryModal
         show={showEnquiryModal}

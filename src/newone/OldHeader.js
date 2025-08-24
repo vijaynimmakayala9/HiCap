@@ -42,7 +42,7 @@ const GuestHeader = ({ onLogin }) => {
       isDropdown: true,
       items: [
         { label: 'Resume Building', path: '/resumebuilding' },
-        { label: 'Mockup Interviews', path: '/mockups' },
+        { label: 'Mockup Interviews', path: '/mockinterviews' },
         { label: 'Live Projects', path: '/liveprojects' },
         { label: 'Placements Assistance', path: '/placements' },
         { label: 'FAQs', path: '/faqs' },

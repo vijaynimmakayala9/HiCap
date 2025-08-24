@@ -47,10 +47,11 @@ const GuestHeader = ({ onLogin }) => {
       isDropdown: true,
       items: [
         { label: 'Resume Building', path: '/resumebuilding' },
-        { label: 'Mockup Interviews', path: '/mockups' },
-        { label: 'Live Projects', path: '/liveprojects' },
+        { label: 'Mock Interviews', path: '/mockinterviews' },
+        { label: 'Real time Assistance', path: '/realtimeassistance' },
+        { label: 'Project Assistance', path: '/projectassistance' },
         { label: 'Placements Assistance', path: '/placements' },
-        { label: 'FAQs', path: '/faqs' }
+        { label: 'One-One Session', path: '/onetoone' },
       ]
     },
     {
@@ -58,8 +59,11 @@ const GuestHeader = ({ onLogin }) => {
       isDropdown: true,
       items: [
         { label: 'About Us', path: '/aboutus' },
+        { label: 'Contact Us', path: '/contactus' },
         { label: 'Blog', path: '/blog' },
-        { label: 'Our Mentors', path: '/ourmentors' }
+        { label: 'Our Mentors', path: '/ourmentors' },
+        { label: 'Certificates', path: '#' },
+        { label: 'FAQs', path: '/faqs' }
       ]
     }
   ];
@@ -77,10 +81,10 @@ const GuestHeader = ({ onLogin }) => {
     const checkScreenSize = () => {
       setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
     };
-    
+
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
-    
+
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
@@ -294,7 +298,7 @@ const GuestHeader = ({ onLogin }) => {
       <div className="flex flex-col md:flex-row p-4 md:p-5">
         <div className="flex-none w-full md:w-1/4 md:pr-4 md:border-r border-gray-200 mb-4 md:mb-0">
           <h6 className="font-bold text-[#ad2132] mb-3 text-sm md:text-base">Course Categories</h6>
-          <ul className="list-none p-0 m-0 flex flex-row md:flex-col overflow-x-auto md:overflow-x-visible pb-2 md:pb-0">
+          <ul className="list-none p-0 m-0 flex flex-col md:flex-col overflow-x-auto md:overflow-x-visible pb-2 md:pb-0">
             {Object.keys(groupedCourses).map((category) => (
               <li key={category} className="mb-2 flex-shrink-0 md:flex-shrink mr-2 md:mr-0">
                 <button
@@ -563,7 +567,7 @@ const GuestHeader = ({ onLogin }) => {
                     {item.label === 'Services' && showResourcesMenu && <ResourcesDropdown />}
                     {item.label === 'Company' && showCompanyMenu && <CompanyDropdown />}
                     {/* Vertical divider line */}
-                    <div className="absolute right-[-8px] md:right-[-10px] top-1/2 transform -translate-y-1/2 h-5 md:h-6 w-px bg-gray-300"></div>
+                    <div className="absolute right-[-8px] md:right-[-7px] top-1/2 transform -translate-y-1/2 h-5 md:h-6 w-px bg-gray-300"></div>
                   </div>
                 );
               } else {
@@ -571,8 +575,8 @@ const GuestHeader = ({ onLogin }) => {
                   <div key={idx} className="relative flex items-center">
                     <span
                       className={`px-4 py-3 md:px-5 md:py-4 text-sm md:text-base font-medium cursor-pointer rounded-md transition-colors ${location.pathname === item.path
-                          ? 'text-[#ad2132]'
-                          : 'text-gray-800 hover:text-[#ad2132]'
+                        ? 'text-[#ad2132]'
+                        : 'text-gray-800 hover:text-[#ad2132]'
                         }`}
                       onClick={() => handleNavigate(item.path)}
                     >

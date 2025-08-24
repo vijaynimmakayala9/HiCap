@@ -14,6 +14,7 @@ import TechsterkerCourses from '../components/TechsterkerCourses'
 import ClientScroller from "../components/Client Scroller";
 import Counter from "../components/Counter";
 import HeroSection from "../newone/Hero";
+import AwardBanner from "../newone/AwardBanner";
 
 const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -58,6 +59,7 @@ const HomePage = () => {
           <HeroSection/>
           <ClientScroller/>
           <TechsterkerCourses/>
+          <AwardBanner/>
           <Features />
           <Counter/>
           <Course />

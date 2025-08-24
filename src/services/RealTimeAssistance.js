@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import Footer from "../Pages/Footer";
 import Header from "../Pages/Header";
 
-const LiveProjects = () => {
+const RealTimeAssistance = () => {
     return (
         <>
             <Header />
@@ -13,11 +13,11 @@ const LiveProjects = () => {
                         {/* Image Section */}
                         <Col lg={6} className="mb-4 mb-lg-0">
                             <img
-                                src="https://www.simplilearn.com/ice9/free_resources_article_thumb/What_Is_a_Project.jpg"
-                                alt="Live Project Experience"
+                                src="https://www.simplilearn.com/ice9/free_resources_article_thumb/Corporate_Training.jpg"
+                                alt="Corporate Project Assistance"
                                 className="img-fluid rounded img-hover-effect"
                                 style={{
-                                    border: "0.5px solid #ad2132", // Thinner border
+                                    border: "0.5px solid #ad2132",
                                     boxShadow: "0 10px 20px rgba(173, 33, 50, 0.3)",
                                 }}
                             />
@@ -26,16 +26,16 @@ const LiveProjects = () => {
                         {/* Text Section */}
                         <Col lg={6}>
                             <h2 className="fw-bold textcolor mb-3">
-                                Real-World Live Projects
+                                Request Assistance on Corporate Projects
                             </h2>
                             <p className="lead text-muted">
-                                Live projects are assignments or tasks that are delivered to experts or students in real time so they can work on real-world issues that businesses or clients are facing.  Through practical experience, these projects assist people in putting their theoretical knowledge to use.  Engaging in real-world projects enhances abilities, boosts self-esteem, and equips individuals for obstacles they may face in the workplace.
+                                Struggling with real-time corporate projects? Our expert mentors provide instant guidance and hands-on support to help you complete your tasks efficiently while learning corporate best practices.
                             </p>
                             <ul className="mb-4">
-                                <li className="textcolorlight">✅ Industry-relevant project experience</li>
-                                <li className="textcolorlight">✅ Mentorship from senior developers</li>
-                                <li className="textcolorlight">✅ Agile development methodology</li>
-                                <li className="textcolorlight">✅ GitHub repository for your portfolio</li>
+                                <li className="textcolorlight">✅ Instant guidance from industry experts</li>
+                                <li className="textcolorlight">✅ Learn corporate workflows & standards</li>
+                                <li className="textcolorlight">✅ Hands-on problem solving in real projects</li>
+                                <li className="textcolorlight">✅ Gain confidence in corporate environments</li>
                             </ul>
                             <Button
                                 size="lg"
@@ -58,28 +58,28 @@ const LiveProjects = () => {
                                     e.target.style.boxShadow = "0 6px 15px rgba(173, 33, 50, 0.4)";
                                 }}
                             >
-                                Contact Us
+                                Request Assistance
                             </Button>
                         </Col>
                     </Row>
 
-                    {/* Features Cards */}
+                    {/* Benefits Cards */}
                     <Row className="mt-5 g-4">
                         {[
                             {
-                                icon: "fas fa-laptop-code",
-                                title: "Development Projects",
-                                text: "Development projects deliver scalable solutions through clean architecture, agile execution, and measurable impact.",
+                                icon: "fas fa-headset",
+                                title: "Instant Expert Help",
+                                text: "Receive real-time support from industry experts to resolve project challenges immediately."
                             },
                             {
-                                icon: "fas fa-database",
-                                title: "Data Science Projects",
-                                text: "Data science projects turn raw data into actionable insights through machine learning, statistical analysis, and impactful visualization.",
+                                icon: "fas fa-project-diagram",
+                                title: "Corporate Workflow Guidance",
+                                text: "Learn corporate-standard processes, methodologies, and documentation while working on live projects."
                             },
                             {
-                                icon: "fas fa-cloud",
-                                title: "Cloud Projects",
-                                text: "Cloud projects deliver scalable, secure solutions by leveraging AWS/Azure/GCP services to optimize performance and reduce costs.",
+                                icon: "fas fa-users-cog",
+                                title: "Collaborative Problem Solving",
+                                text: "Work alongside mentors to solve complex project tasks efficiently and learn practical solutions."
                             },
                         ].map((card, idx) => (
                             <Col md={4} key={idx}>
@@ -140,9 +140,19 @@ const LiveProjects = () => {
                 .card-hover-effect:hover .icon-box {
                     transform: scale(1.05);
                 }
+
+                .textcolor {
+                    color: #ad2132;
+                }
+                .textcolorlight {
+                    color: #6c757d;
+                }
+                .meroon-back {
+                    background-color: #ad2132;
+                }
             `}</style>
         </>
     );
 };
 
-export default LiveProjects;
+export default RealTimeAssistance;

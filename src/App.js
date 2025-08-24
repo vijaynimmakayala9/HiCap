@@ -19,9 +19,11 @@ import LiveClassesPage from "./components/LiveClassesPage";
 import CourseModule from "./admin/CourseModule";
 import StickyContactButtons from "./models/StickyContactHoverClick";
 import ResumeBuilding from "./services/ResumeBuild";
-import MockInterviews from "./services/MockupInterviews";
-import LiveProjects from "./services/LiveProjects";
+import MockInterviews from "./services/MockInterviews";
 import PlacementAssistance from "./services/PlacementsAssistance";
+import OnetoOneSession from "./services/OnetoOneAssistance";
+import ProjectAssistance from "./services/Project Assistance";
+import RealTimeAssistance from "./services/RealTimeAssistance";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -74,10 +76,14 @@ function App() {
         <Route path="/course/:id" element={<CourseDetail />} />
         <Route path="/clients" element={<Clients />} />
         <Route path="/resumebuilding" element={<ResumeBuilding />} />
-        <Route path="/mockups" element={<MockInterviews />} />
-        <Route path="/liveprojects" element={<LiveProjects />} />
+        <Route path="/mockinterviews" element={<MockInterviews />} />
+        <Route path="/projectassistance" element={<ProjectAssistance />} />
+        <Route path="/realtimeassistance" element={<RealTimeAssistance />} />
         <Route path="/placements" element={<PlacementAssistance />} />
-        
+        <Route path="/onetoone" element={<OnetoOneSession />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<HomePage />} />
+
 
         {/* Protected Routes */}
         <Route
