@@ -10,7 +10,7 @@ const Course = () => {
 
     const fetchCourses = async () => {
         try {
-            const response = await axios.get('https://hicap-backend-4rat.onrender.com/api/course1');
+            const response = await axios.get('https://hicap-backend-4rat.onrender.com/api/coursecontroller');
             // Adjust based on actual API structure
             setCourses(response.data.data || response.data || []);
             setLoading(false);
@@ -36,7 +36,7 @@ const Course = () => {
     }
 
     return (
-        <section className="bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+        <section className="bg-gradient-to-br from-white via-gray-50 to-red-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
                 {/* Heading */}
                 <div className="text-center mb-10">
@@ -51,7 +51,7 @@ const Course = () => {
                 {/* Courses Grid */}
                 {Array.isArray(courses) && courses.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        {courses.map(({ _id, name, duration, noOfLessons, rating, description }) => (
+                        {courses.slice(0,4).map(({ _id, name, duration, noOfLessons, rating, description }) => (
                             <div
                                 key={_id}
                                 className="bg-white/30 backdrop-blur-md rounded-xl shadow-lg p-6 flex flex-col justify-between border border-white/20 hover:shadow-2xl hover:bg-white/40 transition-all duration-300 transform hover:scale-105"

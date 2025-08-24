@@ -131,6 +131,11 @@ body p li h3 h4 h5 h6 a{
 }
 
 
+/* In your global CSS */
+.main-content {
+  margin-top: 70px; /* Adjust based on header height */
+}
+
 
 
 /*Gradient Button*/

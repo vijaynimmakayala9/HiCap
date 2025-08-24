@@ -25,7 +25,7 @@ const Features = () => {
   }, []);
 
   return (
-    <div className="container-fluid py-5 my-4 bg-white">
+    <div className="container-fluid py-5 mt-4 bg-gradient-to-br from-white via-gray-50 to-red-50">
       <div className="row justify-content-center text-center mb-4">
         <div className="col-lg-8">
           <div className="d-inline-block position-relative ">
@@ -52,7 +52,7 @@ const Features = () => {
         </div>
       </div>
 
-      <div className="row g-4 my-4 p-4 bg-white rounded">
+      <div className="row g-4 my-4 p-4 bg-gradient-to-br from-white via-gray-50 to-red-50 rounded">
         {features.map((feature, index) => (
           <div key={feature._id} className="col-12 col-sm-6 col-lg-3">
             <div
