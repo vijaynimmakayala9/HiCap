@@ -16,7 +16,7 @@
 //     const fetchCourses = async () => {
 //       try {
 //         const response = await fetch(
-//           "https://hicap-backend-4rat.onrender.com/api/course1"
+//           "https://hicap-backend-4rat.onrender.com/api/coursecontroller"
 //         );
 //         const data = await response.json();
 //         if (data.success) {
@@ -294,7 +294,7 @@ const Footer = () => {
     const fetchCourses = async () => {
       try {
         const response = await fetch(
-          "https://hicap-backend-4rat.onrender.com/api/course1"
+          "https://hicap-backend-4rat.onrender.com/api/coursecontroller"
         );
         const data = await response.json();
         if (data.success) {

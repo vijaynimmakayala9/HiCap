@@ -14,7 +14,7 @@ const TopPerformers = () => {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const response = await axios.get('https://hicap-backend-4rat.onrender.com/api/course1');
+                const response = await axios.get('https://hicap-backend-4rat.onrender.com/api/coursecontroller');
                 if (response.data.success) {
                     const availableCourses = Array.isArray(response.data) ? 
                         response.data : 

@@ -62,7 +62,7 @@ const GuestHeader = ({ onLogin }) => {
   }, []);
 
   useEffect(() => {
-    fetch('https://hicap-backend-4rat.onrender.com/api/course1')
+    fetch('https://hicap-backend-4rat.onrender.com/api/coursecontroller')
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) setCourses(data);

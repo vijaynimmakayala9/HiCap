@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 Modal.setAppElement("#root");
 
-const API_BASE = "https://hicap-backend-4rat.onrender.com/api/course1";
+const API_BASE = "https://hicap-backend-4rat.onrender.com/api/coursecontroller";
 
 function AdminCourses() {
   const [courses, setCourses] = useState([]);

@@ -196,10 +196,10 @@ const Courses = () => {
                                     <div className="d-flex flex-wrap text-muted small mb-3 gap-3">
                                         <div className="d-flex align-items-center"><FaRegClock className="me-1" /> {duration}</div>
                                         <div className="d-flex align-items-center"><FaTasks className="me-1" /> {noOfLessons} Lessons</div>
-                                        <div className="d-flex align-items-center"><FaStar className="me-1 text-warning" /> {rating || 0}/5</div>
+                                        
                                     </div>
                                     <div className="d-flex justify-content-between align-items-center mt-auto">
-                                        {/* <span className="textcolor fw-bold">₹{price}</span> */}
+                                        
                                         <button className="btn btn-outline-meroon btn-sm w-100" onClick={() => handleEnrollClick({ title: name, _id })}>Enroll</button>
                                     </div>
                                     <button className="btn gradient-button btn-sm mt-2 w-100" onClick={() => handleCourseClick(_id)}>View Details</button>

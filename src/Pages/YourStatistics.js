@@ -27,7 +27,7 @@ const YourStatistics = () => {
     const fetchData = async () => {
       try {
         // Fetch courses
-        const coursesResponse = await axios.get('https://hicap-backend-4rat.onrender.com/api/course1');
+        const coursesResponse = await axios.get('https://hicap-backend-4rat.onrender.com/api/coursecontroller');
         if (coursesResponse.data.success) {
           const availableCourses = Array.isArray(coursesResponse.data) ?
             coursesResponse.data :

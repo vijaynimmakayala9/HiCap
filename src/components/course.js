@@ -51,13 +51,13 @@ const Course = () => {
                 {/* Courses Grid */}
                 {Array.isArray(courses) && courses.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        {courses.slice(0, 4).map(({ _id, name, image, category, duration, noOfLessons, rating, description }) => (
+                        {courses.slice(0, 4).map(({ _id, name, image, category, duration, logoImage, mode, description }) => (
                             <div
                                 key={_id}
                                 className="bg-white/30 backdrop-blur-md rounded-xl shadow-lg p-6 flex flex-col justify-between border border-white/20 hover:shadow-2xl hover:bg-white/40 transition-all duration-300 transform hover:scale-105"
                             >
-                                <div className="pb-4 border-b border-white/20 mb-4 d-flex gap-3">
-                                    <img src={image} className='img-fluid rounded-circle' style={{ height: "50px", width: "50px" }} />
+                                <div className="pb-4 border-b border-white/20 mb-2 d-flex gap-3">
+                                    <img src={logoImage} className='img-fluid rounded-circle' style={{ height: "50px", width: "50px" }} />
                                     <div className=''>
                                         <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
                                         <p className="text-sm font-semibold text-gray-500">{category}</p>
@@ -69,16 +69,13 @@ const Course = () => {
                                 <div className="flex items-center text-sm text-gray-700 mb-6 gap-6 flex-wrap">
                                     <div className="flex items-center">
                                         <FaRegClock className="mr-2 text-red-700" />
-                                        <span>{duration} Months</span>
+                                        <span>{duration}</span>
                                     </div>
                                     <div className="flex items-center">
                                         <FaCode className="mr-2 text-red-700" />
-                                        <span>{noOfLessons} Live Projects</span>
+                                        <span>{mode}</span>
                                     </div>
-                                    <div className="flex items-center">
-                                        <FaStar className="mr-2 text-yellow-500" />
-                                        <span>{rating}/5</span>
-                                    </div>
+                                    
                                 </div>
                                 <div className="flex justify-between items-center space-x-4 flex-wrap">
                                     <button

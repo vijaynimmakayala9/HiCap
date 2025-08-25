@@ -24,6 +24,7 @@ import PlacementAssistance from "./services/PlacementsAssistance";
 import OnetoOneSession from "./services/OnetoOneAssistance";
 import ProjectAssistance from "./services/Project Assistance";
 import RealTimeAssistance from "./services/RealTimeAssistance";
+import CoursesByCategory from "./newone/CoursesbyCategory";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -81,7 +82,7 @@ function App() {
         <Route path="/realtimeassistance" element={<RealTimeAssistance />} />
         <Route path="/placements" element={<PlacementAssistance />} />
         <Route path="/onetoone" element={<OnetoOneSession />} />
-        <Route path="/" element={<HomePage />} />
+        <Route path="/allcourses" element={<CoursesByCategory />} />
         <Route path="/" element={<HomePage />} />
 
 

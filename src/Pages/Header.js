@@ -355,7 +355,7 @@ const GuestHeader = ({ onLogin }) => {
                   }}
                 >
                   <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
-                    <img src={course.image} alt={course.name} className="w-full h-full object-cover" />
+                    <img src={course.logoImage} alt={course.name} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-grow overflow-hidden">
                     <div className="font-medium text-xs md:text-sm whitespace-nowrap overflow-hidden text-ellipsis">{course.name}</div>
@@ -482,7 +482,7 @@ const GuestHeader = ({ onLogin }) => {
                     }}
                   >
                     <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
-                      <img src={course.image} alt={course.name} className="w-full h-full object-cover" />
+                      <img src={course.logoImage} alt={course.name} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-grow overflow-hidden">
                       <div className="font-medium text-xs md:text-sm whitespace-nowrap overflow-hidden text-ellipsis">{course.name}</div>
@@ -528,6 +528,7 @@ const GuestHeader = ({ onLogin }) => {
             navigate('/contactus');
             setShowCoursesMenu(false);
             setIsMobileMenuOpen(false);
+            
           }}
         >
           Contact Advisor

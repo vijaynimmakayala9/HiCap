@@ -23,6 +23,7 @@ import Header from './Header';
 import { Container, Row, Col, Card, Button, Form, Modal, Badge, Accordion } from 'react-bootstrap';
 import FlashContact from '../components/FlashContact';
 import CourseEnquiryModal from '../components/EnrollModal';
+import DownloadSyllabusModal from '../models/DownloadSyllabusModal'; // Import the new component
 
 const Counter = ({ end, duration = 1000, suffix = '' }) => {
   const [count, setCount] = useState(0);
@@ -75,41 +76,7 @@ const CourseDetail = () => {
   const [openFAQIndex, setOpenFAQIndex] = useState(null);
   const navigate = useNavigate();
   const [showEnquiryModal, setShowEnquiryModal] = useState(false);
-
-  const [show, setShow] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [phone, setPhone] = useState("");
-
-  const handleShow = () => setShow(true);
-  const handleClose = () => {
-    setShow(false);
-    setOtpSent(false);
-    setOtp("");
-    setPhone("");
-  };
-
-  const sendOtp = () => {
-    if (!phone) {
-      alert("Please enter your WhatsApp number.");
-      return;
-    }
-    // Here you would integrate WhatsApp OTP sending logic (API call)
-    console.log("Sending OTP to:", phone);
-    setOtpSent(true);
-  };
-
-  const verifyOtp = () => {
-    // Here you would integrate OTP verification API call
-    if (otp === "1234") {
-      alert("OTP verified! Starting syllabus downloading...");
-      window.open("/course_syllabus.pdf", "_blank");
-      handleClose();
-    } else {
-      alert("Invalid OTP. Please try again.");
-    }
-  };
-
+  const [showSyllabusModal, setShowSyllabusModal] = useState(false); // State for syllabus modal
   const [role, setRole] = useState("");
 
   useEffect(() => {
@@ -162,13 +129,17 @@ const CourseDetail = () => {
     fetchData();
   }, [id]);
 
-
   const toggleFAQ = (index) => {
     setOpenFAQIndex(openFAQIndex === index ? null : index);
   };
+
   const handleEnroll = () => {
     setShowEnquiryModal(true);
-  }
+  };
+
+  const handleDownloadSyllabus = () => {
+    setShowSyllabusModal(true);
+  };
 
   if (loading) return (
     <div className="min-vh-100 d-flex align-items-center justify-content-center">
@@ -230,11 +201,9 @@ const CourseDetail = () => {
                     alt={course.name}
                     className="rounded-3 img-fluid"
                     style={{
-                      maxWidth: "100%",
-                      height: "500px",
-                      border: "0.5px solid maroon", // Thin maroon border
-                      boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)", // Maroon shadow
-                      transition: "transform 0.3s ease, box-shadow 0.3s ease" // Hover effect
+                      border: "0.5px solid maroon",
+                      boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)",
+                      transition: "transform 0.3s ease, box-shadow 0.3s ease"
                     }}
                   />
                 </div>
@@ -259,9 +228,6 @@ const CourseDetail = () => {
                   >
                     {course.description}
                   </p>
-
-
-                  
 
                   <div className="d-flex flex-wrap gap-2 mb-4">
                     <button
@@ -301,7 +267,6 @@ const CourseDetail = () => {
                     </button>
                   </div>
 
-
                   <div className="mb-4">
                     <p className="mb-1 small text-muted">
                       <span className="fw-semibold">Subcategory:</span> {course.subcategory}
@@ -317,7 +282,7 @@ const CourseDetail = () => {
                     </button>
                     <button
                       className="btn btn-md btn-outline-meroon"
-                      onClick={handleShow}
+                      onClick={handleDownloadSyllabus}
                     >
                       Download Syllabus
                     </button>
@@ -326,6 +291,7 @@ const CourseDetail = () => {
               </Col>
             </Row>
           </Container>
+
 
 
           {/* Features and Who Can Learn */}
@@ -812,65 +778,11 @@ const CourseDetail = () => {
         </main>
       </div>
 
-      {/* Syllabus Download Modal */}
-      <Modal
-        show={show}
-        onHide={handleClose}
-        centered
-        size="md"
-      >
-        <Modal.Header closeButton className="border-bottom-0 justify-content-center">
-          <Modal.Title className="fw-bold textcolor text-center">
-            Download Syllabus
-          </Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body className="px-3 px-sm-4">
-          {!otpSent ? (
-            <Form className="text-center">
-              <Form.Group className="mb-4 text-start">
-                <Form.Label className="fw-semibold">Enter WhatsApp Number</Form.Label>
-                <Form.Control
-                  type="tel"
-                  placeholder="+1 234 567 890"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="py-2"
-                />
-              </Form.Group>
-              <div className="d-grid">
-                <Button
-                  className="gradient-button fw-semibold py-2"
-                  onClick={sendOtp}
-                >
-                  Send OTP
-                </Button>
-              </div>
-            </Form>
-          ) : (
-            <Form className="text-center">
-              <Form.Group className="mb-4 text-start">
-                <Form.Label className="fw-semibold">Enter OTP</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="4-digit OTP"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  className="py-2"
-                />
-              </Form.Group>
-              <div className="d-grid">
-                <Button
-                  className="gradient-button fw-semibold py-2"
-                  onClick={verifyOtp}
-                >
-                  Verify & Download
-                </Button>
-              </div>
-            </Form>
-          )}
-        </Modal.Body>
-      </Modal>
+      
+      <DownloadSyllabusModal 
+        show={showSyllabusModal} 
+        handleClose={() => setShowSyllabusModal(false)} 
+      />
 
       {/* <FlashContact /> */}
       <Footer />
