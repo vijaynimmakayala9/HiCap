@@ -97,11 +97,11 @@ const GuestHeader = ({ onLogin }) => {
       .then((data) => {
         if (data.success && Array.isArray(data.data)) {
           setCourses(data.data);
-          
+
           // Extract unique categories
           const uniqueCategories = [...new Set(data.data.map(course => course.category))];
-          setCategories([ ...uniqueCategories, 'View All']);
-          
+          setCategories([...uniqueCategories, 'View All']);
+
           // Group courses by category
           const grouped = {};
           data.data.forEach(course => {
@@ -110,18 +110,18 @@ const GuestHeader = ({ onLogin }) => {
             }
             grouped[course.category].push(course);
           });
-          
-          
+
+
           setCategoryCourses(grouped);
         } else {
           setCourses([]);
-          setCategories([ 'Certified Program', 'Elite Course', 'View All']);
+          setCategories(['Certified Program', 'Elite Course', 'View All']);
         }
       })
       .catch((err) => {
         console.error(err);
         setCourses([]);
-        setCategories([ 'Certified Program', 'Elite Course', 'View All']);
+        setCategories(['Certified Program', 'Elite Course', 'View All']);
       });
   }, []);
 
@@ -315,8 +315,8 @@ const GuestHeader = ({ onLogin }) => {
           <h6 className="font-bold text-[#ad2132] mb-3 text-sm md:text-base">Course Categories</h6>
           <ul className="list-none p-0 m-0 flex flex-col md:flex-col overflow-x-auto md:overflow-x-visible pb-2 md:pb-0">
             {categories.map((category) => (
-              <li 
-                key={category} 
+              <li
+                key={category}
                 className="mb-2 flex-shrink-0 md:flex-shrink mr-2 md:mr-0"
                 onMouseEnter={() => {
                   if (category !== 'View All') {
@@ -362,7 +362,7 @@ const GuestHeader = ({ onLogin }) => {
                     <div className="flex items-center gap-1 text-gray-600 text-xs mt-1">
                       <span>{course.category || 'N/A'}</span>
                       <span>•</span>
-                      <span>{course.duration || 0} months</span>
+                      <span>{course.duration || 0}</span>
                     </div>
                   </div>
                 </div>
@@ -394,14 +394,16 @@ const GuestHeader = ({ onLogin }) => {
             View All Courses
           </button>
           <button
-            className="flex-1 p-2 bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded text-xs md:text-sm cursor-pointer hover:opacity-90 transition-opacity"
+            className="p-2 bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded cursor-pointer text-xs md:text-sm hover:opacity-90 transition-opacity"
             onClick={() => {
-              navigate('/contactus');
               setShowCoursesMenu(false);
+              setIsMobileMenuOpen(false);
+              window.location.href = "tel:9876543211"; // ✅ direct phone link
             }}
           >
             Contact Advisor
           </button>
+
         </div>
       </div>
     </div>
@@ -460,8 +462,8 @@ const GuestHeader = ({ onLogin }) => {
   const MobileMegaMenu = () => (
     <div className="p-3 bg-gray-50 rounded-lg mt-2">
       {categories.map((category) => (
-        <div 
-          key={category} 
+        <div
+          key={category}
           className="mb-4"
           onMouseEnter={() => {
             if (category !== 'View All') {
@@ -490,7 +492,7 @@ const GuestHeader = ({ onLogin }) => {
                         <FaRegClock className="text-[10px]" />
                         <span>{course.category || 'N/A'}</span>
                         <span>•</span>
-                        <span>{course.duration || 0} months</span>
+                        <span>{course.duration || 0}</span>
                       </div>
                     </div>
                   </div>
@@ -525,14 +527,14 @@ const GuestHeader = ({ onLogin }) => {
         <button
           className="p-2 bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded cursor-pointer text-xs md:text-sm hover:opacity-90 transition-opacity"
           onClick={() => {
-            navigate('/contactus');
             setShowCoursesMenu(false);
             setIsMobileMenuOpen(false);
-            
+            window.location.href = "tel:9876543211"; // ✅ direct phone link
           }}
         >
           Contact Advisor
         </button>
+
       </div>
     </div>
   );
@@ -571,7 +573,7 @@ const GuestHeader = ({ onLogin }) => {
                 return (
                   <div
                     key={idx}
-                    className="relative"
+                    className="relative mx-2"
                     onMouseEnter={handleCoursesMouseEnter}
                     onMouseLeave={handleCoursesMouseLeave}
                   >
@@ -595,7 +597,7 @@ const GuestHeader = ({ onLogin }) => {
                 return (
                   <div
                     key={idx}
-                    className="relative"
+                    className="relative mx-2"
                     onMouseEnter={item.label === 'Services' ? handleResourcesMouseEnter : handleCompanyMouseEnter}
                     onMouseLeave={item.label === 'Services' ? handleResourcesMouseLeave : handleCompanyMouseLeave}
                   >
@@ -624,7 +626,7 @@ const GuestHeader = ({ onLogin }) => {
                 );
               } else {
                 return (
-                  <div key={idx} className="relative flex items-center">
+                  <div key={idx} className="relative flex items-center mx-2">
                     <span
                       className={`px-4 py-3 md:px-5 md:py-4 text-sm md:text-base font-medium cursor-pointer rounded-md transition-colors ${location.pathname === item.path
                         ? 'text-[#ad2132]'
@@ -646,7 +648,7 @@ const GuestHeader = ({ onLogin }) => {
 
             <button
               onClick={() => setShowLoginModal(true)}
-              className="ml-2 px-4 py-2 md:px-6 md:py-2 lg:px-8 lg:py-2 bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded-full font-semibold text-sm md:text-base cursor-pointer whitespace-nowrap hover:opacity-90 transition-opacity"
+              className="ml-2 mx-3 px-4 py-2 md:px-6 md:py-2 lg:px-8 lg:py-2 bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded-full font-semibold text-sm md:text-base cursor-pointer whitespace-nowrap hover:opacity-90 transition-opacity"
             >
               Login
             </button>
