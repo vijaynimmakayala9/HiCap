@@ -107,6 +107,15 @@
 //           <div className="footer-col">
 //             <h5 className="fw-bold mb-3">Contact</h5>
 //             <div className="mb-3">
+//               <p className="mb-1 fw-semibold">Phone</p>
+//               <a
+//                 href="tel:+916299161616"
+//                 className="text-white text-decoration-none link-hover"
+//               >
+//                 +91 6299161616
+//               </a>
+//             </div>
+//             <div className="mb-3">
 //               <p className="mb-1 fw-semibold">WhatsApp</p>
 //               <a
 //                 href="https://wa.me/916299161616"
@@ -117,7 +126,7 @@
 //                 +91 6299161616
 //               </a>
 //             </div>
-//             <div className="mb-3">
+//             <div>
 //               <p className="mb-1 fw-semibold">Email</p>
 //               <a
 //                 href="https://mail.google.com/mail/?view=cm&fs=1&to=info@techsterker.com"
@@ -127,15 +136,7 @@
 //                 info@techsterker.com
 //               </a>
 //             </div>
-//             <div>
-//               <p className="mb-1 fw-semibold">Phone</p>
-//               <a
-//                 href="tel:+916299161616"
-//                 className="text-white text-decoration-none link-hover"
-//               >
-//                 +91 6299161616
-//               </a>
-//             </div>
+            
 //           </div>
 //         </div>
 
@@ -274,6 +275,7 @@
 
 // export default Footer;
 
+
 import React, { useEffect, useState } from "react";
 import {
   FaFacebookF,
@@ -347,7 +349,7 @@ const Footer = () => {
         {/* ===== First Row: Logo + Description and Community + Company + Contact ===== */}
         <div className="row mb-4">
           {/* Logo + Description */}
-          <div className="col-12 col-md-6 col-lg-4 mb-4 mb-md-0">
+          <div className="col-12 col-md-6 col-lg-5 mb-4 mb-md-0 px-5">
             <div className="text-center text-md-start">
               <img
                 src="/logo/lightlogo.png"
@@ -362,14 +364,14 @@ const Footer = () => {
           </div>
 
           {/* Community, Company, Contact */}
-          <div className="col-12 col-md-6 col-lg-8">
+          <div className="col-12 col-md-6 col-lg-7">
             <div className="row">
               {/* Community */}
               <div className="col-12 col-sm-4 mb-4 mb-sm-0">
                 <div className="text-center text-sm-start">
                   <h5 className="fw-bold mb-3">Community</h5>
                   <ul className="list-unstyled">
-                    {["WhatsApp", "Discord", "Slack"].map((item, idx) => (
+                    {["Slack", "Discord", "WhatsApp"].map((item, idx) => (
                       <li key={idx} className="mb-2">
                         <a href="#" className="text-white text-decoration-none link-hover">
                           {item}
@@ -390,7 +392,7 @@ const Footer = () => {
                         About Us
                       </a>
                     </li>
-                    {["Certificates", "Events", "Careers"].map((item, idx) => (
+                    {["Careers", "Events", "Certificates"].map((item, idx) => (
                       <li key={idx} className="mb-2">
                         <a href="#" className="text-white text-decoration-none link-hover">
                           {item}
@@ -406,6 +408,15 @@ const Footer = () => {
                 <div className="text-center text-sm-start">
                   <h5 className="fw-bold mb-3">Contact</h5>
                   <div className="mb-3">
+                    <p className="mb-1 fw-semibold">Phone</p>
+                    <a
+                      href="tel:+916299161616"
+                      className="text-white text-decoration-none link-hover"
+                    >
+                      +91 6299161616
+                    </a>
+                  </div>
+                  <div className="mb-3">
                     <p className="mb-1 fw-semibold">WhatsApp</p>
                     <a
                       href="https://wa.me/916299161616"
@@ -416,7 +427,7 @@ const Footer = () => {
                       +91 6299161616
                     </a>
                   </div>
-                  <div className="mb-3">
+                  <div>
                     <p className="mb-1 fw-semibold">Email</p>
                     <a
                       href="https://mail.google.com/mail/?view=cm&fs=1&to=info@techsterker.com"
@@ -426,15 +437,7 @@ const Footer = () => {
                       info@techsterker.com
                     </a>
                   </div>
-                  <div>
-                    <p className="mb-1 fw-semibold">Phone</p>
-                    <a
-                      href="tel:+916299161616"
-                      className="text-white text-decoration-none link-hover"
-                    >
-                      +91 6299161616
-                    </a>
-                  </div>
+                  
                 </div>
               </div>
             </div>

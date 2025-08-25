@@ -25,7 +25,7 @@ const UpCommingBatches = () => {
 
         if (batchesRes.data.success && batchesRes.data.data.length > 0) {
           const batches = batchesRes.data.data[0].allbatches.map(b => ({
-            batchNo: b.batchNo,
+            batchName: b.batchName,
             date: b.date,
             timing: b.timing,
             duration: b.duration,
@@ -123,7 +123,7 @@ const UpCommingBatches = () => {
 
           {/* Upcoming Batches Section */}
           <section>
-            <h2 className="text-center mb-4 fw-bold mt-5" style={{ color: "#ad2132" }}>
+            <h2 className="text-center mb-4 fw-bold pt-3" style={{ color: "#ad2132" }}>
               Click below to view the batch details
             </h2>
 
@@ -148,7 +148,7 @@ const UpCommingBatches = () => {
               <Table bordered hover responsive className="mb-0">
                 <thead style={{ backgroundColor: "#ad2132" }}>
                   <tr className="text-white text-uppercase">
-                    <th>Batch No</th>
+                    <th>Batch Name</th>
                     <th>Start Date</th>
                     <th>Timings</th>
                     <th>Duration</th>
@@ -159,7 +159,7 @@ const UpCommingBatches = () => {
                   {filteredBatches.length > 0 ? (
                     filteredBatches.map((batch, index) => (
                       <tr key={index}>
-                        <td>{batch.batchNo}</td>
+                        <td>{batch.batchName}</td>
                         <td>{formatDate(batch.date)}</td>
                         <td>{batch.timing}</td>
                         <td>{batch.duration}</td>

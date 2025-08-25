@@ -58,8 +58,8 @@ const HomePage = () => {
           {/* <CourseAndFeatures /> */}
           <HeroSection/>
           <ClientScroller/>
-          <TechsterkerCourses/>
           <AwardBanner/>
+          <TechsterkerCourses/>
           <Features />
           <Counter/>
           <Course />
@@ -135,3 +135,6 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+
+

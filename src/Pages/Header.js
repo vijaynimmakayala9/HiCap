@@ -19,9 +19,11 @@ const GuestHeader = ({ onLogin }) => {
   });
   const [loginError, setLoginError] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('Popular Courses');
+  const [selectedCategory, setSelectedCategory] = useState('Certified Programs');
   const [isScrolled, setIsScrolled] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [categoryCourses, setCategoryCourses] = useState({});
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -89,16 +91,37 @@ const GuestHeader = ({ onLogin }) => {
   }, []);
 
   useEffect(() => {
-    fetch('https://hicap-backend-4rat.onrender.com/api/course1')
+    // Fetch all courses
+    fetch('https://hicap-backend-4rat.onrender.com/api/coursecontroller')
       .then((res) => res.json())
       .then((data) => {
-        if (Array.isArray(data)) setCourses(data);
-        else if (Array.isArray(data.data)) setCourses(data.data);
-        else setCourses([]);
+        if (data.success && Array.isArray(data.data)) {
+          setCourses(data.data);
+          
+          // Extract unique categories
+          const uniqueCategories = [...new Set(data.data.map(course => course.category))];
+          setCategories([ ...uniqueCategories, 'View All']);
+          
+          // Group courses by category
+          const grouped = {};
+          data.data.forEach(course => {
+            if (!grouped[course.category]) {
+              grouped[course.category] = [];
+            }
+            grouped[course.category].push(course);
+          });
+          
+          
+          setCategoryCourses(grouped);
+        } else {
+          setCourses([]);
+          setCategories([ 'Certified Program', 'Elite Course', 'View All']);
+        }
       })
       .catch((err) => {
         console.error(err);
         setCourses([]);
+        setCategories([ 'Certified Program', 'Elite Course', 'View All']);
       });
   }, []);
 
@@ -211,14 +234,6 @@ const GuestHeader = ({ onLogin }) => {
     };
   }, []);
 
-  const groupedCourses = {
-    'High Rated Courses': Array.isArray(courses) ? courses.filter(course => course.isHighRated) : [],
-    'Popular Courses': Array.isArray(courses) ? courses.filter(course => course.isPopular) : [],
-    'Testing Courses': Array.isArray(courses)
-      ? courses.filter(course => (course.name || '').toLowerCase().includes('java'))
-      : [],
-  };
-
   const handleCourseClick = (id) => {
     console.log('Course clicked, ID:', id);
     navigate(`/course/${id}`);
@@ -299,11 +314,26 @@ const GuestHeader = ({ onLogin }) => {
         <div className="flex-none w-full md:w-1/4 md:pr-4 md:border-r border-gray-200 mb-4 md:mb-0">
           <h6 className="font-bold text-[#ad2132] mb-3 text-sm md:text-base">Course Categories</h6>
           <ul className="list-none p-0 m-0 flex flex-col md:flex-col overflow-x-auto md:overflow-x-visible pb-2 md:pb-0">
-            {Object.keys(groupedCourses).map((category) => (
-              <li key={category} className="mb-2 flex-shrink-0 md:flex-shrink mr-2 md:mr-0">
+            {categories.map((category) => (
+              <li 
+                key={category} 
+                className="mb-2 flex-shrink-0 md:flex-shrink mr-2 md:mr-0"
+                onMouseEnter={() => {
+                  if (category !== 'View All') {
+                    setSelectedCategory(category);
+                  }
+                }}
+              >
                 <button
                   className={`w-full text-left p-2 rounded-md text-xs md:text-sm ${selectedCategory === category ? 'bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white' : 'bg-transparent hover:bg-gray-100'}`}
-                  onClick={() => setSelectedCategory(category)}
+                  onClick={() => {
+                    if (category === 'View All') {
+                      navigate('/allcourses');
+                      setShowCoursesMenu(false);
+                    } else {
+                      setSelectedCategory(category);
+                    }
+                  }}
                 >
                   {category}
                 </button>
@@ -315,7 +345,7 @@ const GuestHeader = ({ onLogin }) => {
         <div className="flex-1 md:pl-4">
           <h6 className="font-bold text-[#ad2132] mb-3 text-sm md:text-base">{selectedCategory}</h6>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {groupedCourses[selectedCategory]?.slice(0, 6).map((course) => (
+            {categoryCourses[selectedCategory]?.slice(0, 6).map((course) => (
               <div key={course._id} className="cursor-pointer">
                 <div
                   className="flex gap-3 p-3 rounded-lg transition-colors hover:bg-[#f8d7da]"
@@ -340,7 +370,7 @@ const GuestHeader = ({ onLogin }) => {
             ))}
           </div>
 
-          {groupedCourses[selectedCategory]?.length === 0 && (
+          {(!categoryCourses[selectedCategory] || categoryCourses[selectedCategory].length === 0) && (
             <div className="text-center p-6 text-gray-600 text-sm">
               No courses available in this category
             </div>
@@ -429,35 +459,56 @@ const GuestHeader = ({ onLogin }) => {
 
   const MobileMegaMenu = () => (
     <div className="p-3 bg-gray-50 rounded-lg mt-2">
-      {Object.entries(groupedCourses).map(([category, items]) => (
-        <div key={category} className="mb-4">
+      {categories.map((category) => (
+        <div 
+          key={category} 
+          className="mb-4"
+          onMouseEnter={() => {
+            if (category !== 'View All') {
+              setSelectedCategory(category);
+            }
+          }}
+        >
           <h6 className="font-bold text-gray-600 text-xs md:text-sm mb-2">{category}</h6>
-          <ul className="list-none p-0 m-0">
-            {items.slice(0, 6).map((course) => (
-              <li key={course._id} className="mb-2 cursor-pointer">
-                <div
-                  className="flex items-center gap-2 p-2 bg-white rounded-md hover:bg-[#f8d7da] transition-colors"
-                  onClick={() => {
-                    console.log('Mobile course clicked:', course._id);
-                    handleCourseClick(course._id);
-                  }}
-                >
-                  <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
-                    <img src={course.image} alt={course.name} className="w-full h-full object-cover" />
-                  </div>
-                  <div className="flex-grow overflow-hidden">
-                    <div className="font-medium text-xs md:text-sm whitespace-nowrap overflow-hidden text-ellipsis">{course.name}</div>
-                    <div className="flex items-center gap-1 text-gray-600 text-xs mt-0.5">
-                      <FaRegClock className="text-[10px]" />
-                      <span>{course.category || 'N/A'}</span>
-                      <span>•</span>
-                      <span>{course.duration || 0} months</span>
+          {category !== 'View All' ? (
+            <ul className="list-none p-0 m-0">
+              {categoryCourses[category]?.slice(0, 6).map((course) => (
+                <li key={course._id} className="mb-2 cursor-pointer">
+                  <div
+                    className="flex items-center gap-2 p-2 bg-white rounded-md hover:bg-[#f8d7da] transition-colors"
+                    onClick={() => {
+                      console.log('Mobile course clicked:', course._id);
+                      handleCourseClick(course._id);
+                    }}
+                  >
+                    <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
+                      <img src={course.image} alt={course.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-grow overflow-hidden">
+                      <div className="font-medium text-xs md:text-sm whitespace-nowrap overflow-hidden text-ellipsis">{course.name}</div>
+                      <div className="flex items-center gap-1 text-gray-600 text-xs mt-0.5">
+                        <FaRegClock className="text-[10px]" />
+                        <span>{course.category || 'N/A'}</span>
+                        <span>•</span>
+                        <span>{course.duration || 0} months</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <button
+              className="w-full p-2 bg-transparent border border-[#ad2132] text-[#ad2132] rounded cursor-pointer text-xs md:text-sm hover:bg-[#ad2132] hover:text-white transition-colors"
+              onClick={() => {
+                navigate('/allcourses');
+                setShowCoursesMenu(false);
+                setIsMobileMenuOpen(false);
+              }}
+            >
+              View All Courses
+            </button>
+          )}
         </div>
       ))}
       <div className="grid gap-2 pt-2 border-t border-gray-300">

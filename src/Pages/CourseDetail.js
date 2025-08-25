@@ -703,12 +703,12 @@ const CourseDetail = () => {
 
                         {/* Submit */}
                         <div className="d-grid">
-                          <Button
+                          <button
                             type="submit"
-                            className="gradient-button fw-semibold py-2"
+                            className="btn btn-md gradient-button fw-semibold py-2"
                           >
                             Send Message
-                          </Button>
+                          </button>
                         </div>
                       </Form>
                     </div>
@@ -794,12 +794,12 @@ const CourseDetail = () => {
                           >
                             View Details
                           </Button>
-                          <Button
-                            className="flex-grow-1 gradient-button"
+                          <button
+                            className="btn btn-md flex-grow-1 gradient-button"
                             onClick={() => setShowEnquiryModal(true)}
                           >
                             Enroll Now
-                          </Button>
+                          </button>
                         </div>
                       </Card.Body>
                     </Card>
