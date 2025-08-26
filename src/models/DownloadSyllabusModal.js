@@ -13,32 +13,65 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [pdfUrl, setPdfUrl] = useState('');
+  const [fileName, setFileName] = useState('');
 
-  // Fetch course PDF URL
-  const fetchCoursePdf = async () => {
+  // 🔽 Helper: Download PDF
+  const handleDownload = async (url, filename) => {
     try {
-      setLoading(true);
-      const response = await axios.get(
-        'https://hicap-backend-4rat.onrender.com/api/coursecontroller'
-      );
-      if (response.data.success) {
-        const course = response.data.data.find((c) => c._id === courseId);
-        if (course && course.pdf) {
-          setPdfUrl(course.pdf);
-        } else {
-          Swal.fire('Oops', 'PDF not available for this course.', 'warning');
-        }
-      } else {
-        Swal.fire('Error', 'Failed to fetch course details.', 'error');
-      }
+      const response = await axios.get(url, { responseType: 'blob' });
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = filename || 'syllabus.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     } catch (error) {
-      console.error('Error fetching course PDF:', error);
-      Swal.fire('Error', 'Error fetching PDF. Please try again.', 'error');
-    } finally {
-      setLoading(false);
+      console.error('Error downloading file:', error);
+      Swal.fire('Error', 'Failed to download the PDF. Try again.', 'error');
     }
   };
 
+  // Fetch course PDF URL
+const fetchCoursePdf = async () => {
+  try {
+    setLoading(true);
+    const response = await axios.get(
+      'https://hicap-backend-4rat.onrender.com/api/coursecontroller'
+    );
+
+    if (response.data.success) {
+      const course = response.data.data.find((c) => c._id === courseId);
+
+      if (course && course.pdf) {
+        // ✅ Cloudinary raw files sometimes don’t include .pdf
+        let fileUrl = course.pdf;
+        if (!fileUrl.endsWith(".pdf")) {
+          fileUrl += ".pdf"; // force extension for download
+        }
+
+        setPdfUrl(fileUrl);
+        setFileName(`${course.name}-syllabus.pdf`);
+        return { url: fileUrl, name: course.name };
+      } else {
+        Swal.fire('Oops', 'PDF not available for this course.', 'warning');
+        return null;
+      }
+    } else {
+      Swal.fire('Error', 'Failed to fetch course details.', 'error');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching course PDF:', error);
+    Swal.fire('Error', 'Error fetching PDF. Please try again.', 'error');
+    return null;
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+  // 🔽 Send OTP
   const sendOtp = async () => {
     if (!name || !phone) {
       Swal.fire('Warning', 'Please enter your name and phone number.', 'warning');
@@ -49,7 +82,7 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
       setLoading(true);
       const response = await axios.post(
         'https://hicap-backend-4rat.onrender.com/api/send-otp',
-        { name, phoneNumber: `+${phone}` } // phone includes country code
+        { name, phoneNumber: `+${phone}` }
       );
 
       if (response.data.success) {
@@ -70,6 +103,7 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
     }
   };
 
+  // 🔽 Verify OTP & download
   const verifyOtp = async () => {
     if (!otp || otp.length !== 6) return;
 
@@ -82,9 +116,22 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
 
       if (response.data.success) {
         Swal.fire('Verified', 'OTP verified! Download starting...', 'success');
-        if (!pdfUrl) await fetchCoursePdf();
-        if (pdfUrl) window.open(pdfUrl, '_blank');
-        handleCloseModal();
+
+        let url = pdfUrl;
+        let name = fileName;
+
+        if (!url) {
+          const result = await fetchCoursePdf(); // ✅ now returns object
+          if (result) {
+            url = result.url;
+            name = result.name;
+          }
+        }
+
+        if (url) {
+          await handleDownload(url, `${name}.pdf`);
+        }
+        handleClose();
       } else {
         Swal.fire('Error', response.data.message || 'Invalid OTP. Try again.', 'error');
       }
@@ -96,17 +143,8 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
     }
   };
 
-  const handleCloseModal = () => {
-    setOtpSent(false);
-    setOtp('');
-    setName('');
-    setPhone('');
-    setPdfUrl('');
-    handleClose();
-  };
-
   return (
-    <Modal show={show} onHide={handleCloseModal} centered size="md">
+    <Modal show={show} onHide={handleClose} centered size="md">
       <Modal.Header closeButton className="border-bottom-0 justify-content-center">
         <Modal.Title className="fw-bold textcolor text-center d-flex align-items-center gap-2">
           <FaDownload /> Download Syllabus

@@ -66,14 +66,14 @@ const Interviews = () => {
   if (loading) {
     return (
       <>
-        <Header />
-        <div className="container py-5 my-5 bg-light text-center">
+   
+        <div className="container py-2  bg-light text-center">
           <div className="spinner-border text-primary" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
           <p className="mt-3">Loading interviews...</p>
         </div>
-        <Footer />
+        
       </>
     );
   }
@@ -81,20 +81,20 @@ const Interviews = () => {
   if (error) {
     return (
       <>
-        <Header />
-        <div className="container py-5 my-5 bg-light text-center">
+
+        <div className="container py-2  bg-light text-center">
           <div className="alert alert-danger">{error}</div>
           <p>Failed to load interview data. Please try again later.</p>
         </div>
-        <Footer />
+     
       </>
     );
   }
 
   return (
     <>
-      <Header />
-      <div className="container py-5 my-5 bg-light">
+ 
+      <div className="container py-2  bg-light">
         <div className="mb-4">
           <h1 className="display-6 fw-bold textcolor">Interviews</h1>
           {/* <div className="bg-meroon" style={{ width: '200px', height: '3px', borderRadius: '20px' }}></div> */}
@@ -114,7 +114,7 @@ const Interviews = () => {
           </div>
         )}
       </div>
-      <Footer />
+  
     </>
   );
 };

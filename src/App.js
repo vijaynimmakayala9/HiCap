@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import HomePage from "./Pages/HomePage";
 import ContactUs from "./Pages/ContactUs";
 import AboutSection from "./Pages/AboutSection";
@@ -15,7 +15,7 @@ import Clients from "./Pages/Clients";
 import UpCommingBatches from "./components/UpCommingBatches";
 import Dashboard from "./components/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
-import LiveClassesPage from "./components/LiveClassesPage";
+import LiveClasses from "./components/LiveClassesPage";
 import CourseModule from "./admin/CourseModule";
 import StickyContactButtons from "./models/StickyContactHoverClick";
 import ResumeBuilding from "./services/ResumeBuild";
@@ -25,48 +25,51 @@ import OnetoOneSession from "./services/OnetoOneAssistance";
 import ProjectAssistance from "./services/Project Assistance";
 import RealTimeAssistance from "./services/RealTimeAssistance";
 import CoursesByCategory from "./newone/CoursesbyCategory";
+import UserLayout from "./Header/UserLayout"; // User sidebar layout
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
   const location = useLocation();
 
+  // Check login status
   useEffect(() => {
     const checkAuth = () => {
       try {
         const userData = sessionStorage.getItem("user");
         if (userData) {
           const user = JSON.parse(userData);
-          setIsAuthenticated(!!user?.token); // Using optional chaining
+          setIsAuthenticated(!!user?.token);
+          setUser(user);
         } else {
           setIsAuthenticated(false);
+          setUser(null);
         }
       } catch (error) {
-        console.error("Authentication check error:", error);
         setIsAuthenticated(false);
+        setUser(null);
       }
     };
 
-    // Check auth on initial load and when route changes
     checkAuth();
+    window.addEventListener("storage", checkAuth);
+    return () => window.removeEventListener("storage", checkAuth);
+  }, [location]);
 
-    // Listen for storage changes (from other tabs)
-    const handleStorageChange = () => checkAuth();
-    window.addEventListener('storage', handleStorageChange);
-
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, [location]); // Re-run when route changes
-
-  // Debugging - log auth status and user data
-  useEffect(() => {
-    console.log("Current auth status:", isAuthenticated);
-    console.log("User data:", sessionStorage.getItem("user"));
-  }, [isAuthenticated]);
+  // Logout function
+  const handleLogout = () => {
+    sessionStorage.removeItem("user");
+    setIsAuthenticated(false);
+    setUser(null);
+  };
 
   return (
     <>
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={
+          isAuthenticated ? <Navigate to="/dashboard" replace /> : <HomePage />
+        } />
         <Route path="/contactus" element={<ContactUs />} />
         <Route path="/aboutus" element={<AboutSection />} />
         <Route path="/upcommingbatches" element={<UpCommingBatches />} />
@@ -83,55 +86,27 @@ function App() {
         <Route path="/placements" element={<PlacementAssistance />} />
         <Route path="/onetoone" element={<OnetoOneSession />} />
         <Route path="/allcourses" element={<CoursesByCategory />} />
-        <Route path="/" element={<HomePage />} />
 
+        {/* Protected Dashboard Routes */}
+        <Route path="/dashboard" element={
+          <PrivateRoute isAuthenticated={isAuthenticated}>
+            <UserLayout user={user} onLogout={handleLogout} />
+          </PrivateRoute>
+        }>
+          <Route index element={<Dashboard />} />                {/* /dashboard */}
+          <Route path="interviews" element={<Interviews />} />  {/* /dashboard/interviews */}
+          <Route path="live-classes" element={<LiveClasses />} />
+          <Route path="coursemodule" element={<CourseModule />} />
+          <Route path="doubt-session" element={<DoubtSession />} />
+          <Route path="certificate" element={<Certificate />} />
+        </Route>
 
-        {/* Protected Routes */}
-        <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
-              <Dashboard />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/dashboard/doubt-session"
-          element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
-              <DoubtSession />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/dashboard/certificate"
-          element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
-              <Certificate />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/dashboard/interviews"
-          element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
-              <Interviews />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/dashboard/live-classes"
-          element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
-              <LiveClassesPage />
-            </PrivateRoute>
-          }
-        />
-        <Route path="/dashboard/coursemodule" element={<CourseModule />} />
+        {/* Redirect unknown routes */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
-      {/* Only show if not authenticated AND not on these pages */}
-      {!isAuthenticated && !['/contactus', '/dashboard'].includes(location.pathname) && (
+      {/* Sticky contact button for non-authenticated users */}
+      {!isAuthenticated && !['/contactus', '/aboutus', '/faqs'].includes(location.pathname) && (
         <StickyContactButtons />
       )}
     </>

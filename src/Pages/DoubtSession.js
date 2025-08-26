@@ -94,10 +94,10 @@ const DoubtSession = () => {
 
   return (
     <div>
-      <Header />
+      
 
       {/* Title Section */}
-      <div className="container mt-5 pt-5">
+      <div className="container p-2">
         <h2 className="fw-bold textcolor">Doubt Session</h2>
         {/* <div className="bg-meroon" style={{ width: '200px', height: '3px', borderRadius: '5px' }}></div> */}
       </div>
@@ -251,7 +251,7 @@ const DoubtSession = () => {
         </div>
       </div>
 
-      <Footer />
+  
     </div>
   );
 };

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { FaBook, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 const EnrolledCourses = () => {
@@ -7,38 +6,54 @@ const EnrolledCourses = () => {
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const user = JSON.parse(sessionStorage.getItem("user"));
-  const userId = user?.id;
-
   useEffect(() => {
-    const fetchEnrolledCourses = async () => {
-      try {
-        const response = await axios.get(
-          `https://hicap-backend-4rat.onrender.com/api/enrollments/${userId}`
-        );
+    // Sample course data
+    const sampleCourses = [
+      {
+        _id: "68aaec5ae9bb87ffb9f5db86",
+        name: "React for Beginners",
+        category: "Web Development",
+        duration: 3,
+        description: "Learn the basics of React.js and build interactive UIs.",
+        image: "https://res.cloudinary.com/dwmna13fi/image/upload/v1756122092/courses/main/jdrmbbi8pqkuwwb55ig4.jpg",
+        pdf: "https://res.cloudinary.com/dwmna13fi/raw/upload/v1756200349/courses/pdf/cthzvr3khao0eaaxsjm1",
+        enrollmentDate: "2025-08-01",
+      },
+      {
+        _id: "68aaec5ae9bb87ffb9f5db86",
+        name: "Advanced JavaScript",
+        category: "Programming",
+        duration: 4,
+        description: "Deep dive into JavaScript concepts and ES6 features.",
+        image: "https://res.cloudinary.com/dwmna13fi/image/upload/v1756122092/courses/main/jdrmbbi8pqkuwwb55ig4.jpg",
+        pdf: "https://res.cloudinary.com/dwmna13fi/raw/upload/v1756200349/courses/pdf/cthzvr3khao0eaaxsjm1",
+        enrollmentDate: "2025-07-15",
+      },
+      {
+        _id: "68aaec5ae9bb87ffb9f5db86",
+        name: "Python for Data Science",
+        category: "Data Science",
+        duration: 6,
+        description: "Master Python programming for data analysis and visualization.",
+        image: "https://res.cloudinary.com/dwmna13fi/image/upload/v1756122092/courses/main/jdrmbbi8pqkuwwb55ig4.jpg",
+        pdf: "https://res.cloudinary.com/dwmna13fi/raw/upload/v1756200349/courses/pdf/cthzvr3khao0eaaxsjm1",
+        enrollmentDate: "2025-06-20",
+      },
+      {
+        _id: "68aaec5ae9bb87ffb9f5db86",
+        name: "Machine Learning Basics",
+        category: "AI & ML",
+        duration: 5,
+        description: "Understand the fundamentals of machine learning algorithms.",
+        image: "https://res.cloudinary.com/dwmna13fi/image/upload/v1756122092/courses/main/jdrmbbi8pqkuwwb55ig4.jpg",
+        pdf: "https://res.cloudinary.com/dwmna13fi/raw/upload/v1756200349/courses/pdf/cthzvr3khao0eaaxsjm1",
+        enrollmentDate: "2025-05-10",
+      },
+    ];
 
-        if (response.data.success) {
-          const filteredCourses = response.data.data
-            .filter((item) => item.status === "enrolled")
-            .map((item) => ({
-              ...item.course,
-              enrollmentDate: item.createdAt,
-              enrollmentId: item._id,
-            }));
-
-          setEnrolledCourses(filteredCourses);
-        }
-      } catch (err) {
-        console.error("Error fetching enrolled courses:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (userId) {
-      fetchEnrolledCourses();
-    }
-  }, [userId]);
+    setEnrolledCourses(sampleCourses);
+    setLoading(false);
+  }, []);
 
   const nextSlide = () => {
     if (enrolledCourses.length <= 3) return;
@@ -52,6 +67,25 @@ const EnrolledCourses = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? Math.max(enrolledCourses.length - 3, 0) : prevIndex - 3
     );
+
+
+
+  };
+  const handleDownload = async (url, filename) => {
+    try {
+      const response = await fetch(url, { method: "GET" });
+      const blob = await response.blob();
+
+      // Create a link element
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = filename || "course.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+    }
   };
 
   const visibleCourses = enrolledCourses.slice(currentIndex, currentIndex + 3);
@@ -138,12 +172,20 @@ const EnrolledCourses = () => {
                 <button
                   className="w-full bg-[#ad2132] text-white py-2 rounded-md font-medium hover:bg-[#8a1a2a] transition"
                   onClick={() => {
-                    window.location.href = `/course/${course._id}`;
+                    window.location.href = `/dashboard/coursemodule`;
                   }}
                 >
                   Continue Learning
                 </button>
+
+                <button
+                  onClick={() => handleDownload(course.pdf, `${course.name}.pdf`)}
+                  className="block mt-2 w-full text-center text-sm text-[#ad2132] hover:underline"
+                >
+                  Download PDF
+                </button>
               </div>
+
             </div>
           ))}
         </div>
