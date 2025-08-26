@@ -20,7 +20,7 @@ const Dashboard = () => {
                 <YourStatistics />
                 <CompletedClasses />
                 <RecommendedCourses />
-                <TopPerformers />
+                {/* <TopPerformers /> */}
             </div>
             <Footer/>
         </>

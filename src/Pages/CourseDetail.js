@@ -24,6 +24,7 @@ import { Container, Row, Col, Card, Button, Form, Modal, Badge, Accordion } from
 import FlashContact from '../components/FlashContact';
 import CourseEnquiryModal from '../components/EnrollModal';
 import DownloadSyllabusModal from '../models/DownloadSyllabusModal'; // Import the new component
+import GetInTouch from '../models/GetinTouch';
 
 const Counter = ({ end, duration = 1000, suffix = '' }) => {
   const [count, setCount] = useState(0);
@@ -133,7 +134,10 @@ const CourseDetail = () => {
     setOpenFAQIndex(openFAQIndex === index ? null : index);
   };
 
-  const handleEnroll = () => {
+  const [prefillCourse, setPrefillCourse] = useState(""); 
+
+  const handleEnroll = (name) => {
+    setPrefillCourse(name);
     setShowEnquiryModal(true);
   };
 
@@ -277,7 +281,7 @@ const CourseDetail = () => {
                   </div>
 
                   <div className="d-flex flex-column flex-sm-row gap-3">
-                    <button className="btn btn-md gradient-button" onClick={handleEnroll}>
+                    <button className="btn btn-md gradient-button" onClick={()=>handleEnroll(course.name)}>
                       Enroll Now
                     </button>
                     <button
@@ -536,153 +540,7 @@ const CourseDetail = () => {
           )}
 
 
-          <section className="py-5 bg-light" id="contact">
-            <div className="container">
-              {/* Heading */}
-              <div className="text-center mb-5">
-                <h2 className="fw-bold textcolor">Get in Touch</h2>
-                <p className="text-muted">
-                  Whether you're a student or a professional, we'd love to hear from you.
-                </p>
-              </div>
-
-              {/* Form Card */}
-              <div className="row justify-content-center">
-                <div className="col-lg-8">
-                  <div className="card shadow-sm border-0 shadow-sm">
-                    <div className="card-body p-4 p-sm-5">
-                      <Form>
-                        {/* Name */}
-                        <Form.Group className="mb-3">
-                          <Form.Label className="fw-semibold">Full Name</Form.Label>
-                          <Form.Control
-                            type="text"
-                            placeholder="Enter your full name"
-                            required
-                          />
-                        </Form.Group>
-
-                        {/* Email */}
-                        <Form.Group className="mb-3">
-                          <Form.Label className="fw-semibold">Email Address</Form.Label>
-                          <Form.Control
-                            type="email"
-                            placeholder="Enter your email"
-                            required
-                          />
-                        </Form.Group>
-
-                        {/* Phone */}
-                        <Form.Group className="mb-3">
-                          <Form.Label className="fw-semibold">Phone Number</Form.Label>
-                          <Form.Control
-                            type="tel"
-                            placeholder="+1 234 567 890"
-                            required
-                          />
-                        </Form.Group>
-
-                        {/* Type */}
-                        <Form.Group className="mb-3">
-                          <Form.Label className="fw-semibold">I am a</Form.Label>
-                          <Form.Select
-                            value={role}
-                            onChange={(e) => setRole(e.target.value)}
-                            required
-                          >
-                            <option value="">Select...</option>
-                            <option value="student">Student</option>
-                            <option value="professional">Professional</option>
-                          </Form.Select>
-                        </Form.Group>
-
-                        {/* Extra Fields: Student */}
-                        {role === "student" && (
-                          <>
-                            <Form.Group className="mb-3">
-                              <Form.Label className="fw-semibold">College Name</Form.Label>
-                              <Form.Control
-                                type="text"
-                                placeholder="e.g., XYZ University"
-                                required
-                              />
-                            </Form.Group>
-                            <Form.Group className="mb-3">
-                              <Form.Label className="fw-semibold">Branch</Form.Label>
-                              <Form.Control
-                                type="text"
-                                placeholder="e.g., Computer Science"
-                                required
-                              />
-                            </Form.Group>
-                            <Form.Group className="mb-3">
-                              <Form.Label className="fw-semibold">Year of Passed Out</Form.Label>
-                              <Form.Control
-                                type="text"
-                                placeholder="e.g., Final Year"
-                                required
-                              />
-                            </Form.Group>
-                          </>
-                        )}
-
-                        {/* Extra Fields: Professional */}
-                        {role === "professional" && (
-                          <>
-                            <Form.Group className="mb-3">
-                              <Form.Label className="fw-semibold">Company Name</Form.Label>
-                              <Form.Control
-                                type="text"
-                                placeholder="e.g., ABC Corporation"
-                                required
-                              />
-                            </Form.Group>
-                            <Form.Group className="mb-3">
-                              <Form.Label className="fw-semibold">Role</Form.Label>
-                              <Form.Control
-                                type="text"
-                                placeholder="e.g., Software Engineer"
-                                required
-                              />
-                            </Form.Group>
-                            <Form.Group className="mb-3">
-                              <Form.Label className="fw-semibold">Experience (in years)</Form.Label>
-                              <Form.Control
-                                type="number"
-                                placeholder="e.g., 3"
-                                required
-                              />
-                            </Form.Group>
-                          </>
-                        )}
-
-                        {/* Message */}
-                        <Form.Group className="mb-4">
-                          <Form.Label className="fw-semibold">Message</Form.Label>
-                          <Form.Control
-                            as="textarea"
-                            rows={4}
-                            placeholder="Write your query or message here"
-                            required
-                          />
-                        </Form.Group>
-
-                        {/* Submit */}
-                        <div className="d-grid">
-                          <button
-                            type="submit"
-                            className="btn btn-md gradient-button fw-semibold py-2"
-                          >
-                            Send Message
-                          </button>
-                        </div>
-                      </Form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          <GetInTouch />
 
 
           {/* Related Courses - Updated Format */}
@@ -762,7 +620,7 @@ const CourseDetail = () => {
                           </Button>
                           <button
                             className="btn btn-md flex-grow-1 gradient-button"
-                            onClick={() => setShowEnquiryModal(true)}
+                            onClick={()=>handleEnroll(relatedCourse.name)}
                           >
                             Enroll Now
                           </button>
@@ -778,16 +636,17 @@ const CourseDetail = () => {
         </main>
       </div>
 
-      
-      <DownloadSyllabusModal 
-        show={showSyllabusModal} 
-        handleClose={() => setShowSyllabusModal(false)} 
+
+      <DownloadSyllabusModal
+        show={showSyllabusModal}
+        handleClose={() => setShowSyllabusModal(false)}
       />
 
       {/* <FlashContact /> */}
       <Footer />
       <CourseEnquiryModal
         show={showEnquiryModal}
+        prefillCourse={prefillCourse}
         handleClose={() => setShowEnquiryModal(false)}
       />
     </>

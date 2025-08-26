@@ -53,7 +53,7 @@ const HomePage = () => {
     <>
       <Header />
 
-      {!isLoggedIn ? (
+     
         <>
           {/* <CourseAndFeatures /> */}
           <HeroSection/>
@@ -67,11 +67,7 @@ const HomePage = () => {
           <Reviews />
           {/* <IndustryExperts /> */}
         </>
-      ) : (
-        <>
-          <Dashboard />
-        </>
-      )}
+     
 
       <Footer />
 

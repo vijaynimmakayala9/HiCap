@@ -1,86 +1,7 @@
-import React, { useState } from 'react';
-import { Phone, Mail } from 'lucide-react';
-
-const RequestCallModal = ({ show, onHide }) => {
-  if (!show) return null;
-
-  return (
-    <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content rounded-3">
-          <div className="modal-header">
-            <h5 className="modal-title">Request Call</h5>
-            <button type="button" className="btn-close" onClick={onHide}></button>
-          </div>
-          <div className="modal-body">
-            <div className="mb-3">
-              <input type="text" className="form-control" placeholder="Your Name" />
-            </div>
-            <div className="mb-3">
-              <input type="tel" className="form-control" placeholder="Your Phone Number" />
-            </div>
-            <div className="mb-3">
-              <textarea className="form-control" placeholder="Message (optional)" rows="3"></textarea>
-            </div>
-          </div>
-          <div className="modal-footer">
-            <button className="btn btn-danger" onClick={onHide}>Request Call</button>
-            <button className="btn btn-secondary" onClick={onHide}>Cancel</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const ContactUsModal = ({ show, onHide }) => {
-  if (!show) return null;
-
-  return (
-    <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content rounded-3">
-          <div className="modal-header">
-            <h5 className="modal-title">Contact Us</h5>
-            <button type="button" className="btn-close" onClick={onHide}></button>
-          </div>
-          <div className="modal-body">
-            <div className="mb-3">
-              <input type="text" className="form-control" placeholder="Your Name" />
-            </div>
-            <div className="mb-3">
-              <input type="email" className="form-control" placeholder="Your Email" />
-            </div>
-            <div className="mb-3">
-              <input type="text" className="form-control" placeholder="Subject" />
-            </div>
-            <div className="mb-3">
-              <textarea className="form-control" placeholder="Your Message" rows="4"></textarea>
-            </div>
-          </div>
-          <div className="modal-footer">
-            <button className="btn btn-danger" onClick={onHide}>Send Message</button>
-            {/*
-            <button className="btn btn-danger">
-  <a
-    href="https://mail.google.com/mail/?view=cm&fs=1&to=info@techsterker.com"
-    target="_blank"
-    className="ms-1 text-white text-decoration-none"
-  >
-    Email Me
-  </a>
-</button>
-            */}
-            <button className="btn btn-secondary" onClick={onHide}>Cancel</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+import React, { useState } from "react";
+import ContactUsModal from "./ContactUsModal"; // import the API-integrated ContactUsModal
 
 const StickyContactButtons = () => {
-  const [showCallModal, setShowCallModal] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [hoveredIcon, setHoveredIcon] = useState(null);
@@ -116,35 +37,9 @@ const StickyContactButtons = () => {
           </div>
         )}
 
-        {/* Expanded Icons */}
+        {/* Expanded Icon */}
         {isExpanded && (
           <div className="d-flex flex-column bg-danger" style={{ borderBottomLeftRadius: '5px' }}>
-            {/* Request Call */}
-            <div
-              className="position-relative"
-              style={{
-                backgroundColor: hoveredIcon === 'call' ? '#b92d3b' : '#ad2132',
-                padding: '12px 15px',
-                cursor: 'pointer'
-              }}
-              onClick={() => {
-                setShowCallModal(true);
-                setIsExpanded(false);
-              }}
-              onMouseEnter={() => setHoveredIcon('call')}
-              onMouseLeave={() => setHoveredIcon(null)}
-            >
-              <Phone size={20} color="white" />
-              {hoveredIcon === 'call' && (
-                <span
-                  className="position-absolute end-100 me-2 bg-dark text-white px-2 py-1 rounded small"
-                  style={{ top: '50%', transform: 'translateY(-50%)', whiteSpace: 'nowrap' }}
-                >
-                  Request Call
-                </span>
-              )}
-            </div>
-
             {/* Contact Us */}
             <div
               className="position-relative"
@@ -161,7 +56,7 @@ const StickyContactButtons = () => {
               onMouseEnter={() => setHoveredIcon('contact')}
               onMouseLeave={() => setHoveredIcon(null)}
             >
-              <Mail size={20} color="white" />
+              <span className="text-white fw-bold">Contact Us</span>
               {hoveredIcon === 'contact' && (
                 <span
                   className="position-absolute end-100 me-2 bg-dark text-white px-2 py-1 rounded small"
@@ -175,8 +70,7 @@ const StickyContactButtons = () => {
         )}
       </div>
 
-      {/* Modals */}
-      <RequestCallModal show={showCallModal} onHide={() => setShowCallModal(false)} />
+      {/* Contact Modal */}
       <ContactUsModal show={showContactModal} onHide={() => setShowContactModal(false)} />
     </>
   );

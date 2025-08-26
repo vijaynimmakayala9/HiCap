@@ -385,7 +385,7 @@ const GuestHeader = ({ onLogin }) => {
         </div>
         <div className="flex flex-col sm:flex-row gap-2">
           <button
-            className="flex-1 p-2 bg-transparent border border-[#ad2132] text-[#ad2132] rounded text-xs md:text-sm cursor-pointer hover:bg-[#ad2132] hover:text-white transition-colors"
+            className="flex-1 p-2 bg-transparent border border-[#ad2132] text-[#ad2132] rounded text-xs md:text-sm cursor-pointer hover:bg-[#ad2132] hover:text-black transition-colors"
             onClick={() => {
               navigate('/courses');
               setShowCoursesMenu(false);
@@ -501,7 +501,7 @@ const GuestHeader = ({ onLogin }) => {
             </ul>
           ) : (
             <button
-              className="w-full p-2 bg-transparent border border-[#ad2132] text-[#ad2132] rounded cursor-pointer text-xs md:text-sm hover:bg-[#ad2132] hover:text-white transition-colors"
+              className="w-full p-2 bg-transparent border border-[#ad2132] text-[#ad2132] rounded cursor-pointer text-xs md:text-sm hover:bg-[#ad2132] hover:text-black transition-colors"
               onClick={() => {
                 navigate('/allcourses');
                 setShowCoursesMenu(false);
@@ -771,19 +771,28 @@ const GuestHeader = ({ onLogin }) => {
 
       {/* Login Modal */}
       {showLoginModal && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black/50 backdrop-blur-sm z-[1070] flex items-center justify-center p-3 sm:p-4 md:p-5">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1070] flex items-center justify-center p-2 sm:p-4 md:p-6">
           <div
             ref={modalRef}
-            className="bg-white rounded-lg md:rounded-xl p-4 md:p-5 lg:p-6 w-full max-w-[320px] sm:max-w-[360px] md:max-w-[400px] shadow-xl"
+            className="bg-white rounded-lg md:rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-[90%] sm:max-w-[360px] md:max-w-[420px] lg:max-w-[480px] shadow-2xl"
           >
+            {/* Logo */}
+            <div className="flex justify-center mb-4 sm:mb-5">
+              <img
+                src="/logo/hicaplogo.png"
+                alt="Logo"
+                className="w-16 sm:w-20 md:w-24 lg:w-28 h-auto object-contain"
+              />
+            </div>
+
             {/* Header */}
-            <div className="flex justify-between items-center mb-4 md:mb-5 lg:mb-6">
-              <h4 className="text-[#ad2132] text-base md:text-lg lg:text-xl font-semibold m-0">
+            <div className="flex justify-between items-center mb-4 sm:mb-5 md:mb-6">
+              <h4 className="text-[#ad2132] text-base sm:text-lg md:text-xl font-semibold m-0">
                 Login
               </h4>
               <button
                 onClick={() => setShowLoginModal(false)}
-                className="bg-transparent border-none text-base md:text-lg lg:text-xl cursor-pointer hover:text-gray-600 transition-colors"
+                className="bg-transparent border-none text-lg sm:text-xl md:text-2xl cursor-pointer hover:text-gray-600 transition-colors"
               >
                 <FaTimes />
               </button>
@@ -792,15 +801,15 @@ const GuestHeader = ({ onLogin }) => {
             {/* Form */}
             <form onSubmit={handleLoginSubmit}>
               {loginError && (
-                <div className="p-2 md:p-2.5 bg-[#f8d7da] text-[#721c24] rounded mb-3 md:mb-4 text-xs md:text-sm">
+                <div className="p-2 sm:p-2.5 bg-[#f8d7da] text-[#721c24] rounded mb-3 sm:mb-4 text-xs sm:text-sm">
                   {loginError}
                 </div>
               )}
 
               {/* Phone Input */}
-              <div className="mb-3 md:mb-4 lg:mb-5">
+              <div className="mb-3 sm:mb-4 md:mb-5">
                 <div className="relative">
-                  <FaPhone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 text-xs md:text-sm" />
+                  <FaPhone className="absolute left-3 sm:left-4 md:left-4 top-1/2 -translate-y-1/2 text-gray-600 text-base sm:text-lg md:text-xl" />
                   <input
                     type="tel"
                     name="phoneNumber"
@@ -808,15 +817,15 @@ const GuestHeader = ({ onLogin }) => {
                     onChange={handleLoginChange}
                     placeholder="Phone Number"
                     required
-                    className="w-full p-2 md:p-2.5 lg:p-3 pl-8 md:pl-9 lg:pl-10 border border-gray-300 rounded-md text-xs md:text-sm focus:border-[#ad2132] focus:outline-none focus:ring-1 focus:ring-[#ad2132] transition-colors"
+                    className="w-full py-2 sm:py-2.5 md:py-3 pl-10 sm:pl-12 md:pl-12 pr-3 border border-gray-300 rounded-md text-sm sm:text-base md:text-lg focus:border-[#ad2132] focus:outline-none focus:ring-1 focus:ring-[#ad2132] transition-colors"
                   />
                 </div>
               </div>
 
               {/* Password Input */}
-              <div className="mb-3 md:mb-4 lg:mb-5">
+              <div className="mb-3 sm:mb-4 md:mb-5">
                 <div className="relative">
-                  <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 text-xs md:text-sm" />
+                  <FaLock className="absolute left-3 sm:left-4 md:left-4 top-1/2 -translate-y-1/2 text-gray-600 text-base sm:text-lg md:text-xl" />
                   <input
                     type="password"
                     name="password"
@@ -824,30 +833,34 @@ const GuestHeader = ({ onLogin }) => {
                     onChange={handleLoginChange}
                     placeholder="Password"
                     required
-                    className="w-full p-2 md:p-2.5 lg:p-3 pl-8 md:pl-9 lg:pl-10 border border-gray-300 rounded-md text-xs md:text-sm focus:border-[#ad2132] focus:outline-none focus:ring-1 focus:ring-[#ad2132] transition-colors"
+                    className="w-full py-2 sm:py-2.5 md:py-3 pl-10 sm:pl-12 md:pl-12 pr-3 border border-gray-300 rounded-md text-sm sm:text-base md:text-lg focus:border-[#ad2132] focus:outline-none focus:ring-1 focus:ring-[#ad2132] transition-colors"
                   />
                 </div>
               </div>
 
-              {/* Button */}
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={isLoggingIn}
-                className={`w-full p-2 md:p-2.5 lg:p-3 bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded-md font-semibold text-xs md:text-sm cursor-pointer hover:opacity-90 transition-opacity ${isLoggingIn ? 'opacity-80' : ''}`}
+                className={`w-full py-2 sm:py-2.5 md:py-3 bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white rounded-md font-semibold text-sm sm:text-base md:text-lg cursor-pointer hover:opacity-90 transition-opacity ${isLoggingIn ? "opacity-80" : ""
+                  }`}
               >
                 {isLoggingIn ? (
                   <>
-                    <span className="inline-block w-3 h-3 md:w-4 md:h-4 border-2 border-white/30 rounded-full border-t-white animate-spin mr-2"></span>
+                    <span className="inline-block w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 border-2 border-white/30 rounded-full border-t-white animate-spin mr-2"></span>
                     Logging in...
                   </>
                 ) : (
-                  'Login'
+                  "Login"
                 )}
               </button>
             </form>
           </div>
         </div>
       )}
+
+
+
 
       <ContactUsModal
         show={showContactModal}
@@ -872,7 +885,7 @@ const UserHeader = ({ user, onLogout }) => {
     { label: 'Dashboard', path: '/dashboard', icon: FaUserCircle, shortLabel: 'Dashboard' },
     { label: 'Interviews', path: '/dashboard/interviews', icon: FaQuestionCircle, shortLabel: 'Interviews' },
     { label: 'Live Classes', path: '/dashboard/live-classes', icon: FaVideo, shortLabel: 'Live' },
-    { label: 'Course Module', path: '/coursemodule', icon: FaBook, shortLabel: 'Courses' },
+    { label: 'Course Module', path: '/dashboard/coursemodule', icon: FaBook, shortLabel: 'Courses' },
     { label: 'Doubt Session', path: '/dashboard/doubt-session', icon: FaQuestionCircle, shortLabel: 'Doubts' },
     { label: 'Certificate', path: '/dashboard/certificate', icon: FaCertificate, shortLabel: 'Cert' },
   ];

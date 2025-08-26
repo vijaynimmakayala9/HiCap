@@ -127,7 +127,7 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route path="/coursemodule" element={<CourseModule />} />
+        <Route path="/dashboard/coursemodule" element={<CourseModule />} />
       </Routes>
 
       {/* Only show if not authenticated AND not on these pages */}

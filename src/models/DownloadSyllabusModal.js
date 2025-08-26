@@ -1,34 +1,39 @@
 import React, { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Spinner } from 'react-bootstrap';
 import { FaDownload } from 'react-icons/fa';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/bootstrap.css';
 
 const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
   const [otpSent, setOtpSent] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState('');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
-  const [pdfUrl, setPdfUrl] = useState("");
+  const [pdfUrl, setPdfUrl] = useState('');
 
-  // Fetch course PDF URL from API
+  // Fetch course PDF URL
   const fetchCoursePdf = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`https://hicap-backend-4rat.onrender.com/api/coursecontroller`);
-      const data = await response.json();
-      if (response.ok && data.success) {
-        const course = data.data.find(c => c._id === courseId);
+      const response = await axios.get(
+        'https://hicap-backend-4rat.onrender.com/api/coursecontroller'
+      );
+      if (response.data.success) {
+        const course = response.data.data.find((c) => c._id === courseId);
         if (course && course.pdf) {
           setPdfUrl(course.pdf);
         } else {
-          alert("PDF not available for this course.");
+          Swal.fire('Oops', 'PDF not available for this course.', 'warning');
         }
       } else {
-        alert("Failed to fetch course details.");
+        Swal.fire('Error', 'Failed to fetch course details.', 'error');
       }
     } catch (error) {
-      console.error("Error fetching course PDF:", error);
-      alert("Error fetching PDF.");
+      console.error('Error fetching course PDF:', error);
+      Swal.fire('Error', 'Error fetching PDF. Please try again.', 'error');
     } finally {
       setLoading(false);
     }
@@ -36,54 +41,56 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
 
   const sendOtp = async () => {
     if (!name || !phone) {
-      alert("Please enter both your name and WhatsApp number.");
+      Swal.fire('Warning', 'Please enter your name and phone number.', 'warning');
       return;
     }
 
     try {
       setLoading(true);
-      const response = await fetch("https://hicap-backend-4rat.onrender.com/api/send-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phoneNumber: phone }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        alert(`OTP sent successfully to ${phone}`);
+      const response = await axios.post(
+        'https://hicap-backend-4rat.onrender.com/api/send-otp',
+        { name, phoneNumber: `+${phone}` } // phone includes country code
+      );
+
+      if (response.data.success) {
+        Swal.fire('Success', `OTP sent successfully to +${phone}`, 'success');
         setOtpSent(true);
       } else {
-        alert(data.message || "Failed to send OTP.");
+        Swal.fire('Error', response.data.message || 'Failed to send OTP.', 'error');
       }
     } catch (error) {
-      console.error("Send OTP error:", error);
-      alert("Error sending OTP.");
+      console.error('Send OTP error:', error.response || error);
+      Swal.fire(
+        'Error',
+        error.response?.data?.message || 'Server error while sending OTP.',
+        'error'
+      );
     } finally {
       setLoading(false);
     }
   };
 
   const verifyOtp = async () => {
-    if (!otp) return;
+    if (!otp || otp.length !== 6) return;
 
     try {
       setLoading(true);
-      const response = await fetch("https://hicap-backend-4rat.onrender.com/api/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phoneNumber: phone, otp }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        alert("OTP verified! Download starting...");
+      const response = await axios.post(
+        'https://hicap-backend-4rat.onrender.com/api/verify-otp',
+        { phoneNumber: `+${phone}`, otp }
+      );
+
+      if (response.data.success) {
+        Swal.fire('Verified', 'OTP verified! Download starting...', 'success');
         if (!pdfUrl) await fetchCoursePdf();
-        if (pdfUrl) window.open(pdfUrl, "_blank");
+        if (pdfUrl) window.open(pdfUrl, '_blank');
         handleCloseModal();
       } else {
-        alert(data.message || "Invalid OTP. Try again.");
+        Swal.fire('Error', response.data.message || 'Invalid OTP. Try again.', 'error');
       }
     } catch (error) {
-      console.error("Verify OTP error:", error);
-      alert("Error verifying OTP.");
+      console.error('Verify OTP error:', error.response || error);
+      Swal.fire('Error', 'Error verifying OTP. Try again later.', 'error');
     } finally {
       setLoading(false);
     }
@@ -91,10 +98,10 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
 
   const handleCloseModal = () => {
     setOtpSent(false);
-    setOtp("");
-    setName("");
-    setPhone("");
-    setPdfUrl("");
+    setOtp('');
+    setName('');
+    setPhone('');
+    setPdfUrl('');
     handleClose();
   };
 
@@ -119,26 +126,36 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
                 className="py-2"
               />
             </Form.Group>
+
             <Form.Group className="mb-4 text-start">
-              <Form.Label className="fw-semibold">Enter WhatsApp Number</Form.Label>
-              <Form.Control
-                type="tel"
-                placeholder="+91 93984 59191"
+              <Form.Label className="fw-semibold">Enter Phone Number</Form.Label>
+              <PhoneInput
+                country={'in'}
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="py-2"
+                onChange={setPhone}
+                inputClass="form-control py-2"
+                placeholder="Enter phone number"
+                enableSearch
               />
               <Form.Text className="text-muted">
-                We'll send a verification code to your WhatsApp
+                Select your country code. We'll send a verification code to this number.
               </Form.Text>
             </Form.Group>
+
             <div className="d-grid">
               <Button
                 className="gradient-button fw-semibold py-2"
                 onClick={sendOtp}
                 disabled={!name || !phone || loading}
               >
-                {loading ? "Sending OTP..." : "Send OTP"}
+                {loading ? (
+                  <>
+                    <Spinner animation="border" size="sm" className="me-2" />
+                    Sending OTP...
+                  </>
+                ) : (
+                  'Send OTP'
+                )}
               </Button>
             </div>
           </Form>
@@ -158,15 +175,24 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
                 Check your WhatsApp for the verification code
               </Form.Text>
             </Form.Group>
+
             <div className="d-grid">
               <Button
                 className="gradient-button fw-semibold py-2"
                 onClick={verifyOtp}
                 disabled={otp.length !== 6 || loading}
               >
-                {loading ? "Verifying..." : "Verify & Download"}
+                {loading ? (
+                  <>
+                    <Spinner animation="border" size="sm" className="me-2" />
+                    Verifying...
+                  </>
+                ) : (
+                  'Verify & Download'
+                )}
               </Button>
             </div>
+
             <div className="text-center mt-3">
               <Button
                 variant="link"
