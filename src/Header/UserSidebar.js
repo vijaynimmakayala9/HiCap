@@ -60,7 +60,6 @@ const UserSidebar = ({ isCollapsed, onToggleCollapse, isMobile }) => {
         style={{
           width: isMobile ? (isCollapsed ? '0' : '250px') : isCollapsed ? '80px' : '250px',
           background: 'linear-gradient(to bottom, #7b1e3d, #8c1f41, #9d2145, #ad2549, #bf2a4e)',
-
           color: 'white',
           zIndex: 1030,
           transition: 'all 0.3s ease',

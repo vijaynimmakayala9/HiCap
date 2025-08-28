@@ -9,28 +9,60 @@ const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [recommendedCourses, setRecommendedCourses] = useState([]);
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [enrollmentsLoading, setEnrollmentsLoading] = useState(true);
+  const [userDetailsLoading, setUserDetailsLoading] = useState(true);
+
+  const Student = sessionStorage.getItem("user");
+  const student = Student ? JSON.parse(Student) : null;
 
   const navigate = useNavigate();
 
-  const userName = "Angela Della";
-  const enrolledCourses = 5;
   const todaysClasses = 2;
 
   const fetchCourses = async () => {
     try {
       const response = await axios.get("https://hicap-backend-4rat.onrender.com/api/coursecontroller");
       setRecommendedCourses(response.data.data || response.data || []);
-      setLoading(false);
     } catch (error) {
       console.error("Error fetching courses:", error);
       setRecommendedCourses([]);
+    } finally {
       setLoading(false);
     }
   };
 
+  const fetchEnrollments = async () => {
+    try {
+      const response = await axios.get(`https://hicap-backend-4rat.onrender.com/api/user/${student.id}/enrollments`);
+      
+      setEnrolledCourses(response.data.enrolledCourses || []);
+    } catch (error) {
+      console.error("Error fetching enrollments:", error);
+      setEnrolledCourses([]);
+    } finally {
+      setEnrollmentsLoading(false);
+    }
+  };
+
+  const fetchUserDetails = async () => {
+    try {
+      const response = await axios.get(`https://hicap-backend-4rat.onrender.com/api/userregister/${student.id}`);
+      setUserData(response.data.data)
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    } finally {
+      setUserDetailsLoading(false);
+    }
+  };
+  console.log(userData)
+
   useEffect(() => {
     fetchCourses();
+    fetchEnrollments();
+    fetchUserDetails();
   }, []);
 
   const handleViewDetails = (courseId) => {
@@ -104,6 +136,41 @@ const Dashboard = () => {
     });
   };
 
+  // Function to calculate progress percentage based on start date and duration
+  const calculateProgress = (startDate, duration) => {
+    const start = new Date(startDate);
+    const now = new Date();
+    const totalWeeks = parseInt(duration) || 12; // Default to 12 weeks if not available
+    const elapsedWeeks = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000));
+
+    if (elapsedWeeks <= 0) return 0;
+    if (elapsedWeeks >= totalWeeks) return 100;
+
+    return Math.min(100, Math.max(0, Math.round((elapsedWeeks / totalWeeks) * 100)));
+  };
+
+  // Function to determine course status based on progress
+  const getCourseStatus = (progress, startDate) => {
+    const start = new Date(startDate);
+    const now = new Date();
+
+    if (now < start) return "Upcoming";
+    if (progress >= 100) return "Completed";
+    return "Ongoing";
+  };
+
+  // Format the joining date
+  const formatJoiningDate = (dateString) => {
+    if (!dateString) return "N/A";
+
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    });
+  };
+
   return (
     <Container fluid className="min-vh-100 bg-light p-3 p-md-4">
       {/* Header Section */}
@@ -111,14 +178,16 @@ const Dashboard = () => {
         <Col md={4}>
           <Card className="shadow-sm border-0 rounded-3 p-3" style={{ backgroundColor: "#e3f2fd" }}>
             <h5 className="text-primary fw-semibold mb-1">Welcome</h5>
-            <p className="text-secondary mb-0">{userName}</p>
+            <p className="text-secondary mb-0">
+              {userData ? `${userData.firstName || ''} ${userData.lastName || ''}`.trim() : "Loading..."}
+            </p>
           </Card>
         </Col>
 
         <Col md={4}>
           <Card className="shadow-sm border-0 rounded-3 p-3" style={{ backgroundColor: "#e8f5e9" }}>
             <h6 className="text-muted mb-1">Enrolled Courses</h6>
-            <h3 className="fw-bold text-success mb-0">{enrolledCourses}</h3>
+            <h3 className="fw-bold text-success mb-0">{enrolledCourses.length}</h3>
           </Card>
         </Col>
 
@@ -147,28 +216,32 @@ const Dashboard = () => {
               </div>
 
               <Row className="g-3 justify-content-center">
-                {[{ name: "UI/UX Design", attended: 24, total: 30, color: "#ff6b6b" },
-                { name: "Web Development", attended: 20, total: 25, color: "#4ecdc4" },
-                { name: "Data Structures", attended: 18, total: 22, color: "#ffd166" },
-                { name: "Database Systems", attended: 22, total: 28, color: "#6a0572" }].map((course, idx) => {
-                  const percentage = Math.round((course.attended / course.total) * 100);
+                {enrolledCourses.slice(0, 4).map((course, idx) => {
+                  // Generate random attendance data for demo purposes
+                  const totalClasses = 25 + Math.floor(Math.random() * 10);
+                  const attendedClasses = Math.floor(totalClasses * (0.7 + Math.random() * 0.3));
+                  const percentage = Math.round((attendedClasses / totalClasses) * 100);
+
+                  const colors = ["#ff6b6b", "#4ecdc4", "#ffd166", "#6a0572"];
+                  const color = colors[idx % colors.length];
+
                   return (
                     <Col xs={6} sm={6} key={idx} className="d-flex justify-content-center">
                       <div className="text-center">
                         <div className="circular-progress position-relative mb-2" style={{ width: "100px", height: "100px" }}>
                           <svg className="position-absolute top-0 start-0" width="100" height="100">
                             <circle cx="50" cy="50" r="45" stroke="#e6e6e6" strokeWidth="10" fill="none" />
-                            <circle cx="50" cy="50" r="45" stroke={course.color} strokeWidth="10" fill="none"
+                            <circle cx="50" cy="50" r="45" stroke={color} strokeWidth="10" fill="none"
                               strokeDasharray={2 * Math.PI * 45}
                               strokeDashoffset={2 * Math.PI * 45 * (1 - percentage / 100)}
                               strokeLinecap="round"
                               transform="rotate(-90 50 50)" />
                           </svg>
                           <div className="position-absolute top-50 start-50 translate-middle">
-                            <strong className="text-dark">{course.attended}</strong>/{course.total}
+                            <strong className="text-dark">{attendedClasses}</strong>/{totalClasses}
                           </div>
                         </div>
-                        <p className="text-dark fw-medium mb-1">{course.name}</p>
+                        <p className="text-dark fw-medium mb-1">{course.courseId.name}</p>
                       </div>
                     </Col>
                   );
@@ -189,33 +262,57 @@ const Dashboard = () => {
                 </div>
                 <Card.Title className="h5 fw-semibold text-success mb-0">Enrolled Courses</Card.Title>
               </div>
-              <Row className="g-3">
-                {[{ name: "UI/UX Design", status: "Ongoing", progress: 80, instructor: "Prof. Smith" },
-                { name: "Web Development", status: "Completed", progress: 100, instructor: "Dr. Johnson" },
-                { name: "Data Structures", status: "Ongoing", progress: 65, instructor: "Prof. Williams" },
-                { name: "Database Systems", status: "Upcoming", progress: 0, instructor: "Dr. Brown" }].map((course, idx) => (
-                  <Col xl={6} lg={6} md={12} sm={12} xs={12} key={idx}>
-                    <Card className="shadow-sm border-0 h-100">
-                      <Card.Body className="p-3">
-                        <div className="d-flex justify-content-between align-items-start mb-2">
-                          <p className="text-dark fw-medium mb-0">{course.name}</p>
-                          <Badge bg={course.status === "Completed" ? "success" : course.status === "Ongoing" ? "primary" : "info"} className="px-2">{course.status}</Badge>
-                        </div>
-                        <p className="text-secondary small mb-2">Instructor: {course.instructor}</p>
-                        {course.status !== "Upcoming" && (
-                          <>
-                            <div className="progress mb-2" style={{ height: "8px" }}>
-                              <div className={`progress-bar ${course.status === "Completed" ? "bg-success" : "bg-primary"}`} role="progressbar" style={{ width: `${course.progress}%` }}></div>
+              {enrollmentsLoading ? (
+                <div className="text-center py-4">
+                  <div className="spinner-border text-success" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              ) : enrolledCourses.length > 0 ? (
+                <Row className="g-3">
+                  {enrolledCourses.map((course, idx) => {
+                    const progress = calculateProgress(course.startDate, course.duration);
+                    const status = getCourseStatus(progress, course.startDate);
+
+                    return (
+                      <Col xl={6} lg={6} md={12} sm={12} xs={12} key={idx}>
+                        <Card className="shadow-sm border-0 h-100">
+                          <Card.Body className="p-3">
+                            <div className="d-flex justify-content-between align-items-start mb-2">
+                              <p className="text-dark fw-medium mb-0">{course.courseId.name}</p>
+                              <Badge bg={status === "Completed" ? "success" : status === "Ongoing" ? "primary" : "info"} className="px-2">
+                                {status}
+                              </Badge>
                             </div>
-                            <p className="text-secondary small mb-0">{course.progress}% completed</p>
-                          </>
-                        )}
-                        {course.status === "Upcoming" && <p className="text-secondary small mb-0">Starting next week</p>}
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                ))}
-              </Row>
+                            <p className="text-secondary small mb-2">Batch: {course.batchName}</p>
+                            {status !== "Upcoming" && (
+                              <>
+                                <div className="progress mb-2" style={{ height: "8px" }}>
+                                  <div className={`progress-bar ${status === "Completed" ? "bg-success" : "bg-primary"}`}
+                                    role="progressbar" style={{ width: `${progress}%` }}></div>
+                                </div>
+                                <p className="text-secondary small mb-0">{progress}% completed</p>
+                              </>
+                            )}
+                            {status === "Upcoming" && (
+                              <p className="text-secondary small mb-0">
+                                Starting on {new Date(course.startDate).toLocaleDateString()}
+                              </p>
+                            )}
+                          </Card.Body>
+                        </Card>
+                      </Col>
+                    );
+                  })}
+                </Row>
+              ) : (
+                <div className="text-center py-4">
+                  <p className="text-muted">No courses enrolled yet.</p>
+                  <Button variant="success" onClick={() => navigate("/courses")}>
+                    Browse Courses
+                  </Button>
+                </div>
+              )}
             </Card.Body>
           </Card>
         </Col>
@@ -230,28 +327,42 @@ const Dashboard = () => {
                 </div>
                 <Card.Title className="h5 fw-semibold text-info mb-0">Student Details</Card.Title>
               </div>
-              <div className="d-grid gap-3">
-                {[{ icon: "bi-person-badge", label: "Student ID", value: "STU-2023-001" },
-                { icon: "bi-building", label: "Department", value: "Computer Science" },
-                { icon: "bi-book", label: "Semester", value: "4th" },
-                { icon: "bi-telephone", label: "Contact", value: "angela@example.com" },
-                { icon: "bi-calendar", label: "Joining Date", value: "Jan 15, 2023" },
-                { icon: "bi-award", label: "Current GPA", value: "3.8" }].map((item, idx) => (
-                  <div key={idx} className="d-flex align-items-center p-2 bg-white rounded shadow-sm">
-                    <div className="bg-light p-2 rounded me-3">
-                      <i className={`${item.icon} text-info`}></i>
-                    </div>
-                    <div>
-                      <p className="text-secondary small mb-0">{item.label}</p>
-                      <p className="text-dark fw-medium mb-0">{item.value}</p>
-                    </div>
+              {userDetailsLoading ? (
+                <div className="text-center py-4">
+                  <div className="spinner-border text-info" role="status">
+                    <span className="visually-hidden">Loading...</span>
                   </div>
-                ))}
-              </div>
+                </div>
+              ) : userData ? (
+                <div className="d-grid gap-3">
+                  {[
+                    { icon: "bi-person-badge", label: "Student ID", value: userData._id ? userData._id.slice(-8) : "N/A" },
+                    { icon: "bi-person", label: "Full Name", value: `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || `${student.name}` },
+                    { icon: "bi-envelope", label: "Email", value: userData.email || "N/A" },
+                    { icon: "bi-telephone", label: "Phone", value: userData.phoneNumber || "N/A" },
+                    { icon: "bi-book", label: "Enrolled Courses", value: enrolledCourses.length },
+                    { icon: "bi-calendar", label: "Joining Date", value: formatJoiningDate(userData.createdAt) },
+                    { icon: "bi-award", label: "Status", value: "Active" }
+                  ].map((item, idx) => (
+                    <div key={idx} className="d-flex align-items-center p-2 bg-white rounded shadow-sm">
+                      <div className="bg-light p-2 rounded me-3">
+                        <i className={`${item.icon} text-info`}></i>
+                      </div>
+                      <div>
+                        <p className="text-secondary small mb-0">{item.label}</p>
+                        <p className="text-dark fw-medium mb-0">{item.value}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-4">
+                  <p className="text-muted">Failed to load user data.</p>
+                </div>
+              )}
             </Card.Body>
           </Card>
         </Col>
-
 
         {/* Calendar Section - Responsive */}
         <Col xl={6} lg={6} md={6} className="mb-4">
@@ -446,7 +557,10 @@ const Dashboard = () => {
                           </button>
                           <button
                             className="flex-1 py-2 px-4 rounded-md text-white font-medium bg-yellow-500 hover:bg-yellow-600 transition-colors text-sm sm:text-base"
-                            onClick={() => setShowModal(true)}
+                            onClick={() => {
+                              setSelectedCourse(name);
+                              setShowModal(true);
+                            }}
                           >
                             Enroll Now
                           </button>
