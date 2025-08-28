@@ -139,6 +139,9 @@ body p li h3 h4 h5 h6 a{
 
 
 /*Gradient Button*/
+.lightest-back {
+  background-color: #f8d7da !important;
+}
 
 .gradient-button {
   background-color: #ad2132 !important;

@@ -8,11 +8,13 @@ import {
   FaBook,
   FaCertificate,
   FaBars,
-  FaTimes,
-  FaSignOutAlt
+  FaArrowLeft,
+  FaArrowRight,
+  FaSignOutAlt,
+  FaUserCircle
 } from 'react-icons/fa';
 
-const UserSidebar = ({ isCollapsed, onToggleCollapse, isMobile }) => {
+const UserSidebar = ({ isCollapsed, onToggleCollapse, isMobile, user }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [activePath, setActivePath] = useState(location.pathname);
@@ -21,12 +23,10 @@ const UserSidebar = ({ isCollapsed, onToggleCollapse, isMobile }) => {
     setActivePath(location.pathname);
   }, [location]);
 
-  // Logout function
   const handleLogout = () => {
-    // Clear session storage or any authentication tokens
     sessionStorage.removeItem('user');
-    localStorage.removeItem('token'); // if using token storage
-    navigate('/login'); // redirect to login page
+    localStorage.removeItem('token');
+    navigate('/login');
   };
 
   const menuItems = [
@@ -55,7 +55,8 @@ const UserSidebar = ({ isCollapsed, onToggleCollapse, isMobile }) => {
         className="position-fixed vh-100 d-flex flex-column"
         style={{
           width: isMobile ? (isCollapsed ? '0' : '250px') : isCollapsed ? '80px' : '250px',
-          background: 'linear-gradient(180deg, #ad2132 0%, #8a1a2a 100%)',
+          background: 'linear-gradient(to bottom, #7b1e3d, #8c1f41, #9d2145, #ad2549, #bf2a4e)',
+
           color: 'white',
           zIndex: 1030,
           transition: 'all 0.3s ease',
@@ -63,20 +64,36 @@ const UserSidebar = ({ isCollapsed, onToggleCollapse, isMobile }) => {
           boxShadow: '2px 0 10px rgba(0, 0, 0, 0.1)'
         }}
       >
-        {/* Header */}
-        <div
-          className="d-flex justify-content-between align-items-center p-3"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
-        >
-          {!isCollapsed && <h5 className="mb-0 text-white">HiCap</h5>}
+        {/* Collapse Button */}
+        <div className="d-flex justify-content-end align-items-center p-3">
           <button
             className="btn btn-sm text-white"
             style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
             onClick={() => onToggleCollapse(!isCollapsed)}
           >
-            {isCollapsed ? <FaBars /> : <FaTimes />}
+            {isCollapsed ? <FaArrowRight /> : <FaArrowLeft />}
           </button>
         </div>
+
+        {/* Profile Section */}
+        {!isCollapsed && (
+          <div className="d-flex flex-column align-items-center text-center mt-3 mb-3 px-2">
+            <div
+              className="bg-light rounded-circle mb-2"
+              style={{
+                width: '60px',
+                height: '60px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <FaUserCircle className="text-danger" size={40} />
+            </div>
+            <p className="text-white fw-semibold mb-0">{user?.name || 'Student Name'}</p>
+            <p className="text-white-50 small mb-0">{user?.email || 'student@example.com'}</p>
+          </div>
+        )}
 
         {/* Menu */}
         <ul className="nav flex-column px-2 mt-3">
@@ -86,7 +103,9 @@ const UserSidebar = ({ isCollapsed, onToggleCollapse, isMobile }) => {
               <li key={item.label} className="nav-item mb-2">
                 {item.onClick ? (
                   <div
-                    className={`nav-link d-flex align-items-center text-white rounded ${isActive ? 'active' : ''}`}
+                    className={`nav-link d-flex align-items-center text-white rounded ${
+                      isActive ? 'active' : ''
+                    }`}
                     style={{
                       cursor: 'pointer',
                       backgroundColor: isActive ? 'rgba(255, 255, 255, 0.15)' : 'transparent',
@@ -109,7 +128,9 @@ const UserSidebar = ({ isCollapsed, onToggleCollapse, isMobile }) => {
                 ) : (
                   <Link
                     to={item.path}
-                    className={`nav-link d-flex align-items-center text-white rounded ${isActive ? 'active' : ''}`}
+                    className={`nav-link d-flex align-items-center text-white rounded ${
+                      isActive ? 'active' : ''
+                    }`}
                     style={{
                       backgroundColor: isActive ? 'rgba(255, 255, 255, 0.15)' : 'transparent',
                       transition: 'all 0.2s ease',
@@ -141,7 +162,11 @@ const UserSidebar = ({ isCollapsed, onToggleCollapse, isMobile }) => {
 UserSidebar.propTypes = {
   isCollapsed: PropTypes.bool.isRequired,
   onToggleCollapse: PropTypes.func.isRequired,
-  isMobile: PropTypes.bool.isRequired
+  isMobile: PropTypes.bool.isRequired,
+  user: PropTypes.shape({
+    name: PropTypes.string,
+    email: PropTypes.string
+  })
 };
 
 export default UserSidebar;
