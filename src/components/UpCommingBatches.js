@@ -172,6 +172,56 @@ const UpCommingBatches = () => {
             </div>
           </section>
 
+          {/* Flash Banner Section */}
+          <section
+            className="my-4 p-4 rounded d-flex flex-column flex-md-row align-items-center justify-content-between text-center text-md-start"
+            style={{
+              background: "linear-gradient(90deg, #c34153, #c34153)", // bright gradient
+              color: "#fff",
+              border: "2px solid #ad2132",
+              boxShadow: "0 8px 20px rgba(0,0,0,0.25)",
+              animation: "flashSlide 1s ease-in-out", // subtle entrance animation
+            }}
+          >
+            <div className="mb-3 mb-md-0">
+              <h4 className="fw-bold mb-2" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
+                🌟 One-on-One Mentorship Session!
+              </h4>
+              <p className="mb-0" style={{ fontSize: "1rem", textShadow: "0.5px 0.5px 1px rgba(0,0,0,0.3)" }}>
+                Secure your personal guidance with our expert instructors. Limited seats available!
+              </p>
+            </div>
+            <div>
+              <Button
+                variant="light"
+                size="md"
+                className="fw-bold px-4 py-2"
+                style={{
+                  color: "#ad2132",
+                  backgroundColor: "#fff",
+                  borderRadius: "30px",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+                  transition: "transform 0.2s",
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+                onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                onClick={() => window.location.href = "tel:9876543211"}
+              >
+                Call a Counselor Now
+              </Button>
+            </div>
+
+            {/* Animation Keyframes */}
+            <style>
+              {`
+      @keyframes flashSlide {
+        0% { opacity: 0; transform: translateY(-20px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+    `}
+            </style>
+          </section>
+
           {/* Abroad Students Section */}
           {abroadData && (
             <section className="my-5 p-4 rounded" style={{ backgroundColor: "#f8f9fa" }}>
