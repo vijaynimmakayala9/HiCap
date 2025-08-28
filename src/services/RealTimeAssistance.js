@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import Footer from "../Pages/Footer";
-import Header from "../Pages/Header";
+import Header from "../Header/Header";
 
 const RealTimeAssistance = () => {
     return (

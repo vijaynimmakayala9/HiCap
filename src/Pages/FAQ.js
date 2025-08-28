@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaPlus, FaMinus } from 'react-icons/fa';
-import Header from './Header';
+import Header from '../Header/Header';
 import Footer from './Footer';
 import axios from 'axios';
 import Container from 'react-bootstrap/Container';

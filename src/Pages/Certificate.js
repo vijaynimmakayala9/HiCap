@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Download, Book, Clock, Users, Award, CheckCircle } from 'lucide-react';
-import Header from './Header';
+import Header from '../Header/Header';
 import Footer from './Footer';
 import { useNavigate } from 'react-router-dom';
 
@@ -145,7 +145,7 @@ const Certificate = () => {
             <div className="card shadow-sm p-4 text-center rounded-4 border-0">
               <Award size={40} className="text-danger mb-2" />
               <h3 className="fw-bold">{totalCourses}</h3>
-              <p className="text-muted">Total Courses</p>
+              <p className="text-muted">Enrolled Courses</p>
             </div>
           </div>
           <div className="col-md-4">
@@ -245,35 +245,7 @@ const Certificate = () => {
           </div>
         )}
 
-        {/* Completed Certificates */}
-        <div className="mt-5">
-          <h3 className="fw-bold mb-4">Completed Certificates</h3>
-          <div className="row g-4">
-            {enrollmentData
-              .filter((c) => c.status === 'completed')
-              .map((course) => {
-                const cert = certificateData?.certificates.find((c) => c.enrollment === course.course._id);
-                return (
-                  <div className="col-md-4" key={course.course._id}>
-                    <div className="card shadow-sm border-0 h-100 text-center p-3">
-                      <img
-                        src={cert?.status.image}
-                        alt={course.course.name}
-                        className="img-fluid rounded mb-3 border"
-                      />
-                      <h5 className="fw-bold">{course.course.name}</h5>
-                      <button
-                        className="btn btn-sm btn-danger mt-2"
-                        onClick={() => alert('Download logic here')}
-                      >
-                        <Download size={16} className="me-1" /> Download
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-          </div>
-        </div>
+        
       </div>
 
     </>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaShareAlt } from 'react-icons/fa';
-import Header from './Header';
+import Header from '../Header/Header';
 import Footer from './Footer';
 
 const blogData = new Array(9).fill({

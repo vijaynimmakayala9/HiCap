@@ -2,10 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Badge, Button } from "react-bootstrap";
 import CourseEnquiryModal from "./EnrollModal";
 import { useNavigate } from "react-router-dom";
+import { FaRegClock, FaCode } from "react-icons/fa";
+import axios from "axios";
 
 const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState("");
+  const [recommendedCourses, setRecommendedCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -13,44 +17,33 @@ const Dashboard = () => {
   const enrolledCourses = 5;
   const todaysClasses = 2;
 
-  const courses = [
-    {
-      name: "Advanced JavaScript",
-      note: "Based on your interests",
-      level: "Intermediate",
-      duration: "6 weeks",
-    },
-    {
-      name: "Machine Learning Basics",
-      note: "Popular in your department",
-      level: "Beginner",
-      duration: "8 weeks",
-    },
-    {
-      name: "Cloud Computing",
-      note: "Trending now",
-      level: "Intermediate",
-      duration: "10 weeks",
-    },
-    {
-      name: "Mobile App Development",
-      note: "Complementary to your skills",
-      level: "Advanced",
-      duration: "12 weeks",
-    },
-  ];
-
-  const mockOccasions = [
-    { date: '2025-08-28', title: 'Math Exam', type: 'Exam', time: '10:00 AM', location: 'Room 101' },
-    { date: '2025-08-28', title: 'Science Quiz', type: 'Quiz', time: '2:00 PM', location: 'Room 102' },
-    { date: '2025-08-29', title: 'Parent Meeting', type: 'Meeting', time: '11:00 AM', location: 'Hall A' },
-    { date: '2025-08-30', title: 'History Exam', type: 'Exam', time: '9:30 AM', location: 'Room 103' },
-  ];
-
-  const handleViewDetails = (courseName) => {
-    setSelectedCourse(courseName);
-    setShowModal(true);
+  const fetchCourses = async () => {
+    try {
+      const response = await axios.get("https://hicap-backend-4rat.onrender.com/api/coursecontroller");
+      setRecommendedCourses(response.data.data || response.data || []);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+      setRecommendedCourses([]);
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  const handleViewDetails = (courseId) => {
+    navigate(`/course/${courseId}`);
+  };
+
+  // mock occasions for calendar
+  const mockOccasions = [
+    { date: "2025-08-28", title: "Math Exam", type: "Exam", time: "10:00 AM", location: "Room 101" },
+    { date: "2025-08-28", title: "Science Quiz", type: "Quiz", time: "2:00 PM", location: "Room 102" },
+    { date: "2025-08-29", title: "Parent Meeting", type: "Meeting", time: "11:00 AM", location: "Hall A" },
+    { date: "2025-08-30", title: "History Exam", type: "Exam", time: "9:30 AM", location: "Room 103" },
+  ];
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [weekStart, setWeekStart] = useState(new Date());
@@ -98,18 +91,16 @@ const Dashboard = () => {
     setSelectedDate(nextWeek);
   };
 
-  // Format date for display
   const formatDate = (date) => {
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric'
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
     });
   };
 
-  // Format weekday for display
   const formatWeekday = (date) => {
-    return date.toLocaleDateString('en-US', { 
-      weekday: 'short' 
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
     });
   };
 
@@ -118,28 +109,31 @@ const Dashboard = () => {
       {/* Header Section */}
       <Row className="mb-4">
         <Col md={4}>
-          <Card className="shadow-sm border-0 rounded-3 p-3" style={{ backgroundColor: '#e3f2fd' }}>
+          <Card className="shadow-sm border-0 rounded-3 p-3" style={{ backgroundColor: "#e3f2fd" }}>
             <h5 className="text-primary fw-semibold mb-1">Welcome</h5>
             <p className="text-secondary mb-0">{userName}</p>
           </Card>
         </Col>
 
         <Col md={4}>
-          <Card className="shadow-sm border-0 rounded-3 p-3" style={{ backgroundColor: '#e8f5e9' }}>
+          <Card className="shadow-sm border-0 rounded-3 p-3" style={{ backgroundColor: "#e8f5e9" }}>
             <h6 className="text-muted mb-1">Enrolled Courses</h6>
             <h3 className="fw-bold text-success mb-0">{enrolledCourses}</h3>
           </Card>
         </Col>
 
         <Col md={4}>
-          <Card className="shadow-sm border-0 rounded-3 p-3" style={{ backgroundColor: '#fff3e0' }} onClick={() => navigate('/dashboard/live-classes')}>
+          <Card
+            className="shadow-sm border-0 rounded-3 p-3"
+            style={{ backgroundColor: "#fff3e0" }}
+            onClick={() => navigate("/dashboard/live-classes")}
+          >
             <h6 className="text-muted mb-1">Classes Today</h6>
             <h3 className="fw-bold text-warning mb-0">{todaysClasses}</h3>
           </Card>
         </Col>
       </Row>
 
-      {/* Main Boxes Section */}
       <Row className="mb-4">
         {/* Attendance Section */}
         <Col xl={6} lg={6} md={6} className="mb-4">
@@ -264,10 +258,10 @@ const Dashboard = () => {
           <Card className="h-100 shadow-sm border-0" style={{ backgroundColor: '#f3e5f5' }}>
             <Card.Body className="p-3 p-md-4">
               <div className="d-flex align-items-center mb-3">
-                <div className="bg-purple p-2 rounded me-3" style={{backgroundColor: '#9c27b0'}}>
+                <div className="bg-purple p-2 rounded me-3" style={{ backgroundColor: '#9c27b0' }}>
                   <i className="bi bi-calendar-event text-white fs-4"></i>
                 </div>
-                <Card.Title className="h5 fw-semibold text-purple mb-0" style={{color: '#7b1fa2'}}>
+                <Card.Title className="h5 fw-semibold text-purple mb-0" style={{ color: '#7b1fa2' }}>
                   Calendar
                 </Card.Title>
               </div>
@@ -293,13 +287,13 @@ const Dashboard = () => {
                   const dayOccasions = mockOccasions.filter(
                     (occ) => new Date(occ.date).toDateString() === day.toDateString()
                   );
-                  
+
                   return (
                     <div
                       key={idx}
                       className={`flex-shrink-0 p-2 rounded-3 text-center ${isSelected ? 'bg-primary text-white' : isToday ? 'border-warning bg-light' : 'bg-light'}`}
-                      style={{ 
-                        minWidth: '70px', 
+                      style={{
+                        minWidth: '70px',
                         cursor: 'pointer',
                         border: isToday ? '2px solid #ff9800' : '1px solid #dee2e6'
                       }}
@@ -309,8 +303,8 @@ const Dashboard = () => {
                       <div className={`small ${isSelected ? 'text-white' : 'text-muted'}`}>{formatDate(day)}</div>
                       <div className="mt-1">
                         {dayOccasions.length > 0 ? (
-                          <Badge 
-                            bg={isSelected ? 'light' : 'success'} 
+                          <Badge
+                            bg={isSelected ? 'light' : 'success'}
                             text={isSelected ? 'dark' : ''}
                             className="small"
                             style={{ fontSize: '0.6rem' }}
@@ -329,10 +323,10 @@ const Dashboard = () => {
               {/* Selected Date Header */}
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <h6 className="text-primary mb-0">
-                  {selectedDate.toLocaleDateString('en-US', { 
-                    weekday: 'long', 
-                    month: 'long', 
-                    day: 'numeric' 
+                  {selectedDate.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    month: 'long',
+                    day: 'numeric'
                   })}
                 </h6>
                 <Badge bg="light" text="dark" className="small">
@@ -344,15 +338,15 @@ const Dashboard = () => {
               {todaysOccasions.length > 0 ? (
                 <div className="d-grid gap-2">
                   {todaysOccasions.map((occ, idx) => (
-                    <Card 
-                      key={idx} 
+                    <Card
+                      key={idx}
                       className={`shadow-sm border-0 ${occ.type === 'Exam' ? 'border-start border-danger border-3' : occ.type === 'Quiz' ? 'border-start border-warning border-3' : 'border-start border-info border-3'}`}
                     >
                       <Card.Body className="p-2">
                         <div className="d-flex justify-content-between align-items-center">
                           <span className="text-dark fw-medium small">{occ.title}</span>
-                          <Badge 
-                            bg={occ.type === 'Exam' ? 'danger' : occ.type === 'Quiz' ? 'warning' : 'info'} 
+                          <Badge
+                            bg={occ.type === 'Exam' ? 'danger' : occ.type === 'Quiz' ? 'warning' : 'info'}
                             className="text-capitalize small"
                           >
                             {occ.type}
@@ -382,40 +376,89 @@ const Dashboard = () => {
           </Card>
         </Col>
 
-        {/* Recommended Courses */}
+        {/* Recommended Courses (Tailwind style like Course component) */}
         <Col xl={12} lg={12} md={12} className="mb-4">
           <Card className="h-100 shadow-sm border-0" style={{ backgroundColor: "#fffde7", borderRadius: "12px" }}>
             <Card.Body className="p-3 p-md-4">
               <div className="d-flex align-items-center mb-4">
-                <div className="bg-warning p-2 rounded me-3 d-flex align-items-center justify-content-center" style={{ width: "40px", height: "40px" }}>
+                <div
+                  className="bg-warning p-2 rounded me-3 d-flex align-items-center justify-content-center"
+                  style={{ width: "40px", height: "40px" }}
+                >
                   <i className="bi bi-lightbulb text-white fs-4"></i>
                 </div>
                 <Card.Title className="h5 fw-semibold text-warning mb-0">Recommended Courses</Card.Title>
               </div>
 
-              <Row className="g-3">
-                {courses.map((course, idx) => (
-                  <Col xl={3} lg={3} md={4} sm={12} xs={12} key={idx}>
-                    <Card className="shadow-sm border-0 h-100 rounded-3">
-                      <Card.Body className="p-3 d-flex flex-column justify-content-between">
-                        <div>
-                          <p className="text-dark fw-medium mb-2">{course.name}</p>
-                          <div className="d-flex flex-wrap align-items-center mb-2 gap-2">
-                            <Badge bg={course.level === "Beginner" ? "info" : course.level === "Intermediate" ? "primary" : "warning"}>
-                              {course.level}
-                            </Badge>
-                            <Badge bg="light" text="dark">{course.duration}</Badge>
+              {loading ? (
+                <div className="flex justify-center items-center py-5">
+                  <div className="spinner-border text-warning" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              ) : Array.isArray(recommendedCourses) && recommendedCourses.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6 px-4 sm:px-6 lg:px-8">
+                  {recommendedCourses.slice(0, 4).map(
+                    ({ _id, name, logoImage, category, duration, mode, description }) => (
+                      <div
+                        key={_id}
+                        className="bg-white rounded-xl shadow-md hover:shadow-xl transition-transform duration-300 p-5 flex flex-col justify-between border border-gray-100 hover:scale-[1.02]"
+                      >
+                        {/* Top Section */}
+                        <div className="flex items-center gap-3 pb-3 border-b border-gray-100 mb-3">
+                          <img
+                            src={logoImage}
+                            alt={name}
+                            className="h-12 w-12 rounded-full object-cover"
+                          />
+                          <div>
+                            <h3 className="text-base sm:text-lg font-semibold text-gray-900 line-clamp-1">
+                              {name}
+                            </h3>
+                            <p className="text-xs sm:text-sm text-gray-500">{category}</p>
                           </div>
-                          <p className="text-secondary small mb-0">{course.note}</p>
                         </div>
-                        <button className="btn btn-primary btn-sm mt-3 w-100" onClick={() => handleViewDetails(course.name)}>
-                          Enroll Now
-                        </button>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                ))}
-              </Row>
+
+                        {/* Description */}
+                        <p className="text-sm text-gray-700 flex-grow line-clamp-3">
+                          {description}
+                        </p>
+
+                        {/* Course Details */}
+                        <div className="flex items-center text-xs sm:text-sm text-gray-600 my-4 gap-4 flex-wrap">
+                          <div className="flex items-center">
+                            <FaRegClock className="mr-1 sm:mr-2 text-yellow-600" />
+                            <span>{duration}</span>
+                          </div>
+                          <div className="flex items-center">
+                            <FaCode className="mr-1 sm:mr-2 text-yellow-600" />
+                            <span>{mode}</span>
+                          </div>
+                        </div>
+
+                        {/* Buttons */}
+                        <div className="flex flex-col sm:flex-row justify-between items-stretch gap-3">
+                          <button
+                            className="flex-1 py-2 px-4 rounded-md border border-yellow-400 font-medium text-yellow-700 hover:bg-yellow-100 transition-colors text-sm sm:text-base"
+                            onClick={() => handleViewDetails(_id)}
+                          >
+                            View Details
+                          </button>
+                          <button
+                            className="flex-1 py-2 px-4 rounded-md text-white font-medium bg-yellow-500 hover:bg-yellow-600 transition-colors text-sm sm:text-base"
+                            onClick={() => setShowModal(true)}
+                          >
+                            Enroll Now
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+
+              ) : (
+                <p className="text-center text-gray-700">No courses available.</p>
+              )}
             </Card.Body>
           </Card>
         </Col>
@@ -423,21 +466,6 @@ const Dashboard = () => {
 
       {/* Enroll Modal */}
       <CourseEnquiryModal show={showModal} handleClose={() => setShowModal(false)} prefillCourse={selectedCourse} />
-
-      {/* Custom CSS */}
-      <style>{`
-          .text-primary { color: #2196f3 !important; }
-          .text-secondary { color: #757575 !important; }
-          .bg-primary { background-color: #2196f3 !important; }
-          .btn-primary { background-color: #2196f3 !important; border-color: #2196f3 !important; }
-          .btn-primary:hover { background-color: #1976d2 !important; border-color: #1976d2 !important; }
-          .btn-outline-primary { color: #2196f3 !important; border-color: #2196f3 !important; }
-          .btn-outline-primary:hover { color: #fff !important; background-color: #2196f3 !important; }
-          .card { transition: transform 0.2s ease-in-out; }
-          .card:hover { transform: translateY(-5px); }
-          .bg-purple { background-color: #9c27b0; }
-          .text-purple { color: #7b1fa2; }
-      `}</style>
     </Container>
   );
 };

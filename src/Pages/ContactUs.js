@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaPhoneAlt, FaEnvelope, FaPlus, FaMinus } from 'react-icons/fa';
-import Header from './Header';
+import Header from '../Header/Header';
 import Footer from './Footer';
 import AboutTechsterker from './AboutTerchsterker';
 import Swal from 'sweetalert2';

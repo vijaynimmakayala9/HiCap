@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from './Header';   // Adjust path if needed
+import Header from '../Header/Header';   // Adjust path if needed
 import Footer from './Footer';   // Adjust path if needed
 import AboutUs from './AboutUs'; // Adjust path if needed
 

@@ -19,7 +19,7 @@ import {
   FaCode
 } from 'react-icons/fa';
 import Footer from './Footer';
-import Header from './Header';
+import Header from '../Header/Header';
 import { Container, Row, Col, Card, Button, Form, Modal, Badge, Accordion } from 'react-bootstrap';
 import FlashContact from '../components/FlashContact';
 import CourseEnquiryModal from '../components/EnrollModal';

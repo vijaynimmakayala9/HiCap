@@ -2,22 +2,47 @@ import React, { useState, useEffect } from 'react';
 import {
   FiBook, FiChevronDown, FiChevronRight, FiMenu, FiX,
   FiCode, FiLayers, FiDatabase, FiPlay, FiClock,
-  FiCalendar, FiSearch, FiUser
+  FiCalendar, FiSearch, FiUser, FiDownload, FiFileText,
+  FiVideo, FiImage, FiMusic, FiBox
 } from 'react-icons/fi';
 
-// Mock data for multiple courses
+// Mock data for multiple courses with resources
 const COURSES_DATA = [
   {
     id: 'course-1',
     name: 'Full Stack JavaScript',
+    instructor: 'Sarah Johnson',
+    progress: 65,
     modules: [
       {
         id: 'module-1',
         name: 'Introduction to JS',
         icon: <FiCode className="text-blue-500" />,
         lessons: [
-          { id: 'class-1', name: 'Variables', date: '2023-09-01', duration: '40 min', videoId: 'abc123', completed: true },
-          { id: 'class-2', name: 'Functions', date: '2023-09-02', duration: '50 min', videoId: 'def456', completed: false }
+          { 
+            id: 'class-1', 
+            name: 'Variables & Data Types', 
+            date: '2023-09-01', 
+            duration: '40 min', 
+            videoId: 'W6NZfCO5SIk', 
+            completed: true,
+            resources: [
+              { id: 'res-1', name: 'JavaScript Basics Slides', type: 'pdf', url: '#', icon: <FiFileText className="text-red-500" /> },
+              { id: 'res-2', name: 'Code Examples', type: 'zip', url: '#', icon: <FiBox className="text-purple-500" /> },
+              { id: 'res-3', name: 'Reference Guide', type: 'doc', url: '#', icon: <FiFileText className="text-blue-500" /> }
+            ]
+          },
+          { 
+            id: 'class-2', 
+            name: 'Functions & Scope', 
+            date: '2023-09-02', 
+            duration: '50 min', 
+            videoId: 'N8ap4k_1QEQ', 
+            completed: false,
+            resources: [
+              { id: 'res-4', name: 'Functions Cheat Sheet', type: 'pdf', url: '#', icon: <FiFileText className="text-red-500" /> }
+            ]
+          }
         ]
       },
       {
@@ -25,8 +50,29 @@ const COURSES_DATA = [
         name: 'React Basics',
         icon: <FiLayers className="text-green-500" />,
         lessons: [
-          { id: 'class-3', name: 'Components', date: '2023-09-05', duration: '45 min', videoId: 'ghi789', completed: false },
-          { id: 'class-4', name: 'State & Props', date: '2023-09-06', duration: '55 min', videoId: 'jkl012', completed: false }
+          { 
+            id: 'class-3', 
+            name: 'Components & JSX', 
+            date: '2023-09-05', 
+            duration: '45 min', 
+            videoId: '0ik6X4DJKCc', 
+            completed: false,
+            resources: [
+              { id: 'res-5', name: 'React Setup Guide', type: 'pdf', url: '#', icon: <FiFileText className="text-red-500" /> },
+              { id: 'res-6', name: 'Starter Project', type: 'zip', url: '#', icon: <FiBox className="text-purple-500" /> }
+            ]
+          },
+          { 
+            id: 'class-4', 
+            name: 'State & Props', 
+            date: '2023-09-06', 
+            duration: '55 min', 
+            videoId: '1PnVor36_40', 
+            completed: false,
+            resources: [
+              { id: 'res-7', name: 'State Management Examples', type: 'zip', url: '#', icon: <FiBox className="text-purple-500" /> }
+            ]
+          }
         ]
       }
     ]
@@ -34,14 +80,37 @@ const COURSES_DATA = [
   {
     id: 'course-2',
     name: 'React & Node JS',
+    instructor: 'Michael Chen',
+    progress: 30,
     modules: [
       {
         id: 'module-3',
         name: 'Node Basics',
         icon: <FiDatabase className="text-purple-500" />,
         lessons: [
-          { id: 'class-5', name: 'Express Setup', date: '2023-09-10', duration: '40 min', videoId: 'mno345', completed: true },
-          { id: 'class-6', name: 'Routing', date: '2023-09-11', duration: '50 min', videoId: 'pqr678', completed: false }
+          { 
+            id: 'class-5', 
+            name: 'Express Setup', 
+            date: '2023-09-10', 
+            duration: '40 min', 
+            videoId: 'ztHopE5Wnpc', 
+            completed: true,
+            resources: [
+              { id: 'res-8', name: 'Express Documentation', type: 'pdf', url: '#', icon: <FiFileText className="text-red-500" /> },
+              { id: 'res-9', name: 'API Examples', type: 'zip', url: '#', icon: <FiBox className="text-purple-500" /> }
+            ]
+          },
+          { 
+            id: 'class-6', 
+            name: 'Routing & Middleware', 
+            date: '2023-09-11', 
+            duration: '50 min', 
+            videoId: 'HXV3zeQKqGY', 
+            completed: false,
+            resources: [
+              { id: 'res-10', name: 'Middleware Guide', type: 'doc', url: '#', icon: <FiFileText className="text-blue-500" /> }
+            ]
+          }
         ]
       }
     ]
@@ -55,6 +124,7 @@ const CourseModuleInterface = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('content');
   const [selectedCourse, setSelectedCourse] = useState(COURSES_DATA[0].id);
+  const [notes, setNotes] = useState('');
 
   const selectedCourseData = COURSES_DATA.find(c => c.id === selectedCourse);
   const modules = selectedCourseData?.modules || [];
@@ -90,6 +160,11 @@ const CourseModuleInterface = () => {
 
   const markAsCompleted = (classId) => {
     console.log(`Marked class ${classId} as completed`);
+  };
+
+  const saveNotes = () => {
+    console.log('Notes saved:', notes);
+    // In a real app, this would save to a backend
   };
 
   return (
@@ -154,6 +229,8 @@ const CourseModuleInterface = () => {
                 </select>
               </div>
 
+              
+
               {/* Mobile Search */}
               <div className="mt-3 lg:hidden flex items-center bg-white rounded-lg px-3 py-2 border">
                 <FiSearch className="text-gray-500 mr-2" />
@@ -184,8 +261,8 @@ const CourseModuleInterface = () => {
                     </button>
 
                     {expandedModules[module.id] && (
-                      <div className="border-t border-gray-100 bg-gray-50">
-                        {module.lessons.map(classItem => (
+                      <div className="border-t border-gray-100 bg-gray-50 divide-y divide-gray-200">
+                        {module.lessons.map((classItem, index) => (
                           <button
                             key={classItem.id}
                             onClick={() => handleClassSelect(classItem)}
@@ -210,7 +287,6 @@ const CourseModuleInterface = () => {
                         ))}
                       </div>
                     )}
-
                   </div>
                 ))
               ) : (
@@ -229,17 +305,23 @@ const CourseModuleInterface = () => {
               <div className="flex flex-col h-full">
                 {/* Video & Info */}
                 <div className="p-4 border-b border-gray-200">
-                  <div className="flex justify-between items-start">
-                    <div>
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+                    <div className="flex-1">
                       <h2 className="text-xl font-bold text-gray-800">{selectedClass.name}</h2>
-                      <div className="flex items-center mt-2 text-sm text-gray-600">
-                        <FiCalendar className="h-4 w-4 mr-1" /><span className="mr-4">{selectedClass.date}</span>
-                        <FiClock className="h-4 w-4 mr-1" /><span>{selectedClass.duration}</span>
+                      <div className="flex items-center mt-2 text-sm text-gray-600 flex-wrap gap-2">
+                        <div className="flex items-center">
+                          <FiCalendar className="h-4 w-4 mr-1" />
+                          <span>{selectedClass.date}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <FiClock className="h-4 w-4 mr-1" />
+                          <span>{selectedClass.duration}</span>
+                        </div>
                       </div>
                     </div>
                     <button
                       onClick={() => markAsCompleted(selectedClass.id)}
-                      className={`px-3 py-1 rounded-full text-sm ${selectedClass.completed ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'} hover:bg-gray-200 transition-colors`}
+                      className={`px-3 py-1 rounded-full text-sm ${selectedClass.completed ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'} hover:bg-gray-200 transition-colors whitespace-nowrap`}
                     >
                       {selectedClass.completed ? 'Completed' : 'Mark as Complete'}
                     </button>
@@ -247,8 +329,8 @@ const CourseModuleInterface = () => {
                 </div>
 
                 {/* Tabs */}
-                <div className="border-b border-gray-200">
-                  <div className="flex px-4">
+                <div className="border-b border-gray-200 overflow-x-auto">
+                  <div className="flex min-w-max">
                     {['content', 'resources', 'notes'].map(tab => (
                       <button
                         key={tab}
@@ -272,7 +354,7 @@ const CourseModuleInterface = () => {
                           frameBorder="0"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                           allowFullScreen
-                          className="w-full h-64 lg:h-96"
+                          className="w-full h-48 sm:h-64 md:h-72 lg:h-80 xl:h-96"
                         ></iframe>
                       </div>
                       <div>
@@ -283,17 +365,57 @@ const CourseModuleInterface = () => {
                   )}
 
                   {activeTab === 'resources' && (
-                    <p className="text-gray-500">No resources available for this class.</p>
-                  )}
-
-                  {activeTab === 'notes' && (
                     <div>
-                      <textarea className="w-full h-40 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Add your notes here..."></textarea>
-                      <div className="mt-3 flex justify-end">
-                        <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">Save Notes</button>
-                      </div>
+                      <h3 className="text-lg font-semibold text-gray-800 mb-4">Class Resources</h3>
+                      {selectedClass.resources && selectedClass.resources.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          {selectedClass.resources.map(resource => (
+                            <div key={resource.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                              <div className="flex items-center">
+                                <div className="p-2 bg-gray-100 rounded-lg mr-3">
+                                  {resource.icon}
+                                </div>
+                                <div>
+                                  <span className="text-sm font-medium text-gray-700 block">{resource.name}</span>
+                                  <span className="text-xs text-gray-500 uppercase">{resource.type}</span>
+                                </div>
+                              </div>
+                              <a 
+                                href={resource.url} 
+                                className="text-indigo-600 hover:text-indigo-800 p-2"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <FiDownload className="h-4 w-4" />
+                              </a>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-500 py-4 text-center">No resources available for this class.</p>
+                      )}
                     </div>
                   )}
+
+                  {/* {activeTab === 'notes' && (
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-800 mb-4">Your Notes</h3>
+                      <textarea 
+                        className="w-full h-40 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+                        placeholder="Add your notes here..."
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
+                      ></textarea>
+                      <div className="mt-3 flex justify-end">
+                        <button 
+                          className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                          onClick={saveNotes}
+                        >
+                          Save Notes
+                        </button>
+                      </div>
+                    </div>
+                  )} */}
                 </div>
               </div>
             ) : (
@@ -303,6 +425,7 @@ const CourseModuleInterface = () => {
                 </div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">Welcome to Learning Platform</h2>
                 <p className="text-gray-600 max-w-md mx-auto mb-6">Select a class from the sidebar to start learning.</p>
+                
               </div>
             )}
           </div>

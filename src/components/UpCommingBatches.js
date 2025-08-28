@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Header from "../Pages/Header";
+import Header from "../Header/Header";
 import Footer from "../Pages/Footer";
-import { Container, Table, Button, Card, Spinner, Alert, Row, Col, Modal } from "react-bootstrap";
-import { Globe, Clock, Users } from 'react-feather';
+import { Container, Table, Button, Card, Spinner, Alert, Row, Col } from "react-bootstrap";
+import { Globe, Clock, Users } from "react-feather";
 import CourseEnquiryModal from '../components/EnrollModal';
 
 const UpCommingBatches = () => {
@@ -15,14 +15,14 @@ const UpCommingBatches = () => {
   const [categories, setCategories] = useState([]);
   const [showEnquiryModal, setShowEnquiryModal] = useState(false);
 
-  // New state for the flash modal
-  const [showFlashModal, setShowFlashModal] = useState(true);
+  // Abroad Students State
+  const [abroadData, setAbroadData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch batches
         const batchesRes = await axios.get('https://hicap-backend-4rat.onrender.com/api/upcomingBatch');
-
         if (batchesRes.data.success && batchesRes.data.data.length > 0) {
           const batches = batchesRes.data.data[0].allbatches.map(b => ({
             batchName: b.batchName,
@@ -31,15 +31,19 @@ const UpCommingBatches = () => {
             duration: b.duration,
             category: b.categorie,
           }));
-
           setAllBatches(batches);
           setFilteredBatches(batches);
-
           const uniqueCategories = [...new Set(batches.map(batch => batch.category))];
           setCategories(["All Categories", ...uniqueCategories]);
         } else {
           setAllBatches([]);
           setFilteredBatches([]);
+        }
+
+        // Fetch Abroad Students data
+        const abroadRes = await axios.get('https://hicap-backend-4rat.onrender.com/api/abrodstudents');
+        if (abroadRes.data.success && abroadRes.data.data.length > 0) {
+          setAbroadData(abroadRes.data.data[0]);
         }
 
       } catch (err) {
@@ -68,11 +72,7 @@ const UpCommingBatches = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    });
+    return date.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
   };
 
   if (loading) {
@@ -98,14 +98,8 @@ const UpCommingBatches = () => {
         <Header />
         <div className="main-content">
           <Container className="my-5 text-center">
-            <Alert variant="danger">
-              Failed to load data: {error}
-            </Alert>
-            <Button
-              variant="danger"
-              onClick={() => window.location.reload()}
-              className="mt-3"
-            >
+            <Alert variant="danger">Failed to load data: {error}</Alert>
+            <Button variant="danger" onClick={() => window.location.reload()} className="mt-3">
               Retry
             </Button>
           </Container>
@@ -178,112 +172,57 @@ const UpCommingBatches = () => {
             </div>
           </section>
 
-          {/* Flash Banner Section */}
-          <section
-            className="my-4 p-4 rounded d-flex flex-column flex-md-row align-items-center justify-content-between text-center text-md-start"
-            style={{
-              background: "linear-gradient(90deg, #c34153, #c34153)", // bright gradient
-              color: "#fff",
-              border: "2px solid #ad2132",
-              boxShadow: "0 8px 20px rgba(0,0,0,0.25)",
-              animation: "flashSlide 1s ease-in-out", // subtle entrance animation
-            }}
-          >
-            <div className="mb-3 mb-md-0">
-              <h4 className="fw-bold mb-2" style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}>
-                🌟 One-on-One Mentorship Session!
-              </h4>
-              <p className="mb-0" style={{ fontSize: "1rem", textShadow: "0.5px 0.5px 1px rgba(0,0,0,0.3)" }}>
-                Secure your personal guidance with our expert instructors. Limited seats available!
-              </p>
-            </div>
-            <div>
-              <Button
-                variant="light"
-                size="md"
-                className="fw-bold px-4 py-2"
-                style={{
-                  color: "#ad2132",
-                  backgroundColor: "#fff",
-                  borderRadius: "30px",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-                  transition: "transform 0.2s",
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
-                onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
-                onClick={() => window.location.href = "tel:9876543211"}
-              >
-                Call a Counselor Now
-              </Button>
-            </div>
-
-            {/* Animation Keyframes */}
-            <style>
-              {`
-      @keyframes flashSlide {
-        0% { opacity: 0; transform: translateY(-20px); }
-        100% { opacity: 1; transform: translateY(0); }
-      }
-    `}
-            </style>
-          </section>
-
-
-          {/* International Students Section */}
-          <section className="my-5 p-4 rounded" style={{ backgroundColor: "#f8f9fa" }}>
-            <Row className="align-items-center">
-              <Col md={6}>
-                <h3 className="fw-bold mb-3" style={{ color: "#ad2132" }}>
-                  🌏 Welcome, International Students!
-                </h3>
-                <p className="mb-4" style={{ fontSize: "1rem", lineHeight: "1.6" }}>
-                  At <strong>Techsterker</strong>, we provide dedicated support for students joining us from around the world:
-                </p>
-                <ul className="list-unstyled" style={{ fontSize: "1rem", lineHeight: "1.6" }}>
-                  <li className="mb-3 d-flex align-items-center">
-                    <Globe color="#ad2132" size={20} className="me-2 flex-shrink-0" />
-                    <span>Flexible scheduling to accommodate various time zones</span>
-                  </li>
-                  <li className="mb-3 d-flex align-items-center">
-                    <Users color="#ad2132" size={20} className="me-2 flex-shrink-0" />
-                    <span>Customized time adjustments available upon request</span>
-                  </li>
-                  <li className="mb-3 d-flex align-items-center">
-                    <Clock color="#ad2132" size={20} className="me-2 flex-shrink-0" />
-                    <span>Access recorded sessions anytime, 24/7</span>
-                  </li>
-                </ul>
-                <Button
-                  variant="danger"
-                  size="sm"
-                  style={{
-                    backgroundColor: "#ad2132",
-                    border: "none",
-                    borderRadius: "8px",
-                    padding: "10px 20px",
-                  }}
-                >
-                  Contact International Admissions
-                </Button>
-              </Col>
-
-              <Col md={6} className="text-center">
-                <img
-                  src="/abroad.jpg"
-                  alt="International students"
-                  className="img-fluid rounded shadow-md"
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    objectFit: "cover",
-                    border: "0.5px solid #ad2132",
-                    borderRadius: "20px",
-                    boxShadow: "0 20px 40px rgba(173, 33, 50, 0.25)",
-                  }}
-                />
-              </Col>
-            </Row>
-          </section>
+          {/* Abroad Students Section */}
+          {abroadData && (
+            <section className="my-5 p-4 rounded" style={{ backgroundColor: "#f8f9fa" }}>
+              <Row className="align-items-center">
+                <Col md={6}>
+                  <h3 className="fw-bold mb-3" style={{ color: "#ad2132" }}>
+                    🌏 {abroadData.title}
+                  </h3>
+                  <p className="mb-4" style={{ fontSize: "1rem", lineHeight: "1.6" }}>
+                    {abroadData.description}
+                  </p>
+                  <ul className="list-unstyled" style={{ fontSize: "1rem", lineHeight: "1.6" }}>
+                    {abroadData.details.map(detail => (
+                      <li key={detail._id} className="mb-3 d-flex align-items-center">
+                        <img src={detail.image} alt="" width={20} height={20} className="me-2 flex-shrink-0" />
+                        <span>{detail.content}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Button
+                    variant="danger"
+                    href="tel:9876543211"
+                    size="sm"
+                    style={{
+                      backgroundColor: "#ad2132",
+                      border: "none",
+                      borderRadius: "8px",
+                      padding: "10px 20px",
+                    }}
+                  >
+                    Contact International Admissions
+                  </Button>
+                </Col>
+                <Col md={6} className="text-center">
+                  <img
+                    src="/abroad.jpg"
+                    alt="International students"
+                    className="img-fluid rounded shadow-md"
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      objectFit: "cover",
+                      border: "0.5px solid #ad2132",
+                      borderRadius: "20px",
+                      boxShadow: "0 20px 40px rgba(173, 33, 50, 0.25)",
+                    }}
+                  />
+                </Col>
+              </Row>
+            </section>
+          )}
 
           {/* Call to Action Section */}
           <Card className="mt-5 border-0 shadow">

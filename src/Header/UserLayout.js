@@ -10,7 +10,7 @@ const UserLayout = ({ user, onLogout }) => {
     const handleResize = () => {
       const mobile = window.innerWidth < 992;
       setIsMobile(mobile);
-      
+
       // Auto-collapse sidebar on mobile
       if (mobile) {
         setIsSidebarCollapsed(true);
@@ -24,10 +24,10 @@ const UserLayout = ({ user, onLogout }) => {
         }
       }
     };
-    
+
     window.addEventListener('resize', handleResize);
     handleResize();
-    
+
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
@@ -64,8 +64,8 @@ const UserLayout = ({ user, onLogout }) => {
         {/* Top Navbar */}
         <nav
           className="navbar navbar-expand-lg navbar-dark"
-          style={{ 
-            background: 'linear-gradient(90deg, #ff5e62, #ff9966)',
+          style={{
+            background: 'linear-gradient(to right, #7b1e3d, #8c1f41, #9d2145, #ad2549, #bf2a4e)',
             boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
             padding: '0.75rem 1rem'
           }}
@@ -81,8 +81,11 @@ const UserLayout = ({ user, onLogout }) => {
               </button>
             )}
             <div className="ms-auto text-white text-end">
-              <div className="fw-bold">{user?.name || 'User'}</div>
-              <small>{user?.email || user?.phone}</small>
+              <img
+                src="/logo/lightlogo.png"
+                alt="HiCap Logo"
+                className="max-h-8 md:max-h-10 lg:max-h-11 w-auto"
+              />
             </div>
           </div>
         </nav>

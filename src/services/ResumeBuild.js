@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
-import Header from "../Pages/Header";
+import Header from "../Header/Header";
 import Footer from "../Pages/Footer";
 import ContactUsModal from "../models/ContactUsModal";
 import CourseEnquiryModal from "../components/EnrollModal";

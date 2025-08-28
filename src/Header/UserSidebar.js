@@ -14,10 +14,13 @@ import {
   FaUserCircle
 } from 'react-icons/fa';
 
-const UserSidebar = ({ isCollapsed, onToggleCollapse, isMobile, user }) => {
+const UserSidebar = ({ isCollapsed, onToggleCollapse, isMobile }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [activePath, setActivePath] = useState(location.pathname);
+
+  const userData = sessionStorage.getItem("user");
+  const user = userData ? JSON.parse(userData) : null;
 
   useEffect(() => {
     setActivePath(location.pathname);
@@ -38,6 +41,7 @@ const UserSidebar = ({ isCollapsed, onToggleCollapse, isMobile, user }) => {
     { path: '/dashboard/certificate', icon: <FaCertificate />, label: 'Certificate' },
     { path: '/', icon: <FaSignOutAlt />, label: 'Logout', onClick: handleLogout }
   ];
+
 
   return (
     <>
@@ -103,9 +107,8 @@ const UserSidebar = ({ isCollapsed, onToggleCollapse, isMobile, user }) => {
               <li key={item.label} className="nav-item mb-2">
                 {item.onClick ? (
                   <div
-                    className={`nav-link d-flex align-items-center text-white rounded ${
-                      isActive ? 'active' : ''
-                    }`}
+                    className={`nav-link d-flex align-items-center text-white rounded ${isActive ? 'active' : ''
+                      }`}
                     style={{
                       cursor: 'pointer',
                       backgroundColor: isActive ? 'rgba(255, 255, 255, 0.15)' : 'transparent',
@@ -128,9 +131,8 @@ const UserSidebar = ({ isCollapsed, onToggleCollapse, isMobile, user }) => {
                 ) : (
                   <Link
                     to={item.path}
-                    className={`nav-link d-flex align-items-center text-white rounded ${
-                      isActive ? 'active' : ''
-                    }`}
+                    className={`nav-link d-flex align-items-center text-white rounded ${isActive ? 'active' : ''
+                      }`}
                     style={{
                       backgroundColor: isActive ? 'rgba(255, 255, 255, 0.15)' : 'transparent',
                       transition: 'all 0.2s ease',

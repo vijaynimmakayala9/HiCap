@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaRegClock, FaTasks, FaStar } from 'react-icons/fa';
-import Header from './Header';
+import Header from '../Header/Header';
 import { useNavigate } from 'react-router-dom';
 import CourseEnquiryModal from '../components/EnrollModal';
 import Footer from './Footer';
