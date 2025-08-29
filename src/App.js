@@ -13,7 +13,7 @@ import Certificate from "./Pages/Certificate";
 import Interviews from "./Pages/Interviews";
 import Clients from "./Pages/Clients";
 import UpCommingBatches from "./components/UpCommingBatches";
-import Dashboard from "./components/Dashboard";
+import Dashboard from "./Dashboard/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import LiveClasses from "./components/LiveClassesPage";
 import CourseModule from "./admin/CourseModule";
