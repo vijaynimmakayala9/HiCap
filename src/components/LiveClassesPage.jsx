@@ -30,9 +30,9 @@ const LiveClassesPage = () => {
       // Use the user-specific endpoint
       const res = await fetch(`https://hicap-backend-4rat.onrender.com/api/live-classes/user/${user.id}`);
       const data = await res.json();
-      
+
       console.log('Live classes data:', data);
-      
+
       if (data.success) {
         // Map API data to your card structure
         const mappedClasses = data.data.map((cls) => ({
@@ -56,7 +56,7 @@ const LiveClassesPage = () => {
       try {
         const fallbackRes = await fetch('https://hicap-backend-4rat.onrender.com/api/liveclass');
         const fallbackData = await fallbackRes.json();
-        
+
         if (fallbackData.success) {
           const mappedClasses = fallbackData.data.map((cls) => ({
             _id: cls._id,
@@ -111,7 +111,7 @@ const LiveClassesPage = () => {
   const formatDateTime = (isoString) => {
     try {
       const date = new Date(isoString);
-      return date.toLocaleString('en-IN', { 
+      return date.toLocaleString('en-IN', {
         weekday: 'short',
         year: 'numeric',
         month: 'short',
@@ -143,7 +143,7 @@ const LiveClassesPage = () => {
     const now = new Date();
     const classDate = new Date(classTime);
     const endTime = new Date(classDate.getTime() + 60 * 60 * 1000); // Assuming 1 hour duration
-    
+
     return now >= classDate && now <= endTime;
   };
 
@@ -172,22 +172,31 @@ const LiveClassesPage = () => {
             const dayClasses = filteredClasses(day);
             const hasLiveClasses = dayClasses.some(cls => isClassLive(cls.timing));
             const hasUpcomingClasses = dayClasses.some(cls => isClassUpcoming(cls.timing));
+            const isToday = day.toDateString() === new Date().toDateString();
 
             return (
               <div
                 key={index}
-                className={`position-relative flex-shrink-0 p-3 rounded-3 shadow-sm text-center ${
-                  isSelected ? 'bg-primary text-white' : 'bg-light'
-                }`}
-                style={{ 
-                  minWidth: '120px', 
-                  cursor: 'pointer', 
-                  transition: 'all 0.3s ease', 
+                className={`position-relative flex-shrink-0 p-3 rounded-3 shadow-sm text-center ${isSelected ? 'bg-primary text-white' : 'bg-light'
+                  }`}
+                style={{
+                  minWidth: '120px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
                   border: '1px solid #dee2e6',
                   borderLeft: hasLiveClasses ? '4px solid #28a745' : hasUpcomingClasses ? '4px solid #ffc107' : '1px solid #dee2e6'
                 }}
                 onClick={() => setSelectedDate(day)}
               >
+                {/* 🔴 Dot marker for today */}
+                {isToday && (
+                  <span
+                    className="position-absolute top-2 end-2 translate-middle p-1 bg-warning border border-light rounded-circle"
+                    title="Today"
+                    style={{ transform: 'translate(50%, -50%)' }}
+                  ></span>
+                )}
+
                 <div className="fw-bold">{day.toLocaleDateString('en-US', { weekday: 'short' })}</div>
                 <div className="small">{day.getDate()}-{day.getMonth() + 1}</div>
                 <div className="mt-2">
@@ -204,6 +213,7 @@ const LiveClassesPage = () => {
             );
           })}
         </div>
+
         <button className="btn btn-outline-secondary" onClick={handleNextWeek}>
           <FaChevronRight />
         </button>
@@ -233,14 +243,13 @@ const LiveClassesPage = () => {
             {filteredClasses(selectedDate).map((cls) => {
               const isLive = isClassLive(cls.timing);
               const isUpcoming = isClassUpcoming(cls.timing);
-              
+
               return (
                 <div key={cls._id} className="col-12 col-sm-6 col-lg-4">
                   <div
-                    className={`card h-100 shadow rounded-4 overflow-hidden border-0 ${
-                      isLive ? 'border-success border-2' : isUpcoming ? 'border-warning border-2' : ''
-                    }`}
-                    style={{ 
+                    className={`card h-100 shadow rounded-4 overflow-hidden border-0 ${isLive ? 'border-success border-2' : isUpcoming ? 'border-warning border-2' : ''
+                      }`}
+                    style={{
                       transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                     }}
                     onMouseEnter={(e) => {
@@ -284,12 +293,11 @@ const LiveClassesPage = () => {
                         href={cls.meetLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`btn mt-auto d-flex align-items-center justify-content-center gap-2 ${
-                          isLive ? 'btn-success' : isUpcoming ? 'btn-warning' : 'btn-primary'
-                        }`}
+                        className={`btn mt-auto d-flex align-items-center justify-content-center gap-2 ${isLive ? 'btn-success' : isUpcoming ? 'btn-warning' : 'btn-primary'
+                          }`}
                         disabled={!isLive && !isUpcoming}
                       >
-                        {isLive ? 'Join Now' : isUpcoming ? 'Join Soon' : 'Class Ended'} 
+                        {isLive ? 'Join Now' : isUpcoming ? 'Join Soon' : 'Class Ended'}
                         <MoveRight size={18} />
                       </a>
                     </div>
@@ -306,7 +314,7 @@ const LiveClassesPage = () => {
         <div className="alert alert-info mt-4">
           <h5 className="alert-heading">Need Help?</h5>
           <p className="mb-0">
-            If you're having trouble joining a class or have any questions, please contact support at 
+            If you're having trouble joining a class or have any questions, please contact support at
             <strong> support@hicap.com</strong> or call <strong>+1-800-HICAP-HELP</strong>.
           </p>
         </div>
