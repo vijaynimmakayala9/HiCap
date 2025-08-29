@@ -3,7 +3,7 @@ import {
   FiBook, FiChevronDown, FiChevronRight, FiMenu, FiX,
   FiCode, FiLayers, FiDatabase, FiPlay, FiClock,
   FiCalendar, FiSearch, FiUser, FiDownload, FiFileText,
-  FiVideo, FiImage, FiMusic, FiBox, FiLoader
+  FiVideo, FiImage, FiMusic, FiBox, FiLoader, FiEye
 } from 'react-icons/fi';
 
 const CourseModuleInterface = () => {
@@ -17,6 +17,9 @@ const CourseModuleInterface = () => {
   const [coursesData, setCoursesData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [pdfViewerOpen, setPdfViewerOpen] = useState(false);
+  const [currentPdf, setCurrentPdf] = useState(null);
+  const [downloading, setDownloading] = useState(false);
 
   const user = JSON.parse(sessionStorage.getItem('user') || '{}');
   const userId = user.id;
@@ -33,27 +36,28 @@ const CourseModuleInterface = () => {
           // Transform API data to match our component structure
           const transformedCourses = data.data.map(course => ({
             id: course._id,
-            name: course.courseId.name,
+            name: course.enrolledId.batchName,
             instructor: course.mentorName,
-            progress: 0, // You might want to calculate this based on user progress
+            progress: 0,
             modules: course.modules.map(module => ({
               id: module._id,
-              name: module.moduleName,
-              icon: <FiCode className="text-blue-500" />, // Default icon
+              name: module.subjectName,
+              icon: <FiCode className="text-blue-500" />,
               lessons: module.topics.flatMap(topic =>
                 topic.lessons.map(lesson => ({
                   id: lesson._id,
                   name: lesson.name,
                   date: new Date(lesson.date).toISOString().split('T')[0],
-                  duration: '40 min', // Default duration
+                  duration: lesson.duration || '40 min',
                   videoId: lesson.videoId,
-                  completed: false, // You might want to track this from user data
+                  completed: false,
                   resources: lesson.resources ? lesson.resources.map(resource => ({
                     id: resource._id,
                     name: resource.name,
                     type: resource.file.split('.').pop(),
                     url: resource.file,
-                    icon: <FiFileText className="text-red-500" />
+                    icon: <FiFileText className="text-red-500" />,
+                    isPdf: resource.file.includes('.pdf') || resource.name.toLowerCase().includes('pdf')
                   })) : []
                 }))
               )
@@ -74,8 +78,13 @@ const CourseModuleInterface = () => {
       }
     };
 
-    fetchData();
-  }, []);
+    if (userId) {
+      fetchData();
+    } else {
+      setError('User not found. Please log in again.');
+      setLoading(false);
+    }
+  }, [userId]);
 
   const selectedCourseData = coursesData.find(c => c.id === selectedCourse);
   const modules = selectedCourseData?.modules || [];
@@ -101,6 +110,86 @@ const CourseModuleInterface = () => {
     if (window.innerWidth < 1024) setSidebarOpen(false);
   };
 
+  const handleDownload = async (fileUrl, fileName, isPdf = false) => {
+    try {
+      setDownloading(true);
+      
+      if (isPdf) {
+        // For PDFs, we'll use a different approach
+        await downloadPdfFromUrl(fileUrl, fileName);
+      } else {
+        // For other file types, use the standard approach
+        const response = await fetch(fileUrl);
+        if (!response.ok) throw new Error('Network response was not ok');
+        
+        const blob = await response.blob();
+        const blobUrl = window.URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = fileName || 'resource';
+        document.body.appendChild(link);
+        link.click();
+        
+        // Clean up
+        window.URL.revokeObjectURL(blobUrl);
+        document.body.removeChild(link);
+      }
+      
+      console.log(`Download completed for ${fileName}`);
+    } catch (error) {
+      console.error('Download failed:', error);
+      alert('Download failed. Please try again.');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  const downloadPdfFromUrl = async (pdfUrl, fileName) => {
+    try {
+      const response = await fetch(pdfUrl);
+      if (!response.ok) throw new Error('Network response was not ok');
+      
+      // Get the response as array buffer (byte code)
+      const arrayBuffer = await response.arrayBuffer();
+      
+      // Create a blob from the array buffer
+      const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+      
+      // Create a URL for the blob
+      const blobUrl = window.URL.createObjectURL(blob);
+      
+      // Create a download link and trigger it
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = fileName || 'document.pdf';
+      document.body.appendChild(link);
+      link.click();
+      
+      // Clean up
+      window.URL.revokeObjectURL(blobUrl);
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('PDF download error:', error);
+      throw error;
+    }
+  };
+
+  const viewPdf = async (pdfUrl, pdfName) => {
+    try {
+      setLoading(true);
+      
+      // Directly use the URL for the iframe
+      setCurrentPdf({ url: pdfUrl, name: pdfName });
+      setPdfViewerOpen(true);
+    } catch (error) {
+      console.error('Error loading PDF:', error);
+      alert('Failed to load PDF. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const filteredModules = modules.map(module => {
     if (!searchTerm) return module;
     const filteredLessons = module.lessons.filter(lesson =>
@@ -111,45 +200,13 @@ const CourseModuleInterface = () => {
 
   const markAsCompleted = (classId) => {
     console.log(`Marked class ${classId} as completed`);
-    // In a real app, this would update the backend
   };
 
   const saveNotes = () => {
     console.log('Notes saved:', notes);
-    // In a real app, this would save to a backend
   };
 
-  const handleDownload = async (fileUrl, fileName) => {
-    try {
-      // Show loading state
-      console.log(`Downloading ${fileName}...`);
-
-      // For Cloudinary files, we need to handle the download properly
-      // Cloudinary URLs can be modified to force download
-      const downloadUrl = fileUrl.includes('cloudinary.com')
-        ? fileUrl.replace('/upload/', '/upload/fl_attachment/')
-        : fileUrl;
-
-      // Create a temporary anchor element
-      const link = document.createElement('a');
-      link.href = downloadUrl;
-      link.setAttribute('download', fileName || 'resource');
-      link.setAttribute('target', '_blank');
-
-      // Append to body, click, and remove
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      console.log(`Download started for ${fileName}`);
-    } catch (error) {
-      console.error('Download error:', error);
-      // Fallback: open in new tab if download fails
-      window.open(fileUrl, '_blank');
-    }
-  };
-
-  if (loading) {
+  if (loading && !pdfViewerOpen) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -196,6 +253,44 @@ const CourseModuleInterface = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* PDF Viewer Modal */}
+      {pdfViewerOpen && currentPdf && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+          <div className="bg-white rounded-lg shadow-xl w-full h-full max-w-6xl max-h-screen flex flex-col">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h3 className="text-lg font-semibold">{currentPdf.name}</h3>
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => handleDownload(currentPdf.url, currentPdf.name, true)}
+                  className="p-2 text-indigo-600 hover:bg-indigo-100 rounded"
+                  disabled={downloading}
+                >
+                  {downloading ? (
+                    <FiLoader className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <FiDownload className="h-5 w-5" />
+                  )}
+                </button>
+                <button
+                  onClick={() => setPdfViewerOpen(false)}
+                  className="p-2 text-gray-600 hover:bg-gray-100 rounded"
+                >
+                  <FiX className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+            <div className="flex-1 overflow-auto">
+              <iframe
+                src={currentPdf.url}
+                className="w-full h-full"
+                title={currentPdf.name}
+                frameBorder="0"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="bg-white border-b border-gray-200 py-3 px-4 lg:px-6 flex items-center justify-between">
         <div className="flex items-center">
@@ -234,7 +329,7 @@ const CourseModuleInterface = () => {
         <div className={`lg:w-80 lg:flex-shrink-0 ${sidebarOpen ? 'fixed inset-y-0 left-0 z-50 w-80' : 'hidden'} lg:relative lg:block bg-white border-r border-gray-200`}>
           <div className="h-full flex flex-col">
             <div className="bg-white px-6 py-4 border-b border-gray-100">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between">                
                 <button
                   onClick={() => setSidebarOpen(false)}
                   className="lg:hidden p-1 rounded-md text-gray-600 hover:bg-gray-100 transition-colors"
@@ -402,16 +497,31 @@ const CourseModuleInterface = () => {
                                 </div>
                                 <div>
                                   <span className="text-sm font-medium text-gray-700 block">{resource.name}</span>
-                                  {/* <span className="text-xs text-gray-500 uppercase">{resource.type}</span> */}
                                 </div>
                               </div>
-                              <button
-                                onClick={() => handleDownload(resource.url, resource.name)}
-                                className="text-indigo-600 hover:text-indigo-800 p-2"
-                                title="Download resource"
-                              >
-                                <FiDownload className="h-4 w-4" />
-                              </button>
+                              <div className="flex space-x-1">
+                                {resource.isPdf && (
+                                  <button
+                                    onClick={() => viewPdf(resource.url, resource.name)}
+                                    className="text-blue-600 hover:text-blue-800 p-2"
+                                    title="View PDF"
+                                  >
+                                    <FiEye className="h-4 w-4" />
+                                  </button>
+                                )}
+                                <button
+                                  onClick={() => handleDownload(resource.url, resource.name, resource.isPdf)}
+                                  className="text-indigo-600 hover:text-indigo-800 p-2"
+                                  title="Download resource"
+                                  disabled={downloading}
+                                >
+                                  {downloading ? (
+                                    <FiLoader className="h-4 w-4 animate-spin" />
+                                  ) : (
+                                    <FiDownload className="h-4 w-4" />
+                                  )}
+                                </button>
+                              </div>
                             </div>
                           ))}
                         </div>
@@ -420,6 +530,8 @@ const CourseModuleInterface = () => {
                       )}
                     </div>
                   )}
+
+                  
                 </div>
               </div>
             ) : (
@@ -438,4 +550,4 @@ const CourseModuleInterface = () => {
   );
 };
 
-export default CourseModuleInterface;     
+export default CourseModuleInterface;
