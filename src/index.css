@@ -94,21 +94,25 @@
 /* index.css or App.css */
 
 /* Import Poppins font */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
-@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
 
 body {
-  font-family:  sans-serif !important;
+  font-family: 'Open Sans', sans-serif !important;
   margin: 0;
   padding: 0;
-  background-color: #fefefe;
-  /* Clean background */
+  background-color: #fefefe; /* Clean background */
 }
-body p li h3 h4 h5 h6 a{
-  font-weight: 600 !important;
+
+body p,
+body li,
+body h3,
+body h4,
+body h5,
+body h6,
+body a {
+  font-weight: 500 !important;
 }
+
 
 /* Improve focus styles for accessibility */
 *:focus {

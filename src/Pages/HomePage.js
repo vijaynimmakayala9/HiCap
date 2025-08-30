@@ -58,7 +58,7 @@ const HomePage = () => {
         <>
           {/* <CourseAndFeatures /> */}
           <NewHero/>
-          <HeroSection/>
+          {/* <HeroSection/> */}
           <ClientScroller/>
           <AwardBanner/>
           <TechsterkerCourses/>

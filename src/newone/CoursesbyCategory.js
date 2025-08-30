@@ -30,12 +30,7 @@ const CoursesByCategory = () => {
                         cat !== 'Certified Program' && cat !== 'Elite Course'
                     )]);
                     
-                    // Expand first category by default
-                    if (uniqueCategories.length > 0) {
-                        setExpandedCategories({
-                            [uniqueCategories[0]]: true
-                        });
-                    }
+                    
                 } else {
                     console.error('Failed to fetch courses');
                 }

@@ -14,7 +14,7 @@ const features = [
   { icon: <FaChalkboardTeacher />, title: 'Interactive Live Classes' },
   { icon: <FaChartLine />, title: 'Best Simulations' },
   { icon: <FaLaptopCode />, title: 'Personalized Learning Plan' },
-  { icon: <FaMobileAlt />, title: 'Online' },
+  { icon: <FaMobileAlt />, title: 'LMS' },
   { icon: <FaUsers />, title: 'Group Labs and Hackathons' },
   { icon: <FaUserTie />, title: 'One-to-One Mentor Support' },
   { icon: <FaCheckDouble />, title: '100% Placements' },

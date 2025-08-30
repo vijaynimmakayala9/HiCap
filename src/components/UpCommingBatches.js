@@ -118,10 +118,10 @@ const UpCommingBatches = () => {
           {/* Upcoming Batches Section */}
           <section>
             <h2 className="text-center mb-4 fw-bold pt-3" style={{ color: "#ad2132" }}>
-              Click below to view the batch details
+              
             </h2>
 
-            <div className="text-white text-center py-3 fw-semibold rounded-top" style={{ backgroundColor: "#c34153" }}>
+            <div className="text-white text-center py-3 fw-semibold rounded-top fs-3" style={{ backgroundColor: "#c34153" }}>
               UPCOMING BATCHES
             </div>
 

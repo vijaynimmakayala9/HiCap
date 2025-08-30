@@ -204,11 +204,11 @@ const CourseDetail = () => {
                     src={course.image}
                     alt={course.name}
                     className="rounded-3 img-fluid"
-                    style={{
-                      border: "0.5px solid maroon",
-                      boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)",
-                      transition: "transform 0.3s ease, box-shadow 0.3s ease"
-                    }}
+                    // style={{
+                    //   border: "0.5px solid maroon",
+                    //   boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)",
+                    //   transition: "transform 0.3s ease, box-shadow 0.3s ease"
+                    // }}
                   />
                 </div>
               </Col>
@@ -240,7 +240,7 @@ const CourseDetail = () => {
                       style={{ backgroundColor: "#c34153", color: "#fff" }}
                     >
                       <FaRegClock className="fs-6" />
-                      {course.duration} Months
+                      {course.duration}
                     </button>
 
                     <button
@@ -249,7 +249,7 @@ const CourseDetail = () => {
                       style={{ backgroundColor: "#c34153", color: "#fff" }}
                     >
                       <FaUserGraduate className="fs-6" />
-                      {course.noOfStudents}+ Students
+                      {course.noOfStudents}
                     </button>
 
                     <button
@@ -258,7 +258,7 @@ const CourseDetail = () => {
                       style={{ backgroundColor: "#c34153", color: "#fff" }}
                     >
                       <FaBook className="fs-6" />
-                      {course.noOfLessons} Lessons
+                      {course.noOfLessons}
                     </button>
 
                     <button
@@ -271,14 +271,7 @@ const CourseDetail = () => {
                     </button>
                   </div>
 
-                  <div className="mb-4">
-                    <p className="mb-1 small text-muted">
-                      <span className="fw-semibold">Subcategory:</span> {course.subcategory}
-                    </p>
-                    <p className="mb-0 small text-muted">
-                      <span className="fw-semibold">Mode:</span> {course.mode}
-                    </p>
-                  </div>
+                  
 
                   <div className="d-flex flex-column flex-sm-row gap-3">
                     <button className="btn btn-md gradient-button" onClick={()=>handleEnroll(course.name)}>
