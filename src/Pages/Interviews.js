@@ -202,7 +202,7 @@ const Interviews = () => {
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={() => setSelectedInterview(null)}>Close</Button>
-              <Button variant="primary" onClick={() => window.open(selectedInterview.link, '_blank')}>Apply Now</Button>
+              <Button className='bg-meroon' onClick={() => window.open(selectedInterview.link, '_blank')}>Apply Now</Button>
             </Modal.Footer>
           </>
         )}

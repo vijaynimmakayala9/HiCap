@@ -26,6 +26,8 @@ import ProjectAssistance from "./services/Project Assistance";
 import RealTimeAssistance from "./services/RealTimeAssistance";
 import CoursesByCategory from "./newone/CoursesbyCategory";
 import UserLayout from "./Header/UserLayout"; // User sidebar layout
+import Events from "./newone/Events";
+import EventDetails from "./newone/EventDetails";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -86,6 +88,8 @@ function App() {
         <Route path="/placements" element={<PlacementAssistance />} />
         <Route path="/onetoone" element={<OnetoOneSession />} />
         <Route path="/allcourses" element={<CoursesByCategory />} />
+        <Route path="/events" element={<Events/>}/>
+        <Route path="/event/:title" element={<EventDetails />} />
 
         {/* Protected Dashboard Routes */}
         <Route path="/dashboard" element={

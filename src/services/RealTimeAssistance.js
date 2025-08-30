@@ -13,7 +13,7 @@ const RealTimeAssistance = () => {
                         {/* Image Section */}
                         <Col lg={6} className="mb-4 mb-lg-0">
                             <img
-                                src="https://www.simplilearn.com/ice9/free_resources_article_thumb/Corporate_Training.jpg"
+                                src="/service/realtimeassist.jpg"
                                 alt="Corporate Project Assistance"
                                 className="img-fluid rounded img-hover-effect"
                             />

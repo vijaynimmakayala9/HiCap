@@ -63,7 +63,7 @@ const GuestHeader = ({ onLogin }) => {
         { label: 'About Us', path: '/aboutus' },
         { label: 'Contact Us', path: '/contactus' },
         { label: 'Blog', path: '/blog' },
-        // { label: 'Our Mentors', path: '/ourmentors' },
+        { label: 'Events', path: '/events' },
         // { label: 'Certificates', path: '#' },
         { label: 'FAQs', path: '/faqs' }
       ]
@@ -449,8 +449,8 @@ const GuestHeader = ({ onLogin }) => {
                     setIsMobileMenuOpen(false);
                   }}
                 >
-                  <div className={`flex-shrink-0 ${screenSize === 'mobile-small' ? 'w-6 h-6' : screenSize === 'mobile' ? 'w-7 h-7' : screenSize === 'mobile-large' ? 'w-8 h-8' : 'w-10 h-10'} bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden`}>
-                    <img src={course.logoImage} alt={course.name} className="w-full h-full object-cover" />
+                  <div className={`flex-shrink-0 p-1 rounded-circle ${screenSize === 'mobile-small' ? 'w-6 h-6' : screenSize === 'mobile' ? 'w-7 h-7' : screenSize === 'mobile-large' ? 'w-8 h-8' : 'w-10 h-10'} bg-white-500 rounded-lg flex items-center justify-center overflow-hidden`}>
+                    <img src={course.logoImage} alt={course.name} className="w-full h-full object-cover  rounded-square" />
                   </div>
                   <div className="flex-grow overflow-hidden">
                     <div className={`font-medium ${screenSize === 'mobile-small' ? 'text-xs' : screenSize === 'mobile' || screenSize === 'mobile-large' ? 'text-sm' : 'text-sm md:text-base'} whitespace-nowrap overflow-hidden text-ellipsis`}>{course.name}</div>
@@ -685,7 +685,7 @@ const GuestHeader = ({ onLogin }) => {
                       Courses <FaChevronDown className={`ml-1 text-sm transition-transform ${showCoursesMenu ? 'rotate-180' : ''}`} />
                     </span>
                     {showCoursesMenu && <MegaMenu />}
-                    <div className="absolute right-0 top-1/2 transform -translate-y-1/2 h-5 w-px bg-gray-300"></div>
+                    <span className="absolute right-0 top-1/2 transform -translate-y-1/2 h-5 border-r border-gray-300"></span>
                   </div>
                 );
               } else if (item.isDropdown) {

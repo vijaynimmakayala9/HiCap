@@ -24,7 +24,7 @@ const AboutTechsterker = () => {
       {aboutData ? (
         <div className="row align-items-center mb-4 mb-md-5 g-4">
           {/* Text Section */}
-          <div className="col-md-6 order-md-1 order-2">
+          <div className="col-md-6 col-lg-6 order-md-1 order-2">
             <div className="position-relative mb-4">
               <h2 className="fw-bold mb-3">
                 About <span style={{ color: "#ad2132" }}>TECHSTERKER</span> Institute
@@ -46,16 +46,16 @@ const AboutTechsterker = () => {
           </div>
 
           {/* Image Section */}
-          <div className="col-md-6 order-md-2 order-1">
+          <div className="col-md-6 col-lg-6 order-md-2 order-1">
             <div className="position-relative">
               <img
-                src={aboutData.image1}
+                src="/service/aboutus.jpg"
                 alt="About TECHSTERKER"
                 className="img-fluid rounded-4 w-100"
                 style={{
                   maxWidth: "100%",
                   height: "auto",
-                  maxHeight: '400px',
+                  maxHeight: '450px',
                   objectFit: "cover",
                   transition: "transform 0.3s ease, box-shadow 0.3s ease" // Hover effect
                 }}

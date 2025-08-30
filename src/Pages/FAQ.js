@@ -62,11 +62,11 @@ const FAQ = () => {
           <Row className="justify-content-center mb-5">
             <Col xs={12} md={8} lg={6}>
               <Image 
-                src={faqImage}
+                src="/service/faqs.jpg"
                 alt="FAQ Banner"
                 fluid
                 rounded
-                className="shadow border border-light"
+                className=" border border-light"
               />
             </Col>
           </Row>

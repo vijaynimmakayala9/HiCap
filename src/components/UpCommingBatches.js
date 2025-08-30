@@ -227,8 +227,8 @@ const UpCommingBatches = () => {
             <section className="my-5 p-4 rounded" style={{ backgroundColor: "#fff" }}>
               <Row className="align-items-center">
                 <Col md={6}>
-                  <h3 className="fw-bold mb-3" style={{ color: "#ad2132" }}>
-                    🌏 {abroadData.title}
+                  <h3 className="fw-bold mb-3" style={{ color: "#000" }}>
+                    <i class="fa-solid fa-earth-americas" style={{color: "#ad2132"}}></i> {abroadData.title}
                   </h3>
                   <p className="mb-4" style={{ fontSize: "1rem", lineHeight: "1.6" }}>
                     {abroadData.description}

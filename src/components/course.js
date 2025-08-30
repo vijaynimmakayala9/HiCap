@@ -57,9 +57,9 @@ const Course = () => {
                                 className="bg-white/30 backdrop-blur-md rounded-xl shadow-lg p-6 flex flex-col justify-between border border-white/20 hover:shadow-2xl hover:bg-white/40 transition-all duration-300 transform hover:scale-105"
                             >
                                 <div className="pb-4 border-b border-white/20 mb-2 d-flex gap-3">
-                                    <img src={logoImage} className='img-fluid rounded-circle' style={{ height: "50px", width: "50px" }} />
+                                    <img src={logoImage} className='img-fluid rounded-circle' style={{ height: "70px", width: "70px" }} />
                                     <div className=''>
-                                        <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
+                                        <h3 className="text-lg fw-bold text-gray-900">{name}</h3>
                                         <p className="text-sm font-semibold text-gray-500">{category}</p>
                                     </div>
                                 </div>
@@ -83,13 +83,13 @@ const Course = () => {
                                 </div>
                                 <div className="flex justify-between items-center space-x-4 flex-wrap">
                                     <button
-                                        className="flex-1 py-2 px-4 rounded-md border border-red-300 font-medium hover:bg-gray-200 transition-colors mb-2 sm:mb-0"
+                                        className="flex-1 py-2 px-2 rounded-md border border-red-300 font-medium hover:bg-gray-200 transition-colors mb-2 sm:mb-0"
                                         onClick={() => navigate(`/course/${_id}`)}
                                     >
                                         View Details
                                     </button>
                                     <button
-                                        className="flex-1 py-2 px-4 rounded-md text-white font-medium bg-red-700 hover:bg-red-800 transition-colors"
+                                        className="flex-1 py-2 px-2 rounded-md text-white font-medium bg-red-700 hover:bg-red-800 transition-colors"
                                         onClick={() => {/* Handle enroll logic here */ }}
                                     >
                                         Enroll Now

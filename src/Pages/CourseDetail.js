@@ -554,13 +554,13 @@ const CourseDetail = () => {
 
                         <div className="d-flex align-items-center gap-3">
                           <img
-                            src={relatedCourse.image} // replace with actual image property
+                            src={relatedCourse.logoImage} // replace with actual image property
                             alt={relatedCourse.name}
                             className="rounded-circle img-fluid"
-                            style={{ width: "50px", height: "50px", objectFit: "cover" }}
+                            style={{ width: "70px", height: "70px", objectFit: "cover" }}
                           />
                           <div>
-                            <Card.Title className="mb-1 fw-semibold" style={{ color: "#ad2132" }}>
+                            <Card.Title className="mb-1 fw-bold" style={{ color: "#ad2132" }}>
                               {relatedCourse.name}
                             </Card.Title>
                             {relatedCourse.category && (
@@ -612,7 +612,7 @@ const CourseDetail = () => {
                             View Details
                           </Button>
                           <button
-                            className="btn btn-md flex-grow-1 gradient-button"
+                            className="btn btn-sm flex-grow-1 gradient-button"
                             onClick={()=>handleEnroll(relatedCourse.name)}
                           >
                             Enroll Now

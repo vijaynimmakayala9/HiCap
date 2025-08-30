@@ -15,7 +15,7 @@ const OnetoOneSession = () => {
             {/* Image Section */}
             <Col lg={6} className="mb-4 mb-lg-0 order-lg-1 order-1">
               <img
-                src="/services/oneonone.jpg"
+                src="/service/onetoone1.jpg"
                 alt="One-to-One Session"
                 className="img-fluid rounded img-hover-effect"
               />

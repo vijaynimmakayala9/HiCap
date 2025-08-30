@@ -13,7 +13,7 @@ const PlacementAssistance = () => {
                         {/* Image Section */}
                         <Col lg={6} className="mb-4 mb-lg-0 order-lg-1 order-2">
                             <img
-                                src="https://www.cetpainfotech.com/wp-content/uploads/2022/05/Placement.jpg"
+                                src="/service/placementassist.jpg"
                                 alt="Placement Assistance"
                                 className="img-fluid rounded img-hover-effect"
                             />

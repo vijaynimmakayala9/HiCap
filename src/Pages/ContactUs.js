@@ -126,7 +126,7 @@ const ContactUs = () => {
               </a>{' '}
               /{' '}
               <strong>E-Mail :</strong>{' '}
-              <a href="mailto:info.courses@gmail.com" className="text-meroon fw-semibold">
+              <a href="https://mail.google.com/mail/?view=cm&fs=1&to=info@techsterker.com" target='_blank' className="text-meroon fw-semibold">
                 info.courses@gmail.com
               </a>
             </p>

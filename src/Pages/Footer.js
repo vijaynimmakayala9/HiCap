@@ -149,7 +149,7 @@ const Footer = () => {
                     </a>
                     <a
                       href="tel:+916299161616"
-                      className="text-white text-decoration-none fw-semibold link-hover"
+                      className="text-white text-decoration-none link-hover"
                     >
                       +91 6299161616
                     </a>
@@ -169,7 +169,7 @@ const Footer = () => {
                       href="https://wa.me/916299161616"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-white text-decoration-none fw-semibold link-hover"
+                      className="text-white text-decoration-none link-hover"
                     >
                       +91 6299161616
                     </a>
@@ -178,14 +178,16 @@ const Footer = () => {
                   {/* Email */}
                   <div className="d-flex justify-content-center justify-content-sm-start align-items-center gap-2">
                     <a
-                      href="mailto:info@techsterker.com"
+                      href="https://mail.google.com/mail/?view=cm&fs=1&to=info@techsterker.com"
+                      target='_blank'
                       className="contact-icon email-icon"
                     >
                       <i className="fas fa-envelope"></i>
                     </a>
                     <a
-                      href="mailto:info@techsterker.com"
-                      className="text-white text-decoration-none fw-semibold link-hover"
+                      href="https://mail.google.com/mail/?view=cm&fs=1&to=info@techsterker.com"
+                      target='_blank'
+                      className="text-white text-decoration-none link-hover"
                     >
                       info@techsterker.com
                     </a>
@@ -321,8 +323,8 @@ const Footer = () => {
   .social-icon:hover { transform: scale(1.1); }
 
   .contact-icon {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -337,20 +339,20 @@ const Footer = () => {
   /* Phone */
   .phone-icon i.mirrored { 
     transform: scaleX(-1); 
-    color: #0d6efd; 
+    color: #000; 
     transition: color 0.3s;
   }
-  .phone-icon:hover { background-color: #0d6efd; }
+  .phone-icon:hover { background-color: #000; }
   .phone-icon:hover i.mirrored { color: #fff; }
 
   /* WhatsApp */
-  .whatsapp-icon i { color: #25D366; transition: color 0.3s; }
-  .whatsapp-icon:hover { background-color: #25D366; }
+  .whatsapp-icon i { color: #000; transition: color 0.3s; }
+  .whatsapp-icon:hover { background-color: #000; }
   .whatsapp-icon:hover i { color: #fff; }
 
   /* Email */
-  .email-icon i { color: #dc3545; transition: color 0.3s; }
-  .email-icon:hover { background-color: #dc3545; }
+  .email-icon i { color: #000; transition: color 0.3s; }
+  .email-icon:hover { background-color: #000; }
   .email-icon:hover i { color: #fff; }
 
   @media (max-width: 768px) {

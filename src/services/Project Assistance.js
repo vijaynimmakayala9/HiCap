@@ -13,7 +13,7 @@ const ProjectAssistance = () => {
                         {/* Image Section */}
                         <Col lg={6} className="mb-4 mb-lg-0">
                             <img
-                                src="https://www.simplilearn.com/ice9/free_resources_article_thumb/What_Is_a_Project.jpg"
+                                src="/service/projectassist.jpg"
                                 alt="Live Project Experience"
                                 className="img-fluid rounded img-hover-effect"
                             />
