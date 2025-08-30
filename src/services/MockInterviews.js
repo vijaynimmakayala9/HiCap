@@ -7,20 +7,18 @@ const MockInterviews = () => {
     return (
         <>
             <Header />
-            <section className="mt-5 py-5 bg-light">
+            <section className="mt-5 py-5 bg-white">
                 <Container>
                     <Row className="align-items-center">
                         {/* Image Section */}
                         <Col lg={6} className="mb-4 mb-lg-0 order-lg-1 order-2">
                             <img
-                                src="https://www.jobsoid.com/wp-content/uploads/2020/12/blog-1.jpg"
+                                src="/service/mockinterview.jpg"
                                 alt="Mock Interview Practice"
                                 className="img-fluid rounded img-hover-effect"
                                 style={{
-                                    border: "0.5px solid #ad2132",
                                     borderRadius: "12px",
-                                    boxShadow: "0 15px 25px rgba(173, 33, 50, 0.25)",
-                                    transition: "transform 0.4s ease, box-shadow 0.4s ease"
+                                    transition: "transform 0rgba(14, 7, 8, 0.25)4s ease"
                                 }}
                             />
                         </Col>

@@ -258,7 +258,7 @@ const CourseDetail = () => {
                       style={{ backgroundColor: "#c34153", color: "#fff" }}
                     >
                       <FaBook className="fs-6" />
-                      {course.noOfLessons}
+                      {course.noOfLessons} Lessons
                     </button>
 
                     <button
@@ -579,13 +579,13 @@ const CourseDetail = () => {
                             <span>{relatedCourse.duration}</span>
                           </div>
                           <div className="d-flex align-items-center">
-                            <FaCode className="me-2" style={{ color: "#ad2132" }} />
-                            <span>{relatedCourse.mode} </span>
+                            <FaUserGraduate className="me-2" style={{ color: "#ad2132" }} />
+                            <span>{relatedCourse.noOfStudents} </span>
                           </div>
-                          {/* <div className="d-flex align-items-center">
-                            <FaStar className="me-2 text-warning" />
-                            <span>{relatedCourse.rating}/5</span>
-                          </div> */}
+                          <div className="d-flex align-items-center">
+                            <FaBook className="me-2 textcolor" />
+                            <span>{relatedCourse.noOfLessons}/5</span>
+                          </div>
                         </div>
 
                         <div className="d-flex justify-content-between gap-2 flex-wrap">

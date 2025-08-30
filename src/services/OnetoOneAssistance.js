@@ -18,10 +18,6 @@ const OnetoOneSession = () => {
                 src="/services/oneonone.jpg"
                 alt="One-to-One Session"
                 className="img-fluid rounded img-hover-effect"
-                style={{
-                  border: "0.5px solid #ad2132",
-                  boxShadow: "0 10px 20px rgba(173, 33, 50, 0.3)"
-                }}
               />
             </Col>
 

@@ -16,10 +16,6 @@ const ProjectAssistance = () => {
                                 src="https://www.simplilearn.com/ice9/free_resources_article_thumb/What_Is_a_Project.jpg"
                                 alt="Live Project Experience"
                                 className="img-fluid rounded img-hover-effect"
-                                style={{
-                                    border: "0.5px solid #ad2132", // Thinner border
-                                    boxShadow: "0 10px 20px rgba(173, 33, 50, 0.3)",
-                                }}
                             />
                         </Col>
 

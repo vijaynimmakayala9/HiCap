@@ -63,8 +63,8 @@ const GuestHeader = ({ onLogin }) => {
         { label: 'About Us', path: '/aboutus' },
         { label: 'Contact Us', path: '/contactus' },
         { label: 'Blog', path: '/blog' },
-        { label: 'Our Mentors', path: '/ourmentors' },
-        { label: 'Certificates', path: '#' },
+        // { label: 'Our Mentors', path: '/ourmentors' },
+        // { label: 'Certificates', path: '#' },
         { label: 'FAQs', path: '/faqs' }
       ]
     }

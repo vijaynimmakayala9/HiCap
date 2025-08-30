@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaRegClock, FaCode, FaStar } from 'react-icons/fa';
+import { FaRegClock, FaCode, FaStar, FaUserGraduate, FaBook } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -51,7 +51,7 @@ const Course = () => {
                 {/* Courses Grid */}
                 {Array.isArray(courses) && courses.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        {courses.slice(0, 4).map(({ _id, name, image, category, duration, logoImage, mode, description }) => (
+                        {courses.slice(0, 4).map(({ _id, name, image, category, duration, logoImage, mode, description, noOfLessons, noOfStudents }) => (
                             <div
                                 key={_id}
                                 className="bg-white/30 backdrop-blur-md rounded-xl shadow-lg p-6 flex flex-col justify-between border border-white/20 hover:shadow-2xl hover:bg-white/40 transition-all duration-300 transform hover:scale-105"
@@ -72,8 +72,12 @@ const Course = () => {
                                         <span>{duration}</span>
                                     </div>
                                     <div className="flex items-center">
-                                        <FaCode className="mr-2 text-red-700" />
-                                        <span>{mode}</span>
+                                        <FaUserGraduate className="mr-2 text-red-700" />
+                                        <span>{noOfStudents}</span>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <FaBook className="mr-2 text-red-700" />
+                                        <span>{noOfLessons}</span>
                                     </div>
                                     
                                 </div>

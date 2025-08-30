@@ -177,7 +177,7 @@ const LiveClassesPage = () => {
             return (
               <div
                 key={index}
-                className={`position-relative flex-shrink-0 p-3 rounded-3 shadow-sm text-center ${isSelected ? 'bg-primary text-white' : 'bg-light'
+                className={`position-relative flex-shrink-0 p-3 rounded-3 shadow-sm text-center ${isSelected ? 'bg-meroon text-white' : 'bg-light'
                   }`}
                 style={{
                   minWidth: '120px',

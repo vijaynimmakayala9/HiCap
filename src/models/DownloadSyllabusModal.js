@@ -16,16 +16,27 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
   const [fileName, setFileName] = useState('');
 
   // 🔽 Helper: Download PDF
-  const handleDownload = async (url, filename) => {
+  const handleDownload = async (url, filename = 'document.pdf') => {
     try {
+      // Fetch the file as a blob
       const response = await axios.get(url, { responseType: 'blob' });
-      const blob = new Blob([response.data], { type: 'application/pdf' });
+
+      // Create a Blob object
+      const blob = new Blob([response.data], { type: response.data.type || 'application/pdf' });
+
+      // Generate temporary URL
+      const downloadUrl = window.URL.createObjectURL(blob);
+
+      // Create a link and trigger download
       const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = filename || 'syllabus.pdf';
+      link.href = downloadUrl;
+      link.download = filename;
       document.body.appendChild(link);
       link.click();
+
+      // Cleanup
       document.body.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
     } catch (error) {
       console.error('Error downloading file:', error);
       Swal.fire('Error', 'Failed to download the PDF. Try again.', 'error');
@@ -33,42 +44,42 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
   };
 
   // Fetch course PDF URL
-const fetchCoursePdf = async () => {
-  try {
-    setLoading(true);
-    const response = await axios.get(
-      'https://hicap-backend-4rat.onrender.com/api/coursecontroller'
-    );
+  const fetchCoursePdf = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        'https://hicap-backend-4rat.onrender.com/api/coursecontroller'
+      );
 
-    if (response.data.success) {
-      const course = response.data.data.find((c) => c._id === courseId);
+      if (response.data.success) {
+        const course = response.data.data.find((c) => c._id === courseId);
 
-      if (course && course.pdf) {
-        // ✅ Cloudinary raw files sometimes don’t include .pdf
-        let fileUrl = course.pdf;
-        if (!fileUrl.endsWith(".pdf")) {
-          fileUrl += ".pdf"; // force extension for download
+        if (course && course.pdf) {
+          // ✅ Cloudinary raw files sometimes don’t include .pdf
+          let fileUrl = course.pdf;
+          if (!fileUrl.endsWith(".pdf")) {
+            fileUrl += ".pdf"; // force extension for download
+          }
+
+          setPdfUrl(fileUrl);
+          setFileName(`${course.name}-syllabus.pdf`);
+          return { url: fileUrl, name: course.name };
+        } else {
+          Swal.fire('Oops', 'PDF not available for this course.', 'warning');
+          return null;
         }
-
-        setPdfUrl(fileUrl);
-        setFileName(`${course.name}-syllabus.pdf`);
-        return { url: fileUrl, name: course.name };
       } else {
-        Swal.fire('Oops', 'PDF not available for this course.', 'warning');
+        Swal.fire('Error', 'Failed to fetch course details.', 'error');
         return null;
       }
-    } else {
-      Swal.fire('Error', 'Failed to fetch course details.', 'error');
+    } catch (error) {
+      console.error('Error fetching course PDF:', error);
+      Swal.fire('Error', 'Error fetching PDF. Please try again.', 'error');
       return null;
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error('Error fetching course PDF:', error);
-    Swal.fire('Error', 'Error fetching PDF. Please try again.', 'error');
-    return null;
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
 
   // 🔽 Send OTP

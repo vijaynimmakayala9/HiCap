@@ -16,10 +16,6 @@ const RealTimeAssistance = () => {
                                 src="https://www.simplilearn.com/ice9/free_resources_article_thumb/Corporate_Training.jpg"
                                 alt="Corporate Project Assistance"
                                 className="img-fluid rounded img-hover-effect"
-                                style={{
-                                    border: "0.5px solid #ad2132",
-                                    boxShadow: "0 10px 20px rgba(173, 33, 50, 0.3)",
-                                }}
                             />
                         </Col>
 

@@ -147,13 +147,13 @@ const Dashboard = () => {
         <CalendarSection />
 
         {/* Recommended Courses */}
-        <RecommendedCourses 
+        {/* <RecommendedCourses 
           loading={loading}
           recommendedCourses={recommendedCourses}
           handleViewDetails={handleViewDetails}
           setSelectedCourse={setSelectedCourse}
           setShowModal={setShowModal}
-        />
+        /> */}
       </Row>
 
       {/* Enroll Modal */}

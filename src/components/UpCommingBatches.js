@@ -224,7 +224,7 @@ const UpCommingBatches = () => {
 
           {/* Abroad Students Section */}
           {abroadData && (
-            <section className="my-5 p-4 rounded" style={{ backgroundColor: "#f8f9fa" }}>
+            <section className="my-5 p-4 rounded" style={{ backgroundColor: "#fff" }}>
               <Row className="align-items-center">
                 <Col md={6}>
                   <h3 className="fw-bold mb-3" style={{ color: "#ad2132" }}>
@@ -257,16 +257,14 @@ const UpCommingBatches = () => {
                 </Col>
                 <Col md={6} className="text-center">
                   <img
-                    src="/abroad.jpg"
+                    src="/home/abroad.jpg"
                     alt="International students"
-                    className="img-fluid rounded shadow-md"
+                    className="img-fluid rounded "
                     style={{
                       width: "100%",
                       height: "auto",
                       objectFit: "cover",
-                      border: "0.5px solid #ad2132",
                       borderRadius: "20px",
-                      boxShadow: "0 20px 40px rgba(173, 33, 50, 0.25)",
                     }}
                   />
                 </Col>

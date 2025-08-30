@@ -1,121 +1,82 @@
 import React, { useState, useEffect } from 'react';
-import { Download, Book, Clock, Users, Award, CheckCircle } from 'lucide-react';
+import { Download, Award, Clock, CheckCircle } from 'lucide-react';
+import axios from 'axios';
 import Header from '../Header/Header';
 import Footer from './Footer';
-import { useNavigate } from 'react-router-dom';
 
 const Certificate = () => {
-  const [selectedCourseIndex, setSelectedCourseIndex] = useState(0);
-  const [certificateData, setCertificateData] = useState(null);
-  const [enrollmentData, setEnrollmentData] = useState([]);
+  const [certificates, setCertificates] = useState([]);
+  const [courses, setCourses] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const navigate = useNavigate();
   const user = JSON.parse(sessionStorage.getItem('user'));
   const userId = user?.id;
 
+  // Fetch certificates
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCertificates = async () => {
       try {
         setLoading(true);
+        const response = await fetch(`https://hicap-backend-4rat.onrender.com/api/certificate/user/${userId}`);
+        if (!response.ok) throw new Error('Failed to fetch certificates');
+        const data = await response.json();
+        if (data.success) {
+          setCertificates(data.data);
 
-        // Simulated fetch with static data for demo
-        const staticEnrollmentData = [
-          {
-            course: {
-              _id: '1',
-              name: 'Full Stack Python',
-              image: 'https://foundr.com/wp-content/uploads/2021/09/Best-online-course-platforms.png',
-              description: 'Learn Python, Django, React and more.',
-              noOfLessons: 20,
-              duration: 3,
-              noOfStudents: 1200,
-            },
-            status: 'completed',
-            enrollmentDate: '2025-01-15',
-          },
-          {
-            course: {
-              _id: '2',
-              name: 'React for Beginners',
-              image: 'https://foundr.com/wp-content/uploads/2021/09/Best-online-course-platforms.png',
-              description: 'Learn React JS from scratch.',
-              noOfLessons: 15,
-              duration: 2,
-              noOfStudents: 800,
-            },
-            status: 'enrolled',
-            enrollmentDate: '2025-06-01',
-          },
-        ];
-
-        const staticCertificateData = {
-          certificates: [
-            {
-              enrollment: '1',
-              status: {
-                type: 'Completed',
-                image: 'https://graphicsfamily.com/wp-content/uploads/edd/2022/01/Award-Certificate-Template-1536x1117.jpg',
-              },
-            },
-            {
-              enrollment: '2',
-              status: {
-                type: 'In Progress',
-                image: 'https://graphicsfamily.com/wp-content/uploads/edd/2022/01/Award-Certificate-Template-1536x1117.jpg',
-              },
-            },
-          ],
-        };
-
-        setEnrollmentData(staticEnrollmentData);
-        setCertificateData(staticCertificateData);
-        setLoading(false);
+          // Fetch course details for each certificate
+          const courseIds = data.data.map(c => c.enrolledId.courseId._id);
+          const coursePromises = courseIds.map(id =>
+            axios.get(`https://hicap-backend-4rat.onrender.com/api/coursecontroller/${id}`)
+          );
+          const courseResponses = await Promise.all(coursePromises);
+          const courseData = {};
+          courseResponses.forEach(res => {
+            if (res.data.success) {
+              courseData[res.data.data._id] = res.data.data;
+            }
+          });
+          setCourses(courseData);
+        } else {
+          throw new Error('Unable to load certificate data');
+        }
       } catch (err) {
         setError(err.message);
+      } finally {
         setLoading(false);
       }
     };
-
-    fetchData();
+    fetchCertificates();
   }, [userId]);
 
-  const selectedCourse = enrollmentData[selectedCourseIndex];
-  const selectedCertificate = certificateData?.certificates?.find(
-    (cert) => cert.enrollment === selectedCourse?.course._id
-  );
-
-  const generatePDF = async () => {
-    if (!selectedCertificate?.status?.image) return;
-
+  // Download certificate file
+  const downloadCertificate = async (url, name) => {
+    if (!url) return;
     try {
-      const response = await fetch(selectedCertificate.status.image, { mode: 'cors' });
-      if (!response.ok) throw new Error('Failed to fetch image');
+      const response = await fetch(url, { mode: 'cors' });
+      if (!response.ok) throw new Error('Failed to fetch certificate');
       const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = url;
-      link.download = `${selectedCourse?.course?.name || 'Certificate'}.png`;
+      link.href = URL.createObjectURL(blob);
+      link.download = name || 'Certificate.png';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      URL.revokeObjectURL(url);
     } catch (err) {
-      console.error('Error downloading certificate:', err);
       alert('Unable to download certificate. Please try again later.');
+      console.error(err);
     }
   };
 
+  // Status badge
   const getStatusBadge = (status) => {
     const statusConfig = {
-      completed: { class: 'bg-success bg-opacity-10 text-success', icon: CheckCircle, text: 'Completed' },
-      enrolled: { class: 'bg-primary bg-opacity-10 text-primary', icon: Book, text: 'In Progress' },
-      default: { class: 'bg-secondary bg-opacity-10 text-secondary', icon: Clock, text: 'Unknown' },
+      Pending: { class: 'bg-warning bg-opacity-10 text-warning', icon: Clock, text: 'Pending' },
+      Completed: { class: 'bg-success bg-opacity-10 text-success', icon: CheckCircle, text: 'Completed' },
+      default: { class: 'bg-secondary bg-opacity-10 text-secondary', icon: Award, text: 'Unknown' },
     };
     const config = statusConfig[status] || statusConfig.default;
     const IconComponent = config.icon;
-
     return (
       <span className={`badge rounded-pill d-inline-flex align-items-center ${config.class}`}>
         <IconComponent className="me-1" size={16} />
@@ -124,130 +85,79 @@ const Certificate = () => {
     );
   };
 
-  if (loading) return <p className="text-center py-5">Loading...</p>;
+  if (loading) return <p className="text-center py-5">Loading certificates...</p>;
   if (error) return <p className="text-center py-5 text-danger">{error}</p>;
-
-  // Stats
-  const totalCourses = enrollmentData.length;
-  const completedCourses = enrollmentData.filter((e) => e.status === 'completed').length;
-  const inProgressCourses = enrollmentData.filter((e) => e.status === 'enrolled').length;
 
   return (
     <>
-      
-
       <div className="container py-5">
         <h1 className="h2 fw-bold text-dark mb-4">Certificate Dashboard</h1>
 
-        {/* Stats Cards */}
-        <div className="row g-4 mb-5">
-          <div className="col-md-4">
-            <div className="card shadow-sm p-4 text-center rounded-4 border-0">
-              <Award size={40} className="text-danger mb-2" />
-              <h3 className="fw-bold">{totalCourses}</h3>
-              <p className="text-muted">Enrolled Courses</p>
+        {certificates.length === 0 ? (
+          <div className="text-center py-5">
+            <div className="bg-white rounded-4 p-5 shadow-sm border">
+              <h4 className="text-muted">No certificates available</h4>
+              <p className="small text-muted">Complete your courses to receive certificates</p>
             </div>
           </div>
-          <div className="col-md-4">
-            <div className="card shadow-sm p-4 text-center rounded-4 border-0">
-              <CheckCircle size={40} className="text-success mb-2" />
-              <h3 className="fw-bold">{completedCourses}</h3>
-              <p className="text-muted">Completed Courses</p>
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="card shadow-sm p-4 text-center rounded-4 border-0">
-              <Book size={40} className="text-primary mb-2" />
-              <h3 className="fw-bold">{inProgressCourses}</h3>
-              <p className="text-muted">In Progress</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Course Selection */}
-        {enrollmentData.length > 1 && (
-          <div className="mb-5">
-            <label className="form-label fw-medium mb-2">Select Course:</label>
-            <select
-              className="form-select w-100 max-w-md"
-              value={selectedCourseIndex}
-              onChange={(e) => setSelectedCourseIndex(Number(e.target.value))}
-            >
-              {enrollmentData.map((enrollment, index) => (
-                <option key={enrollment.course._id} value={index}>
-                  {enrollment.course.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-
-        {/* Selected Course Details */}
-        {selectedCourse && (
+        ) : (
           <div className="row g-4">
-            {/* Course Card */}
-            <div className="col-lg-6">
-              <div className="card border-0 shadow-sm">
-                <div className="card-body p-4 d-flex flex-column align-items-center">
-                  <img
-                    src={selectedCourse.course.image}
-                    alt={selectedCourse.course.name}
-                    className="rounded shadow-sm mb-3"
-                    style={{ width: '120px', height: '120px', objectFit: 'cover' }}
-                  />
-                  <h3 className="fw-bold mb-2">{selectedCourse.course.name}</h3>
-                  {getStatusBadge(selectedCourse.status)}
-                  <p className="text-muted mt-2 text-center">{selectedCourse.course.description}</p>
-                  <div className="d-flex flex-wrap gap-3 justify-content-center mt-3">
-                    <span className="d-flex align-items-center text-muted">
-                      <Book size={18} className="me-1" /> {selectedCourse.course.noOfLessons} Lessons
-                    </span>
-                    <span className="d-flex align-items-center text-muted">
-                      <Clock size={18} className="me-1" /> {selectedCourse.course.duration} Months
-                    </span>
-                    <span className="d-flex align-items-center text-muted">
-                      <Users size={18} className="me-1" /> {selectedCourse.course.noOfStudents}+ Students
-                    </span>
+            {certificates.map((cert) => {
+              const course = courses[cert.enrolledId.courseId._id];
+              const courseName = course ? course.name : cert.enrolledId.batchName;
+
+              return (
+                <div key={cert._id} className="col-lg-4">
+                  <div className="card border-0 shadow-sm">
+                    <div className="card-body p-4 text-center">
+                      <h5 className="fw-medium mb-2">{courseName}</h5>
+                      <h6 className="fw-medium mb-3 text-muted">{course.category}</h6>
+
+                      {cert.status === 'Completed' && cert.certificateFile ? (
+                        <>
+                          <div className="d-flex justify-content-center mb-3">
+                            <img
+                              src={cert.certificateFile}
+                              alt="Certificate"
+                              className="img-fluid rounded border"
+                              style={{ maxWidth: '100%', height: 'auto' }}
+                            />
+                          </div>
+                          <div className="d-flex justify-content-center">
+                            <button
+                              className="btn btn-danger d-flex align-items-center"
+                              onClick={() =>
+                                downloadCertificate(cert.certificateFile, `${courseName}-Certificate.png`)
+                              }
+                            >
+                              <Download size={20} className="me-2" /> Download Certificate
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="d-flex justify-content-center mb-3">
+                            <Award size={64} className="text-muted" />
+                          </div>
+                          <h6 className="fw-medium text-muted text-center">Certificate Not Available</h6>
+                          <p className="small text-muted text-center">
+                            {cert.status === 'Pending'
+                              ? 'Certificate is being processed'
+                              : 'Certificate will be available upon course completion'}
+                          </p>
+                        </>
+                      )}
+
+
+                      <div className="mt-2">{getStatusBadge(cert.status)}</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            {/* Certificate Card */}
-            <div className="col-lg-6">
-              <div className="card border-0 shadow-sm">
-                <div className="card-body p-4 text-center">
-                  {selectedCourse.status === 'completed' && selectedCertificate ? (
-                    <>
-                      <img
-                        src={selectedCertificate.status.image}
-                        alt="Certificate"
-                        className="img-fluid rounded mb-3 border"
-                      />
-                      <button className="btn btn-danger d-flex align-items-center mx-auto" onClick={generatePDF}>
-                        <Download size={20} className="me-2" /> Download Certificate
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <Award size={64} className="text-muted mb-3" />
-                      <h5 className="fw-medium text-muted">Certificate Not Available</h5>
-                      <p className="small text-muted">
-                        {selectedCourse.status === 'enrolled'
-                          ? 'Complete the course to receive your certificate'
-                          : 'Certificate will be available upon course completion'}
-                      </p>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
+              );
+            })}
           </div>
         )}
-
-        
       </div>
-
     </>
   );
 };

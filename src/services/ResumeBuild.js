@@ -21,15 +21,13 @@ const ResumeBuilding = () => {
             {/* Image Section */}
             <Col lg={6} className="mb-4 mb-lg-0">
               <img
-                src="https://www.write-right.in/wp-content/uploads/2023/06/image-24.png"
+                src="/service/resume.jpg"
                 alt="Techsterker Resume Services"
                 className="img-fluid rounded img-hover-effect"
                 style={{
                   maxWidth: "100%",
                   height: "auto",
-                  border: "0.5px solid #ad2132",
                   borderRadius: "20px",
-                  boxShadow: "0 20px 40px rgba(173, 33, 50, 0.25)",
                 }}
               />
             </Col>

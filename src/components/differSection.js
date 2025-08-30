@@ -82,14 +82,12 @@ const DifferSection = () => {
                 }}
               >
                 <img
-                  src="/logo/differ.jpeg"
+                  src="/home/differ.jpg"
                   alt="Standing out from the crowd"
                   className="img-fluid rounded-3"
                   style={{
                     maxWidth: "100%",
                     height: "auto",
-                    border: "0.5px solid maroon",
-                    boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)",
                     transition: "transform 0.3s ease, box-shadow 0.3s ease"
                   }}
                 />

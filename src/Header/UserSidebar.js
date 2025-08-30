@@ -37,7 +37,7 @@ const UserSidebar = ({ isCollapsed, onToggleCollapse, isMobile }) => {
     { path: '/dashboard/interviews', icon: <FaQuestionCircle />, label: 'Interviews' },
     { path: '/dashboard/live-classes', icon: <FaVideo />, label: 'Live Classes' },
     { path: '/dashboard/coursemodule', icon: <FaBook />, label: 'Course Module' },
-    { path: '/dashboard/doubt-session', icon: <FaQuestionCircle />, label: 'Doubt Session' },
+    // { path: '/dashboard/doubt-session', icon: <FaQuestionCircle />, label: 'Doubt Session' },
     { path: '/dashboard/certificate', icon: <FaCertificate />, label: 'Certificate' },
     { path: '/', icon: <FaSignOutAlt />, label: 'Logout', onClick: handleLogout }
   ];

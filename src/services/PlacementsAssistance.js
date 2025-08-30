@@ -16,10 +16,6 @@ const PlacementAssistance = () => {
                                 src="https://www.cetpainfotech.com/wp-content/uploads/2022/05/Placement.jpg"
                                 alt="Placement Assistance"
                                 className="img-fluid rounded img-hover-effect"
-                                style={{
-                                    border: "0.5px solid #ad2132",
-                                    boxShadow: "0 10px 20px rgba(173, 33, 50, 0.3)"
-                                }}
                             />
                         </Col>
 

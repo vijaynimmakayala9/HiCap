@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaRegClock, FaTasks, FaStar } from 'react-icons/fa';
+import { FaRegClock, FaTasks, FaStar, FaBook, FaUserGraduate } from 'react-icons/fa';
 import Header from '../Header/Header';
 import { useNavigate } from 'react-router-dom';
 import CourseEnquiryModal from '../components/EnrollModal';
@@ -170,7 +170,7 @@ const Courses = () => {
                 </div>
 
                 <div className="row">
-                    {currentCourses.map(({ _id, name, duration, noOfLessons, rating, description, image, price }) => (
+                    {currentCourses.map(({ _id, name, duration, noOfLessons, noOfStudents, rating, description, image, price }) => (
                         <div key={_id} className="col-12 col-sm-6 col-lg-4 col-xl-3 mb-4">
                             <div className="card h-100 shadow-sm border-0 rounded-4">
                                 <img
@@ -194,9 +194,9 @@ const Courses = () => {
                                         </button>
                                     )}
                                     <div className="d-flex flex-wrap text-muted small mb-3 gap-3">
-                                        <div className="d-flex align-items-center"><FaRegClock className="me-1" /> {duration}</div>
-                                        <div className="d-flex align-items-center"><FaTasks className="me-1" /> {noOfLessons} Lessons</div>
-                                        
+                                        <div className="d-flex align-items-center textcolor"><FaRegClock className="me-1" /> {duration}</div>
+                                        <div className="d-flex align-items-center textcolor"><FaBook className="me-1" /> {noOfLessons}</div>
+                                        <div className="d-flex align-items-center textcolor"><FaUserGraduate className="me-1" /> {noOfStudents}</div>                                        
                                     </div>
                                     <div className="d-flex justify-content-between align-items-center mt-auto">
                                         
