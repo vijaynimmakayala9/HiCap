@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "../Header/Header";
 import Footer from "../Pages/Footer";
-import { Container, Table, Button, Card, Spinner, Alert, Row, Col } from "react-bootstrap";
+import { Container, Table, Button, Card, Spinner, Alert, Row, Col, Badge } from "react-bootstrap";
 import { Globe, Clock, Users } from "react-feather";
 import CourseEnquiryModal from '../components/EnrollModal';
 
@@ -14,8 +14,7 @@ const UpCommingBatches = () => {
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
   const [showEnquiryModal, setShowEnquiryModal] = useState(false);
-
-  // Abroad Students State
+  const [enrollments, setEnrollments] = useState([]);
   const [abroadData, setAbroadData] = useState(null);
 
   useEffect(() => {
@@ -46,6 +45,12 @@ const UpCommingBatches = () => {
           setAbroadData(abroadRes.data.data[0]);
         }
 
+        // Fetch Enrollments data
+        const enrollmentsRes = await axios.get('https://hicap-backend-4rat.onrender.com/api/enrollments');
+        if (enrollmentsRes.data.success) {
+          setEnrollments(enrollmentsRes.data.data);
+        }
+
       } catch (err) {
         setError(err.message);
         console.error('Failed to fetch:', err);
@@ -73,6 +78,18 @@ const UpCommingBatches = () => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+  };
+
+  // Function to get enrollment count for a specific batch
+  const getEnrollmentCount = (batchName) => {
+    const enrollment = enrollments.find(e => e.batchName === batchName);
+    return enrollment ? enrollment.enrolledUsers.length : 0;
+  };
+
+  // Function to check if a batch has mentors assigned
+  const hasMentors = (batchName) => {
+    const enrollment = enrollments.find(e => e.batchName === batchName);
+    return enrollment ? enrollment.assignedMentors.length > 0 : false;
   };
 
   if (loading) {
@@ -151,18 +168,24 @@ const UpCommingBatches = () => {
                 </thead>
                 <tbody>
                   {filteredBatches.length > 0 ? (
-                    filteredBatches.map((batch, index) => (
-                      <tr key={index}>
-                        <td>{batch.batchName}</td>
-                        <td>{formatDate(batch.date)}</td>
-                        <td>{batch.timing}</td>
-                        <td>{batch.duration}</td>
-                        <td>{batch.category}</td>
-                      </tr>
-                    ))
+                    filteredBatches.map((batch, index) => {
+                      const enrollmentCount = getEnrollmentCount(batch.batchName);
+                      const mentorsAssigned = hasMentors(batch.batchName);
+                      
+                      return (
+                        <tr key={index}>
+                          <td>{batch.batchName}</td>
+                          <td>{formatDate(batch.date)}</td>
+                          <td>{batch.timing}</td>
+                          <td>{batch.duration}</td>
+                          <td>{batch.category}</td>
+                          
+                        </tr>
+                      );
+                    })
                   ) : (
                     <tr>
-                      <td colSpan="5" className="text-center text-muted py-3">
+                      <td colSpan="7" className="text-center text-muted py-3">
                         No batches found for the selected category
                       </td>
                     </tr>
@@ -172,15 +195,17 @@ const UpCommingBatches = () => {
             </div>
           </section>
 
+          
+
           {/* Flash Banner Section */}
           <section
             className="my-4 p-4 rounded d-flex flex-column flex-md-row align-items-center justify-content-between text-center text-md-start"
             style={{
-              background: "linear-gradient(90deg, #c34153, #c34153)", // bright gradient
+              background: "linear-gradient(90deg, #c34153, #c34153)",
               color: "#fff",
               border: "2px solid #a51d34",
               boxShadow: "0 8px 20px rgba(0,0,0,0.25)",
-              animation: "flashSlide 1s ease-in-out", // subtle entrance animation
+              animation: "flashSlide 1s ease-in-out",
             }}
           >
             <div className="mb-3 mb-md-0">
@@ -214,11 +239,11 @@ const UpCommingBatches = () => {
             {/* Animation Keyframes */}
             <style>
               {`
-      @keyframes flashSlide {
-        0% { opacity: 0; transform: translateY(-20px); }
-        100% { opacity: 1; transform: translateY(0); }
-      }
-    `}
+                @keyframes flashSlide {
+                  0% { opacity: 0; transform: translateY(-20px); }
+                  100% { opacity: 1; transform: translateY(0); }
+                }
+              `}
             </style>
           </section>
 
@@ -228,7 +253,7 @@ const UpCommingBatches = () => {
               <Row className="align-items-center">
                 <Col md={6}>
                   <h3 className="fw-bold mb-3" style={{ color: "#000" }}>
-                    <i class="fa-solid fa-earth-americas" style={{color: "#a51d34"}}></i> {abroadData.title}
+                    <i className="fa-solid fa-earth-americas" style={{color: "#a51d34"}}></i> {abroadData.title}
                   </h3>
                   <p className="mb-4" style={{ fontSize: "1rem", lineHeight: "1.6" }}>
                     {abroadData.description}
@@ -259,7 +284,7 @@ const UpCommingBatches = () => {
                   <img
                     src="/home/abroad.jpg"
                     alt="International students"
-                    className="img-fluid rounded "
+                    className="img-fluid rounded"
                     style={{
                       width: "100%",
                       height: "auto",

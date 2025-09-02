@@ -49,7 +49,7 @@ const AboutTechsterker = () => {
           <div className="col-md-6 col-lg-6 order-md-2 order-1">
             <div className="position-relative">
               <img
-                src="/service/aboutus.jpg"
+                src="/service/about.png"
                 alt="About TECHSTERKER"
                 className="img-fluid rounded-4 w-100"
                 style={{

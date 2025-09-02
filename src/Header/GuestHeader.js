@@ -450,7 +450,7 @@ const GuestHeader = ({ onLogin }) => {
                   }}
                 >
                   <div className={`flex-shrink-0 p-1 rounded-circle ${screenSize === 'mobile-small' ? 'w-6 h-6' : screenSize === 'mobile' ? 'w-7 h-7' : screenSize === 'mobile-large' ? 'w-8 h-8' : 'w-10 h-10'} bg-white-500 rounded-lg flex items-center justify-center overflow-hidden`}>
-                    <img src={course.logoImage} alt={course.name} className="w-full h-full object-cover  rounded-square" />
+                    <img src={course.logoImage} alt={course.name} className="w-full h-full object-cover img-fluid  rounded-square" />
                   </div>
                   <div className="flex-grow overflow-hidden">
                     <div className={`font-medium ${screenSize === 'mobile-small' ? 'text-xs' : screenSize === 'mobile' || screenSize === 'mobile-large' ? 'text-sm' : 'text-sm md:text-base'} whitespace-nowrap overflow-hidden text-ellipsis`}>{course.name}</div>

@@ -75,7 +75,7 @@ const AboutUS = () => {
           <div className="col-lg-6">
             <div className="h-100">
               <img
-                src="/service/whyus.jpg"
+                src="/service/why.png"
                 alt="Why Choose TECHSTERKER"
                 className="img-fluid rounded w-100"
                 style={{
@@ -169,7 +169,7 @@ const AboutUS = () => {
         </div>
         <div className="col-md-6 order-md-2 order-1 d-flex align-items-center justify-content-center">
           <img
-            src="/service/Visionandmission.jpg"
+            src="/service/vision.png"
             alt="Vision Mission"
             className="img-fluid rounded"
             style={{
