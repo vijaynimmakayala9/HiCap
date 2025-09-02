@@ -1,311 +1,396 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Modal from "react-modal";
-import Swal from "sweetalert2";
-import "react-toastify/dist/ReactToastify.css";
+import { useState, useEffect } from 'react';
 
-Modal.setAppElement("#root");
-
-const API_BASE = "https://hicap-backend-4rat.onrender.com/api/coursecontroller";
-
-function AdminCourses() {
+const CourseAdminPanel = () => {
   const [courses, setCourses] = useState([]);
-  const [newCourse, setNewCourse] = useState({
-    name: "",
-    description: "",
-    mode: "online",
-    category: "",
-    subcategory: "",
-    duration: "",
-    faq: [{ question: "", answer: "" }],
-    courseObject: [{ title: "", content: "" }],
-    features: [{ title: "", image: "" }],
-    noOfLessons: 0,
-    noOfStudents: 0,
-    rating: 0,
-    reviewCount: 0,
-    isPopular: false,
-    isHighRated: false,
-    price: 0,
-    status: "available",
-    image: "",
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [editingCourse, setEditingCourse] = useState(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    mode: 'Online',
+    category: 'Certified Programs',
+    subcategory: 'course',
+    duration: '',
+    noOfLessons: '',
+    noOfStudents: ''
   });
-
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [viewCourse, setViewCourse] = useState(null);
-
-  const fetchCourses = async () => {
-    try {
-      const res = await axios.get(API_BASE);
-      setCourses(Array.isArray(res.data.data) ? res.data.data : []);
-    } catch (err) {
-      Swal.fire("Error", "Failed to fetch courses", "error");
-    }
-  };
+  const coursesPerPage = 10;
 
   useEffect(() => {
     fetchCourses();
   }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewCourse({ ...newCourse, [name]: value });
-  };
-
-  const handleImageUpload = async (e, index = null, field = "main") => {
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append("file", file);
-
+  const fetchCourses = async () => {
     try {
-      const res = await axios.post("https://api.imgbb.com/1/upload?key=YOUR_IMGBB_API_KEY", formData);
-      const url = res.data.data.url;
-
-      if (field === "main") {
-        setNewCourse({ ...newCourse, image: url });
-      } else if (field === "feature") {
-        const updated = [...newCourse.features];
-        updated[index].image = url;
-        setNewCourse({ ...newCourse, features: updated });
+      setLoading(true);
+      const response = await fetch('https://hicap-backend-4rat.onrender.com/api/coursecontroller');
+      if (!response.ok) {
+        throw new Error('Failed to fetch courses');
       }
+      const data = await response.json();
+      setCourses(data.data);
+      setLoading(false);
     } catch (err) {
-      Swal.fire("Error", "Image upload failed", "error");
+      setError(err.message);
+      setLoading(false);
     }
-  };
-
-  const handleNestedChange = (e, field, index, key) => {
-    const updated = [...newCourse[field]];
-    updated[index][key] = e.target.value;
-    setNewCourse({ ...newCourse, [field]: updated });
-  };
-
-  const addNestedField = (field, template) => {
-    setNewCourse({ ...newCourse, [field]: [...newCourse[field], template] });
-  };
-
-  const removeNestedField = (field, index) => {
-    const updated = [...newCourse[field]];
-    updated.splice(index, 1);
-    setNewCourse({ ...newCourse, [field]: updated });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const formData = new FormData();
-
-    for (let key in newCourse) {
-      if (["faq", "courseObject"].includes(key)) {
-        formData.append(key, JSON.stringify(newCourse[key]));
-      } else if (key === "features") {
-        newCourse.features.forEach((f, i) => {
-          formData.append(`features[${i}][title]`, f.title);
-          if (f.image && f.image.startsWith("http")) {
-            formData.append(`features[${i}][image]`, f.image);
-          }
-        });
-        formData.append("featureCount", newCourse.features.length);
-      } else {
-        formData.append(key, newCourse[key]);
-      }
-    }
-
     try {
-      await axios.post(API_BASE, formData);
-      Swal.fire("Success", "Course created successfully", "success");
-      setNewCourse({
-        name: "",
-        description: "",
-        mode: "online",
-        category: "",
-        subcategory: "",
-        duration: "",
-        faq: [{ question: "", answer: "" }],
-        courseObject: [{ title: "", content: "" }],
-        features: [{ title: "", image: "" }],
-        noOfLessons: 0,
-        noOfStudents: 0,
-        rating: 0,
-        reviewCount: 0,
-        isPopular: false,
-        isHighRated: false,
-        price: 0,
-        status: "available",
-        image: "",
+      const url = editingCourse 
+        ? `https://hicap-backend-4rat.onrender.com/api/coursecontroller/${editingCourse._id}`
+        : 'https://hicap-backend-4rat.onrender.com/api/coursecontroller';
+      
+      const method = editingCourse ? 'PUT' : 'POST';
+      
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
-      fetchCourses();
+      
+      if (!response.ok) {
+        throw new Error(`Failed to ${editingCourse ? 'update' : 'create'} course`);
+      }
+      
+      setShowModal(false);
+      setEditingCourse(null);
+      setFormData({
+        name: '',
+        description: '',
+        mode: 'Online',
+        category: 'Certified Programs',
+        subcategory: 'course',
+        duration: '',
+        noOfLessons: '',
+        noOfStudents: ''
+      });
+      
+      fetchCourses(); // Refresh the course list
     } catch (err) {
-      Swal.fire("Error", err.response?.data?.message || "Course creation failed", "error");
+      setError(err.message);
     }
+  };
+
+  const handleEdit = (course) => {
+    setEditingCourse(course);
+    setFormData({
+      name: course.name,
+      description: course.description,
+      mode: course.mode,
+      category: course.category,
+      subcategory: course.subcategory,
+      duration: course.duration,
+      noOfLessons: course.noOfLessons || '',
+      noOfStudents: course.noOfStudents || ''
+    });
+    setShowModal(true);
   };
 
   const handleDelete = async (id) => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to delete this course?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
-    });
-
-    if (!result.isConfirmed) return;
-
+    if (!window.confirm('Are you sure you want to delete this course?')) {
+      return;
+    }
+    
     try {
-      await axios.delete(`${API_BASE}/${id}`);
-      Swal.fire("Deleted!", "Course has been deleted.", "success");
-      fetchCourses();
-    } catch {
-      Swal.fire("Error", "Delete failed", "error");
+      const response = await fetch(`https://hicap-backend-4rat.onrender.com/api/coursecontroller/${id}`, {
+        method: 'DELETE',
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to delete course');
+      }
+      
+      fetchCourses(); // Refresh the course list
+    } catch (err) {
+      setError(err.message);
     }
   };
 
-  const handleView = (course) => {
-    setViewCourse(course);
-    setModalIsOpen(true);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
+  // Calculate pagination
+  const indexOfLastCourse = currentPage * coursesPerPage;
+  const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+  const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
+  const totalPages = Math.ceil(courses.length / coursesPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="container py-4">
-      <h2 className="mb-4">Admin Courses</h2>
-
-      <form onSubmit={handleSubmit} className="mb-5">
-        <div className="row">
-          {Object.entries({
-            name: "Name",
-            description: "Description",
-            mode: "Mode",
-            category: "Category",
-            subcategory: "Subcategory",
-            duration: "Duration",
-            noOfLessons: "Lessons",
-            noOfStudents: "Students",
-            rating: "Rating",
-            reviewCount: "Reviews",
-            price: "Price",
-            status: "Status",
-          }).map(([key, label]) => (
-            <div className="col-md-6 mb-3" key={key}>
-              <label className="form-label">{label}</label>
-              <input
-                className="form-control"
-                name={key}
-                value={newCourse[key]}
-                onChange={handleInputChange}
-              />
-            </div>
-          ))}
-
-          <div className="col-md-6 mb-3">
-            <label className="form-label">Course Image</label>
-            <input
-              type="file"
-              className="form-control"
-              accept="image/*"
-              onChange={(e) => handleImageUpload(e)}
-            />
-          </div>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8 text-center">Course Management Admin Panel</h1>
+      
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+          <span className="block sm:inline">{error}</span>
+          <button onClick={() => setError(null)} className="absolute top-0 right-0 px-4 py-3">
+            <span className="text-red-700">×</span>
+          </button>
         </div>
-
-        {["faq", "courseObject", "features"].map((field) => (
-          <div key={field} className="mb-3">
-            <label className="fw-bold text-capitalize">{field}</label>
-            {newCourse[field].map((item, i) => (
-              <div key={i} className="d-flex gap-2 mb-2">
-                {Object.keys(item).map((k) =>
-                  k !== "image" ? (
-                    <input
-                      key={k}
-                      placeholder={k}
-                      className="form-control"
-                      value={item[k]}
-                      onChange={(e) => handleNestedChange(e, field, i, k)}
-                    />
-                  ) : null
-                )}
-                {field === "features" && (
-                  <input type="file" onChange={(e) => handleImageUpload(e, i, "feature")} />
-                )}
-                <button
-                  type="button"
-                  className="btn btn-sm btn-outline-danger"
-                  onClick={() => removeNestedField(field, i)}
-                >
-                  ❌
-                </button>
-              </div>
+      )}
+      
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-semibold">All Courses ({courses.length})</h2>
+        <button
+          onClick={() => {
+            setEditingCourse(null);
+            setFormData({
+              name: '',
+              description: '',
+              mode: 'Online',
+              category: 'Certified Programs',
+              subcategory: 'course',
+              duration: '',
+              noOfLessons: '',
+              noOfStudents: ''
+            });
+            setShowModal(true);
+          }}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
+        >
+          Add New Course
+        </button>
+      </div>
+      
+      <div className="overflow-x-auto shadow-md rounded-lg">
+        <table className="min-w-full bg-white border border-gray-200">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="py-3 px-4 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+              <th className="py-3 px-4 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+              <th className="py-3 px-4 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
+              <th className="py-3 px-4 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lessons</th>
+              <th className="py-3 px-4 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Students</th>
+              <th className="py-3 px-4 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {currentCourses.map((course) => (
+              <tr key={course._id} className="hover:bg-gray-50">
+                <td className="py-3 px-4 border-b font-medium">{course.name}</td>
+                <td className="py-3 px-4 border-b">{course.category}</td>
+                <td className="py-3 px-4 border-b">{course.duration}</td>
+                <td className="py-3 px-4 border-b">{course.noOfLessons || 'N/A'}</td>
+                <td className="py-3 px-4 border-b">{course.noOfStudents || 'N/A'}</td>
+                <td className="py-3 px-4 border-b">
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => handleEdit(course)}
+                      className="bg-blue-100 text-blue-600 px-2 py-1 rounded text-sm hover:bg-blue-200"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(course._id)}
+                      className="bg-red-100 text-red-600 px-2 py-1 rounded text-sm hover:bg-red-200"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
             ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-8">
+        <nav className="flex items-center space-x-2">
+          <button
+            onClick={() => paginate(currentPage > 1 ? currentPage - 1 : 1)}
+            disabled={currentPage === 1}
+            className={`px-3 py-1 rounded-md ${currentPage === 1 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+          >
+            Previous
+          </button>
+          
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
             <button
-              type="button"
-              className="btn btn-sm btn-secondary"
-              onClick={() =>
-                addNestedField(
-                  field,
-                  Object.fromEntries(Object.keys(newCourse[field][0] || {}).map((k) => [k, ""]))
-                )
-              }
+              key={page}
+              onClick={() => paginate(page)}
+              className={`px-3 py-1 rounded-md ${currentPage === page ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
             >
-              + Add {field.slice(0, -1)}
+              {page}
             </button>
-          </div>
-        ))}
+          ))}
+          
+          <button
+            onClick={() => paginate(currentPage < totalPages ? currentPage + 1 : totalPages)}
+            disabled={currentPage === totalPages}
+            className={`px-3 py-1 rounded-md ${currentPage === totalPages ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+          >
+            Next
+          </button>
+        </nav>
+      </div>
 
-        <div className="form-check mb-2">
-          <input
-            type="checkbox"
-            className="form-check-input"
-            checked={newCourse.isPopular}
-            onChange={(e) =>
-              setNewCourse({ ...newCourse, isPopular: e.target.checked })
-            }
-          />
-          <label className="form-check-label">Popular</label>
-        </div>
+      <div className="mt-4 text-center text-gray-600">
+        Showing {indexOfFirstCourse + 1} to {Math.min(indexOfLastCourse, courses.length)} of {courses.length} courses
+      </div>
 
-        <div className="form-check mb-3">
-          <input
-            type="checkbox"
-            className="form-check-input"
-            checked={newCourse.isHighRated}
-            onChange={(e) =>
-              setNewCourse({ ...newCourse, isHighRated: e.target.checked })
-            }
-          />
-          <label className="form-check-label">High Rated</label>
-        </div>
-
-        <button className="btn btn-primary" type="submit">
-          Submit
-        </button>
-      </form>
-
-      <h4>Existing Courses</h4>
-      <ul className="list-group">
-        {courses.map((course) => (
-          <li className="list-group-item d-flex justify-content-between" key={course._id}>
-            <span>{course.name}</span>
-            <div>
-              <button className="btn btn-sm btn-info me-2" onClick={() => handleView(course)}>
-                View
-              </button>
-              <button className="btn btn-sm btn-danger" onClick={() => handleDelete(course._id)}>
-                Delete
-              </button>
+      {/* Modal for Add/Edit Course */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div className="p-6">
+              <h2 className="text-xl font-semibold mb-4">
+                {editingCourse ? 'Edit Course' : 'Add New Course'}
+              </h2>
+              
+              <form onSubmit={handleSubmit}>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+                    Course Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+                    Description
+                  </label>
+                  <textarea
+                    id="description"
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows="3"
+                    required
+                  />
+                </div>
+                
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="mode">
+                    Mode
+                  </label>
+                  <select
+                    id="mode"
+                    name="mode"
+                    value={formData.mode}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="Online">Online</option>
+                    <option value="Offline">Offline</option>
+                    <option value="Hybrid">Hybrid</option>
+                  </select>
+                </div>
+                
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="category">
+                    Category
+                  </label>
+                  <select
+                    id="category"
+                    name="category"
+                    value={formData.category}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="Certified Programs">Certified Programs</option>
+                    <option value="Elite Courses">Elite Courses</option>
+                    <option value="Individual Courses">Individual Courses</option>
+                    <option value="Healthcare Courses">Healthcare Courses</option>
+                  </select>
+                </div>
+                
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="duration">
+                    Duration
+                  </label>
+                  <input
+                    type="text"
+                    id="duration"
+                    name="duration"
+                    value={formData.duration}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="noOfLessons">
+                    Number of Lessons
+                  </label>
+                  <input
+                    type="text"
+                    id="noOfLessons"
+                    name="noOfLessons"
+                    value={formData.noOfLessons}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="noOfStudents">
+                    Number of Students
+                  </label>
+                  <input
+                    type="text"
+                    id="noOfStudents"
+                    name="noOfStudents"
+                    value={formData.noOfStudents}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div className="flex justify-end space-x-4">
+                  <button
+                    type="button"
+                    onClick={() => setShowModal(false)}
+                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                  >
+                    {editingCourse ? 'Update' : 'Create'} Course
+                  </button>
+                </div>
+              </form>
             </div>
-          </li>
-        ))}
-      </ul>
-
-      <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
-        <h3>Course Details</h3>
-        {viewCourse && <pre>{JSON.stringify(viewCourse, null, 2)}</pre>}
-        <button onClick={() => setModalIsOpen(false)} className="btn btn-secondary">
-          Close
-        </button>
-      </Modal>
+          </div>
+        </div>
+      )}
     </div>
   );
-}
+};
 
-export default AdminCourses;
+export default CourseAdminPanel;

@@ -28,6 +28,7 @@ import CoursesByCategory from "./newone/CoursesbyCategory";
 import UserLayout from "./Header/UserLayout"; // User sidebar layout
 import Events from "./newone/Events";
 import EventDetails from "./newone/EventDetails";
+import CourseAdminPanel from "./admin/AdminCourses";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -90,6 +91,7 @@ function App() {
         <Route path="/allcourses" element={<CoursesByCategory />} />
         <Route path="/events" element={<Events/>}/>
         <Route path="/event/:title" element={<EventDetails />} />
+        <Route path="/admin" element={<CourseAdminPanel />} />
 
         {/* Protected Dashboard Routes */}
         <Route path="/dashboard" element={
