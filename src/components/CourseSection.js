@@ -116,7 +116,7 @@ const CourseAndFeatures = () => {
                           width: "100%",
                           height: "100%",
                           objectFit: "cover",
-                          border: "0.5px solid #ad2132",
+                          border: "0.5px solid #a51d34",
                           borderRadius: "20px",
                           boxShadow: "0 20px 40px rgba(173, 33, 50, 0.25)",
                         }}
@@ -133,7 +133,7 @@ const CourseAndFeatures = () => {
                             <span
                               key={i}
                               style={{
-                                color: i % 2 === 0 ? "#ad2132" : "#000",
+                                color: i % 2 === 0 ? "#a51d34" : "#000",
                               }}
                             >
                               {word}{" "}

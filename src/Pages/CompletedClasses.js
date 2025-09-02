@@ -150,10 +150,10 @@ const CompletedCourses = () => {
 
       <style jsx>{`
         .textcolor {
-          color: #ad2132;
+          color: #a51d34;
         }
         .bg-meroon {
-          background-color: #ad2132;
+          background-color: #a51d34;
           color: white;
           border: none;
           transition: all 0.3s ease;
@@ -162,12 +162,12 @@ const CompletedCourses = () => {
           background-color: #8a1a2a;
         }
         .btn-outline-meroon {
-          border-color: #ad2132;
-          color: #ad2132;
+          border-color: #a51d34;
+          color: #a51d34;
           transition: all 0.3s ease;
         }
         .btn-outline-meroon:hover {
-          background-color: #ad2132;
+          background-color: #a51d34;
           color: white;
         }
         .completed-courses {
@@ -193,12 +193,12 @@ const CompletedCourses = () => {
           font-size: 0.9rem;
         }
         .btn-outline-secondary {
-          border-color: #ad2132;
-          color: #ad2132;
+          border-color: #a51d34;
+          color: #a51d34;
           transition: all 0.3s ease;
         }
         .btn-outline-secondary:hover {
-          background-color: #ad2132;
+          background-color: #a51d34;
           color: white;
         }
         .badge {

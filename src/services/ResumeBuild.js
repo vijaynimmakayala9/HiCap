@@ -7,7 +7,6 @@ import CourseEnquiryModal from "../components/EnrollModal";
 
 const ResumeBuilding = () => {
   const [showContactModal, setShowContactModal] = useState(false);
-  const [showCourseModal, setShowCourseModal] = useState(false);
 
   return (
     <>
@@ -37,7 +36,7 @@ const ResumeBuilding = () => {
               <h2
                 className="fw-bold mb-4"
                 style={{
-                  color: "#ad2132",
+                  color: "#a51d34",
                   fontSize: "2.2rem",
                   lineHeight: "1.4",
                 }}
@@ -73,7 +72,7 @@ const ResumeBuilding = () => {
                 <Button
                   size="lg"
                   style={{
-                    background: "linear-gradient(90deg, #ad2132, #d63447)",
+                    background: "linear-gradient(90deg, #a51d34, #d63447)",
                     border: "none",
                     padding: "12px 25px",
                     borderRadius: "50px",
@@ -96,34 +95,6 @@ const ResumeBuilding = () => {
                   onClick={() => setShowContactModal(true)}
                 >
                   Contact Us
-                </Button>
-
-                <Button
-                  size="lg"
-                  style={{
-                    background: "linear-gradient(90deg, #d63447, #ad2132)",
-                    border: "none",
-                    padding: "12px 25px",
-                    borderRadius: "50px",
-                    fontWeight: "600",
-                    color: "#fff",
-                    boxShadow: "0 6px 15px rgba(214, 52, 71, 0.4)",
-                    transition:
-                      "transform 0.3s ease, box-shadow 0.3s ease",
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.transform = "translateY(-3px)";
-                    e.target.style.boxShadow =
-                      "0 10px 20px rgba(214, 52, 71, 0.5)";
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.transform = "translateY(0)";
-                    e.target.style.boxShadow =
-                      "0 6px 15px rgba(214, 52, 71, 0.4)";
-                  }}
-                  onClick={() => setShowCourseModal(true)}
-                >
-                  Enquiry Form
                 </Button>
               </div>
             </Col>
@@ -157,7 +128,7 @@ const ResumeBuilding = () => {
                     <div
                       className="icon-circle mb-3"
                       style={{
-                        background: "#ad2132",
+                        background: "#a51d34",
                         width: "60px",
                         height: "60px",
                         margin: "0 auto",
@@ -171,7 +142,7 @@ const ResumeBuilding = () => {
                         className={`${service.icon} text-white`}
                         style={{
                           fontSize: "1.5rem",
-                          color: "#ad2132",
+                          color: "#a51d34",
                         }}
                       ></i>
                     </div>
@@ -197,12 +168,8 @@ const ResumeBuilding = () => {
       {/* Modals */}
       <ContactUsModal
         show={showContactModal}
+        type="resume"
         onHide={() => setShowContactModal(false)}
-      />
-      <CourseEnquiryModal
-        show={showCourseModal}
-        handleClose={() => setShowCourseModal(false)}
-        prefillCourse="Resume Building"
       />
 
       <style>{`

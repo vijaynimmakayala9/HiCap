@@ -713,7 +713,7 @@ const GuestHeader = ({ onLogin }) => {
         }
         
         .nav-link:hover, .nav-link.active {
-          color: #ad2132;
+          color: #a51d34;
         }
         
         /* Always show the margin line between menu items */
@@ -747,7 +747,7 @@ const GuestHeader = ({ onLogin }) => {
         .desktop-login-btn {
           margin-left: 15px;
           padding: 12px 30px; /* Increased padding */
-          background: linear-gradient(135deg, #ad2132, #d32f2f);
+          background: linear-gradient(135deg, #a51d34, #d32f2f);
           color: white;
           border: none;
           border-radius: 30px;
@@ -785,7 +785,7 @@ const GuestHeader = ({ onLogin }) => {
         
         .categories-column h6 {
           font-weight: bold;
-          color: #ad2132;
+          color: #a51d34;
           margin-bottom: 15px;
           font-size: 16px;
         }
@@ -812,7 +812,7 @@ const GuestHeader = ({ onLogin }) => {
         }
         
         .category-btn:hover, .category-btn.active {
-          background: linear-gradient(135deg, #ad2132, #d32f2f);
+          background: linear-gradient(135deg, #a51d34, #d32f2f);
           color: white;
         }
         
@@ -823,7 +823,7 @@ const GuestHeader = ({ onLogin }) => {
         
         .courses-column h6 {
           font-weight: bold;
-          color: #ad2132;
+          color: #a51d34;
           margin-bottom: 15px;
           font-size: 16px;
         }
@@ -907,7 +907,7 @@ const GuestHeader = ({ onLogin }) => {
         
         .footer-content h6 {
           font-weight: bold;
-          color: #ad2132;
+          color: #a51d34;
           margin-bottom: 5px;
         }
         
@@ -926,8 +926,8 @@ const GuestHeader = ({ onLogin }) => {
           flex: 1;
           padding: 8px;
           background: none;
-          border: 1px solid #ad2132;
-          color: #ad2132;
+          border: 1px solid #a51d34;
+          color: #a51d34;
           border-radius: 4px;
           font-size: 13px;
           cursor: pointer;
@@ -936,7 +936,7 @@ const GuestHeader = ({ onLogin }) => {
         .btn-primary {
           flex: 1;
           padding: 8px;
-          background: linear-gradient(135deg, #ad2132, #d32f2f);
+          background: linear-gradient(135deg, #a51d34, #d32f2f);
           color: white;
           border: none;
           border-radius: 4px;
@@ -976,7 +976,7 @@ const GuestHeader = ({ onLogin }) => {
         
         .dropdown-item:hover, 
         .dropdown-item.active {
-          color: #ad2132;
+          color: #a51d34;
           background-color: #f8d7da;
         }
         
@@ -995,7 +995,7 @@ const GuestHeader = ({ onLogin }) => {
         
         .login-btn-mobile {
           padding: 8px 15px;
-          background: linear-gradient(135deg, #ad2132, #d32f2f);
+          background: linear-gradient(135deg, #a51d34, #d32f2f);
           color: white;
           border: none;
           border-radius: 4px;
@@ -1010,7 +1010,7 @@ const GuestHeader = ({ onLogin }) => {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, #ad2132, #d32f2f);
+          background: linear-gradient(135deg, #a51d34, #d32f2f);
           color: white;
           border: none;
           border-radius: 4px;
@@ -1192,7 +1192,7 @@ const GuestHeader = ({ onLogin }) => {
         
         .sidebar-menu-item.simple-item:hover,
         .sidebar-menu-item.simple-item.active {
-          color: #ad2132;
+          color: #a51d34;
           background-color: #f8d7da;
         }
         
@@ -1250,7 +1250,7 @@ const GuestHeader = ({ onLogin }) => {
         
         .submenu-item:hover, 
         .submenu-item.active {
-          color: #ad2132;
+          color: #a51d34;
           background-color: #fff;
         }
         
@@ -1262,7 +1262,7 @@ const GuestHeader = ({ onLogin }) => {
         .sidebar-login-btn {
           width: 100%;
           padding: 15px;
-          background: linear-gradient(135deg, #ad2132, #d32f2f);
+          background: linear-gradient(135deg, #a51d34, #d32f2f);
           color: white;
           border: none;
           border-radius: 6px;
@@ -1304,7 +1304,7 @@ const GuestHeader = ({ onLogin }) => {
         }
         
         .modal-header h4 {
-          color: #ad2132;
+          color: #a51d34;
           margin: 0;
         }
         
@@ -1351,7 +1351,7 @@ const GuestHeader = ({ onLogin }) => {
         .login-submit-btn {
           width: 100%;
           padding: 12px;
-          background: linear-gradient(135deg, #ad2132, #d32f2f);
+          background: linear-gradient(135deg, #a51d34, #d32f2f);
           color: white;
           border: none;
           border-radius: 6px;
@@ -1663,7 +1663,7 @@ const UserHeader = ({ user, onLogout }) => {
         }
         
         .nav-link:hover, .nav-link.active {
-          color: #ad2132;
+          color: #a51d34;
           background-color: #f8d7da;
         }
         
@@ -1805,11 +1805,11 @@ const UserHeader = ({ user, onLogout }) => {
         
         .dropdown-item:hover {
           background-color: #f8f9fa;
-          color: #ad2132;
+          color: #a51d34;
         }
         
         .dropdown-item.active {
-          color: #ad2132;
+          color: #a51d34;
         }
         
         .dropdown-item.logout {
@@ -1843,13 +1843,13 @@ const UserHeader = ({ user, onLogout }) => {
           gap: 5px;
           padding: 8px 12px;
           background: none;
-          border: 1px solid #ad2132;
+          border: 1px solid #a51d34;
           border-radius: 4px;
           cursor: pointer;
         }
         
         .user-icon {
-          color: #ad2132;
+          color: #a51d34;
           font-size: 16px;
         }
         
@@ -1872,8 +1872,8 @@ const UserHeader = ({ user, onLogout }) => {
           align-items: center;
           justify-content: center;
           background: none;
-          border: 1px solid #ad2132;
-          color: #ad2132;
+          border: 1px solid #a51d34;
+          color: #a51d34;
           border-radius: 4px;
           cursor: pointer;
         }
@@ -1954,7 +1954,7 @@ const UserHeader = ({ user, onLogout }) => {
         
         .user-avatar {
           font-size: 2.5rem;
-          color: #ad2132;
+          color: #a51d34;
         }
         
         .user-details {
@@ -1987,7 +1987,7 @@ const UserHeader = ({ user, onLogout }) => {
         
         .menu-item:hover, .menu-item.active {
           background-color: #f8f9fa;
-          color: #ad2132;
+          color: #a51d34;
         }
         
         .menu-icon {

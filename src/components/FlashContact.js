@@ -41,14 +41,14 @@ const FlashContact = () => {
 
       <style jsx>{`
         .flash-contact-section {
-          background-color: #ad2132;
+          background-color: #a51d34;
           color: white;
         }
         .text-meroon {
-          color: #ad2132 !important;
+          color: #a51d34 !important;
         }
         .gradient-button {
-          background: linear-gradient(90deg, #ad2132, #c34153);
+          background: linear-gradient(90deg, #a51d34, #c34153);
           color: white;
           border: none;
         }

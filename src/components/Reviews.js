@@ -28,7 +28,7 @@ const Reviews = () => {
   return (
     <div className="container py-5">
       <h4 className="fw-bold mb-4 text-center">
-        What Our <span style={{ color: "#ad2132" }}>Alumni</span> Speaks?
+        What Our <span style={{ color: "#a51d34" }}>Alumni</span> Speaks?
       </h4>
 
       {loading && <p className="text-center">Loading reviews...</p>}

@@ -144,7 +144,7 @@ const ClientScrollerBootstrap = () => {
     <section className="container mb-4 py-5 bg-white">
       <div className="text-center mb-4">
         <h2 className="fw-bold text-dark">
-          Our Esteemed <span style={{ color: "#ad2132" }}>Clients</span>
+          Our Esteemed <span style={{ color: "#a51d34" }}>Clients</span>
         </h2>
         <p className="text-muted small">{content}</p>
       </div>

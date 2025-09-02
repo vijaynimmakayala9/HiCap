@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import Footer from "../Pages/Footer";
 import Header from "../Header/Header";
+import ContactUsModal from "../models/ContactUsModal";
 
 const ProjectAssistance = () => {
+    const [showContactModal, setShowContactModal] = useState(false);
+
+
     return (
         <>
             <Header />
@@ -36,7 +40,7 @@ const ProjectAssistance = () => {
                             <Button
                                 size="lg"
                                 style={{
-                                    background: "linear-gradient(90deg, #ad2132, #d63447)",
+                                    background: "linear-gradient(90deg, #a51d34, #d63447)",
                                     border: "none",
                                     padding: "12px 25px",
                                     borderRadius: "50px",
@@ -53,6 +57,7 @@ const ProjectAssistance = () => {
                                     e.target.style.transform = "translateY(0)";
                                     e.target.style.boxShadow = "0 6px 15px rgba(173, 33, 50, 0.4)";
                                 }}
+                                onClick={() => setShowContactModal(true)}
                             >
                                 Contact Us
                             </Button>
@@ -98,6 +103,13 @@ const ProjectAssistance = () => {
                 </Container>
             </section>
             <Footer />
+
+            {/* Modals */}
+            <ContactUsModal
+                show={showContactModal}
+                type="project"
+                onHide={() => setShowContactModal(false)}
+            />
 
             <style>{`
                 /* Card Hover Effect */

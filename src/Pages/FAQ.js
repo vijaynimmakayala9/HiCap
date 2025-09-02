@@ -39,13 +39,13 @@ const FAQ = () => {
           <Col>
             <div className="d-inline-block position-relative mb-3">
               <h2 className="fw-bold text-dark mb-1">
-                Frequently Asked <span style={{ color: "#ad2132" }}>Questions</span>
+                Frequently Asked <span style={{ color: "#a51d34" }}>Questions</span>
               </h2>
               {/* <div
                 style={{
                   width: "100px",
                   height: "5px",
-                  backgroundColor: "#ad2132",
+                  backgroundColor: "#a51d34",
                   borderRadius: "999px",
                   position: "absolute",
                   left: "10%",

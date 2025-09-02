@@ -58,7 +58,7 @@ const GetInTouch = () => {
           icon: "success",
           title: "Message Sent!",
           text: "Your message has been sent successfully.",
-          confirmButtonColor: "#ad2132",
+          confirmButtonColor: "#a51d34",
         });
         setFormData({
           fullName: "",
@@ -79,7 +79,7 @@ const GetInTouch = () => {
           icon: "error",
           title: "Oops...",
           text: "Something went wrong. Please try again.",
-          confirmButtonColor: "#ad2132",
+          confirmButtonColor: "#a51d34",
         });
       }
     } catch (error) {
@@ -88,7 +88,7 @@ const GetInTouch = () => {
         icon: "error",
         title: "Failed",
         text: "Failed to submit. Please try again later.",
-        confirmButtonColor: "#ad2132",
+        confirmButtonColor: "#a51d34",
       });
     } finally {
       setLoading(false);
@@ -99,7 +99,7 @@ const GetInTouch = () => {
     <section className="py-12 bg-gray-50" id="contact">
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-10">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#ad2132]">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#a51d34]">
             Get in Touch
           </h2>
           <p className="text-gray-600 mt-2 text-sm sm:text-base">
@@ -121,7 +121,7 @@ const GetInTouch = () => {
                 onChange={handleChange}
                 placeholder="Enter your full name"
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#ad2132]"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a51d34]"
               />
             </div>
 
@@ -137,7 +137,7 @@ const GetInTouch = () => {
                 onChange={handleChange}
                 placeholder="Enter your email"
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#ad2132]"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a51d34]"
               />
             </div>
 
@@ -153,7 +153,7 @@ const GetInTouch = () => {
                 onChange={handleChange}
                 placeholder="+1 234 567 890"
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#ad2132]"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a51d34]"
               />
             </div>
 
@@ -167,7 +167,7 @@ const GetInTouch = () => {
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-[#ad2132]"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-[#a51d34]"
               >
                 <option value="">Select...</option>
                 <option value="student">Student</option>
@@ -189,7 +189,7 @@ const GetInTouch = () => {
                     onChange={handleChange}
                     placeholder="e.g., ABC College"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#ad2132]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a51d34]"
                   />
                 </div>
                 <div>
@@ -203,7 +203,7 @@ const GetInTouch = () => {
                     onChange={handleChange}
                     placeholder="e.g., Computer Science"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#ad2132]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a51d34]"
                   />
                 </div>
                 <div>
@@ -217,7 +217,7 @@ const GetInTouch = () => {
                     onChange={handleChange}
                     placeholder="e.g., 2024"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#ad2132]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a51d34]"
                   />
                 </div>
               </>
@@ -237,7 +237,7 @@ const GetInTouch = () => {
                     onChange={handleChange}
                     placeholder="e.g., ABC Corporation"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#ad2132]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a51d34]"
                   />
                 </div>
                 <div>
@@ -251,7 +251,7 @@ const GetInTouch = () => {
                     onChange={handleChange}
                     placeholder="e.g., Software Engineer"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#ad2132]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a51d34]"
                   />
                 </div>
                 <div>
@@ -265,7 +265,7 @@ const GetInTouch = () => {
                     onChange={handleChange}
                     placeholder="e.g., 3"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#ad2132]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a51d34]"
                   />
                 </div>
               </>
@@ -283,7 +283,7 @@ const GetInTouch = () => {
                 onChange={handleChange}
                 placeholder="Write your query or message here"
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#ad2132]"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a51d34]"
               />
             </div>
 
@@ -292,7 +292,7 @@ const GetInTouch = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full bg-gradient-to-r from-[#ad2132] to-[#d32f2f] text-white py-2.5 rounded-lg font-semibold hover:opacity-90 transition ${
+                className={`w-full bg-gradient-to-r from-[#a51d34] to-[#d32f2f] text-white py-2.5 rounded-lg font-semibold hover:opacity-90 transition ${
                   loading ? "opacity-80 cursor-not-allowed" : ""
                 }`}
               >

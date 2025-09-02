@@ -407,7 +407,7 @@ const GuestHeader = ({ onLogin }) => {
     >
       <div className={`flex flex-col ${screenSize === 'mobile-small' ? 'p-2' : screenSize === 'mobile' ? 'p-3' : 'p-4'} ${screenSize === 'laptop' || screenSize === 'desktop' || screenSize === 'desktop-large' ? 'md:flex-row' : ''} ${screenSize === 'desktop' || screenSize === 'desktop-large' ? 'md:p-6' : 'md:p-5'}`}>
         <div className={`flex-none w-full ${screenSize === 'laptop' || screenSize === 'desktop' || screenSize === 'desktop-large' ? 'md:w-1/4 md:pr-4 md:border-r' : ''} border-gray-200 ${screenSize === 'laptop' || screenSize === 'desktop' || screenSize === 'desktop-large' ? 'mb-4 md:mb-0' : 'mb-4'}`}>
-          <h6 className={`font-bold text-[#ad2132] mb-3 ${screenSize === 'mobile-small' ? 'text-xs' : screenSize === 'mobile' || screenSize === 'mobile-large' ? 'text-sm' : 'text-base'}`}>Course Categories</h6>
+          <h6 className={`font-bold text-[#a51d34] mb-3 ${screenSize === 'mobile-small' ? 'text-xs' : screenSize === 'mobile' || screenSize === 'mobile-large' ? 'text-sm' : 'text-base'}`}>Course Categories</h6>
           <ul className={`list-none p-0 m-0 flex ${screenSize === 'laptop' || screenSize === 'desktop' || screenSize === 'desktop-large' ? 'flex-col md:flex-col' : 'flex-col'} ${screenSize === 'mobile-small' || screenSize === 'mobile' ? 'overflow-x-auto' : ''} ${screenSize === 'mobile-small' || screenSize === 'mobile' ? 'pb-2 md:pb-0' : ''}`}>
             {categories.map((category) => (
               <li
@@ -420,7 +420,7 @@ const GuestHeader = ({ onLogin }) => {
                 }}
               >
                 <button
-                  className={`w-full text-left p-2 rounded-md ${screenSize === 'mobile-small' ? 'text-xs' : screenSize === 'mobile' || screenSize === 'mobile-large' || screenSize === 'tablet' ? 'text-sm' : 'text-sm md:text-base'} ${selectedCategory === category ? 'bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white' : 'bg-transparent hover:bg-gray-100'}`}
+                  className={`w-full text-left p-2 rounded-md ${screenSize === 'mobile-small' ? 'text-xs' : screenSize === 'mobile' || screenSize === 'mobile-large' || screenSize === 'tablet' ? 'text-sm' : 'text-sm md:text-base'} ${selectedCategory === category ? 'bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white' : 'bg-transparent hover:bg-gray-100'}`}
                   onClick={() => {
                     if (category === 'View All') {
                       navigate('/allcourses');
@@ -438,7 +438,7 @@ const GuestHeader = ({ onLogin }) => {
         </div>
 
         <div className={`flex-1 ${screenSize === 'laptop' || screenSize === 'desktop' || screenSize === 'desktop-large' ? 'md:pl-4' : ''}`}>
-          <h6 className={`font-bold text-[#ad2132] mb-3 ${screenSize === 'mobile-small' ? 'text-xs' : screenSize === 'mobile' || screenSize === 'mobile-large' ? 'text-sm' : 'text-base'}`}>{selectedCategory}</h6>
+          <h6 className={`font-bold text-[#a51d34] mb-3 ${screenSize === 'mobile-small' ? 'text-xs' : screenSize === 'mobile' || screenSize === 'mobile-large' ? 'text-sm' : 'text-base'}`}>{selectedCategory}</h6>
           <div className={`grid ${screenSize === 'mobile-small' ? 'grid-cols-1' : screenSize === 'mobile' || screenSize === 'mobile-large' ? 'grid-cols-1 sm:grid-cols-2' : screenSize === 'tablet' ? 'grid-cols-2' : 'grid-cols-2 lg:grid-cols-2'} ${screenSize === 'mobile-small' ? 'gap-2' : 'gap-3'}`}>
             {categoryCourses[selectedCategory]?.slice(0, screenSize === 'desktop-large' ? 12 : 10).map((course) => (
               <div key={course._id} className="cursor-pointer">
@@ -475,12 +475,12 @@ const GuestHeader = ({ onLogin }) => {
 
       <div className={`${screenSize === 'mobile-small' ? 'p-2' : screenSize === 'mobile' ? 'p-3' : 'p-4'} ${screenSize === 'desktop' || screenSize === 'desktop-large' ? 'md:p-5' : ''} border-t border-gray-200`}>
         <div className="mb-3">
-          <h6 className={`font-bold text-[#ad2132] mb-1 ${screenSize === 'mobile-small' ? 'text-xs' : screenSize === 'mobile' || screenSize === 'mobile-large' ? 'text-sm' : 'text-base'}`}>Can't find what you're looking for?</h6>
+          <h6 className={`font-bold text-[#a51d34] mb-1 ${screenSize === 'mobile-small' ? 'text-xs' : screenSize === 'mobile' || screenSize === 'mobile-large' ? 'text-sm' : 'text-base'}`}>Can't find what you're looking for?</h6>
           <p className={`text-gray-600 ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} m-0`}>Browse our complete course catalog or talk to our advisors</p>
         </div>
         <div className={`flex ${screenSize === 'mobile-small' ? 'flex-col' : 'flex-col sm:flex-row'} gap-2`}>
           <button
-            className={`flex-1 p-2 bg-transparent border border-[#ad2132] text-[#ad2132] rounded ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} cursor-pointer hover:bg-[#ad2132] hover:text-black transition-colors`}
+            className={`flex-1 p-2 bg-transparent border border-[#a51d34] text-[#a51d34] rounded ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} cursor-pointer hover:bg-[#a51d34] hover:text-black transition-colors`}
             onClick={() => {
               navigate('/courses');
               setShowCoursesMenu(false);
@@ -489,7 +489,7 @@ const GuestHeader = ({ onLogin }) => {
             View All Courses
           </button>
           <button
-            className={`p-2 bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded cursor-pointer ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} hover:opacity-90 transition-opacity`}
+            className={`p-2 bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded cursor-pointer ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} hover:opacity-90 transition-opacity`}
             onClick={() => {
               setShowCoursesMenu(false);
               setIsMobileMenuOpen(false);
@@ -514,7 +514,7 @@ const GuestHeader = ({ onLogin }) => {
         {menuItems.find(item => item.label === 'Services').items.map((item, idx) => (
           <li key={idx}>
             <button
-              className={`w-full text-left p-2 rounded-md ${screenSize === 'mobile-small' ? 'text-xs' : screenSize === 'mobile' || screenSize === 'mobile-large' || screenSize === 'tablet' ? 'text-sm' : 'text-sm md:text-base'} transition-all hover:bg-[#f8d7da] hover:text-[#ad2132] ${location.pathname === item.path ? 'text-[#ad2132] bg-[#f8d7da]' : 'bg-transparent'}`}
+              className={`w-full text-left p-2 rounded-md ${screenSize === 'mobile-small' ? 'text-xs' : screenSize === 'mobile' || screenSize === 'mobile-large' || screenSize === 'tablet' ? 'text-sm' : 'text-sm md:text-base'} transition-all hover:bg-[#f8d7da] hover:text-[#a51d34] ${location.pathname === item.path ? 'text-[#a51d34] bg-[#f8d7da]' : 'bg-transparent'}`}
               onClick={() => {
                 handleNavigate(item.path);
                 setShowResourcesMenu(false);
@@ -539,7 +539,7 @@ const GuestHeader = ({ onLogin }) => {
         {menuItems.find(item => item.label === 'Company').items.map((item, idx) => (
           <li key={idx}>
             <button
-              className={`w-full text-left p-2 rounded-md ${screenSize === 'mobile-small' ? 'text-xs' : screenSize === 'mobile' || screenSize === 'mobile-large' || screenSize === 'tablet' ? 'text-sm' : 'text-sm md:text-base'} transition-all hover:bg-[#f8d7da] hover:text-[#ad2132] ${location.pathname === item.path ? 'text-[#ad2132] bg-[#f8d7da]' : 'bg-transparent'}`}
+              className={`w-full text-left p-2 rounded-md ${screenSize === 'mobile-small' ? 'text-xs' : screenSize === 'mobile' || screenSize === 'mobile-large' || screenSize === 'tablet' ? 'text-sm' : 'text-sm md:text-base'} transition-all hover:bg-[#f8d7da] hover:text-[#a51d34] ${location.pathname === item.path ? 'text-[#a51d34] bg-[#f8d7da]' : 'bg-transparent'}`}
               onClick={() => {
                 handleNavigate(item.path);
                 setShowCompanyMenu(false);
@@ -595,7 +595,7 @@ const GuestHeader = ({ onLogin }) => {
             </ul>
           ) : (
             <button
-              className={`w-full p-2 bg-transparent border border-[#ad2132] text-[#ad2132] rounded cursor-pointer ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} hover:bg-[#ad2132] hover:text-black transition-colors`}
+              className={`w-full p-2 bg-transparent border border-[#a51d34] text-[#a51d34] rounded cursor-pointer ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} hover:bg-[#a51d34] hover:text-black transition-colors`}
               onClick={() => {
                 navigate('/allcourses');
                 setShowCoursesMenu(false);
@@ -609,7 +609,7 @@ const GuestHeader = ({ onLogin }) => {
       ))}
       <div className={`grid gap-2 pt-2 border-t border-gray-300`}>
         <button
-          className={`p-2 bg-transparent border border-[#ad2132] text-[#ad2132] rounded cursor-pointer ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} hover:bg-[#ad2132] hover:text-white transition-colors`}
+          className={`p-2 bg-transparent border border-[#a51d34] text-[#a51d34] rounded cursor-pointer ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} hover:bg-[#a51d34] hover:text-white transition-colors`}
           onClick={() => {
             navigate('/courses');
             setShowCoursesMenu(false);
@@ -619,7 +619,7 @@ const GuestHeader = ({ onLogin }) => {
           View All Courses
         </button>
         <button
-          className={`p-2 bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded cursor-pointer ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} hover:opacity-90 transition-opacity`}
+          className={`p-2 bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded cursor-pointer ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} hover:opacity-90 transition-opacity`}
           onClick={() => {
             setShowCoursesMenu(false);
             setIsMobileMenuOpen(false);
@@ -648,12 +648,12 @@ const GuestHeader = ({ onLogin }) => {
           <div className={`flex items-center ${screenSize === 'mobile-small' ? 'gap-1.5' : 'gap-2'} lg:hidden`}>
             <button
               onClick={() => setShowLoginModal(true)}
-              className={`${responsiveClasses.buttonPadding} bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded ${responsiveClasses.buttonText} cursor-pointer whitespace-nowrap hover:opacity-90 transition-opacity`}
+              className={`${responsiveClasses.buttonPadding} bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded ${responsiveClasses.buttonText} cursor-pointer whitespace-nowrap hover:opacity-90 transition-opacity`}
             >
               Login
             </button>
             <button
-              className={`${responsiveClasses.iconSize} flex items-center justify-center bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded cursor-pointer hover:opacity-90 transition-opacity`}
+              className={`${responsiveClasses.iconSize} flex items-center justify-center bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded cursor-pointer hover:opacity-90 transition-opacity`}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle navigation"
             >
@@ -675,7 +675,7 @@ const GuestHeader = ({ onLogin }) => {
                   >
                     <span
                       ref={coursesBtnRef}
-                      className={`flex items-center px-3 py-2 text-base font-medium text-gray-800 cursor-pointer rounded-md transition-all relative ${showCoursesMenu ? 'text-[#ad2132]' : 'hover:text-[#ad2132]'}`}
+                      className={`flex items-center px-3 py-2 text-base font-medium text-gray-800 cursor-pointer rounded-md transition-all relative ${showCoursesMenu ? 'text-[#a51d34]' : 'hover:text-[#a51d34]'}`}
                       onClick={() => {
                         setShowCoursesMenu(!showCoursesMenu);
                         setShowResourcesMenu(false);
@@ -698,7 +698,7 @@ const GuestHeader = ({ onLogin }) => {
                   >
                     <span
                       ref={item.label === 'Services' ? resourcesBtnRef : companyBtnRef}
-                      className={`flex items-center px-3 py-2 text-base font-medium cursor-pointer rounded-md transition-all ${((item.label === 'Services' && showResourcesMenu) || (item.label === 'Company' && showCompanyMenu)) ? 'text-[#ad2132]' : 'text-gray-800 hover:text-[#ad2132]'}`}
+                      className={`flex items-center px-3 py-2 text-base font-medium cursor-pointer rounded-md transition-all ${((item.label === 'Services' && showResourcesMenu) || (item.label === 'Company' && showCompanyMenu)) ? 'text-[#a51d34]' : 'text-gray-800 hover:text-[#a51d34]'}`}
                       onClick={() => {
                         if (item.label === 'Services') {
                           setShowResourcesMenu(!showResourcesMenu);
@@ -722,7 +722,7 @@ const GuestHeader = ({ onLogin }) => {
                 return (
                   <div key={idx} className="relative flex items-center">
                     <span
-                      className={`px-3 py-2 text-base font-medium cursor-pointer rounded-md transition-colors ${location.pathname === item.path ? 'text-[#ad2132]' : 'text-gray-800 hover:text-[#ad2132]'}`}
+                      className={`px-3 py-2 text-base font-medium cursor-pointer rounded-md transition-colors ${location.pathname === item.path ? 'text-[#a51d34]' : 'text-gray-800 hover:text-[#a51d34]'}`}
                       onClick={() => handleNavigate(item.path)}
                     >
                       {item.label}
@@ -738,7 +738,7 @@ const GuestHeader = ({ onLogin }) => {
 
             <button
               onClick={() => setShowLoginModal(true)}
-              className={`ml-2 ${screenSize === 'laptop' ? 'mx-2 px-4 py-2' : screenSize === 'desktop' ? 'mx-2.5 px-4 py-2' : 'mx-3 px-8 py-2'} bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded-full font-semibold ${screenSize === 'laptop' ? 'text-sm' : screenSize === 'desktop' ? 'text-base' : 'text-base'} cursor-pointer whitespace-nowrap hover:opacity-90 transition-opacity`}
+              className={`ml-2 ${screenSize === 'laptop' ? 'mx-2 px-4 py-2' : screenSize === 'desktop' ? 'mx-2.5 px-4 py-2' : 'mx-3 px-8 py-2'} bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded-full font-semibold ${screenSize === 'laptop' ? 'text-sm' : screenSize === 'desktop' ? 'text-base' : 'text-base'} cursor-pointer whitespace-nowrap hover:opacity-90 transition-opacity`}
             >
               Login
             </button>
@@ -757,7 +757,7 @@ const GuestHeader = ({ onLogin }) => {
               className={`${screenSize === 'mobile-small' ? 'h-7' : screenSize === 'mobile' ? 'h-8' : 'h-10'}`}
             />
             <button
-              className={`bg-transparent border-none ${screenSize === 'mobile-small' ? 'text-lg' : screenSize === 'mobile' ? 'text-xl' : 'text-2xl'} text-gray-800 cursor-pointer hover:text-[#ad2132] transition-colors`}
+              className={`bg-transparent border-none ${screenSize === 'mobile-small' ? 'text-lg' : screenSize === 'mobile' ? 'text-xl' : 'text-2xl'} text-gray-800 cursor-pointer hover:text-[#a51d34] transition-colors`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <FaTimes />
@@ -808,7 +808,7 @@ const GuestHeader = ({ onLogin }) => {
                         {item.items.map((subItem, subIdx) => (
                           <div
                             key={subIdx}
-                            className={`${screenSize === 'mobile-small' ? 'p-2.5 pl-6' : 'p-3 pl-8'} cursor-pointer ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} text-gray-700 transition-all border-b border-gray-100 last:border-b-0 hover:bg-white hover:text-[#ad2132] ${location.pathname === subItem.path ? 'text-[#ad2132] bg-white' : ''}`}
+                            className={`${screenSize === 'mobile-small' ? 'p-2.5 pl-6' : 'p-3 pl-8'} cursor-pointer ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} text-gray-700 transition-all border-b border-gray-100 last:border-b-0 hover:bg-white hover:text-[#a51d34] ${location.pathname === subItem.path ? 'text-[#a51d34] bg-white' : ''}`}
                             onClick={() => handleNavigate(subItem.path)}
                           >
                             {subItem.label}
@@ -821,7 +821,7 @@ const GuestHeader = ({ onLogin }) => {
                         {item.items.map((subItem, subIdx) => (
                           <div
                             key={subIdx}
-                            className={`${screenSize === 'mobile-small' ? 'p-2.5 pl-6' : 'p-3 pl-8'} cursor-pointer ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} text-gray-700 transition-all border-b border-gray-100 last:border-b-0 hover:bg-white hover:text-[#ad2132] ${location.pathname === subItem.path ? 'text-[#ad2132] bg-white' : ''}`}
+                            className={`${screenSize === 'mobile-small' ? 'p-2.5 pl-6' : 'p-3 pl-8'} cursor-pointer ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} text-gray-700 transition-all border-b border-gray-100 last:border-b-0 hover:bg-white hover:text-[#a51d34] ${location.pathname === subItem.path ? 'text-[#a51d34] bg-white' : ''}`}
                             onClick={() => handleNavigate(subItem.path)}
                           >
                             {subItem.label}
@@ -835,7 +835,7 @@ const GuestHeader = ({ onLogin }) => {
                 return (
                   <div
                     key={idx}
-                    className={`${screenSize === 'mobile-small' ? 'p-2.5' : 'p-3'} cursor-pointer transition-all border-b border-gray-100 last:border-b-0 hover:bg-gray-50 hover:text-[#ad2132] ${location.pathname === item.path ? 'text-[#ad2132] bg-[#f8d7da]' : ''}`}
+                    className={`${screenSize === 'mobile-small' ? 'p-2.5' : 'p-3'} cursor-pointer transition-all border-b border-gray-100 last:border-b-0 hover:bg-gray-50 hover:text-[#a51d34] ${location.pathname === item.path ? 'text-[#a51d34] bg-[#f8d7da]' : ''}`}
                     onClick={() => handleNavigate(item.path)}
                   >
                     <span className={`${screenSize === 'mobile-small' ? 'text-sm' : 'text-base'} font-medium`}>{item.label}</span>
@@ -847,7 +847,7 @@ const GuestHeader = ({ onLogin }) => {
 
           <div className={`${screenSize === 'mobile-small' ? 'p-3' : 'p-4'} border-t border-gray-200`}>
             <button
-              className={`w-full ${screenSize === 'mobile-small' ? 'p-2.5' : 'p-3'} bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white border-none rounded-md font-semibold cursor-pointer ${screenSize === 'mobile-small' ? 'text-sm' : 'text-base'} hover:opacity-90 transition-opacity`}
+              className={`w-full ${screenSize === 'mobile-small' ? 'p-2.5' : 'p-3'} bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded-md font-semibold cursor-pointer ${screenSize === 'mobile-small' ? 'text-sm' : 'text-base'} hover:opacity-90 transition-opacity`}
               onClick={() => {
                 setIsMobileMenuOpen(false);
                 setShowLoginModal(true);
@@ -875,7 +875,7 @@ const GuestHeader = ({ onLogin }) => {
             </div>
 
             <div className={`flex justify-between items-center ${screenSize === 'mobile-small' ? 'mb-4' : 'mb-4 sm:mb-5 md:mb-6'}`}>
-              <h4 className={`text-[#ad2132] ${screenSize === 'mobile-small' ? 'text-base' : screenSize === 'mobile' ? 'text-lg' : screenSize === 'mobile-large' ? 'text-lg sm:text-xl' : screenSize === 'tablet' ? 'text-xl md:text-2xl' : 'text-xl lg:text-2xl'} font-semibold m-0`}>
+              <h4 className={`text-[#a51d34] ${screenSize === 'mobile-small' ? 'text-base' : screenSize === 'mobile' ? 'text-lg' : screenSize === 'mobile-large' ? 'text-lg sm:text-xl' : screenSize === 'tablet' ? 'text-xl md:text-2xl' : 'text-xl lg:text-2xl'} font-semibold m-0`}>
                 Login
               </h4>
               <button
@@ -903,7 +903,7 @@ const GuestHeader = ({ onLogin }) => {
                     onChange={handleLoginChange}
                     placeholder="Phone Number"
                     required
-                    className={`w-full ${screenSize === 'mobile-small' ? 'py-2 pl-9 pr-3' : screenSize === 'mobile' ? 'py-2 pl-10 pr-3' : 'py-2 sm:py-2.5 md:py-3 pl-10 sm:pl-12 md:pl-12 pr-3'} border border-gray-300 rounded-md ${screenSize === 'mobile-small' ? 'text-sm' : screenSize === 'mobile' ? 'text-sm' : 'text-sm sm:text-base md:text-lg'} focus:border-[#ad2132] focus:outline-none focus:ring-1 focus:ring-[#ad2132] transition-colors`}
+                    className={`w-full ${screenSize === 'mobile-small' ? 'py-2 pl-9 pr-3' : screenSize === 'mobile' ? 'py-2 pl-10 pr-3' : 'py-2 sm:py-2.5 md:py-3 pl-10 sm:pl-12 md:pl-12 pr-3'} border border-gray-300 rounded-md ${screenSize === 'mobile-small' ? 'text-sm' : screenSize === 'mobile' ? 'text-sm' : 'text-sm sm:text-base md:text-lg'} focus:border-[#a51d34] focus:outline-none focus:ring-1 focus:ring-[#a51d34] transition-colors`}
                   />
                 </div>
               </div>
@@ -918,7 +918,7 @@ const GuestHeader = ({ onLogin }) => {
                     onChange={handleLoginChange}
                     placeholder="Password"
                     required
-                    className={`w-full ${screenSize === 'mobile-small' ? 'py-2 pl-9 pr-3' : screenSize === 'mobile' ? 'py-2 pl-10 pr-3' : 'py-2 sm:py-2.5 md:py-3 pl-10 sm:pl-12 md:pl-12 pr-3'} border border-gray-300 rounded-md ${screenSize === 'mobile-small' ? 'text-sm' : screenSize === 'mobile' ? 'text-sm' : 'text-sm sm:text-base md:text-lg'} focus:border-[#ad2132] focus:outline-none focus:ring-1 focus:ring-[#ad2132] transition-colors`}
+                    className={`w-full ${screenSize === 'mobile-small' ? 'py-2 pl-9 pr-3' : screenSize === 'mobile' ? 'py-2 pl-10 pr-3' : 'py-2 sm:py-2.5 md:py-3 pl-10 sm:pl-12 md:pl-12 pr-3'} border border-gray-300 rounded-md ${screenSize === 'mobile-small' ? 'text-sm' : screenSize === 'mobile' ? 'text-sm' : 'text-sm sm:text-base md:text-lg'} focus:border-[#a51d34] focus:outline-none focus:ring-1 focus:ring-[#a51d34] transition-colors`}
                   />
                 </div>
               </div>
@@ -926,7 +926,7 @@ const GuestHeader = ({ onLogin }) => {
               <button
                 type="submit"
                 disabled={isLoggingIn}
-                className={`w-full ${screenSize === 'mobile-small' ? 'py-2' : screenSize === 'mobile' ? 'py-2.5' : 'py-2 sm:py-2.5 md:py-3'} bg-gradient-to-br from-[#ad2132] to-[#d32f2f] text-white rounded-md font-semibold ${screenSize === 'mobile-small' ? 'text-sm' : screenSize === 'mobile' ? 'text-sm' : 'text-sm sm:text-base md:text-lg'} cursor-pointer hover:opacity-90 transition-opacity ${isLoggingIn ? "opacity-80" : ""}`}
+                className={`w-full ${screenSize === 'mobile-small' ? 'py-2' : screenSize === 'mobile' ? 'py-2.5' : 'py-2 sm:py-2.5 md:py-3'} bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white rounded-md font-semibold ${screenSize === 'mobile-small' ? 'text-sm' : screenSize === 'mobile' ? 'text-sm' : 'text-sm sm:text-base md:text-lg'} cursor-pointer hover:opacity-90 transition-opacity ${isLoggingIn ? "opacity-80" : ""}`}
               >
                 {isLoggingIn ? (
                   <>

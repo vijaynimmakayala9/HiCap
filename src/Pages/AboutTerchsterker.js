@@ -27,13 +27,13 @@ const AboutTechsterker = () => {
           <div className="col-md-6 col-lg-6 order-md-1 order-2">
             <div className="position-relative mb-4">
               <h2 className="fw-bold mb-3">
-                About <span style={{ color: "#ad2132" }}>TECHSTERKER</span> Institute
+                About <span style={{ color: "#a51d34" }}>TECHSTERKER</span> Institute
               </h2>
               {/* <div
                 style={{
                   width: "150px",
                   height: "4px",
-                  backgroundColor: "#ad2132",
+                  backgroundColor: "#a51d34",
                   borderRadius: "999px",
                   position: "absolute",
                   left: "0",

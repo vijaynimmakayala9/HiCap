@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import Footer from "../Pages/Footer";
 import Header from "../Header/Header";
+import ContactUsModal from "../models/ContactUsModal";
 
 const PlacementAssistance = () => {
+    const [showContactModal, setShowContactModal] = useState(false);
+
     return (
         <>
             <Header />
@@ -33,8 +36,8 @@ const PlacementAssistance = () => {
                                 <li className="textcolorlight">✅ Interview scheduling</li>
                                 <li className="textcolorlight">✅ Salary negotiation guidance</li>
                             </ul>
-                            <Button variant="meroon" size="lg" className="gradient-button">
-                                View Placement Stats
+                            <Button variant="meroon" size="lg" className="gradient-button" onClick={() => setShowContactModal(true)}>
+                                Contact Us
                             </Button>
                         </Col>
                     </Row>
@@ -96,6 +99,14 @@ const PlacementAssistance = () => {
                 </Container>
             </section>
             <Footer />
+
+            {/* Modals */}
+            <ContactUsModal
+                show={showContactModal}
+                type="placement"
+                onHide={() => setShowContactModal(false)}
+            />
+
             <style >{`
             /* Card Hover Effect */
 .card-hover-effect {

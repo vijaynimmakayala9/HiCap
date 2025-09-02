@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import Header from "../Header/Header";
 import Footer from "../Pages/Footer";
 import { FaChalkboardTeacher, FaLightbulb, FaClock, FaUsers } from "react-icons/fa";
+import ContactUsModal from "../models/ContactUsModal";
 
 const OnetoOneSession = () => {
+  const [showContactModal, setShowContactModal] = useState(false);
+
   return (
     <>
       <Header />
@@ -35,8 +38,8 @@ const OnetoOneSession = () => {
                 <li className="textcolorlight">✅ Flexible schedule to suit your pace</li>
                 <li className="textcolorlight">✅ Interactive, hands-on guidance</li>
               </ul>
-              <Button variant="meroon" size="lg" className="gradient-button" onClick={() => window.location.href="tel:9876543211"}>
-                Book Your Session
+              <Button variant="meroon" size="lg" className="gradient-button" onClick={() => setShowContactModal(true)}>
+                Contact Us
               </Button>
             </Col>
           </Row>
@@ -48,7 +51,7 @@ const OnetoOneSession = () => {
                 <Card.Body>
                   <div className="icon-box mb-3">
                     <div className="icon-circle bg-meroonlight">
-                      <FaChalkboardTeacher className="text-white" size={24}/>
+                      <FaChalkboardTeacher className="text-white" size={24} />
                     </div>
                   </div>
                   <Card.Title className="textcolor fw-bold">Expert Mentors</Card.Title>
@@ -63,7 +66,7 @@ const OnetoOneSession = () => {
                 <Card.Body>
                   <div className="icon-box mb-3">
                     <div className="icon-circle bg-meroonlight">
-                      <FaLightbulb className="text-white" size={24}/>
+                      <FaLightbulb className="text-white" size={24} />
                     </div>
                   </div>
                   <Card.Title className="textcolor fw-bold">Tailored Plan</Card.Title>
@@ -78,7 +81,7 @@ const OnetoOneSession = () => {
                 <Card.Body>
                   <div className="icon-box mb-3">
                     <div className="icon-circle bg-meroonlight">
-                      <FaClock className="text-white" size={24}/>
+                      <FaClock className="text-white" size={24} />
                     </div>
                   </div>
                   <Card.Title className="textcolor fw-bold">Flexible Timings</Card.Title>
@@ -93,7 +96,7 @@ const OnetoOneSession = () => {
                 <Card.Body>
                   <div className="icon-box mb-3">
                     <div className="icon-circle bg-meroonlight">
-                      <FaUsers className="text-white" size={24}/>
+                      <FaUsers className="text-white" size={24} />
                     </div>
                   </div>
                   <Card.Title className="textcolor fw-bold">Interactive Learning</Card.Title>
@@ -108,6 +111,12 @@ const OnetoOneSession = () => {
       </section>
 
       <Footer />
+      {/* Modals */}
+      <ContactUsModal
+        show={showContactModal}
+        type="oneonone"
+        onHide={() => setShowContactModal(false)}
+      />
 
       <style>{`
         /* Card Hover Effect */
@@ -153,7 +162,7 @@ const OnetoOneSession = () => {
         }
 
         .textcolor {
-          color: #ad2132;
+          color: #a51d34;
         }
 
         .textcolorlight {
@@ -161,11 +170,11 @@ const OnetoOneSession = () => {
         }
 
         .bg-meroonlight {
-          background-color: #ad2132;
+          background-color: #a51d34;
         }
 
         .gradient-button {
-          background: linear-gradient(90deg, #ad2132 0%, #ff6b6b 100%);
+          background: linear-gradient(90deg, #a51d34 0%, #ff6b6b 100%);
           border: none;
         }
       `}</style>

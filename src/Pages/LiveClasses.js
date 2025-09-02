@@ -45,7 +45,7 @@ const LiveClasses = () => {
           style={{
             width: '180px',
             height: '3px',
-            backgroundColor: '#ad2132',
+            backgroundColor: '#a51d34',
             borderRadius: '999px',
           }}
         /> */}
@@ -116,7 +116,7 @@ const LiveClasses = () => {
                     className="bg-light border d-flex flex-column align-items-center justify-content-center px-2 py-2 rounded"
                     style={{ width: '48%', borderColor: '#00000022' }}
                   >
-                    <MdOutlineTimer size={24} color="#ad2132" />
+                    <MdOutlineTimer size={24} color="#a51d34" />
                     <small className="fw-medium mt-1">{cls.duration}</small>
                   </div>
 
@@ -124,7 +124,7 @@ const LiveClasses = () => {
                     className="bg-light border d-flex flex-column align-items-center justify-content-center px-2 py-2 rounded"
                     style={{ width: '48%', borderColor: '#00000022' }}
                   >
-                    <SiGoogleclassroom size={24} color="#ad2132" />
+                    <SiGoogleclassroom size={24} color="#a51d34" />
                     <small className="fw-medium mt-1">Live</small>
                   </div>
                 </div>

@@ -148,7 +148,7 @@ body a {
 }
 
 .gradient-button {
-  background-color: #ad2132 !important;
+  background-color: #a51d34 !important;
   color: white !important;
 }
 
@@ -158,7 +158,7 @@ body a {
 }
 
 .textcolor {
-  color: #ad2132 !important;
+  color: #a51d34 !important;
 }
 
 .textcolorlight {
@@ -166,11 +166,11 @@ body a {
 }
 
 .meroon-back {
-  background-color: #ad2132 !important;
+  background-color: #a51d34 !important;
 }
 
 .bg-meroon {
-  background-color: #ad2132 !important;
+  background-color: #a51d34 !important;
   color: #fff !important;
 }
 
@@ -180,23 +180,23 @@ body a {
 }
 
 .btn-outline-meroon {
-  color: #ad2132 !important;
-  border-color: #ad2132 !important;
+  color: #a51d34 !important;
+  border-color: #a51d34 !important;
 }
 
 .btn-outline-meroon:hover,
 .btn-outline-meroon:focus,
 .btn-outline-meroon:active {
   color: #fff !important;
-  background-color: #ad2132 !important;
-  border-color: #ad2132 !important;
+  background-color: #a51d34 !important;
+  border-color: #a51d34 !important;
 }
 
 
 /* Course ENroll button*/
 
 .enroll-hover:hover {
-  background-color: #ad2132;
+  background-color: #a51d34;
   /* Bootstrap dark */
   color: #fff;
   border-color: #212529;

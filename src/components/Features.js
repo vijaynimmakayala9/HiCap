@@ -30,13 +30,13 @@ const Features = () => {
         <div className="col-lg-8">
           <div className="d-inline-block position-relative ">
             <h2 className="fw-bold text-dark mb-1">
-              Key Takeaways of <span style={{ color: "#ad2132" }}>TECHSTERKER</span>
+              Key Takeaways of <span style={{ color: "#a51d34" }}>TECHSTERKER</span>
             </h2>
             {/* <div
               style={{
                 width: "100px",
                 height: "5px",
-                backgroundColor: "#ad2132",
+                backgroundColor: "#a51d34",
                 borderRadius: "999px",
                 position: "absolute",
                 left: "0",

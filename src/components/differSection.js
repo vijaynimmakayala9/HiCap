@@ -37,7 +37,7 @@ const DifferSection = () => {
           <div className="row align-items-center">
             <div className="d-inline-block position-relative mb-4">
               <h2 className="fw-bold text-center text-lg-start">
-                How we <span style={{ color: "#ad2132" }}>differ</span> from others?
+                How we <span style={{ color: "#a51d34" }}>differ</span> from others?
               </h2>
             </div>
             {/* Left Column - Features */}
@@ -55,14 +55,14 @@ const DifferSection = () => {
                         padding: '1rem 1rem',
                         backgroundColor: '#f8d7da', // light maroon background
                         borderRadius: '8px',
-                        borderLeft: '4px solid #ad2132', // maroon accent line
+                        borderLeft: '4px solid #a51d34', // maroon accent line
                         boxShadow: '0 2px 8px rgba(173, 33, 50, 0.15)', // soft maroon shadow
                         textAlign: 'left',
                         margin: '0.5rem 0', // vertical spacing between cards
                         gap: '10px', // spacing between icon and text
                       }}
                     >
-                      <div className="fs-4" style={{ color: "#ad2132" }}>
+                      <div className="fs-4" style={{ color: "#a51d34" }}>
                         {feature.icon}
                       </div>
                       <div className="fw-medium">{feature.title}</div>

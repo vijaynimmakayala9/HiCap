@@ -27,14 +27,14 @@ const BlogPage = () => {
         {/* Heading with green line, left aligned and smaller */}
         <div className="max-w-[600px] mb-12 mt-18">
           <h1 className="font-roboto font-bold text-3xl mb-2 mt-10 text-black">
-            Our Latest <span style={{ color: "#ad2132" }}>Blogs</span>
+            Our Latest <span style={{ color: "#a51d34" }}>Blogs</span>
           </h1>
           {/* <div
             style={{
               width: '216px',
               height: '3px',
               borderRadius: '20px',
-              backgroundColor: '#ad2132',
+              backgroundColor: '#a51d34',
             }}
           /> */}
         </div>

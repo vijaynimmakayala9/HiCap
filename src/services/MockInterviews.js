@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import Header from "../Header/Header";
 import Footer from "../Pages/Footer";
+import ContactUsModal from "../models/ContactUsModal";
 
 const MockInterviews = () => {
+    const [showContactModal, setShowContactModal] = useState(false);
+
     return (
         <>
             <Header />
@@ -26,7 +29,7 @@ const MockInterviews = () => {
                         {/* Text Section */}
                         <Col lg={6} className="order-lg-2 order-1">
                             <h2 className="fw-bold textcolor mb-3 display-6">
-                                <span style={{ color: "#ad2132" }}>Industry-Standard</span> Mock Interviews
+                                <span style={{ color: "#a51d34" }}>Industry-Standard</span> Mock Interviews
                             </h2>
                             <p className="lead text-muted mb-4" style={{ lineHeight: "1.8" }}>
                                 Mock interviews simulate <strong>real job interviews</strong> to help you
@@ -43,7 +46,7 @@ const MockInterviews = () => {
                             <Button
                                 size="lg"
                                 style={{
-                                    background: "linear-gradient(90deg, #ad2132, #d63447)",
+                                    background: "linear-gradient(90deg, #a51d34, #d63447)",
                                     border: "none",
                                     padding: "12px 25px",
                                     borderRadius: "50px",
@@ -60,6 +63,7 @@ const MockInterviews = () => {
                                     e.target.style.transform = "translateY(0)";
                                     e.target.style.boxShadow = "0 6px 15px rgba(173, 33, 50, 0.4)";
                                 }}
+                                onClick={() => setShowContactModal(true)}
                             >
                                 Contact Us
                             </Button>
@@ -90,7 +94,7 @@ const MockInterviews = () => {
                                     <div
                                         className="icon-circle mb-3 mx-auto"
                                         style={{
-                                            background: "linear-gradient(135deg, #ad2132, #d6404b)",
+                                            background: "linear-gradient(135deg, #a51d34, #d6404b)",
                                             width: "65px",
                                             height: "65px",
                                             borderRadius: "50%",
@@ -112,6 +116,12 @@ const MockInterviews = () => {
                 </Container>
             </section>
             <Footer />
+            {/* Modals */}
+            <ContactUsModal
+                show={showContactModal}
+                type="mock"
+                onHide={() => setShowContactModal(false)}
+            />
 
             {/* Styles */}
             <style>

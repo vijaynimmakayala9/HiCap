@@ -117,7 +117,7 @@ const UpCommingBatches = () => {
 
           {/* Upcoming Batches Section */}
           <section>
-            <h2 className="text-center mb-4 fw-bold pt-3" style={{ color: "#ad2132" }}>
+            <h2 className="text-center mb-4 fw-bold pt-3" style={{ color: "#a51d34" }}>
               
             </h2>
 
@@ -140,7 +140,7 @@ const UpCommingBatches = () => {
 
             <div className="shadow-sm border border-top-0 rounded-bottom">
               <Table bordered hover responsive className="mb-0">
-                <thead style={{ backgroundColor: "#ad2132" }}>
+                <thead style={{ backgroundColor: "#a51d34" }}>
                   <tr className="text-white text-uppercase">
                     <th>Batch Name</th>
                     <th>Start Date</th>
@@ -178,7 +178,7 @@ const UpCommingBatches = () => {
             style={{
               background: "linear-gradient(90deg, #c34153, #c34153)", // bright gradient
               color: "#fff",
-              border: "2px solid #ad2132",
+              border: "2px solid #a51d34",
               boxShadow: "0 8px 20px rgba(0,0,0,0.25)",
               animation: "flashSlide 1s ease-in-out", // subtle entrance animation
             }}
@@ -197,7 +197,7 @@ const UpCommingBatches = () => {
                 size="md"
                 className="fw-bold px-4 py-2"
                 style={{
-                  color: "#ad2132",
+                  color: "#a51d34",
                   backgroundColor: "#fff",
                   borderRadius: "30px",
                   boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
@@ -228,7 +228,7 @@ const UpCommingBatches = () => {
               <Row className="align-items-center">
                 <Col md={6}>
                   <h3 className="fw-bold mb-3" style={{ color: "#000" }}>
-                    <i class="fa-solid fa-earth-americas" style={{color: "#ad2132"}}></i> {abroadData.title}
+                    <i class="fa-solid fa-earth-americas" style={{color: "#a51d34"}}></i> {abroadData.title}
                   </h3>
                   <p className="mb-4" style={{ fontSize: "1rem", lineHeight: "1.6" }}>
                     {abroadData.description}
@@ -246,7 +246,7 @@ const UpCommingBatches = () => {
                     href="tel:9876543211"
                     size="sm"
                     style={{
-                      backgroundColor: "#ad2132",
+                      backgroundColor: "#a51d34",
                       border: "none",
                       borderRadius: "8px",
                       padding: "10px 20px",
@@ -275,7 +275,7 @@ const UpCommingBatches = () => {
           {/* Call to Action Section */}
           <Card className="mt-5 border-0 shadow">
             <Card.Body className="text-center p-4">
-              <h3 className="mb-3" style={{ color: "#ad2132" }}>Ready to Start Your Tech Journey?</h3>
+              <h3 className="mb-3" style={{ color: "#a51d34" }}>Ready to Start Your Tech Journey?</h3>
               <p className="mb-4 lead">
                 Join hundreds of successful students who launched their tech careers with Techsterker
               </p>

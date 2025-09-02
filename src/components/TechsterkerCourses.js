@@ -8,8 +8,8 @@ const TechsterkerCourses = () => {
 
   // 🔹 Mock images (order matters – should match API order)
   const mockImages = [
-    "/home/career.jpg",
-    "/home/upskill.jpg"
+    "/home/career.png",
+    "/home/Upskill.jpg"
   ];
 
   const containerStyle = {
@@ -58,7 +58,7 @@ const TechsterkerCourses = () => {
               </h5>
               <h3 className="fw-bold text-uppercase">
                 <span style={{ color: "#000" }}>{course.title}</span>{" "}
-                <span className="" style={{ color: "#ad2132" }}>
+                <span className="" style={{ color: "#a51d34" }}>
                   Techsterker
                 </span>
               </h3>

@@ -203,7 +203,7 @@ const CourseDetail = () => {
                     variant="top"
                     src={course.image}
                     alt={course.name}
-                    className="rounded-3 img-fluid"
+                    className="rounded-4 img-fluid h-100"
                     // style={{
                     //   border: "0.5px solid maroon",
                     //   boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)",
@@ -223,7 +223,7 @@ const CourseDetail = () => {
                     {course.category} Training
                   </button>
 
-                  <h1 className="display-5 fw-bold mb-3" style={{ color: "#ad2132" }}>
+                  <h1 className="display-5 fw-bold mb-3" style={{ color: "#a51d34" }}>
                     {course.name}
                   </h1>
                   <p
@@ -300,7 +300,7 @@ const CourseDetail = () => {
                   <Card.Body>
                     <Card.Title
                       className="d-flex align-items-center mb-3 pb-1 border-bottom"
-                      style={{ fontWeight: '600', fontSize: '1.25rem', color: "#ad2132" }}
+                      style={{ fontWeight: '600', fontSize: '1.25rem', color: "#a51d34" }}
                     >
                       <FaCertificate className="me-2" size={20} />
                       What You'll Get
@@ -314,7 +314,7 @@ const CourseDetail = () => {
                               className="h-100"
                               style={{
                                 backgroundColor: '#f8d7da', // light maroon background
-                                borderLeft: '4px solid #ad2132', // maroon accent line
+                                borderLeft: '4px solid #a51d34', // maroon accent line
                                 borderRadius: '8px',
                                 boxShadow: '0 2px 8px rgba(173, 33, 50, 0.15)', // soft maroon shadow
                               }}
@@ -367,7 +367,7 @@ const CourseDetail = () => {
                   <Card.Body>
                     <Card.Title
                       className="border-bottom pb-2"
-                      style={{ color: "#ad2132", fontSize: "1.25rem", fontWeight: '600' }}
+                      style={{ color: "#a51d34", fontSize: "1.25rem", fontWeight: '600' }}
                     >
                       Who Can Learn
                     </Card.Title>
@@ -404,7 +404,7 @@ const CourseDetail = () => {
                                 style={{ width: '48px', height: '48px', objectFit: 'cover' }}
                               />
                               <div>
-                                <h5 className="mb-1" style={{ color: "#ad2132" }}>
+                                <h5 className="mb-1" style={{ color: "#a51d34" }}>
                                   {learner.title}
                                 </h5>
                                 <h6 className="small text-muted mb-0">
@@ -427,7 +427,7 @@ const CourseDetail = () => {
             <Container className="py-4">
               <Card className="border-0 shadow-sm">
                 <Card.Body className="p-4">
-                  <Card.Title className="d-flex align-items-center mb-4" style={{ color: "#ad2132" }}>
+                  <Card.Title className="d-flex align-items-center mb-4" style={{ color: "#a51d34" }}>
                     <FaTools className="me-2" />
                     Tools & Platforms You'll Learn
                   </Card.Title>
@@ -460,7 +460,7 @@ const CourseDetail = () => {
                 <Card.Body className="rounded-4 shadow-sm" style={{ backgroundColor: "#fcebed" }}>
                   <Card.Title
                     className="pb-3 fw-bold"
-                    style={{ color: "#ad2132", fontSize: "1.75rem" }}
+                    style={{ color: "#a51d34", fontSize: "1.75rem" }}
                   >
                     Frequently Asked Questions
                   </Card.Title>
@@ -470,7 +470,7 @@ const CourseDetail = () => {
                       <Accordion.Item eventKey={index.toString()} key={index}>
                         <Accordion.Header
                           className="fw-semibold"
-                          style={{ color: "#ad2132" }}
+                          style={{ color: "#a51d34" }}
                         >
                           {item.question}
                         </Accordion.Header>
@@ -491,7 +491,7 @@ const CourseDetail = () => {
           {/* Reviews Section (Directly after FAQs) */}
           {course.reviews && course.reviews.length > 0 && (
             <Container className="py-5">
-              <h3 className="mb-4 text-center" style={{ color: "#ad2132" }}>
+              <h3 className="mb-4 text-center" style={{ color: "#a51d34" }}>
                 Alumni Reviews
               </h3>
               <Row className="g-4">
@@ -539,7 +539,7 @@ const CourseDetail = () => {
           {/* Related Courses - Updated Format */}
           {relatedCourses.length > 0 && (
             <Container className="py-4 bg-light">
-              <h2 className="mb-4" style={{ color: "#ad2132" }}>
+              <h2 className="mb-4" style={{ color: "#a51d34" }}>
                 You May Also Like
               </h2>
               <Row className="g-4">
@@ -560,7 +560,7 @@ const CourseDetail = () => {
                             style={{ width: "70px", height: "70px", objectFit: "cover" }}
                           />
                           <div>
-                            <Card.Title className="mb-1 fw-bold" style={{ color: "#ad2132" }}>
+                            <Card.Title className="mb-1 fw-bold" style={{ color: "#a51d34" }}>
                               {relatedCourse.name}
                             </Card.Title>
                             {relatedCourse.category && (
@@ -575,11 +575,11 @@ const CourseDetail = () => {
 
                         <div className="d-flex align-items-center text-sm text-muted mb-4 gap-4 flex-wrap">
                           <div className="d-flex align-items-center">
-                            <FaRegClock className="me-2" style={{ color: "#ad2132" }} />
+                            <FaRegClock className="me-2" style={{ color: "#a51d34" }} />
                             <span>{relatedCourse.duration}</span>
                           </div>
                           <div className="d-flex align-items-center">
-                            <FaUserGraduate className="me-2" style={{ color: "#ad2132" }} />
+                            <FaUserGraduate className="me-2" style={{ color: "#a51d34" }} />
                             <span>{relatedCourse.noOfStudents} </span>
                           </div>
                           <div className="d-flex align-items-center">
@@ -593,16 +593,16 @@ const CourseDetail = () => {
                             variant="outline"
                             className="flex-grow-1"
                             style={{
-                              borderColor: "#ad2132",
-                              color: "#ad2132",
+                              borderColor: "#a51d34",
+                              color: "#a51d34",
                             }}
                             onMouseOver={(e) => {
-                              e.target.style.backgroundColor = "#ad2132";
+                              e.target.style.backgroundColor = "#a51d34";
                               e.target.style.color = "#fff";
                             }}
                             onMouseOut={(e) => {
                               e.target.style.backgroundColor = "transparent";
-                              e.target.style.color = "#ad2132";
+                              e.target.style.color = "#a51d34";
                             }}
                             onClick={() => {
                               navigate(`/course/${relatedCourse._id}`);

@@ -95,19 +95,19 @@ const EnrolledCourses = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h3 className="flex items-center text-xl font-semibold text-gray-800">
-          <FaBook className="mr-2 text-[#ad2132]" />
+          <FaBook className="mr-2 text-[#a51d34]" />
           Enrolled Courses
         </h3>
         {enrolledCourses.length > 3 && (
           <div className="space-x-2">
             <button
-              className="p-2 rounded-full border border-[#ad2132] text-[#ad2132] hover:bg-[#ad2132] hover:text-white transition"
+              className="p-2 rounded-full border border-[#a51d34] text-[#a51d34] hover:bg-[#a51d34] hover:text-white transition"
               onClick={prevSlide}
             >
               <FaArrowLeft />
             </button>
             <button
-              className="p-2 rounded-full border border-[#ad2132] text-[#ad2132] hover:bg-[#ad2132] hover:text-white transition"
+              className="p-2 rounded-full border border-[#a51d34] text-[#a51d34] hover:bg-[#a51d34] hover:text-white transition"
               onClick={nextSlide}
             >
               <FaArrowRight />
@@ -119,7 +119,7 @@ const EnrolledCourses = () => {
       {/* Loader */}
       {loading ? (
         <div className="flex justify-center py-8">
-          <div className="w-8 h-8 border-4 border-[#ad2132]/40 border-t-[#ad2132] rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-4 border-[#a51d34]/40 border-t-[#a51d34] rounded-full animate-spin"></div>
         </div>
       ) : enrolledCourses.length === 0 ? (
         <div className="p-4 bg-blue-50 text-blue-700 rounded">
@@ -160,7 +160,7 @@ const EnrolledCourses = () => {
                     : course.description}
                 </p>
                 <div className="mt-3 flex justify-between items-center">
-                  <span className="bg-[#ad2132]/10 text-[#ad2132] text-xs font-semibold px-2 py-1 rounded">
+                  <span className="bg-[#a51d34]/10 text-[#a51d34] text-xs font-semibold px-2 py-1 rounded">
                     Enrolled
                   </span>
                   <small className="text-gray-500 text-xs">
@@ -170,7 +170,7 @@ const EnrolledCourses = () => {
               </div>
               <div className="p-4 border-t">
                 <button
-                  className="w-full bg-[#ad2132] text-white py-2 rounded-md font-medium hover:bg-[#8a1a2a] transition"
+                  className="w-full bg-[#a51d34] text-white py-2 rounded-md font-medium hover:bg-[#8a1a2a] transition"
                   onClick={() => {
                     window.location.href = `/dashboard/coursemodule`;
                   }}
@@ -180,7 +180,7 @@ const EnrolledCourses = () => {
 
                 <button
                   onClick={() => handleDownload(course.pdf, `${course.name}.pdf`)}
-                  className="block mt-2 w-full text-center text-sm text-[#ad2132] hover:underline"
+                  className="block mt-2 w-full text-center text-sm text-[#a51d34] hover:underline"
                 >
                   Download PDF
                 </button>

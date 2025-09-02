@@ -99,7 +99,7 @@ const Events = () => {
       <div style={{ maxWidth: '1280px', margin: '60px auto', padding: '0 24px', fontFamily: 'Roboto', marginTop: '100px' }}>
         <div className="max-w-[600px] mb-12 mt-18">
           <h1 className="font-roboto font-bold text-3xl mb-2 mt-10 text-black">
-            Our <span style={{ color: "#ad2132" }}>Instuite</span> Events
+            Our <span style={{ color: "#a51d34" }}>Instuite</span> Events
           </h1>
           
         </div>
@@ -135,15 +135,15 @@ const Events = () => {
                 </p>
 
                 <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
-                  <FaCalendarAlt style={{ color: '#ad2132', marginRight: '8px' }} />
+                  <FaCalendarAlt style={{ color: '#a51d34', marginRight: '8px' }} />
                   <span style={{ fontSize: '14px' }}>{event.date}</span>
                 </div>
                 <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
-                  <FaCalendarAlt style={{ color: '#ad2132', marginRight: '8px', opacity: 0 }} /> 
+                  <FaCalendarAlt style={{ color: '#a51d34', marginRight: '8px', opacity: 0 }} /> 
                   <span style={{ fontSize: '14px' }}>{event.time}</span>
                 </div>
                 <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
-                  <FaMapMarkerAlt style={{ color: '#ad2132', marginRight: '8px' }} />
+                  <FaMapMarkerAlt style={{ color: '#a51d34', marginRight: '8px' }} />
                   <span style={{ fontSize: '14px' }}>{event.location}</span>
                 </div>
               </div>
@@ -151,7 +151,7 @@ const Events = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '16px', paddingTop: '0', alignItems: 'center' }}>
                 <button
                   style={{
-                    backgroundColor: '#ad2132',
+                    backgroundColor: '#a51d34',
                     color: 'white',
                     border: 'none',
                     padding: '8px 16px',
@@ -168,8 +168,8 @@ const Events = () => {
                 <button
                   style={{
                     backgroundColor: '#fff',
-                    color: '#ad2132',
-                    border: '1px solid #ad2132',
+                    color: '#a51d34',
+                    border: '1px solid #a51d34',
                     padding: '8px 16px',
                     borderRadius: '4px',
                     cursor: 'pointer',
@@ -181,7 +181,7 @@ const Events = () => {
                   View Details
                 </button>
 
-                <div style={{ cursor: 'pointer', color: '#ad2132', fontSize: '18px' }} title="Share this event">
+                <div style={{ cursor: 'pointer', color: '#a51d34', fontSize: '18px' }} title="Share this event">
                   <FaShareAlt className='textcolor' />
                 </div>
               </div>
@@ -202,7 +202,7 @@ const Events = () => {
           zIndex: 1000
         }}>
           <div style={{ backgroundColor: '#fff', padding: '24px', borderRadius: '10px', width: '400px', maxWidth: '90%', position: 'relative' }}>
-            <h2 style={{ marginBottom: '16px', color: '#ad2132' }}>Register for {selectedEvent.title}</h2>
+            <h2 style={{ marginBottom: '16px', color: '#a51d34' }}>Register for {selectedEvent.title}</h2>
             <form onSubmit={handleSubmit}>
               <div style={{ marginBottom: '12px' }}>
                 <input type="text" name="name" placeholder="Full Name" value={formData.name} onChange={handleInputChange} required
@@ -218,7 +218,7 @@ const Events = () => {
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
                 <button type="button" onClick={() => setShowModal(false)} style={{ padding: '8px 16px', borderRadius: '4px', border: '1px solid #ccc', cursor: 'pointer', backgroundColor: '#fff' }}>Cancel</button>
-                <button type="submit" style={{ backgroundColor: '#ad2132', color: '#fff', padding: '8px 16px', borderRadius: '4px', border: 'none', cursor: 'pointer' }}>Submit</button>
+                <button type="submit" style={{ backgroundColor: '#a51d34', color: '#fff', padding: '8px 16px', borderRadius: '4px', border: 'none', cursor: 'pointer' }}>Submit</button>
               </div>
             </form>
           </div>

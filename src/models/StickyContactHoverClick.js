@@ -44,7 +44,7 @@ const StickyContactButtons = () => {
             <div
               className="position-relative"
               style={{
-                backgroundColor: hoveredIcon === 'contact' ? '#b92d3b' : '#ad2132',
+                backgroundColor: hoveredIcon === 'contact' ? '#b92d3b' : '#a51d34',
                 padding: '12px 15px',
                 borderBottomLeftRadius: '5px',
                 cursor: 'pointer'

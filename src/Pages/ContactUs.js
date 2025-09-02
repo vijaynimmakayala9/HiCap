@@ -104,12 +104,12 @@ const ContactUs = () => {
           <Col className="text-center">
             <div className="position-relative mb-4">
               <h2 className="text-dark mb-3 d-inline-block position-relative">
-                Looking for <span style={{ color: "#ad2132" }}>Classroom/Online </span>Training?
+                Looking for <span style={{ color: "#a51d34" }}>Classroom/Online </span>Training?
                 {/* <div
                   style={{
                     width: "150px",
                     height: "4px",
-                    backgroundColor: "#ad2132",
+                    backgroundColor: "#a51d34",
                     borderRadius: "999px",
                     position: "absolute",
                     left: "0", // Aligns it with the start of the h2

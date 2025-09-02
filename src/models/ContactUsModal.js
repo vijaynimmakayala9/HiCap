@@ -5,12 +5,12 @@ import "react-phone-input-2/lib/bootstrap.css";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const ContactUsModal = ({ show, onHide }) => {
+const ContactUsModal = ({ show, type, onHide }) => {
   const [contactData, setContactData] = useState({
     name: "",
     email: "",
     phone: "",
-    enquiryType: "",
+    enquiryType: type,
     message: "",
   });
   const [loading, setLoading] = useState(false);
@@ -115,10 +115,13 @@ const ContactUsModal = ({ show, onHide }) => {
               onChange={(e) => handleContactChange("enquiryType", e.target.value)}
               required
             >
-              <option value="">Select enquiry type</option>
-              <option value="course">Course Information</option>
-              <option value="admission">Admission Process</option>
-              <option value="fees">Fees & Payment</option>
+              <option value="" disabled>Select enquiry type</option>
+              <option value="resume">Resume Building</option>
+              <option value="mock">Mock Interviews</option>
+              <option value="realtime">Real Time Assistance</option>
+              <option value="project">Project Assistance</option>
+              <option value="placement">Placement Assistance</option>
+              <option value="oneonone">One-On-One Session</option>
               <option value="other">Other</option>
             </Form.Select>
           </Form.Group>

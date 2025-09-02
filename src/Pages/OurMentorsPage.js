@@ -28,13 +28,13 @@ const OurMentorsPage = () => {
         <div className="text-center mb-5">
           <div className="d-inline-block position-relative mb-3">
             <h2 className="fw-bold text-dark mb-1">
-              Our <span style={{ color: "#ad2132" }}>Mentors</span>
+              Our <span style={{ color: "#a51d34" }}>Mentors</span>
             </h2>
             {/* <div
               style={{
                 width: "100px",
                 height: "5px",
-                backgroundColor: "#ad2132",
+                backgroundColor: "#a51d34",
                 borderRadius: "999px",
                 position: "absolute",
                 left: "0",  // Changed from 50% to 0
@@ -69,7 +69,7 @@ const OurMentorsPage = () => {
               </div>
               <div className="col-md-8">
                 <div className="rounded p-4">
-                  <h4 className="fw-bold mb-2" style={{ color: '#ad2132' }}>{mentor.name}</h4>
+                  <h4 className="fw-bold mb-2" style={{ color: '#a51d34' }}>{mentor.name}</h4>
                   <h6 className="mb-3" style={{ color: '#c34153' }}>- {mentor.role} -</h6>
                   <p className="text-muted" style={{ fontSize: '1rem', lineHeight: '1.6' }}>{mentor.content}</p>
                 </div>
@@ -83,13 +83,13 @@ const OurMentorsPage = () => {
           <div className="text-center mb-4">
             <div className="d-inline-block position-relative mb-3">
               <h2 className="fw-bold text-dark mb-1">
-                Why Choose Our <span style={{ color: "#ad2132" }}>Mentors?</span>
+                Why Choose Our <span style={{ color: "#a51d34" }}>Mentors?</span>
               </h2>
               {/* <div
                 style={{
                   width: "100px",
                   height: "5px",
-                  backgroundColor: "#ad2132",
+                  backgroundColor: "#a51d34",
                   borderRadius: "999px",
                   position: "absolute",
                   left: "0",  // Changed from 50% to 0
