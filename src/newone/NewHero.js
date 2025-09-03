@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import CourseEnquiryModal from "../components/EnrollModal";
+import DemoRequestModal from "../models/DemoRequestModal";
 
 const NewHero = () => {
   const [banners, setBanners] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [showEnquiryModal, setShowEnquiryModal] = useState(false);
+  const [showDemoModal, setShowDemoModal] = useState(false);
 
   const carouselRef = useRef(null);
   const intervalRef = useRef(null);
@@ -77,6 +79,10 @@ const NewHero = () => {
 
   const handleEnrollClick = () => {
     setShowEnquiryModal(true);
+  };
+
+  const handleDemoClick = () => {
+    setShowDemoModal(true);
   };
 
   return (
@@ -160,6 +166,7 @@ const NewHero = () => {
                         <button
                           className="btn btn-outline-danger btn-sm py-3 rounded-pill fw-bold ms-2 d-flex align-items-center justify-content-center"
                           style={{ minWidth: "160px" }}
+                          onClick={handleDemoClick}
                         >
                           <i className="bi bi-play-circle-fill me-2"></i> Book a Demo
                         </button>
@@ -179,6 +186,10 @@ const NewHero = () => {
       <CourseEnquiryModal
         show={showEnquiryModal}
         handleClose={() => setShowEnquiryModal(false)}
+      />
+      <DemoRequestModal
+        show={showDemoModal}
+        handleClose={() => setShowDemoModal(false)}
       />
 
       {/* Custom CSS */}

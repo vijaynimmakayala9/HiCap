@@ -36,8 +36,7 @@ const ContactUsModal = ({ show, type, onHide }) => {
         enquiryType: contactData.enquiryType,
         message: contactData.message,
       };
-
-      const response = await axios.post("http://localhost:5001/api/contactus", payload);
+      const response = await axios.post("http://31.97.206.144:5001/api/contactus", payload);
 
       if (response.data.success) {
         Swal.fire("Success", "Your enquiry has been submitted!", "success");
