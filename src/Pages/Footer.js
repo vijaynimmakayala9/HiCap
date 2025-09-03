@@ -140,28 +140,22 @@ const Footer = () => {
                   <h5 className="fw-bold mb-3">Contact</h5>
 
                   {/* Phone */}
-                  <div className="d-flex justify-content-center justify-content-sm-start align-items-center mb-3 gap-2">
-                    <a
-                      href="tel:+916299161616"
-                      className="contact-icon phone-icon"
-                    >
+                  <div className="d-flex flex-wrap justify-content-center justify-content-sm-start align-items-center mb-3 gap-2 contact-row">
+                    <a href="tel:+916299161616" className="contact-icon phone-icon mb-2 mb-sm-0">
                       <i className="fas fa-phone-alt mirrored"></i>
                     </a>
-                    <a
-                      href="tel:+916299161616"
-                      className="text-white text-decoration-none link-hover"
-                    >
+                    <a href="tel:+916299161616" className="text-white text-decoration-none link-hover">
                       +91 6299161616
                     </a>
                   </div>
 
                   {/* WhatsApp */}
-                  <div className="d-flex justify-content-center justify-content-sm-start align-items-center mb-3 gap-2">
+                  <div className="d-flex flex-wrap justify-content-center justify-content-sm-start align-items-center mb-3 gap-2 contact-row">
                     <a
                       href="https://wa.me/916299161616"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="contact-icon whatsapp-icon"
+                      className="contact-icon whatsapp-icon mb-2 mb-sm-0"
                     >
                       <i className="fab fa-whatsapp"></i>
                     </a>
@@ -176,17 +170,15 @@ const Footer = () => {
                   </div>
 
                   {/* Email */}
-                  <div className="d-flex justify-content-center justify-content-sm-start align-items-center gap-2">
+                  <div className="d-flex flex-wrap justify-content-center justify-content-sm-start align-items-center gap-2 contact-row">
                     <a
-                      href="https://mail.google.com/mail/?view=cm&fs=1&to=info@techsterker.com"
-                      target='_blank'
-                      className="contact-icon email-icon"
+                      href="mailto:info@techsterker.com"
+                      className="contact-icon email-icon mb-2 mb-sm-0"
                     >
                       <i className="fas fa-envelope"></i>
                     </a>
                     <a
-                      href="https://mail.google.com/mail/?view=cm&fs=1&to=info@techsterker.com"
-                      target='_blank'
+                      href="mailto:info@techsterker.com"
                       className="text-white text-decoration-none link-hover"
                     >
                       info@techsterker.com
@@ -194,6 +186,7 @@ const Footer = () => {
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
@@ -322,48 +315,39 @@ const Footer = () => {
   }
   .social-icon:hover { transform: scale(1.1); }
 
-  .contact-icon {
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background-color: #fff;
-    transition: all 0.3s ease-in-out;
-    font-size: 18px;
-    cursor: pointer;
-    text-decoration: none; /* Remove underline */
-  }
+  /* Responsive Contact Section */
+.contact-row { flex-wrap: wrap; }
 
-  /* Phone */
-  .phone-icon i.mirrored { 
-    transform: scaleX(-1); 
-    color: #000; 
-    transition: color 0.3s;
-  }
-  .phone-icon:hover { background-color: #000; }
-  .phone-icon:hover i.mirrored { color: #fff; }
+.contact-icon {
+  width: 35px;
+  height: 35px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #fff;
+  transition: all 0.3s ease-in-out;
+  text-decoration: none;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
 
-  /* WhatsApp */
-  .whatsapp-icon i { color: #000; transition: color 0.3s; }
-  .whatsapp-icon:hover { background-color: #000; }
-  .whatsapp-icon:hover i { color: #fff; }
+.phone-icon i.mirrored { transform: scaleX(-1); color: #000; }
+.phone-icon:hover { background-color: #000; }
+.phone-icon:hover i.mirrored { color: #fff; }
 
-  /* Email */
-  .email-icon i { color: #000; transition: color 0.3s; }
-  .email-icon:hover { background-color: #000; }
-  .email-icon:hover i { color: #fff; }
+.whatsapp-icon i, .email-icon i { color: #000; transition: color 0.3s; }
+.whatsapp-icon:hover, .email-icon:hover { background-color: #000; }
+.whatsapp-icon:hover i, .email-icon:hover i { color: #fff; }
 
-  @media (max-width: 768px) {
-    .text-center.text-md-start,
-    .text-center.text-sm-start { text-align: center !important; }
-    .row > div { margin-bottom: 1.5rem; }
-  }
-  @media (max-width: 576px) {
-    .contact-icon { width: 35px; height: 35px; font-size: 16px; }
-    .d-flex.gap-2 { gap: 10px !important; }
-  }
+/* Smaller devices */
+@media (max-width: 576px) {
+  .contact-icon { width: 30px; height: 30px; font-size: 16px; }
+  .contact-row { gap: 0.5rem; justify-content: center !important; }
+  .text-center.text-sm-start { text-align: center !important; }
+}
+
 `}</style>
 
     </footer>

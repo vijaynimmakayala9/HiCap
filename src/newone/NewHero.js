@@ -80,7 +80,7 @@ const NewHero = () => {
   };
 
   return (
-    <section className="py-5 mt-5">
+    <section className="py-5 mt-5  bg-gradient-to-br from-white via-gray-50 to-red-50">
       <div className="container">
         <div
           id="heroCarousel"
@@ -106,9 +106,7 @@ const NewHero = () => {
                         width: "100%",
                         height: "100%",
                         objectFit: "cover",
-                        border: "0.5px solid #a51d34",
                         borderRadius: "20px",
-                        boxShadow: "0 20px 40px rgba(173,33,50,0.25)",
                       }}
                     />
                   </div>
@@ -120,6 +118,16 @@ const NewHero = () => {
                         className="fw-bold mb-3"
                         style={{ fontSize: "2rem", lineHeight: "1.2" }}
                       >
+                        <span
+                          style={{
+                            fontSize: "1.2rem",
+                            position: "relative",
+                            top: "-0.4em",
+                            lineHeight: "1"
+                          }}
+                        >
+                          ❝
+                        </span>{" "}
                         {banner.title.split(" ").map((word, i) => (
                           <span
                             key={i}
@@ -127,9 +135,20 @@ const NewHero = () => {
                           >
                             {word}{" "}
                           </span>
-                        ))}
+                        ))}{" "}
+                        <span
+                          style={{
+                            fontSize: "1.2rem",
+                            position: "relative",
+                            top: "-0.4em",
+                            lineHeight: "1"
+                          }}
+                        >
+                          ❞
+                        </span>
                       </h1>
-                      <p className="mb-4">{banner.description}</p>
+
+                      <p className="mb-4" style={{display: "inline-block"}}>{banner.description}</p>
                       <div className="d-flex justify-content-center justify-content-lg-start">
                         <button
                           className="btn btn-danger btn-sm py-3 rounded-pill fw-bold"

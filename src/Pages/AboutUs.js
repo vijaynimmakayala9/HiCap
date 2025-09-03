@@ -17,21 +17,7 @@ const AboutUS = () => {
         if (leadershipData.length > 0 && leadershipData[0].leadership) {
           setLeadershipTeam(leadershipData[0].leadership);
         }
-
-        // Fetch technical team data
-        const techTeamResponse = await fetch('http://31.97.206.144:5001/api/technical-team');
-        const techTeamData = await techTeamResponse.json();
-        if (techTeamData.data && techTeamData.data.length > 0) {
-          setTechnicalTeam(techTeamData.data[0]);
-        }
-
-        // Fetch classroom data
-        const classroomResponse = await fetch('http://31.97.206.144:5001/api/classroom');
-        const classroomJson = await classroomResponse.json();
-        if (classroomJson.data) {
-          setClassroomData(classroomJson.data);
-        }
-
+       
         setLoading(false);
       } catch (err) {
         setError(err.message);
@@ -211,38 +197,6 @@ const AboutUS = () => {
           </div>
         </div>
       )}
-
-      {/* Technical Team */}
-      {/* <div className="mb-5">
-        <SectionHeading><span style={{ color: "#a51d34" }}>TECHNICAL</span> TEAM</SectionHeading>
-        <div className="row align-items-center g-4">
-          <div className="col-md-6">
-
-            {technicalTeam && (
-              <>
-                <h5 style={{ color: "#000", fontWeight: "500", marginBottom: "1rem" }}>
-                  The Force Driving Innovation and Impact:
-                </h5>
-                <p style={{ fontSize: '1rem', lineHeight: '1.6' }}>Our people are Techsterker greatest asset: a vibrant group of competent tech specialists, well-known high-impact trainers, driven entrepreneurs, and effective managers.  Each member contributes their impressive professional achievements, a wealth of expertise, and the admiration of other people in the field.  Together, we are a formidable force dedicated to influencing the direction of IT skill development, spurring innovation, and leaving a lasting impression on the sector.</p>
-              </>
-            )}
-          </div>
-          <div className="col-md-6 text-center">
-            <img
-              src={technicalTeam?.image2 || "https://www.Techsterker.com/images/gallery/institute9.jpg"}
-              alt="Technical Team"
-              className="img-fluid rounded"
-              style={{
-                maxWidth: "100%",
-                height: "auto",
-                border: "0.5px solid maroon", // Thin maroon border
-                boxShadow: "0 10px 20px rgba(128, 0, 0, 0.3)", // Maroon shadow
-                transition: "transform 0.3s ease, box-shadow 0.3s ease" // Hover effect
-              }}
-            />
-          </div>
-        </div>
-      </div> */}
 
 
     </section>

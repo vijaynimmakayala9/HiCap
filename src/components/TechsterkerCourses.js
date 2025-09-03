@@ -62,7 +62,7 @@ const TechsterkerCourses = () => {
                   Techsterker
                 </span>
               </h3>
-              <p className="mt-3 text-muted">{course.content}</p>
+              <p className="mt-3 text-muted" style={{display: "inline-block"}}>{course.content}</p>
               <button
                 className="btn gradient-button mt-3 fw-bold px-4 py-2 rounded-pill"
                 onClick={() => navigate("/courses")}
