@@ -62,7 +62,7 @@ const FAQ = () => {
           <Row className="justify-content-center mb-5">
             <Col xs={12} md={8} lg={6}>
               <Image 
-                src="/service/faqs.jpg"
+                src={faqImage}
                 alt="FAQ Banner"
                 fluid
                 rounded
