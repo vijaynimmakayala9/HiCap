@@ -2,15 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { FaRegClock, FaCode, FaStar, FaUserGraduate, FaBook } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import CourseEnquiryModal from './EnrollModal';
 
 const Course = () => {
     const navigate = useNavigate();
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showEnquiryModal, setShowEnquiryModal] = useState(false);
+    const [selectedCourse, setSelectedCourse] = useState(null);
 
     const fetchCourses = async () => {
         try {
-            const response = await axios.get('https://hicap-backend-4rat.onrender.com/api/coursecontroller');
+            const response = await axios.get('https://backend-hicap.onrender.com/api/coursecontroller');
             // Adjust based on actual API structure
             setCourses(response.data.data || response.data || []);
             setLoading(false);
@@ -24,6 +27,11 @@ const Course = () => {
     useEffect(() => {
         fetchCourses();
     }, []);
+
+    const handleEnrollClick = (course) => {
+        setSelectedCourse(course);
+        setShowEnquiryModal(true);
+    };
 
     if (loading) {
         return (
@@ -79,7 +87,7 @@ const Course = () => {
                                         <FaBook className="mr-2 text-red-700" />
                                         <span>{noOfLessons}</span>
                                     </div>
-                                    
+
                                 </div>
                                 <div className="flex justify-between items-center space-x-4 flex-wrap">
                                     <button
@@ -90,7 +98,7 @@ const Course = () => {
                                     </button>
                                     <button
                                         className="flex-1 py-2 px-2 rounded-md text-white font-medium bg-red-700 hover:bg-red-800 transition-colors"
-                                        onClick={() => {/* Handle enroll logic here */ }}
+                                        onClick={() => handleEnrollClick({title: name, _id})}
                                     >
                                         Enroll Now
                                     </button>
@@ -112,6 +120,11 @@ const Course = () => {
                     </button>
                 </div>
             </div>
+            <CourseEnquiryModal
+                show={showEnquiryModal}
+                handleClose={() => setShowEnquiryModal(false)}
+                prefillCourse={selectedCourse?.title}
+            />
         </section>
     );
 };

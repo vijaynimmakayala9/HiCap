@@ -87,7 +87,7 @@ const Interviews = () => {
     const fetchInterviews = async () => {
       try {
         const response = await fetch(
-          `https://hicap-backend-4rat.onrender.com/api/interview/user/${userId}`
+          `https://backend-hicap.onrender.com/api/interview/user/${userId}`
         );
         if (!response.ok) throw new Error('Failed to fetch interviews');
         const data = await response.json();

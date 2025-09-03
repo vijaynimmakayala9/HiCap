@@ -9,12 +9,12 @@ const OurMentorsPage = () => {
 
   useEffect(() => {
     axios
-      .get('https://hicap-backend-4rat.onrender.com/api/our-mentor/Mentor')
+      .get('https://backend-hicap.onrender.com/api/our-mentor/Mentor')
       .then(res => setMentors(res.data.data || []))
       .catch(err => console.error('Mentor API error:', err));
 
     axios
-      .get('https://hicap-backend-4rat.onrender.com/api/our-mentor/experience')
+      .get('https://backend-hicap.onrender.com/api/our-mentor/experience')
       .then(res => setBenefits(res.data.data || []))
       .catch(err => console.error('Benefits API error:', err));
   }, []);

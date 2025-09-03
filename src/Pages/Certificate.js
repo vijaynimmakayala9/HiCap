@@ -18,7 +18,7 @@ const Certificate = () => {
     const fetchCertificates = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`https://hicap-backend-4rat.onrender.com/api/certificate/user/${userId}`);
+        const response = await fetch(`https://backend-hicap.onrender.com/api/certificate/user/${userId}`);
         if (!response.ok) throw new Error('Failed to fetch certificates');
         const data = await response.json();
         if (data.success) {
@@ -27,7 +27,7 @@ const Certificate = () => {
           // Fetch course details for each certificate
           const courseIds = data.data.map(c => c.enrolledId.courseId._id);
           const coursePromises = courseIds.map(id =>
-            axios.get(`https://hicap-backend-4rat.onrender.com/api/coursecontroller/${id}`)
+            axios.get(`https://backend-hicap.onrender.com/api/coursecontroller/${id}`)
           );
           const courseResponses = await Promise.all(coursePromises);
           const courseData = {};

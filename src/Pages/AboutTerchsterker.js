@@ -7,7 +7,7 @@ const AboutTechsterker = () => {
   useEffect(() => {
     const fetchAboutData = async () => {
       try {
-        const response = await axios.get("https://hicap-backend-4rat.onrender.com/api/about");
+        const response = await axios.get("https://backend-hicap.onrender.com/api/about");
         if (response.data && response.data.data && response.data.data.length > 0) {
           setAboutData(response.data.data[0]);
         }
@@ -20,7 +20,7 @@ const AboutTechsterker = () => {
   }, []);
 
   return (
-    <section className="container py-4 py-md-5 mt-5">
+    <section className="container mt-5">
       {aboutData ? (
         <div className="row align-items-center mb-4 mb-md-5 g-4">
           {/* Text Section */}

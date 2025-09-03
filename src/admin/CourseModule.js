@@ -29,7 +29,7 @@ const CourseModuleInterface = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`https://hicap-backend-4rat.onrender.com/api/course-modules/user/${userId}`);
+        const response = await fetch(`https://backend-hicap.onrender.com/api/course-modules/user/${userId}`);
         const data = await response.json();
 
         if (data.success) {

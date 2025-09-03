@@ -61,7 +61,7 @@ const ContactUs = () => {
     };
 
     try {
-      const response = await fetch('https://hicap-backend-4rat.onrender.com/api/enquiries/create', {
+      const response = await fetch('https://backend-hicap.onrender.com/api/enquiries/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

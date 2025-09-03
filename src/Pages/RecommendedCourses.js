@@ -16,7 +16,7 @@ const RecommendedCourses = () => {
     const fetchEnrollments = async () => {
       try {
         const response = await axios.get(
-          `https://hicap-backend-4rat.onrender.com/api/enrollments/${userId}`
+          `https://backend-hicap.onrender.com/api/enrollments/${userId}`
         );
 
         const enrollments = response.data.data || [];
@@ -37,7 +37,7 @@ const RecommendedCourses = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get('https://hicap-backend-4rat.onrender.com/api/courses');
+        const res = await axios.get('https://backend-hicap.onrender.com/api/courses');
         const allCourses = res.data.data;
 
         const filtered = allCourses.filter(

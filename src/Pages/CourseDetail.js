@@ -84,7 +84,7 @@ const CourseDetail = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('https://hicap-backend-4rat.onrender.com/api/coursecontroller');
+        const response = await fetch('https://backend-hicap.onrender.com/api/coursecontroller');
         const coursesData = await response.json();
 
         if (coursesData.success) {
@@ -374,22 +374,22 @@ const CourseDetail = () => {
                     <Row className="g-3">
                       {[
                         {
-                          image: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+                          image: "/whocanlearn/student.png",
                           title: "Students & Freshers",
                           description: "Perfect for career starters building rock-solid foundations through practical, industry-aligned training."
                         },
                         {
-                          image: "https://cdn-icons-png.flaticon.com/512/1053/1053244.png",
+                          image: "/whocanlearn/professional.png",
                           title: "Working Professionals",
                           description: "Give your career a powerful restart with practical, industry-driven upskilling."
                         },
                         {
-                          image: "https://cdn-icons-png.flaticon.com/512/190/190411.png",
+                          image: "/whocanlearn/freelancer.png",
                           title: "Freelancers",
                           description: "Freelancers can sharpen their competitive edge with high-demand skills and client-winning strategies to grow their independent careers."
                         },
                         {
-                          image: "https://cdn-icons-png.flaticon.com/512/706/706830.png",
+                          image: "/whocanlearn/bussiness.png",
                           title: "Entrepreneurs",
                           description: "Entrepreneurs accelerate growth by mastering scalable systems, data-driven decisions, and leadership strategies to outpace competitors."
                         }
@@ -400,7 +400,7 @@ const CourseDetail = () => {
                               <img
                                 src={learner.image}
                                 alt={learner.title}
-                                className="rounded-circle border border-2 border-info"
+                                className="rounded-circle border border-2 border-light bg-light"
                                 style={{ width: '48px', height: '48px', objectFit: 'cover' }}
                               />
                               <div>

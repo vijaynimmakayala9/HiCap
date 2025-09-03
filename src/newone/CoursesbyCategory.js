@@ -17,7 +17,7 @@ const CoursesByCategory = () => {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const response = await fetch('https://hicap-backend-4rat.onrender.com/api/coursecontroller');
+                const response = await fetch('https://backend-hicap.onrender.com/api/coursecontroller');
                 const data = await response.json();
                 if (response.ok) {
                     setCourses(data.data);

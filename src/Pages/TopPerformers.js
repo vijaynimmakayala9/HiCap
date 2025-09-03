@@ -11,7 +11,7 @@ const TopPerformers = () => {
   const fetchCourses = async () => {
     try {
       const response = await axios.get(
-        "https://hicap-backend-4rat.onrender.com/api/coursecontroller"
+        "https://backend-hicap.onrender.com/api/coursecontroller"
       );
 
       if (response.data.success && Array.isArray(response.data.data)) {
@@ -38,7 +38,7 @@ const TopPerformers = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://hicap-backend-4rat.onrender.com/api/enrollments/top-practical/${courseId}`
+        `https://backend-hicap.onrender.com/api/enrollments/top-practical/${courseId}`
       );
 
       if (response.data.success && Array.isArray(response.data.data)) {

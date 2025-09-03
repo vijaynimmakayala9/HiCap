@@ -1,127 +1,175 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import CourseEnquiryModal from "../components/EnrollModal";
 
 const NewHero = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [banners, setBanners] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [showEnquiryModal, setShowEnquiryModal] = useState(false);
 
-  const banners = [
-    {
-      title: "Professional Skill Development Through Innovative Methods",
-      description:
-        "We provide industry-focused IT training designed to enhance both technical and professional skills. Through innovative teaching methods, hands-on projects, and expert mentorship, we ensure learners gain practical knowledge and confidence.",
-      image:
-        "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80",
-    },
-    {
-      title: "Innovative Approaches to Professional Development",
-      description:
-        "We offer innovative and practical training solutions designed to help learners build essential technical and professional skills. Our programs focus on real-world applications, hands-on projects, and expert mentorship to ensure career readiness.",
-      image:
-        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80",
-    },
-    {
-      title: "Building Competence Through Strategic Skill Enhancement",
-      description:
-        "Through organized and well-thought-out training programs, we concentrate on giving students the fundamental technical and professional skills they need. Our approach combines expert guidance, practical learning, and real-time projects.",
-      image:
-        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1171&q=80",
-    },
-  ];
+  const carouselRef = useRef(null);
+  const intervalRef = useRef(null);
 
-  // Auto-rotate carousel every 4 seconds
+  // Fetch banners from API
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % banners.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [banners.length]);
+    const fetchBanners = async () => {
+      try {
+        const res = await fetch("https://backend-hicap.onrender.com/api/hero-banners");
+        const data = await res.json();
+        if (data.success) {
+          const formatted = data.data.map((item) => ({
+            ...item,
+            description: item.content,
+          }));
+          setBanners(formatted);
+        }
+      } catch (err) {
+        console.error("Error fetching banners:", err);
+      }
+    };
 
-  const getSlidePosition = (index) => {
-    if (index === currentSlide) return "active";
-    if (index === (currentSlide - 1 + banners.length) % banners.length)
-      return "left";
-    if (index === (currentSlide + 1) % banners.length) return "right";
-    return index < currentSlide ? "far-left" : "far-right";
+    fetchBanners();
+  }, []);
+
+  // Auto-scroll functionality
+  const startAutoScroll = () => {
+    intervalRef.current = setInterval(() => {
+      if (!isPaused && banners.length > 0) {
+        const nextIndex = (activeIndex + 1) % banners.length;
+        goToSlide(nextIndex);
+      }
+    }, 4000);
+  };
+
+  const stopAutoScroll = () => clearInterval(intervalRef.current);
+
+  const goToSlide = (index) => {
+    setActiveIndex(index);
+    if (carouselRef.current) {
+      const carousel = new window.bootstrap.Carousel(carouselRef.current);
+      carousel.to(index);
+    }
+  };
+
+  useEffect(() => {
+    if (banners.length > 0) {
+      startAutoScroll();
+      if (carouselRef.current) {
+        new window.bootstrap.Carousel(carouselRef.current, {
+          interval: false,
+          wrap: true,
+        });
+      }
+    }
+    return () => stopAutoScroll();
+  }, [banners]);
+
+  useEffect(() => {
+    stopAutoScroll();
+    if (!isPaused && banners.length > 0) {
+      startAutoScroll();
+    }
+  }, [activeIndex, isPaused, banners]);
+
+  const handleMouseEnter = () => setIsPaused(true);
+  const handleMouseLeave = () => setIsPaused(false);
+
+  const handleEnrollClick = () => {
+    setShowEnquiryModal(true);
   };
 
   return (
-    <div className="relative w-full bg-gray-50 overflow-hidden h-screen min-h-[600px] max-h-[1200px] ">
-      <div className="relative h-full">
-        {banners.map((banner, index) => {
-          const position = getSlidePosition(index);
-
-          return (
-            <div
-              key={index}
-              className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ease-in-out ${position === "active" ? "opacity-100 z-20" : "opacity-0 z-0"
-                }`}
-              style={{
-                transform:
-                  position === "active"
-                    ? "translateX(0)"
-                    : position === "left"
-                      ? "translateX(-100%)"
-                      : position === "right"
-                        ? "translateX(100%)"
-                        : position === "far-left"
-                          ? "translateX(-100%)"
-                          : "translateX(100%)",
-              }}
-            >
-              <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center justify-center lg:justify-between text-center lg:text-left py-6">
-                {/* Left Content */}
-                <div className="flex-1 flex justify-center lg:ml-6 relative">
-                  <div className="relative">
+    <section className="py-5 mt-5">
+      <div className="container">
+        <div
+          id="heroCarousel"
+          className="carousel slide"
+          ref={carouselRef}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <div className="carousel-inner">
+            {banners.map((banner, index) => (
+              <div
+                key={banner._id || index}
+                className={`carousel-item ${index === activeIndex ? "active" : ""}`}
+              >
+                <div className="row g-4 align-items-center">
+                  {/* Left Image */}
+                  <div className="col-lg-6 text-center">
                     <img
                       src={banner.image}
                       alt={banner.title}
-                      className="w-full max-w-[300px] sm:max-w-[400px] md:max-w-[450px] lg:max-w-[500px] xl:max-w-[550px] rounded-xl object-cover shadow-lg border-2 border-white transform perspective-[1000px] -rotate-y-6"
+                      className="img-fluid rounded-3 shadow-lg"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        border: "0.5px solid #a51d34",
+                        borderRadius: "20px",
+                        boxShadow: "0 20px 40px rgba(173,33,50,0.25)",
+                      }}
                     />
-                    {/* Overlay */}
-                    <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-red-600/10 to-transparent z-10"></div>
-                    {/* Radial gradient */}
-                    <div className="absolute -top-10 -right-10 w-[120%] h-[120%] bg-[radial-gradient(circle,rgba(220,53,69,0.15)_0%,transparent_70%)]"></div>
                   </div>
-                </div>
 
-                {/* Right Image */}
-                <div className="flex-1 max-w-full lg:max-w-[45%] mb-6 lg:mb-0 lg:mr-6">
-                  <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-4">
-                    {banner.title}
-                  </h1>
-                  <p className="text-gray-600 text-base md:text-lg lg:text-xl max-h-40 overflow-y-auto mb-6">
-                    {banner.description}
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                    <button className="bg-red-600 hover:bg-red-700 text-white text-sm md:text-base px-4 md:px-6 py-2 md:py-3 rounded-lg shadow">
-                      Login
-                    </button>
-                    <button className="border border-red-600 text-red-600 hover:bg-red-50 text-sm md:text-base px-4 md:px-6 py-2 md:py-3 rounded-lg flex items-center justify-center gap-2">
-                      <i className="bi bi-play-circle-fill"></i> Book a Demo
-                    </button>
+                  {/* Right Text */}
+                  <div className="col-lg-6">
+                    <div className="ps-lg-4 text-center text-lg-start">
+                      <h1
+                        className="fw-bold mb-3"
+                        style={{ fontSize: "2rem", lineHeight: "1.2" }}
+                      >
+                        {banner.title.split(" ").map((word, i) => (
+                          <span
+                            key={i}
+                            style={{ color: i % 2 === 0 ? "#a51d34" : "#000" }}
+                          >
+                            {word}{" "}
+                          </span>
+                        ))}
+                      </h1>
+                      <p className="mb-4">{banner.description}</p>
+                      <div className="d-flex justify-content-center justify-content-lg-start">
+                        <button
+                          className="btn btn-danger btn-sm py-3 rounded-pill fw-bold"
+                          style={{ minWidth: "140px" }}
+                          onClick={handleEnrollClick}
+                        >
+                          Enquiry Now
+                        </button>
+                        <button
+                          className="btn btn-outline-danger btn-sm py-3 rounded-pill fw-bold ms-2 d-flex align-items-center justify-content-center"
+                          style={{ minWidth: "160px" }}
+                        >
+                          <i className="bi bi-play-circle-fill me-2"></i> Book a Demo
+                        </button>
+
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            ))}
+          </div>
+
+
+        </div>
       </div>
 
-      {/* Navigation Indicators */}
-      {/* <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex space-x-2">
-        {banners.map((_, index) => (
-          <button
-            key={index}
-            className={`text-2xl ${
-              index === currentSlide ? "text-red-600" : "text-gray-400"
-            }`}
-            onClick={() => setCurrentSlide(index)}
-            aria-label={`Go to slide ${index + 1}`}
-          >
-            •
-          </button>
-        ))}
-      </div> */}
-    </div>
+      <CourseEnquiryModal
+        show={showEnquiryModal}
+        handleClose={() => setShowEnquiryModal(false)}
+      />
+
+      {/* Custom CSS */}
+      <style jsx>{`
+        .carousel-item {
+          transition: transform 0.6s ease-in-out;
+        }
+      `}</style>
+    </section>
+
   );
 };
 

@@ -10,7 +10,7 @@ const Counter = () => {
     // Fetch counters from API
     const fetchCounts = async () => {
       try {
-        const res = await fetch("https://hicap-backend-4rat.onrender.com/api/counts");
+        const res = await fetch("https://backend-hicap.onrender.com/api/counts");
         const data = await res.json();
 
         if (data.success && data.data.length > 0) {

@@ -16,7 +16,7 @@ const CourseAndFeatures = () => {
     const fetchCourses = async () => {
       try {
         const res = await fetch(
-          "https://hicap-backend-4rat.onrender.com/api/hero-banners"
+          "https://backend-hicap.onrender.com/api/hero-banners"
         );
         const data = await res.json();
         if (data.success) {

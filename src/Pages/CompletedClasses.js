@@ -14,7 +14,7 @@ const CompletedCourses = () => {
     const fetchCompletedCourses = async () => {
       try {
         const response = await axios.get(
-          `https://hicap-backend-4rat.onrender.com/api/enrollments/${userId}`
+          `https://backend-hicap.onrender.com/api/enrollments/${userId}`
         );
 
         if (response.data.success) {

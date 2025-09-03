@@ -24,7 +24,7 @@ const HeaderSection = ({ userData, enrolledCourses, navigate, todaysClassesCount
         return;
       }
 
-      const response = await axios.get(`https://hicap-backend-4rat.onrender.com/api/live-classes/user/${user.id}`);
+      const response = await axios.get(`https://backend-hicap.onrender.com/api/live-classes/user/${user.id}`);
       if (response.data.success) {
         const today = new Date().toDateString();
         const todaysClasses = response.data.data.filter(cls => {

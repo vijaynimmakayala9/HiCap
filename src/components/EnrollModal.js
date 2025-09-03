@@ -17,14 +17,13 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
     email: '',
     course: prefillCourse,
     city: '',
-    timing: '',
     message: ''
   });
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch('https://hicap-backend-4rat.onrender.com/api/coursecontroller');
+        const response = await fetch('https://backend-hicap.onrender.com/api/coursecontroller');
         const data = await response.json();
         setCourses(data.data);
       } catch (error) {
@@ -86,7 +85,7 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
     };
 
     try {
-      const response = await fetch('https://hicap-backend-4rat.onrender.com/api/enquiries/create', {
+      const response = await fetch('https://backend-hicap.onrender.com/api/enquiries/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -187,20 +186,7 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
             onChange={handleChange}
             onFocus={() => setShowSuggestions(false)}
           />
-          <Form.Select
-            name="timing"
-            className="mb-3"
-            value={formData.timing}
-            onChange={handleChange}
-            onFocus={() => setShowSuggestions(false)}
-          >
-            <option value="" disabled>Preferred Timings</option>
-            <option value="Morning">Morning</option>
-            <option value="Afternoon">Afternoon</option>
-            <option value="Evening">Evening</option>
-            <option value="Weekend">Weekend</option>
-            <option value="Online">Online</option>
-          </Form.Select>
+          
           <Form.Control
             as="textarea"
             name="message"

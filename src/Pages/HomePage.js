@@ -32,7 +32,7 @@ const HomePage = () => {
 
     // Fetch content for modal
     axios
-      .get("https://hicap-backend-4rat.onrender.com/api/content")
+      .get("https://backend-hicap.onrender.com/api/content")
       .then((res) => {
         if (res.data?.data?.length > 0) {
           setModalContent(res.data.data[0]);

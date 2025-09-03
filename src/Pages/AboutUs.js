@@ -12,21 +12,21 @@ const AboutUS = () => {
     const fetchData = async () => {
       try {
         // Fetch leadership data
-        const leadershipResponse = await fetch('https://hicap-backend-4rat.onrender.com/api/leadership');
+        const leadershipResponse = await fetch('https://backend-hicap.onrender.com/api/leadership');
         const leadershipData = await leadershipResponse.json();
         if (leadershipData.length > 0 && leadershipData[0].leadership) {
           setLeadershipTeam(leadershipData[0].leadership);
         }
 
         // Fetch technical team data
-        const techTeamResponse = await fetch('https://hicap-backend-4rat.onrender.com/api/technical-team');
+        const techTeamResponse = await fetch('https://backend-hicap.onrender.com/api/technical-team');
         const techTeamData = await techTeamResponse.json();
         if (techTeamData.data && techTeamData.data.length > 0) {
           setTechnicalTeam(techTeamData.data[0]);
         }
 
         // Fetch classroom data
-        const classroomResponse = await fetch('https://hicap-backend-4rat.onrender.com/api/classroom');
+        const classroomResponse = await fetch('https://backend-hicap.onrender.com/api/classroom');
         const classroomJson = await classroomResponse.json();
         if (classroomJson.data) {
           setClassroomData(classroomJson.data);
@@ -69,13 +69,13 @@ const AboutUS = () => {
       <AboutTechsterker />
 
       {/* Why TECHSTERKER */}
-      <div className="container py-4 py-md-5">
+      <div className="container">
         <div className="row align-items-center g-4">
           {/* Image */}
           <div className="col-lg-6">
             <div className="h-100">
               <img
-                src="/service/why.png"
+                src="/service/whyus - Copy.jpg"
                 alt="Why Choose TECHSTERKER"
                 className="img-fluid rounded w-100"
                 style={{

@@ -27,7 +27,7 @@ const YourStatistics = () => {
     const fetchData = async () => {
       try {
         // Fetch courses
-        const coursesResponse = await axios.get('https://hicap-backend-4rat.onrender.com/api/coursecontroller');
+        const coursesResponse = await axios.get('https://backend-hicap.onrender.com/api/coursecontroller');
         if (coursesResponse.data.success) {
           const availableCourses = Array.isArray(coursesResponse.data) ?
             coursesResponse.data :
@@ -40,7 +40,7 @@ const YourStatistics = () => {
         }
 
         // Fetch enrollments
-        const enrollmentsResponse = await axios.get('https://hicap-backend-4rat.onrender.com/api/enrollments');
+        const enrollmentsResponse = await axios.get('https://backend-hicap.onrender.com/api/enrollments');
         if (enrollmentsResponse.data.success) {
           setEnrollments(enrollmentsResponse.data.data);
         }

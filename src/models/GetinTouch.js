@@ -49,7 +49,7 @@ const GetInTouch = () => {
       }
 
       const response = await axios.post(
-        "https://hicap-backend-4rat.onrender.com/api/getintouch",
+        "https://backend-hicap.onrender.com/api/getintouch",
         payload
       );
 

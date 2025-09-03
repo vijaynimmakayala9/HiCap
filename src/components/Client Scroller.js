@@ -22,7 +22,7 @@ const ClientScrollerBootstrap = () => {
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const res = await fetch("https://hicap-backend-4rat.onrender.com/api/clients");
+        const res = await fetch("https://backend-hicap.onrender.com/api/clients");
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
           setContent(data[0].content || "");
