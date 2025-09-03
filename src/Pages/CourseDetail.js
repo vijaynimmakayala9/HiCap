@@ -323,7 +323,7 @@ const CourseDetail = () => {
                                 <img
                                   src={feature.image}
                                   alt={feature.title}
-                                  className="img-fluid rounded-circle"
+                                  className="img-fluid "
                                   style={{ width: '48px', height: '48px', objectFit: 'cover' }}
                                 />
                                 <h4 className="mb-0 small text-dark flex-grow-1">

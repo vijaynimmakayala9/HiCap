@@ -1,24 +1,36 @@
-import React, { useState } from "react";
-import ContactUsModal from "./ContactUsModal"; // import the API-integrated ContactUsModal
+import React, { useState, useRef } from "react";
+import ContactUsModal from "./ContactUsModal"; 
 import CourseEnquiryModal from "../components/EnrollModal";
 
 const StickyContactButtons = () => {
   const [showContactModal, setShowContactModal] = useState(false);
+  const [showEnquiryModal, setShowEnquiryModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [hoveredIcon, setHoveredIcon] = useState(null);
-  const [showEnquiryModal, setShowEnquiryModal] = useState(false);
 
-  
+  const containerRef = useRef(null);
+  let timeoutId = useRef(null);
+
+  const handleMouseEnter = () => {
+    clearTimeout(timeoutId.current);
+    setIsExpanded(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutId.current = setTimeout(() => {
+      setIsExpanded(false);
+      setHoveredIcon(null);
+    }, 200); // small delay to prevent flicker
+  };
+
   return (
     <>
       <div
+        ref={containerRef}
         className="position-fixed d-flex flex-column align-items-end"
         style={{ right: 0, top: '50%', transform: 'translateY(-50%)', zIndex: 1050 }}
-        onMouseEnter={() => setIsExpanded(true)}
-        onMouseLeave={() => {
-          setIsExpanded(false);
-          setHoveredIcon(null);
-        }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         {/* Main Vertical Enquiry Button */}
         {!isExpanded && (
@@ -32,7 +44,6 @@ const StickyContactButtons = () => {
               borderBottomLeftRadius: '5px',
               fontSize: '0.9rem',
               letterSpacing: '1px',
-              height: 'auto',
               cursor: 'pointer'
             }}
           >
@@ -40,7 +51,7 @@ const StickyContactButtons = () => {
           </div>
         )}
 
-        {/* Expanded Icons */}
+        {/* Expanded Buttons */}
         {isExpanded && (
           <div className="d-flex flex-column bg-danger" style={{ borderBottomLeftRadius: '5px' }}>
             {/* Contact Us */}
@@ -52,10 +63,7 @@ const StickyContactButtons = () => {
                 borderBottomLeftRadius: '5px',
                 cursor: 'pointer'
               }}
-              onClick={() => {
-                setShowContactModal(true);
-                setIsExpanded(false);
-              }}
+              onClick={() => setShowContactModal(true)}
               onMouseEnter={() => setHoveredIcon('contact')}
               onMouseLeave={() => setHoveredIcon(null)}
             >
@@ -79,10 +87,7 @@ const StickyContactButtons = () => {
                 borderBottomLeftRadius: '5px',
                 cursor: 'pointer'
               }}
-              onClick={() => {
-                setShowEnquiryModal(true);
-                setIsExpanded(false);
-              }}
+              onClick={() => setShowEnquiryModal(true)}
               onMouseEnter={() => setHoveredIcon('enroll')}
               onMouseLeave={() => setHoveredIcon(null)}
             >
@@ -100,12 +105,9 @@ const StickyContactButtons = () => {
         )}
       </div>
 
-      {/* Contact Modal */}
+      {/* Modals */}
       <ContactUsModal show={showContactModal} onHide={() => setShowContactModal(false)} />
-      <CourseEnquiryModal
-        show={showEnquiryModal}
-        handleClose={() => setShowEnquiryModal(false)}
-      />
+      <CourseEnquiryModal show={showEnquiryModal} handleClose={() => setShowEnquiryModal(false)} />
     </>
   );
 };
