@@ -44,7 +44,7 @@ const fetchCoursePdf = async () => {
   try {
     setLoading(true);
     const response = await axios.get(
-      "https://backend-hicap.onrender.com/api/coursecontroller"
+      "http://31.97.206.144:5001/api/coursecontroller"
     );
 
     if (response.data.success) {
@@ -84,7 +84,7 @@ const fetchCoursePdf = async () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        'https://backend-hicap.onrender.com/api/send-otp',
+        'http://31.97.206.144:5001/api/send-otp',
         { name, phoneNumber: `+${phone}` }
       );
 
@@ -113,7 +113,7 @@ const fetchCoursePdf = async () => {
   try {
     setLoading(true);
     const response = await axios.post(
-      'https://backend-hicap.onrender.com/api/verify-otp',
+      'http://31.97.206.144:5001/api/verify-otp',
       { phoneNumber: `+${phone}`, otp }
     );
 

@@ -42,7 +42,7 @@ const DoubtSession = () => {
       }
 
       const response = await axios.post(
-        'https://backend-hicap.onrender.com/api/doubtsession',
+        'http://31.97.206.144:5001/api/doubtsession',
         formDataToSend,
         {
           headers: {

@@ -16,7 +16,7 @@ const Footer = () => {
     const fetchCourses = async () => {
       try {
         const response = await fetch(
-          "https://backend-hicap.onrender.com/api/coursecontroller"
+          "http://31.97.206.144:5001/api/coursecontroller"
         );
         const data = await response.json();
         if (data.success) setCourses(data.data);
@@ -36,7 +36,7 @@ const Footer = () => {
     const fetchSocialLinks = async () => {
       try {
         const response = await fetch(
-          "https://backend-hicap.onrender.com/api/social-media"
+          "http://31.97.206.144:5001/api/social-media"
         );
         const data = await response.json();
         if (data.success) {

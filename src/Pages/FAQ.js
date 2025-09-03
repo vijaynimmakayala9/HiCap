@@ -15,7 +15,7 @@ const FAQ = () => {
 
   useEffect(() => {
     axios
-      .get('https://backend-hicap.onrender.com/api/faq')
+      .get('http://31.97.206.144:5001/api/faq')
       .then((res) => {
         const data = res.data.data[0];
         setFaqImage(data.image || '');

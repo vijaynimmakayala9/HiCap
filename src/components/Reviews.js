@@ -12,7 +12,7 @@ const Reviews = () => {
 
   const fetchReviews = async () => {
     try {
-      const res = await axios.get('https://backend-hicap.onrender.com/api/Reviews');
+      const res = await axios.get('http://31.97.206.144:5001/api/Reviews');
       setReviews(res.data.data);
     } catch (err) {
       setError('Failed to load reviews.');

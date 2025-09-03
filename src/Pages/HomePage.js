@@ -32,7 +32,7 @@ const HomePage = () => {
 
     // Fetch content for modal
     axios
-      .get("https://backend-hicap.onrender.com/api/content")
+      .get("http://31.97.206.144:5001/api/content")
       .then((res) => {
         if (res.data?.data?.length > 0) {
           setModalContent(res.data.data[0]);

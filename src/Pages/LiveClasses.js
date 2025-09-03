@@ -20,7 +20,7 @@ const LiveClasses = () => {
   useEffect(() => {
     const fetchLiveClasses = async () => {
       try {
-        const res = await axios.get('https://backend-hicap.onrender.com/api/liveclasses');
+        const res = await axios.get('http://31.97.206.144:5001/api/liveclasses');
         if (res.data.success) {
           setLiveClasses(res.data.data);
         } else {

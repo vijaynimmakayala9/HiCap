@@ -21,7 +21,7 @@ const UpCommingBatches = () => {
     const fetchData = async () => {
       try {
         // Fetch batches
-        const batchesRes = await axios.get('https://backend-hicap.onrender.com/api/upcomingBatch');
+        const batchesRes = await axios.get('http://31.97.206.144:5001/api/upcomingBatch');
         if (batchesRes.data.success && batchesRes.data.data.length > 0) {
           const batches = batchesRes.data.data[0].allbatches.map(b => ({
             batchName: b.batchName,
@@ -40,13 +40,13 @@ const UpCommingBatches = () => {
         }
 
         // Fetch Abroad Students data
-        const abroadRes = await axios.get('https://backend-hicap.onrender.com/api/abrodstudents');
+        const abroadRes = await axios.get('http://31.97.206.144:5001/api/abrodstudents');
         if (abroadRes.data.success && abroadRes.data.data.length > 0) {
           setAbroadData(abroadRes.data.data[0]);
         }
 
         // Fetch Enrollments data
-        const enrollmentsRes = await axios.get('https://backend-hicap.onrender.com/api/enrollments');
+        const enrollmentsRes = await axios.get('http://31.97.206.144:5001/api/enrollments');
         if (enrollmentsRes.data.success) {
           setEnrollments(enrollmentsRes.data.data);
         }

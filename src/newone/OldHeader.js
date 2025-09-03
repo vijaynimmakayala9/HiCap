@@ -62,7 +62,7 @@ const GuestHeader = ({ onLogin }) => {
   }, []);
 
   useEffect(() => {
-    fetch('https://backend-hicap.onrender.com/api/coursecontroller')
+    fetch('http://31.97.206.144:5001/api/coursecontroller')
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) setCourses(data);
@@ -172,7 +172,7 @@ const GuestHeader = ({ onLogin }) => {
     setIsLoggingIn(true);
 
     try {
-      const response = await fetch('https://backend-hicap.onrender.com/api/userlogin', {
+      const response = await fetch('http://31.97.206.144:5001/api/userlogin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

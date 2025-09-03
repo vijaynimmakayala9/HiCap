@@ -23,7 +23,7 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch('https://backend-hicap.onrender.com/api/coursecontroller');
+        const response = await fetch('http://31.97.206.144:5001/api/coursecontroller');
         const data = await response.json();
         setCourses(data.data);
       } catch (error) {
@@ -85,7 +85,7 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
     };
 
     try {
-      const response = await fetch('https://backend-hicap.onrender.com/api/enquiries/create', {
+      const response = await fetch('http://31.97.206.144:5001/api/enquiries/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

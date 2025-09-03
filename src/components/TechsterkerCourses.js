@@ -35,7 +35,7 @@ const TechsterkerCourses = () => {
     const fetchCourses = async () => {
       try {
         const res = await axios.get(
-          "https://backend-hicap.onrender.com/api/courses"
+          "http://31.97.206.144:5001/api/courses"
         );
         setCourses(res.data.data || []);
       } catch (error) {

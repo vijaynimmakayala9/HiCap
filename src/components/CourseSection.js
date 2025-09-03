@@ -16,7 +16,7 @@ const CourseAndFeatures = () => {
     const fetchCourses = async () => {
       try {
         const res = await fetch(
-          "https://backend-hicap.onrender.com/api/hero-banners"
+          "http://31.97.206.144:5001/api/hero-banners"
         );
         const data = await res.json();
         if (data.success) {

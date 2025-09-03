@@ -28,7 +28,7 @@ const LiveClassesPage = () => {
       }
 
       // Use the user-specific endpoint
-      const res = await fetch(`https://backend-hicap.onrender.com/api/live-classes/user/${user.id}`);
+      const res = await fetch(`http://31.97.206.144:5001/api/live-classes/user/${user.id}`);
       const data = await res.json();
 
       console.log('Live classes data:', data);
@@ -54,7 +54,7 @@ const LiveClassesPage = () => {
       console.error('Error fetching live classes:', error);
       // Fallback to general endpoint if user-specific fails
       try {
-        const fallbackRes = await fetch('https://backend-hicap.onrender.com/api/liveclass');
+        const fallbackRes = await fetch('http://31.97.206.144:5001/api/liveclass');
         const fallbackData = await fallbackRes.json();
 
         if (fallbackData.success) {

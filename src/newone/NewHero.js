@@ -15,7 +15,7 @@ const NewHero = () => {
   useEffect(() => {
     const fetchBanners = async () => {
       try {
-        const res = await fetch("https://backend-hicap.onrender.com/api/hero-banners");
+        const res = await fetch("http://31.97.206.144:5001/api/hero-banners");
         const data = await res.json();
         if (data.success) {
           const formatted = data.data.map((item) => ({

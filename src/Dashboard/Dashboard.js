@@ -30,13 +30,13 @@ const Dashboard = () => {
 
   const fetchRecommendedCourses = async () => {
     try {
-      const response = await axios.get(`https://backend-hicap.onrender.com/api/recommend-courses/${student.id}`);
+      const response = await axios.get(`http://31.97.206.144:5001/api/recommend-courses/${student.id}`);
       setRecommendedCourses(response.data.data || []);
     } catch (error) {
       console.error("Error fetching recommended courses:", error);
       // Fallback to general courses if recommendation fails
       try {
-        const response = await axios.get("https://backend-hicap.onrender.com/api/coursecontroller");
+        const response = await axios.get("http://31.97.206.144:5001/api/coursecontroller");
         setRecommendedCourses(response.data.data || response.data || []);
       } catch (fallbackError) {
         console.error("Error fetching fallback courses:", fallbackError);
@@ -49,7 +49,7 @@ const Dashboard = () => {
 
   const fetchEnrollments = async () => {
     try {
-      const response = await axios.get(`https://backend-hicap.onrender.com/api/user/${student.id}/enrollments`);
+      const response = await axios.get(`http://31.97.206.144:5001/api/user/${student.id}/enrollments`);
       setEnrolledCourses(response.data.enrolledCourses || []);
     } catch (error) {
       console.error("Error fetching enrollments:", error);
@@ -61,7 +61,7 @@ const Dashboard = () => {
 
   const fetchUserDetails = async () => {
     try {
-      const response = await axios.get(`https://backend-hicap.onrender.com/api/userregister/${student.id}`);
+      const response = await axios.get(`http://31.97.206.144:5001/api/userregister/${student.id}`);
       setUserData(response.data.data);
     } catch (error) {
       console.error("Error fetching user details:", error);
@@ -72,7 +72,7 @@ const Dashboard = () => {
 
   const fetchTodaysClasses = async () => {
     try {
-      const response = await axios.get(`https://backend-hicap.onrender.com/api/live-classes/user/${student.id}`);
+      const response = await axios.get(`http://31.97.206.144:5001/api/live-classes/user/${student.id}`);
       if (response.data.success) {
         const today = new Date().toDateString();
         const todaysClasses = response.data.data.filter(cls => {

@@ -12,21 +12,21 @@ const AboutUS = () => {
     const fetchData = async () => {
       try {
         // Fetch leadership data
-        const leadershipResponse = await fetch('https://backend-hicap.onrender.com/api/leadership');
+        const leadershipResponse = await fetch('http://31.97.206.144:5001/api/leadership');
         const leadershipData = await leadershipResponse.json();
         if (leadershipData.length > 0 && leadershipData[0].leadership) {
           setLeadershipTeam(leadershipData[0].leadership);
         }
 
         // Fetch technical team data
-        const techTeamResponse = await fetch('https://backend-hicap.onrender.com/api/technical-team');
+        const techTeamResponse = await fetch('http://31.97.206.144:5001/api/technical-team');
         const techTeamData = await techTeamResponse.json();
         if (techTeamData.data && techTeamData.data.length > 0) {
           setTechnicalTeam(techTeamData.data[0]);
         }
 
         // Fetch classroom data
-        const classroomResponse = await fetch('https://backend-hicap.onrender.com/api/classroom');
+        const classroomResponse = await fetch('http://31.97.206.144:5001/api/classroom');
         const classroomJson = await classroomResponse.json();
         if (classroomJson.data) {
           setClassroomData(classroomJson.data);
