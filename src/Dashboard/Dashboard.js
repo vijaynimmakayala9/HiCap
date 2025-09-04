@@ -23,14 +23,15 @@ const Dashboard = () => {
   const [userDetailsLoading, setUserDetailsLoading] = useState(true);
   const [todaysClassesCount, setTodaysClassesCount] = useState(0);
 
-  const Student = sessionStorage.getItem("user");
-  const student = Student ? JSON.parse(Student) : null;
+  const Student = JSON.parse(sessionStorage.getItem('user') || '{}');
+  const UserId = Student.id;
+ 
 
   const navigate = useNavigate();
 
   const fetchRecommendedCourses = async () => {
     try {
-      const response = await axios.get(`http://31.97.206.144:5001/api/recommend-courses/${student.id}`);
+      const response = await axios.get(`http://31.97.206.144:5001/api/recommend-courses/${UserId}`);
       setRecommendedCourses(response.data.data || []);
     } catch (error) {
       console.error("Error fetching recommended courses:", error);
@@ -49,7 +50,7 @@ const Dashboard = () => {
 
   const fetchEnrollments = async () => {
     try {
-      const response = await axios.get(`http://31.97.206.144:5001/api/user/${student.id}/enrollments`);
+      const response = await axios.get(`http://31.97.206.144:5001/api/user/${UserId}/enrollments`);
       setEnrolledCourses(response.data.enrolledCourses || []);
     } catch (error) {
       console.error("Error fetching enrollments:", error);
@@ -61,7 +62,7 @@ const Dashboard = () => {
 
   const fetchUserDetails = async () => {
     try {
-      const response = await axios.get(`http://31.97.206.144:5001/api/userregister/${student.id}`);
+      const response = await axios.get(`http://31.97.206.144:5001/api/userregister/${UserId}`);
       setUserData(response.data.data);
     } catch (error) {
       console.error("Error fetching user details:", error);
@@ -72,7 +73,7 @@ const Dashboard = () => {
 
   const fetchTodaysClasses = async () => {
     try {
-      const response = await axios.get(`http://31.97.206.144:5001/api/live-classes/user/${student.id}`);
+      const response = await axios.get(`http://31.97.206.144:5001/api/live-classes/user/${UserId}`);
       if (response.data.success) {
         const today = new Date().toDateString();
         const todaysClasses = response.data.data.filter(cls => {
@@ -89,19 +90,19 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (student && student.id) {
+    if (UserId && UserId) {
       fetchRecommendedCourses();
       fetchEnrollments();
       fetchUserDetails();
       fetchTodaysClasses();
     }
-  }, [student]);
+  }, [UserId]);
 
   const handleViewDetails = (courseId) => {
     navigate(`/course/${courseId}`);
   };
 
-  if (!student) {
+  if (!UserId) {
     return (
       <Container fluid className="min-vh-100 bg-light p-3 p-md-4 d-flex justify-content-center align-items-center">
         <div className="text-center">
@@ -139,7 +140,7 @@ const Dashboard = () => {
         <StudentDetails 
           userDetailsLoading={userDetailsLoading}
           userData={userData}
-          student={student}
+          student={UserId}
           enrolledCourses={enrolledCourses}
         />
 

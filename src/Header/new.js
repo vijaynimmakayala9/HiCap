@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaBars, FaTimes, FaChevronDown, FaRegClock, FaPhone, FaLock, FaShoppingCart, FaCreditCard } from 'react-icons/fa';
+import { FaBars, FaTimes, FaChevronDown, FaRegClock, FaPhone, FaLock } from 'react-icons/fa';
 import ContactUsModal from '../models/ContactUsModal';
 
 const GuestHeader = ({ onLogin }) => {
@@ -24,8 +24,6 @@ const GuestHeader = ({ onLogin }) => {
   const [screenSize, setScreenSize] = useState('desktop');
   const [categories, setCategories] = useState([]);
   const [categoryCourses, setCategoryCourses] = useState({});
-  const [cartItems, setCartItems] = useState([]);
-  const [showCart, setShowCart] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,7 +35,6 @@ const GuestHeader = ({ onLogin }) => {
   const companyDropdownRef = useRef();
   const navRef = useRef();
   const modalRef = useRef();
-  const cartRef = useRef();
   const coursesTimeoutRef = useRef();
   const resourcesTimeoutRef = useRef();
   const companyTimeoutRef = useRef();
@@ -162,10 +159,6 @@ const GuestHeader = ({ onLogin }) => {
 
       if (modalRef.current && !modalRef.current.contains(e.target) && !e.target.classList.contains('login-button')) {
         setShowLoginModal(false);
-      }
-
-      if (cartRef.current && !cartRef.current.contains(e.target) && !e.target.classList.contains('cart-button')) {
-        setShowCart(false);
       }
     };
 
@@ -325,38 +318,6 @@ const GuestHeader = ({ onLogin }) => {
     }
   };
 
-  const addToCart = (course) => {
-    setCartItems(prev => {
-      const existingItem = prev.find(item => item._id === course._id);
-      if (existingItem) {
-        return prev;
-      }
-      return [...prev, { ...course, quantity: 1 }];
-    });
-  };
-
-  const removeFromCart = (courseId) => {
-    setCartItems(prev => prev.filter(item => item._id !== courseId));
-  };
-
-  const updateQuantity = (courseId, newQuantity) => {
-    if (newQuantity <= 0) {
-      removeFromCart(courseId);
-      return;
-    }
-    setCartItems(prev => prev.map(item => 
-      item._id === courseId ? { ...item, quantity: newQuantity } : item
-    ));
-  };
-
-  const getTotalPrice = () => {
-    return cartItems.reduce((total, item) => total + (item.price || 0) * item.quantity, 0);
-  };
-
-  const getTotalItems = () => {
-    return cartItems.reduce((total, item) => total + item.quantity, 0);
-  };
-
   const getResponsiveClasses = () => {
     switch (screenSize) {
       case 'mobile-small':
@@ -434,89 +395,6 @@ const GuestHeader = ({ onLogin }) => {
 
   const responsiveClasses = getResponsiveClasses();
 
-  const CartDropdown = () => (
-    <div
-      ref={cartRef}
-      className={`absolute right-0 top-full ${screenSize === 'tablet' ? 'min-w-[300px]' : screenSize === 'laptop' ? 'min-w-[350px]' : screenSize === 'desktop' || screenSize === 'desktop-large' ? 'min-w-[400px]' : 'min-w-[280px]'} bg-white rounded-lg shadow-lg z-50 mt-1 max-h-[400px] overflow-hidden`}
-    >
-      <div className="p-4 border-b border-gray-200">
-        <h6 className="text-lg font-semibold text-[#a51d34] m-0">Shopping Cart ({getTotalItems()})</h6>
-      </div>
-      
-      <div className="max-h-[250px] overflow-y-auto">
-        {cartItems.length === 0 ? (
-          <div className="p-6 text-center text-gray-600">
-            <FaShoppingCart className="mx-auto mb-2 text-4xl text-gray-300" />
-            <p>Your cart is empty</p>
-          </div>
-        ) : (
-          <div className="p-2">
-            {cartItems.map((item) => (
-              <div key={item._id} className="flex items-center gap-3 p-2 border-b border-gray-100 last:border-b-0">
-                <div className="w-12 h-12 bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
-                  <img src={item.logoImage} alt={item.name} className="w-full h-full object-cover" />
-                </div>
-                <div className="flex-grow">
-                  <div className="font-medium text-sm text-gray-800 line-clamp-1">{item.name}</div>
-                  <div className="text-xs text-gray-600">₹{item.price || 0}</div>
-                </div>
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={() => updateQuantity(item._id, item.quantity - 1)}
-                    className="w-6 h-6 bg-gray-100 rounded text-xs hover:bg-gray-200"
-                  >
-                    -
-                  </button>
-                  <span className="text-xs px-2">{item.quantity}</span>
-                  <button
-                    onClick={() => updateQuantity(item._id, item.quantity + 1)}
-                    className="w-6 h-6 bg-gray-100 rounded text-xs hover:bg-gray-200"
-                  >
-                    +
-                  </button>
-                </div>
-                <button
-                  onClick={() => removeFromCart(item._id)}
-                  className="text-red-500 hover:text-red-700 text-xs"
-                >
-                  <FaTimes />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-      
-      {cartItems.length > 0 && (
-        <div className="p-4 border-t border-gray-200">
-          <div className="flex justify-between items-center mb-3">
-            <span className="font-semibold">Total: ₹{getTotalPrice()}</span>
-          </div>
-          <div className="flex gap-2">
-            <button
-              className="flex-1 py-2 px-3 bg-transparent border border-[#a51d34] text-[#a51d34] rounded text-sm hover:bg-[#a51d34] hover:text-white transition-colors"
-              onClick={() => {
-                navigate('/cart');
-                setShowCart(false);
-              }}
-            >
-              View Cart
-            </button>
-            <button
-              className="flex-1 py-2 px-3 bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white rounded text-sm hover:opacity-90 transition-opacity"
-              onClick={() => {
-                navigate('/checkout');
-                setShowCart(false);
-              }}
-            >
-              Checkout
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-
   const MegaMenu = () => (
     <div
       ref={megaMenuRef}
@@ -565,32 +443,22 @@ const GuestHeader = ({ onLogin }) => {
             {categoryCourses[selectedCategory]?.slice(0, screenSize === 'desktop-large' ? 12 : 10).map((course) => (
               <div key={course._id} className="cursor-pointer">
                 <div
-                  className={`flex gap-2 ${screenSize === 'mobile-small' ? 'p-2' : 'p-3'} rounded-lg transition-colors hover:bg-[#f8d7da] group`}
+                  className={`flex gap-2 ${screenSize === 'mobile-small' ? 'p-2' : 'p-3'} rounded-lg transition-colors hover:bg-[#f8d7da]`}
+                  onClick={() => {
+                    handleCourseClick(course._id);
+                    setIsMobileMenuOpen(false);
+                  }}
                 >
                   <div className={`flex-shrink-0 p-1 rounded-circle ${screenSize === 'mobile-small' ? 'w-6 h-6' : screenSize === 'mobile' ? 'w-7 h-7' : screenSize === 'mobile-large' ? 'w-8 h-8' : 'w-10 h-10'} bg-white-500 rounded-lg flex items-center justify-center overflow-hidden`}>
                     <img src={course.logoImage} alt={course.name} className="w-full h-full object-cover img-fluid  rounded-square" />
                   </div>
-                  <div className="flex-grow overflow-hidden" onClick={() => {
-                    handleCourseClick(course._id);
-                    setIsMobileMenuOpen(false);
-                  }}>
+                  <div className="flex-grow overflow-hidden">
                     <div className={`font-medium ${screenSize === 'mobile-small' ? 'text-xs' : screenSize === 'mobile' || screenSize === 'mobile-large' ? 'text-sm' : 'text-sm md:text-base'} whitespace-nowrap overflow-hidden text-ellipsis`}>{course.name}</div>
                     <div className={`flex items-center gap-1 text-gray-600 ${screenSize === 'mobile-small' ? 'text-xs' : 'text-xs'} mt-1`}>
                       <span>{course.category || 'N/A'}</span>
                       <span>•</span>
                       <span>{course.duration || 0}</span>
                     </div>
-                  </div>
-                  <div className="flex-shrink-0 flex items-center">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        addToCart(course);
-                      }}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity bg-[#a51d34] text-white p-1 rounded text-xs hover:bg-[#d32f2f]"
-                    >
-                      Add to Cart
-                    </button>
                   </div>
                 </div>
               </div>
@@ -703,15 +571,16 @@ const GuestHeader = ({ onLogin }) => {
               {categoryCourses[category]?.slice(0, 10).map((course) => (
                 <li key={course._id} className="mb-2 cursor-pointer">
                   <div
-                    className={`flex items-center gap-2 ${screenSize === 'mobile-small' ? 'p-1.5' : 'p-2'} bg-white rounded-md hover:bg-[#f8d7da] transition-colors group`}
+                    className={`flex items-center gap-2 ${screenSize === 'mobile-small' ? 'p-1.5' : 'p-2'} bg-white rounded-md hover:bg-[#f8d7da] transition-colors`}
+                    onClick={() => {
+                      console.log('Mobile course clicked:', course._id);
+                      handleCourseClick(course._id);
+                    }}
                   >
                     <div className={`${screenSize === 'mobile-small' ? 'w-6 h-6' : screenSize === 'mobile' ? 'w-7 h-7' : 'w-8 h-8'} ${screenSize === 'tablet' ? 'md:w-10 md:h-10' : ''} bg-gray-200 rounded-md overflow-hidden flex-shrink-0`}>
                       <img src={course.logoImage} alt={course.name} className="w-full h-full object-cover" />
                     </div>
-                    <div className="flex-grow overflow-hidden" onClick={() => {
-                      console.log('Mobile course clicked:', course._id);
-                      handleCourseClick(course._id);
-                    }}>
+                    <div className="flex-grow overflow-hidden">
                       <div className={`font-medium ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} ${screenSize === 'tablet' ? 'md:text-base' : ''} whitespace-nowrap overflow-hidden text-ellipsis`}>{course.name}</div>
                       <div className={`flex items-center gap-1 text-gray-600 ${screenSize === 'mobile-small' ? 'text-xs' : 'text-xs'} mt-0.5`}>
                         <FaRegClock className="text-[10px]" />
@@ -719,17 +588,6 @@ const GuestHeader = ({ onLogin }) => {
                         <span>•</span>
                         <span>{course.duration || 0}</span>
                       </div>
-                    </div>
-                    <div className="flex-shrink-0">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          addToCart(course);
-                        }}
-                        className="bg-[#a51d34] text-white p-1 rounded text-xs hover:bg-[#d32f2f]"
-                      >
-                        Add
-                      </button>
                     </div>
                   </div>
                 </li>
@@ -786,24 +644,8 @@ const GuestHeader = ({ onLogin }) => {
             />
           </div>
 
-          {/* Mobile Menu Button, Cart and Login */}
+          {/* Mobile Menu Button and Login */}
           <div className={`flex items-center ${screenSize === 'mobile-small' ? 'gap-1.5' : 'gap-2'} lg:hidden`}>
-            {/* Cart Button for Mobile */}
-            <div className="relative">
-              <button
-                onClick={() => setShowCart(!showCart)}
-                className={`cart-button ${responsiveClasses.iconSize} flex items-center justify-center bg-gray-100 text-gray-700 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 transition-colors relative`}
-              >
-                <FaShoppingCart className={responsiveClasses.iconText} />
-                {getTotalItems() > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#a51d34] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-xs">
-                    {getTotalItems()}
-                  </span>
-                )}
-              </button>
-              {showCart && <CartDropdown />}
-            </div>
-            
             <button
               onClick={() => setShowLoginModal(true)}
               className={`${responsiveClasses.buttonPadding} bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded ${responsiveClasses.buttonText} cursor-pointer whitespace-nowrap hover:opacity-90 transition-opacity`}
@@ -820,6 +662,7 @@ const GuestHeader = ({ onLogin }) => {
           </div>
 
           {/* Desktop Navigation */}
+
           <div className="hidden lg:flex items-center gap-4">
             {menuItems.map((item, idx) => {
               if (item.isMegaMenu) {
@@ -891,28 +734,17 @@ const GuestHeader = ({ onLogin }) => {
               }
             })}
 
-            {/* Desktop Cart Button */}
-            <div className="relative ml-2">
-              <button
-                // onClick={() => setShowCart(!showCart)}
-                onClick={()=>navigate('/payment')}
-                className="cart-button flex items-center justify-center w-10 h-10 bg-gray-100 text-gray-700 border border-gray-300 rounded-full cursor-pointer hover:bg-gray-200 transition-colors relative"
-              >
-                <FaCreditCard className="text-lg textcolor" />
-                {/* {getTotalItems() > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#a51d34] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center text-xs">
-                    {getTotalItems()}
-                  </span>
-                )} */}
-              </button>
-              {showCart && <CartDropdown />}
-            </div>
+
 
             <button
               onClick={() => setShowLoginModal(true)}
               className={`ml-2 ${screenSize === 'laptop' ? 'mx-2 px-4 py-2' : screenSize === 'desktop' ? 'mx-2.5 px-4 py-2' : 'mx-3 px-8 py-2'} bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded-full font-semibold ${screenSize === 'laptop' ? 'text-sm' : screenSize === 'desktop' ? 'text-base' : 'text-base'} cursor-pointer whitespace-nowrap hover:opacity-90 transition-opacity`}
             >
               Login
+            </button>
+
+            <button className='btn btn-sm bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none'>
+              <i class="fa-solid fa-dollar"></i>
             </button>
           </div>
         </div>

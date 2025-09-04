@@ -34,17 +34,44 @@ const LiveClassesPage = () => {
       console.log('Live classes data:', data);
 
       if (data.success) {
-        // Map API data to your card structure
-        const mappedClasses = data.data.map((cls) => ({
-          _id: cls._id,
-          title: cls.className,
-          description: cls.subjectName,
-          mentorName: `${cls.mentorId?.firstName || 'Unknown'} ${cls.mentorId?.lastName || 'Mentor'}`,
-          course: cls.enrollmentIdRef?.courseId?.name || 'General Course',
-          timing: cls.date,
-          duration: cls.enrollmentIdRef?.timings || '1 hour',
-          meetLink: cls.link,
-        }));
+        // Map API data to your card structure based on the provided response
+        const mappedClasses = data.data.map((cls) => {
+          // Extract mentor name from assignedMentors array
+          const mentor = cls.enrollmentIdRef?.assignedMentors?.[0] || {};
+          const mentorName = mentor.firstName && mentor.lastName
+            ? `${mentor.firstName} ${mentor.lastName}`
+            : 'Unknown Mentor';
+
+          // Parse date and time from the API response
+          const classDate = new Date(cls.date);
+          const timingParts = cls.timing ? cls.timing.split(' - ') : [];
+          const startTime = timingParts[0] || '00:00';
+
+          // Create a proper datetime object for the class
+          const [time, modifier] = startTime.split(' ');
+          let [hours, minutes] = time.split(':');
+
+          if (modifier === 'PM' && hours !== '12') {
+            hours = parseInt(hours, 10) + 12;
+          } else if (modifier === 'AM' && hours === '12') {
+            hours = '00';
+          }
+
+          const classDateTime = new Date(classDate);
+          classDateTime.setHours(parseInt(hours, 10), parseInt(minutes, 10));
+
+          return {
+            _id: cls._id,
+            title: cls.className,
+            description: cls.subjectName,
+            mentorName: mentorName,
+            course: cls.enrollmentIdRef?.courseId?.name || 'General Course',
+            timing: classDateTime.toISOString(),
+            duration: cls.timing || '1 hour',
+            meetLink: cls.link,
+          };
+        });
+
         setLiveClasses(mappedClasses);
       } else {
         console.error('Failed to fetch live classes:', data.message);
@@ -152,11 +179,20 @@ const LiveClassesPage = () => {
     return new Date(classTime) > new Date();
   };
 
+  // Check if class has ended
+  const isClassEnded = (classTime) => {
+    const now = new Date();
+    const classDate = new Date(classTime);
+    const endTime = new Date(classDate.getTime() + 60 * 60 * 1000); // Assuming 1 hour duration
+
+    return now > endTime;
+  };
+
   return (
     <div className="container py-5">
       {/* Page Heading */}
       <div className="text-center mb-5">
-        <h1 className="display-5 fw-bold">Live Classes</h1>
+        <h1 className="display-5 fw-bold textcolor">Live Classes</h1>
         <p className="text-muted fs-5">Attend live interactive sessions and enhance your skills</p>
       </div>
 
@@ -184,7 +220,6 @@ const LiveClassesPage = () => {
                   cursor: 'pointer',
                   transition: 'all 0.3s ease',
                   border: '1px solid #dee2e6',
-                  borderLeft: hasLiveClasses ? '4px solid #28a745' : hasUpcomingClasses ? '4px solid #ffc107' : '1px solid #dee2e6'
                 }}
                 onClick={() => setSelectedDate(day)}
               >
@@ -204,11 +239,6 @@ const LiveClassesPage = () => {
                     {dayClasses.length} Class{dayClasses.length !== 1 ? 'es' : ''}
                   </span>
                 </div>
-                {hasLiveClasses && (
-                  <div className="position-absolute top-0 end-0 m-1">
-                    <span className="badge bg-success">Live</span>
-                  </div>
-                )}
               </div>
             );
           })}
@@ -243,11 +273,12 @@ const LiveClassesPage = () => {
             {filteredClasses(selectedDate).map((cls) => {
               const isLive = isClassLive(cls.timing);
               const isUpcoming = isClassUpcoming(cls.timing);
+              const isEnded = isClassEnded(cls.timing);
 
               return (
                 <div key={cls._id} className="col-12 col-sm-6 col-lg-4">
                   <div
-                    className={`card h-100 shadow rounded-4 overflow-hidden border-0 ${isLive ? 'border-success border-2' : isUpcoming ? 'border-warning border-2' : ''
+                    className={`card h-100 shadow rounded-4 overflow-hidden border-0 ${isLive ? 'border-success border-2' : isUpcoming ? 'border-warning border-2' : isEnded ? 'border-secondary border-2' : ''
                       }`}
                     style={{
                       transition: 'transform 0.3s ease, box-shadow 0.3s ease',
@@ -263,17 +294,27 @@ const LiveClassesPage = () => {
                   >
                     <div className="card-header py-3 bg-light position-relative">
                       {isLive && (
-                        <span className="position-absolute top-0 start-0 badge bg-success rounded-end-0">
-                          LIVE NOW
-                        </span>
+                        <span
+                          className="position-absolute top-50 start-0 translate-middle-y ms-2 rounded-circle bg-success"
+                          style={{ width: "12px", height: "12px" }}
+                        ></span>
                       )}
                       {isUpcoming && (
-                        <span className="position-absolute top-0 start-0 badge bg-warning text-dark rounded-end-0">
-                          UPCOMING
-                        </span>
+                        <span
+                          className="position-absolute top-50 start-0 translate-middle-y ms-2 rounded-circle bg-warning"
+                          style={{ width: "12px", height: "12px" }}
+                        ></span>
                       )}
-                      <h5 className="card-title mb-0 fw-bold">{cls.title}</h5>
+                      {isEnded && (
+                        <span
+                          className="position-absolute top-50 start-0 translate-middle-y ms-2 rounded-circle bg-secondary"
+                          style={{ width: "12px", height: "12px" }}
+                        ></span>
+                      )}
+
+                      <h5 className="card-title mb-0 fw-bold ms-4">{cls.title}</h5>
                     </div>
+
                     <div className="card-body d-flex flex-column bg-white">
                       <p className="text-dark mb-3">{cls.description}</p>
                       <div className="mb-2"><strong>Mentor:</strong> {cls.mentorName}</div>
@@ -286,16 +327,16 @@ const LiveClassesPage = () => {
                         </div>
                         <div className="d-flex align-items-center">
                           <SiGoogleclassroom size={20} className="me-2" />
-                          <small>Live Class</small>
+                          <small>Class</small>
                         </div>
                       </div>
                       <a
                         href={cls.meetLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`btn mt-auto d-flex align-items-center justify-content-center gap-2 ${isLive ? 'btn-success' : isUpcoming ? 'btn-warning' : 'btn-primary'
+                        className={`btn mt-auto d-flex align-items-center justify-content-center gap-2 ${isLive ? 'bg-meroon' : isUpcoming ? 'btn-secondary' : 'btn-secondary'
                           }`}
-                        disabled={!isLive && !isUpcoming}
+                        disabled={isEnded}
                       >
                         {isLive ? 'Join Now' : isUpcoming ? 'Join Soon' : 'Class Ended'}
                         <MoveRight size={18} />
@@ -311,7 +352,7 @@ const LiveClassesPage = () => {
 
       {/* Additional information section */}
       {!loading && liveClasses.length > 0 && (
-        <div className="alert alert-info mt-4">
+        <div className="alert mt-4" style={{ backgroundColor: "#f8d7da" }}>
           <h5 className="alert-heading">Need Help?</h5>
           <p className="mb-0">
             If you're having trouble joining a class or have any questions, please contact support at

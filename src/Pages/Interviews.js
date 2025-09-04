@@ -30,7 +30,7 @@ const InterviewCard = ({ interview, onOpen }) => (
   >
     {/* Top-left Date */}
     <div
-      className="position-absolute top-0 start-0 m-3 px-3 py-1 rounded-pill d-flex align-items-center text-muted"
+      className="position-absolute top-0 start-0 m-3 px-3 py-1 rounded-pill d-flex align-items-center text-dark"
       style={{ backgroundColor: '#f1f3f5', fontSize: '0.75rem', fontWeight: '500' }}
     >
       <Calendar size={14} className="me-1" />
@@ -42,7 +42,7 @@ const InterviewCard = ({ interview, onOpen }) => (
     {/* Card Body */}
     <div className="mt-5 p-4 d-flex flex-column flex-grow-1 justify-content-between">
       <div>
-        <p className="mb-1 fw-medium small d-flex align-items-center text-primary">
+        <p className="mb-1 fw-medium small d-flex align-items-center textcolor">
           <Building2 size={14} className="me-1" />
           {interview.companyName}
         </p>
@@ -62,9 +62,9 @@ const InterviewCard = ({ interview, onOpen }) => (
         type="button"
         onClick={() => onOpen(interview)}
         className="btn w-100 rounded-pill d-flex align-items-center justify-content-center gap-2 mt-3 py-2"
-        style={{ backgroundColor: '#0d6efd', color: '#fff', fontWeight: '600', border: 'none', transition: 'all 0.2s ease' }}
-        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#0b5ed7')}
-        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#0d6efd')}
+        style={{ backgroundColor: '#a51d34', color: '#fff', fontWeight: '600', border: 'none', transition: 'all 0.2s ease' }}
+        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#a51d34')}
+        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#a51d34')}
       >
         View Details <ArrowRight size={16} />
       </button>
@@ -139,7 +139,7 @@ const Interviews = () => {
   return (
     <div className="container py-5 min-vh-100">
       <div className="mb-4 text-center text-md-start">
-        <h1 className="display-6 fw-bold text-dark mb-2">Your Interviews</h1>
+        <h1 className="display-6 fw-bold textcolor mb-2">Your Interviews</h1>
         <p className="text-muted">Track the interviews you are enrolled in</p>
 
         {/* Search */}
@@ -168,7 +168,7 @@ const Interviews = () => {
             <h4 className="text-muted">No interviews found</h4>
             <p className="text-muted">No interviews match your search</p>
             <button
-              className="btn btn-primary rounded-pill px-4 mt-3"
+              className="btn bg-meroon text-white rounded-pill px-4 mt-3"
               onClick={() => setSearchTerm('')}
             >
               Clear Search

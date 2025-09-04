@@ -65,7 +65,7 @@ const UserLayout = ({ user, onLogout }) => {
         <nav
           className="navbar navbar-expand-lg navbar-dark"
           style={{
-            background: 'linear-gradient(to right, #7b1e3d, #8c1f41, #9d2145, #ad2549, #bf2a4e)',
+            background: 'linear-gradient(to bottom, #c94a5a, #c94a5a, #c94a5a, #c94a5a, #c94a5a)',
             boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
             padding: '0.75rem 1rem'
           }}

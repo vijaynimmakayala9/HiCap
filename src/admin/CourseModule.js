@@ -42,7 +42,7 @@ const CourseModuleInterface = () => {
             modules: course.modules.map(module => ({
               id: module._id,
               name: module.subjectName,
-              icon: <FiCode className="text-blue-500" />,
+              icon: <FiCode className="textcolor" />,
               lessons: module.topics.flatMap(topic =>
                 topic.lessons.map(lesson => ({
                   id: lesson._id,
@@ -56,7 +56,7 @@ const CourseModuleInterface = () => {
                     name: resource.name,
                     type: resource.file.split('.').pop(),
                     url: resource.file,
-                    icon: <FiFileText className="text-red-500" />,
+                    icon: <FiFileText className="textcolor" />,
                     isPdf: resource.file.includes('.pdf') || resource.name.toLowerCase().includes('pdf')
                   })) : []
                 }))
@@ -313,9 +313,7 @@ const CourseModuleInterface = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
-            <FiUser className="h-5 w-5 text-gray-600" />
-          </button>
+          
         </div>
       </header>
 
@@ -390,16 +388,16 @@ const CourseModuleInterface = () => {
                           >
                             <div className="ml-4 flex-1">
                               <div className="flex items-center">
-                                <FiPlay className="h-3 w-3 text-indigo-600 mr-2" />
-                                <span className="text-sm text-gray-700">{classItem.name}</span>
+                                <FiPlay className="h-3 w-3 textcolor mr-2" />
+                                <span className="text-sm text-black-700">{classItem.name}</span>
                                 {classItem.completed && (
                                   <span className="ml-2 text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">Completed</span>
                                 )}
                               </div>
                               <div className="flex items-center mt-1 text-xs text-gray-500">
-                                <FiCalendar className="h-3 w-3 mr-1" />
+                                <FiCalendar className="h-3 w-3 mr-1 textcolor" />
                                 <span className="mr-3">{classItem.date}</span>
-                                <FiClock className="h-3 w-3 mr-1" />
+                                <FiClock className="h-3 w-3 mr-1 textcolor" />
                                 <span>{classItem.duration}</span>
                               </div>
                             </div>
@@ -430,21 +428,21 @@ const CourseModuleInterface = () => {
                       <h2 className="text-xl font-bold text-gray-800">{selectedClass.name}</h2>
                       <div className="flex items-center mt-2 text-sm text-gray-600 flex-wrap gap-2">
                         <div className="flex items-center">
-                          <FiCalendar className="h-4 w-4 mr-1" />
+                          <FiCalendar className="h-4 w-4 mr-1 textcolor" />
                           <span>{selectedClass.date}</span>
                         </div>
                         <div className="flex items-center">
-                          <FiClock className="h-4 w-4 mr-1" />
+                          <FiClock className="h-4 w-4 mr-1 textcolor" />
                           <span>{selectedClass.duration}</span>
                         </div>
                       </div>
                     </div>
-                    <button
+                    {/* <button
                       onClick={() => markAsCompleted(selectedClass.id)}
                       className={`px-3 py-1 rounded-full text-sm ${selectedClass.completed ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'} hover:bg-gray-200 transition-colors whitespace-nowrap`}
                     >
                       {selectedClass.completed ? 'Completed' : 'Mark as Complete'}
-                    </button>
+                    </button> */}
                   </div>
                 </div>
 

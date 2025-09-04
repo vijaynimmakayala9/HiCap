@@ -86,17 +86,32 @@ const CalendarSection = () => {
 
           {/* Week Navigation */}
           <div className="d-flex align-items-center justify-content-between mb-3">
-            <Button variant="outline-primary" size="sm" onClick={handlePrevWeek}>
+            <Button
+              size="sm"
+              style={{
+                backgroundColor: "#9c27b0",
+                borderColor: "#9c27b0",
+                color: "white",
+              }}
+              onClick={handlePrevWeek}
+            >
               &lt; Prev Week
             </Button>
-            <span className="fw-medium text-primary">
+            <span className="fw-medium" style={{ color: "#7b1fa2" }}>
               {weekStart.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
             </span>
-            <Button variant="outline-primary" size="sm" onClick={handleNextWeek}>
+            <Button
+              size="sm"
+              style={{
+                backgroundColor: "#9c27b0",
+                borderColor: "#9c27b0",
+                color: "white",
+              }}
+              onClick={handleNextWeek}
+            >
               Next Week &gt;
             </Button>
           </div>
-
           {/* Week Carousel */}
           <div className="d-flex overflow-auto gap-2 mb-3 pb-2" style={{ scrollbarWidth: "thin" }}>
             {weekDays.map((day, idx) => {
@@ -109,9 +124,8 @@ const CalendarSection = () => {
               return (
                 <div
                   key={idx}
-                  className={`flex-shrink-0 p-2 rounded-3 text-center ${
-                    isSelected ? "bg-meroon text-white" : isToday ? "border-warning bg-light" : "bg-light"
-                  }`}
+                  className={`flex-shrink-0 p-2 rounded-3 text-center ${isSelected ? "bg-meroon text-white" : isToday ? "border-warning bg-light" : "bg-light"
+                    }`}
                   style={{
                     minWidth: "70px",
                     cursor: "pointer",
@@ -138,7 +152,7 @@ const CalendarSection = () => {
 
           {/* Selected Date Header */}
           <div className="d-flex justify-content-between align-items-center mb-3">
-            <h6 className="text-primary mb-0">
+            <h6 className="mb-0" style={{ color: "#7b1fa2" }}>
               {selectedDate.toLocaleDateString("en-US", {
                 weekday: "long",
                 month: "long",
@@ -150,17 +164,21 @@ const CalendarSection = () => {
             </Badge>
           </div>
 
+
+
+
+
+
           {/* Occasions List */}
           {todaysOccasions.length > 0 ? (
             <div className="d-grid gap-2">
               {todaysOccasions.map((occ, idx) => (
                 <Card
                   key={idx}
-                  className={`shadow-sm border-0 ${
-                    occ.type === "holiday"
+                  className={`shadow-sm border-0 ${occ.type === "holiday"
                       ? "border-start border-danger border-3"
                       : "border-start border-info border-3"
-                  }`}
+                    }`}
                 >
                   <Card.Body className="p-2">
                     <div className="d-flex justify-content-between align-items-center">

@@ -258,7 +258,7 @@ const CourseDetail = () => {
                       style={{ backgroundColor: "#c34153", color: "#fff" }}
                     >
                       <FaBook className="fs-6" />
-                      {course.noOfLessons} Lessons
+                      {course.noOfLessons}
                     </button>
 
                     <button
@@ -632,6 +632,7 @@ const CourseDetail = () => {
 
       <DownloadSyllabusModal
         show={showSyllabusModal}
+        courseId={id}
         handleClose={() => setShowSyllabusModal(false)}
       />
 

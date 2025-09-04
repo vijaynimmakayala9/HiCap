@@ -59,7 +59,7 @@ const UserSidebar = ({ isCollapsed, onToggleCollapse, isMobile }) => {
         className="position-fixed vh-100 d-flex flex-column"
         style={{
           width: isMobile ? (isCollapsed ? '0' : '250px') : isCollapsed ? '80px' : '250px',
-          background: 'linear-gradient(to bottom, #7b1e3d, #8c1f41, #9d2145, #ad2549, #bf2a4e)',
+          background: 'linear-gradient(to bottom, #c94a5a, #c94a5a, #c94a5a, #c94a5a, #c94a5a)',
           color: 'white',
           zIndex: 1030,
           transition: 'all 0.3s ease',

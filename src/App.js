@@ -29,6 +29,7 @@ import UserLayout from "./Header/UserLayout"; // User sidebar layout
 import Events from "./newone/Events";
 import EventDetails from "./newone/EventDetails";
 import CourseAdminPanel from "./admin/AdminCourses";
+import PaymentForm from "./Header/Payment";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -89,8 +90,9 @@ function App() {
         <Route path="/placements" element={<PlacementAssistance />} />
         <Route path="/onetoone" element={<OnetoOneSession />} />
         <Route path="/allcourses" element={<CoursesByCategory />} />
-        <Route path="/events" element={<Events/>}/>
+        <Route path="/events" element={<Events />} />
         <Route path="/event/:title" element={<EventDetails />} />
+        <Route path="/payment" element={<PaymentForm />} />
         <Route path="/admin" element={<CourseAdminPanel />} />
 
         {/* Protected Dashboard Routes */}
