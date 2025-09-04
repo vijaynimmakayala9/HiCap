@@ -163,7 +163,7 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
               <Form.Label className="fw-semibold">Enter WhatsApp Number</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter phone number"
+                placeholder="Enter WhatsApp number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 className="py-2"
