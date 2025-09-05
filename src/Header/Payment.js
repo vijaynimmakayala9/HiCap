@@ -254,7 +254,7 @@ const PaymentForm = () => {
                         )}
 
                         {/* ✅ Terms & Conditions */}
-                        <div className="flex items-start space-x-2">
+                        {/* <div className="flex items-start space-x-2">
                             <input
                                 type="checkbox"
                                 id="terms"
@@ -271,13 +271,13 @@ const PaymentForm = () => {
                                     Privacy Statement.
                                 </a>
                             </label>
-                        </div>
+                        </div> */}
 
                         {/* Submit */}
                         <button
                             type="submit"
-                            disabled={!agreed} // ✅ Disabled until checked
-                            className={`w-full text-white font-semibold py-3 rounded-lg shadow-md transition ${agreed
+                            //disabled={!agreed} // ✅ Disabled until checked
+                            className={`w-full text-white font-semibold py-3 rounded-lg shadow-md transition ${!agreed
                                 ? "bg-gradient-to-br from-[#a51d34] to-[#d32f2f] hover:opacity-90"
                                 : "bg-gray-400 cursor-not-allowed"
                                 }`}

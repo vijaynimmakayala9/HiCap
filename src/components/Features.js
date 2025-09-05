@@ -51,48 +51,49 @@ const Features = () => {
           </p>
         </div>
       </div>
-
-      <div className="row g-4 my-4 p-4 bg-gradient-to-br from-white via-gray-50 to-red-50 rounded">
-        {features.map((feature, index) => (
-          <div key={feature._id} className="col-12 col-sm-6 col-lg-3">
-            <div
-              className={`h-100 border-0 p-4 shadow-sm rounded-4 text-center bg-white position-relative overflow-hidden ${hoveredCard === index ? 'shadow-lg' : ''}`}
-              onMouseEnter={() => setHoveredCard(index)}
-              onMouseLeave={() => setHoveredCard(null)}
-              style={{
-                transition: 'all 0.3s ease',
-                transform: hoveredCard === index ? 'translateY(-6px)' : 'none',
-              }}
-            >
-              {/* Border top effect on hover */}
-              <div 
-                className={`position-absolute top-0 left-0 right-0 ${hoveredCard === index ? 'bg-meroon' : ''}`}
-                style={{
-                  height: '4px',
-                  transition: 'all 0.3s ease',
-                  opacity: hoveredCard === index ? 1 : 0,
-                }}
-              ></div>
-              
+      <div className="container">
+        <div className="row g-4 my-4 p-4 bg-gradient-to-br from-white via-gray-50 to-red-50 rounded">
+          {features.map((feature, index) => (
+            <div key={feature._id} className="col-12 col-sm-6 col-lg-3">
               <div
-                className={`d-flex align-items-center justify-content-center mx-auto mb-4 rounded-circle ${hoveredCard === index
-                    ? 'bg-meroon text-white'
-                    : 'bg-opacity-10 textcolor'
-                  }`}
+                className={`h-100 border-0 p-4 shadow-sm rounded-4 text-center bg-white position-relative overflow-hidden ${hoveredCard === index ? 'shadow-lg' : ''}`}
+                onMouseEnter={() => setHoveredCard(index)}
+                onMouseLeave={() => setHoveredCard(null)}
                 style={{
-                  width: '70px',
-                  height: '70px',
-                  fontSize: '28px',
-                  transition: 'all 0.3s ease'
+                  transition: 'all 0.3s ease',
+                  transform: hoveredCard === index ? 'translateY(-6px)' : 'none',
                 }}
               >
-                <i className={`bi ${iconList[index % iconList.length]} fs-1`}></i>
+                {/* Border top effect on hover */}
+                <div
+                  className={`position-absolute top-0 left-0 right-0 ${hoveredCard === index ? 'bg-meroon' : ''}`}
+                  style={{
+                    height: '4px',
+                    transition: 'all 0.3s ease',
+                    opacity: hoveredCard === index ? 1 : 0,
+                  }}
+                ></div>
+
+                <div
+                  className={`d-flex align-items-center justify-content-center mx-auto mb-4 rounded-circle ${hoveredCard === index
+                    ? 'bg-meroon text-white'
+                    : 'bg-opacity-10 textcolor'
+                    }`}
+                  style={{
+                    width: '70px',
+                    height: '70px',
+                    fontSize: '28px',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <i className={`bi ${iconList[index % iconList.length]} fs-1`}></i>
+                </div>
+                <h5 className="fw-bold mb-3 ">{feature.title}</h5>
+                <p className="text-muted small">{feature.content}</p>
               </div>
-              <h5 className="fw-bold mb-3 ">{feature.title}</h5>
-              <p className="text-muted small">{feature.content}</p>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

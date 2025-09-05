@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaBars, FaTimes, FaChevronDown, FaRegClock, FaPhone, FaLock, FaShoppingCart, FaCreditCard } from 'react-icons/fa';
+import { FaBars, FaTimes, FaChevronDown, FaRegClock, FaPhone, FaLock, FaShoppingCart, FaCreditCard, FaWhatsapp } from 'react-icons/fa';
 import ContactUsModal from '../models/ContactUsModal';
 
 const GuestHeader = ({ onLogin }) => {
@@ -344,7 +344,7 @@ const GuestHeader = ({ onLogin }) => {
       removeFromCart(courseId);
       return;
     }
-    setCartItems(prev => prev.map(item => 
+    setCartItems(prev => prev.map(item =>
       item._id === courseId ? { ...item, quantity: newQuantity } : item
     ));
   };
@@ -361,13 +361,13 @@ const GuestHeader = ({ onLogin }) => {
     switch (screenSize) {
       case 'mobile-small':
         return {
-          navHeight: 'h-14',
-          logoHeight: 'max-h-6',
+          navHeight: 'h-16',
+          logoHeight: 'max-h-7',
           menuPadding: 'px-2',
-          buttonPadding: 'px-2 py-1',
-          buttonText: 'text-xs',
-          iconSize: 'w-7 h-7',
-          iconText: 'text-xs'
+          buttonPadding: 'px-2 py-2',
+          buttonText: 'text-md',
+          iconSize: 'w-8 h-10',
+          iconText: 'text-md'
         };
       case 'mobile':
         return {
@@ -442,7 +442,7 @@ const GuestHeader = ({ onLogin }) => {
       <div className="p-4 border-b border-gray-200">
         <h6 className="text-lg font-semibold text-[#a51d34] m-0">Shopping Cart ({getTotalItems()})</h6>
       </div>
-      
+
       <div className="max-h-[250px] overflow-y-auto">
         {cartItems.length === 0 ? (
           <div className="p-6 text-center text-gray-600">
@@ -486,7 +486,7 @@ const GuestHeader = ({ onLogin }) => {
           </div>
         )}
       </div>
-      
+
       {cartItems.length > 0 && (
         <div className="p-4 border-t border-gray-200">
           <div className="flex justify-between items-center mb-3">
@@ -791,19 +791,16 @@ const GuestHeader = ({ onLogin }) => {
             {/* Cart Button for Mobile */}
             <div className="relative">
               <button
-                onClick={() => setShowCart(!showCart)}
+                //onClick={() => setShowCart(!showCart)}
+                onClick={() => navigate('/payment')}
                 className={`cart-button ${responsiveClasses.iconSize} flex items-center justify-center bg-gray-100 text-gray-700 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 transition-colors relative`}
               >
-                <FaShoppingCart className={responsiveClasses.iconText} />
-                {getTotalItems() > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#a51d34] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-xs">
-                    {getTotalItems()}
-                  </span>
-                )}
+                <FaCreditCard className={responsiveClasses.iconText} />
+                
               </button>
               {showCart && <CartDropdown />}
             </div>
-            
+
             <button
               onClick={() => setShowLoginModal(true)}
               className={`${responsiveClasses.buttonPadding} bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded ${responsiveClasses.buttonText} cursor-pointer whitespace-nowrap hover:opacity-90 transition-opacity`}
@@ -895,7 +892,7 @@ const GuestHeader = ({ onLogin }) => {
             <div className="relative ml-2">
               <button
                 // onClick={() => setShowCart(!showCart)}
-                onClick={()=>navigate('/payment')}
+                onClick={() => navigate('/payment')}
                 className="cart-button flex items-center justify-center w-10 h-10 bg-gray-100 text-gray-700 border border-gray-300 rounded-full cursor-pointer hover:bg-gray-200 transition-colors relative"
               >
                 <FaCreditCard className="text-lg textcolor" />
@@ -1113,6 +1110,16 @@ const GuestHeader = ({ onLogin }) => {
           </div>
         </div>
       )}
+
+      <a
+        href="https://wa.me/919876543210" // replace with your WhatsApp number
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-5 right-5 bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 transition duration-300 z-[9999]"
+      >
+        <FaWhatsapp size={30} />
+      </a>
+
 
       <ContactUsModal
         show={showContactModal}
