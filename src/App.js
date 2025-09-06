@@ -30,6 +30,7 @@ import Events from "./newone/Events";
 import EventDetails from "./newone/EventDetails";
 import CourseAdminPanel from "./admin/AdminCourses";
 import PaymentForm from "./Header/Payment";
+import Acknowledge from "./admin/Acknowledgment";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -107,6 +108,7 @@ function App() {
           <Route path="coursemodule" element={<CourseModule />} />
           <Route path="doubt-session" element={<DoubtSession />} />
           <Route path="certificate" element={<Certificate />} />
+          <Route path="acknowledge" element={<Acknowledge />} />
         </Route>
 
         {/* Redirect unknown routes */}

@@ -581,17 +581,7 @@ const GuestHeader = ({ onLogin }) => {
                       <span>{course.duration || 0}</span>
                     </div>
                   </div>
-                  <div className="flex-shrink-0 flex items-center">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        addToCart(course);
-                      }}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity bg-[#a51d34] text-white p-1 rounded text-xs hover:bg-[#d32f2f]"
-                    >
-                      Add to Cart
-                    </button>
-                  </div>
+                  
                 </div>
               </div>
             ))}

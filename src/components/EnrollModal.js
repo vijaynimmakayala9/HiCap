@@ -1,6 +1,6 @@
 // CourseEnquiryModal.js
 import React, { useState, useEffect, useRef } from 'react';
-import { Modal, Button, Form, ListGroup } from 'react-bootstrap';
+import { Modal, Button, Form, ListGroup, Badge } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 
 const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
@@ -15,7 +15,7 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
     name: '',
     phone: '',
     email: '',
-    course: prefillCourse,
+    courses: prefillCourse ? [prefillCourse] : [],
     city: '',
     message: ''
   });
@@ -34,8 +34,10 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
   }, []);
 
   useEffect(() => {
-    setFormData(prev => ({ ...prev, course: prefillCourse }));
-    setSearchTerm(prefillCourse || '');
+    if (prefillCourse) {
+      setFormData(prev => ({ ...prev, courses: [prefillCourse] }));
+      setSearchTerm('');
+    }
   }, [prefillCourse]);
 
   useEffect(() => {
@@ -61,14 +63,22 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
 
   const handleCourseInputChange = (e) => {
     setSearchTerm(e.target.value);
-    setFormData(prev => ({ ...prev, course: e.target.value }));
     setShowSuggestions(true);
   };
 
   const handleCourseSelect = (courseName) => {
-    setFormData(prev => ({ ...prev, course: courseName }));
-    setSearchTerm(courseName);
+    if (!formData.courses.includes(courseName)) {
+      setFormData(prev => ({ ...prev, courses: [...prev.courses, courseName] }));
+    }
+    setSearchTerm('');
     setShowSuggestions(false);
+  };
+
+  const handleRemoveCourse = (courseName) => {
+    setFormData(prev => ({
+      ...prev,
+      courses: prev.courses.filter(c => c !== courseName)
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -78,14 +88,13 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
       name: formData.name,
       phoneNumber: formData.phone,
       email: formData.email,
-      section: [{ name: formData.course }],
+      section: formData.courses.map(course => ({ name: course })),
       city: formData.city,
-      timings: [{ preferred: formData.timing }],
       message: formData.message
     };
 
     try {
-      const response = await fetch('http://31.97.206.144:5001/api/enquiries/create', {
+      const response = await fetch('http://31.97.206.144:5001/api/Enquiry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -93,7 +102,7 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
 
       if (response.ok) {
         Swal.fire({ icon: 'success', title: 'Enquiry Submitted', text: 'We will get back to you soon!' });
-        setFormData({ name: '', phone: '', email: '', course: '', city: '', timing: '', message: '' });
+        setFormData({ name: '', phone: '', email: '', courses: [], city: '', message: '' });
         setSearchTerm('');
         handleClose();
       } else {
@@ -120,7 +129,6 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
             className="mb-3"
             value={formData.name}
             onChange={handleChange}
-            onFocus={() => setShowSuggestions(false)}
             required
           />
           <Form.Control
@@ -130,7 +138,6 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
             className="mb-3"
             value={formData.phone}
             onChange={handleChange}
-            onFocus={() => setShowSuggestions(false)}
             required
           />
           <Form.Control
@@ -140,18 +147,31 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
             className="mb-3"
             value={formData.email}
             onChange={handleChange}
-            onFocus={() => setShowSuggestions(false)}
           />
 
-          {/* Searchable Course Input */}
+          {/* Searchable Multi Course Input */}
           <div className="position-relative mb-3" ref={courseInputRef}>
+            {/* Selected courses as badges */}
+            <div className="mb-2 d-flex flex-wrap gap-2">
+              {formData.courses.map((course, idx) => (
+                <Badge
+                  key={idx}
+                  pill
+                  bg="danger"
+                  className='bg-meroon'
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleRemoveCourse(course)}
+                >
+                  {course} ✕
+                </Badge>
+              ))}
+            </div>
             <Form.Control
               type="text"
-              placeholder="Search or Select Course*"
+              placeholder="Search & select courses*"
               value={searchTerm}
               onChange={handleCourseInputChange}
               onFocus={() => setShowSuggestions(true)}
-              required
             />
             {showSuggestions && filteredCourses.length > 0 && (
               <ListGroup
@@ -166,7 +186,7 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
               >
                 {filteredCourses.map((course) => (
                   <ListGroup.Item
-                    key={course._id}
+                    key={course._id}                    
                     action
                     onClick={() => handleCourseSelect(course.name)}
                   >
@@ -184,7 +204,6 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
             className="mb-3"
             value={formData.city}
             onChange={handleChange}
-            onFocus={() => setShowSuggestions(false)}
           />
           
           <Form.Control
@@ -195,7 +214,6 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
             className="mb-4"
             value={formData.message}
             onChange={handleChange}
-            onFocus={() => setShowSuggestions(false)}
           />
           <Button type="submit" className="px-4 w-100 bg-meroon border-0">
             Enroll Now

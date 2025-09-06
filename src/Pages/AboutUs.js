@@ -169,7 +169,7 @@ const AboutUS = () => {
       </div>
 
       {/* Leadership Team */}
-      {leadershipTeam.length > 0 && (
+      {/* {leadershipTeam.length > 0 && (
         <div className="mb-5">
           <div className="text-center mb-5">
             <SectionHeading><span style={{ color: "#a51d34" }}>LEADERSHIP</span> TEAM</SectionHeading>
@@ -196,7 +196,7 @@ const AboutUS = () => {
             ))}
           </div>
         </div>
-      )}
+      )} */}
 
 
     </section>
