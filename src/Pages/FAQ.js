@@ -32,28 +32,17 @@ const FAQ = () => {
     <>
       <Header />
 
-      <Container className="py-5 mt-5" style={{ maxWidth: '1140px', fontFamily: 'Roboto, sans-serif' }}>
-        
+      <Container
+        className="py-5 mt-5"
+        style={{ maxWidth: '1140px', fontFamily: 'Roboto, sans-serif' }}
+      >
         {/* FAQ Title */}
         <Row className="text-center mb-5">
           <Col>
-            <div className="d-inline-block position-relative mb-3">
-              <h2 className="fw-bold text-dark mb-1">
-                Frequently Asked <span style={{ color: "#a51d34" }}>Questions</span>
-              </h2>
-              {/* <div
-                style={{
-                  width: "100px",
-                  height: "5px",
-                  backgroundColor: "#a51d34",
-                  borderRadius: "999px",
-                  position: "absolute",
-                  left: "10%",
-                  transform: "translateX(-50%)",
-                  bottom: "-6px",
-                }}
-              ></div> */}
-            </div>
+            <h2 className="fw-bold text-dark mb-1 fs-3 fs-md-2 fs-lg-1">
+              Frequently Asked{' '}
+              <span style={{ color: '#a51d34' }}>Questions</span>
+            </h2>
           </Col>
         </Row>
 
@@ -61,12 +50,12 @@ const FAQ = () => {
         {faqImage && (
           <Row className="justify-content-center mb-5">
             <Col xs={12} md={8} lg={6}>
-              <Image 
+              <Image
                 src={faqImage}
                 alt="FAQ Banner"
                 fluid
                 rounded
-                className=" border border-light"
+                className="border border-light"
               />
             </Col>
           </Row>
@@ -77,28 +66,24 @@ const FAQ = () => {
           <Col xs={12} lg={10}>
             <div className="accordion">
               {faqData.map((faq, index) => (
-                <div 
-                  key={faq._id} 
+                <div
+                  key={faq._id}
                   className="border-bottom border-light pb-3 mb-3"
                 >
-                  <div 
-                    className="d-flex justify-content-between align-items-center cursor-pointer"
+                  <div
+                    className="d-flex justify-content-between align-items-center"
                     onClick={() => toggleFAQ(index)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h3 className="h5 fw-semibold text-dark mb-0">
+                    <h3 className="fw-bold text-dark mb-0 fs-6 fs-sm-5 fs-md-4">
                       {String(index + 1).padStart(2, '0')}. {faq.question}
                     </h3>
                     <span className="textcolor ms-3">
-                      {openIndex === index ? (
-                        <FaMinus />
-                      ) : (
-                        <FaPlus />
-                      )}
+                      {openIndex === index ? <FaMinus /> : <FaPlus />}
                     </span>
                   </div>
                   {openIndex === index && (
-                    <p className="mt-3 text-muted">
+                    <p className="mt-3 text-muted fs-6 fs-sm-6 fs-md-5">
                       {faq.answer}
                     </p>
                   )}

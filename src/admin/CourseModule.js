@@ -5,6 +5,8 @@ import {
   FiCalendar, FiSearch, FiUser, FiDownload, FiFileText,
   FiVideo, FiImage, FiMusic, FiBox, FiLoader, FiEye
 } from 'react-icons/fi';
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const CourseModuleInterface = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -111,75 +113,47 @@ const CourseModuleInterface = () => {
     if (window.innerWidth < 1024) setSidebarOpen(false);
   };
 
-  const handleDownload = async (fileUrl, fileName, isPdf = false) => {
+
+  const handleDownload = async (url, filename = "document.pdf") => {
     try {
-      setDownloading(true);
-      
-      if (isPdf) {
-        // For PDFs, we'll use a different approach
-        await downloadPdfFromUrl(fileUrl, fileName);
-      } else {
-        // For other file types, use the standard approach
-        const response = await fetch(fileUrl);
-        if (!response.ok) throw new Error('Network response was not ok');
-        
-        const blob = await response.blob();
-        const blobUrl = window.URL.createObjectURL(blob);
-        
-        const link = document.createElement('a');
-        link.href = blobUrl;
-        link.download = fileName || 'resource';
-        document.body.appendChild(link);
-        link.click();
-        
-        // Clean up
-        window.URL.revokeObjectURL(blobUrl);
-        document.body.removeChild(link);
+      const response = await axios.get(url, { responseType: "blob" });
+
+      // Extract content type (fallback to PDF)
+      const contentType = response.headers["content-type"] || "application/pdf";
+
+      // Extract filename from headers if not given
+      const contentDisposition = response.headers["content-disposition"];
+      if (contentDisposition && contentDisposition.includes("filename=")) {
+        filename = contentDisposition.split("filename=")[1].replace(/['"]/g, "");
       }
-      
-      console.log(`Download completed for ${fileName}`);
+
+      const blob = new Blob([response.data], { type: contentType });
+      const downloadUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = filename.endsWith(".pdf") ? filename : `${filename}.pdf`;
+
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
+
+      console.log(`Downloaded: ${filename}`);
     } catch (error) {
-      console.error('Download failed:', error);
-      alert('Download failed. Please try again.');
-    } finally {
-      setDownloading(false);
+      console.error("Error downloading file:", error);
+      Swal.fire("Error", "Failed to download the file. Try again.", "error");
     }
   };
 
-  const downloadPdfFromUrl = async (pdfUrl, fileName) => {
-    try {
-      const response = await fetch(pdfUrl);
-      if (!response.ok) throw new Error('Network response was not ok');
-      
-      // Get the response as array buffer (byte code)
-      const arrayBuffer = await response.arrayBuffer();
-      
-      // Create a blob from the array buffer
-      const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
-      
-      // Create a URL for the blob
-      const blobUrl = window.URL.createObjectURL(blob);
-      
-      // Create a download link and trigger it
-      const link = document.createElement('a');
-      link.href = blobUrl;
-      link.download = fileName || 'document.pdf';
-      document.body.appendChild(link);
-      link.click();
-      
-      // Clean up
-      window.URL.revokeObjectURL(blobUrl);
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error('PDF download error:', error);
-      throw error;
-    }
-  };
+
 
   const viewPdf = async (pdfUrl, pdfName) => {
     try {
       setLoading(true);
-      
+
       // Directly use the URL for the iframe
       setCurrentPdf({ url: pdfUrl, name: pdfName });
       setPdfViewerOpen(true);
@@ -262,7 +236,7 @@ const CourseModuleInterface = () => {
               <h3 className="text-lg font-semibold">{currentPdf.name}</h3>
               <div className="flex space-x-2">
                 <button
-                  onClick={() => handleDownload(currentPdf.url, currentPdf.name, true)}
+                  onClick={() => handleDownload(currentPdf.url, currentPdf.name)}
                   className="p-2 text-indigo-600 hover:bg-indigo-100 rounded"
                   disabled={downloading}
                 >
@@ -314,7 +288,7 @@ const CourseModuleInterface = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          
+
         </div>
       </header>
 
@@ -328,7 +302,7 @@ const CourseModuleInterface = () => {
         <div className={`lg:w-80 lg:flex-shrink-0 ${sidebarOpen ? 'fixed inset-y-0 left-0 z-50 w-80' : 'hidden'} lg:relative lg:block bg-white border-r border-gray-200`}>
           <div className="h-full flex flex-col">
             <div className="bg-white px-6 py-4 border-b border-gray-100">
-              <div className="flex items-center justify-between">                
+              <div className="flex items-center justify-between">
                 <button
                   onClick={() => setSidebarOpen(false)}
                   className="lg:hidden p-1 rounded-md text-gray-600 hover:bg-gray-100 transition-colors"
@@ -509,7 +483,7 @@ const CourseModuleInterface = () => {
                                   </button>
                                 )}
                                 <button
-                                  onClick={() => handleDownload(resource.url, resource.name, resource.isPdf)}
+                                  onClick={() => handleDownload(resource.url, resource.name)}
                                   className="text-indigo-600 hover:text-indigo-800 p-2"
                                   title="Download resource"
                                   disabled={downloading}
@@ -530,7 +504,7 @@ const CourseModuleInterface = () => {
                     </div>
                   )}
 
-                  
+
                 </div>
               </div>
             ) : (

@@ -10,7 +10,7 @@ const ContactUsModal = ({ show, type, onHide }) => {
     name: "",
     email: "",
     phone: "",
-    enquiryType: type,
+    enquiryType: type || "", // still accept default if passed
     message: "",
   });
   const [loading, setLoading] = useState(false);
@@ -22,7 +22,12 @@ const ContactUsModal = ({ show, type, onHide }) => {
   const handleContactSubmit = async (e) => {
     e.preventDefault();
 
-    if (!contactData.name || !contactData.email || !contactData.phone || !contactData.enquiryType) {
+    if (
+      !contactData.name ||
+      !contactData.email ||
+      !contactData.phone ||
+      !contactData.enquiryType
+    ) {
       Swal.fire("Warning", "Please fill in all required fields.", "warning");
       return;
     }
@@ -36,7 +41,10 @@ const ContactUsModal = ({ show, type, onHide }) => {
         enquiryType: contactData.enquiryType,
         message: contactData.message,
       };
-      const response = await axios.post("http://31.97.206.144:5001/api/contactus", payload);
+      const response = await axios.post(
+        "http://31.97.206.144:5001/api/contactus",
+        payload
+      );
 
       if (response.data.success) {
         Swal.fire("Success", "Your enquiry has been submitted!", "success");
@@ -49,13 +57,18 @@ const ContactUsModal = ({ show, type, onHide }) => {
         });
         onHide();
       } else {
-        Swal.fire("Error", response.data.message || "Failed to submit enquiry.", "error");
+        Swal.fire(
+          "Error",
+          response.data.message || "Failed to submit enquiry.",
+          "error"
+        );
       }
     } catch (error) {
       console.error("Contact submission error:", error.response || error);
       Swal.fire(
         "Error",
-        error.response?.data?.message || "Server error while submitting enquiry.",
+        error.response?.data?.message ||
+          "Server error while submitting enquiry.",
         "error"
       );
     } finally {
@@ -107,22 +120,18 @@ const ContactUsModal = ({ show, type, onHide }) => {
             </Form.Text>
           </Form.Group>
 
+          {/* 🔹 Changed dropdown to input */}
           <Form.Group className="mb-3">
             <Form.Label>Enquiry Type</Form.Label>
-            <Form.Select
+            <Form.Control
+              type="text"
+              placeholder="Enter enquiry type"
               value={contactData.enquiryType}
-              onChange={(e) => handleContactChange("enquiryType", e.target.value)}
+              onChange={(e) =>
+                handleContactChange("enquiryType", e.target.value)
+              }
               required
-            >
-              <option value="" disabled>Select enquiry type</option>
-              <option value="resume">Resume Building</option>
-              <option value="mock">Mock Interviews</option>
-              <option value="realtime">Real Time Assistance</option>
-              <option value="project">Project Assistance</option>
-              <option value="placement">Placement Assistance</option>
-              <option value="oneonone">One-On-One Session</option>
-              <option value="other">Other</option>
-            </Form.Select>
+            />
           </Form.Group>
 
           <Form.Group className="mb-3">
@@ -137,10 +146,15 @@ const ContactUsModal = ({ show, type, onHide }) => {
           </Form.Group>
 
           <div className="d-grid">
-            <Button type="submit" className="gradient-button fw-semibold" disabled={loading}>
+            <Button
+              type="submit"
+              className="gradient-button fw-semibold"
+              disabled={loading}
+            >
               {loading ? (
                 <>
-                  <Spinner animation="border" size="sm" className="me-2" /> Submitting...
+                  <Spinner animation="border" size="sm" className="me-2" />{" "}
+                  Submitting...
                 </>
               ) : (
                 "Submit Enquiry"

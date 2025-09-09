@@ -31,6 +31,8 @@ import EventDetails from "./newone/EventDetails";
 import CourseAdminPanel from "./admin/AdminCourses";
 import PaymentForm from "./Header/Payment";
 import Acknowledge from "./admin/Acknowledgment";
+import Careers from "./newone/Career";
+import OurPolicies from "./Header/OurPolicies";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -94,6 +96,8 @@ function App() {
         <Route path="/events" element={<Events />} />
         <Route path="/event/:title" element={<EventDetails />} />
         <Route path="/payment" element={<PaymentForm />} />
+        <Route path="/careers" element={<Careers />} />
+        <Route path="/ourpolicies" element={<OurPolicies />} />
         <Route path="/admin" element={<CourseAdminPanel />} />
 
         {/* Protected Dashboard Routes */}

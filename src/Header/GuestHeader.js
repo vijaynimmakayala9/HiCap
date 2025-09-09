@@ -581,7 +581,7 @@ const GuestHeader = ({ onLogin }) => {
                       <span>{course.duration || 0}</span>
                     </div>
                   </div>
-                  
+
                 </div>
               </div>
             ))}
@@ -615,7 +615,7 @@ const GuestHeader = ({ onLogin }) => {
             onClick={() => {
               setShowCoursesMenu(false);
               setIsMobileMenuOpen(false);
-              window.location.href = "tel:9876543211";
+              window.location.href = "tel:9000239871";
             }}
           >
             Contact Advisor
@@ -755,7 +755,7 @@ const GuestHeader = ({ onLogin }) => {
           onClick={() => {
             setShowCoursesMenu(false);
             setIsMobileMenuOpen(false);
-            window.location.href = "tel:9876543211";
+            window.location.href = "tel:9000239871";
           }}
         >
           Contact Advisor
@@ -766,7 +766,7 @@ const GuestHeader = ({ onLogin }) => {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 w-full ${responsiveClasses.navHeight} bg-white shadow-md z-50 transition-all ${isScrolled ? 'bg-white/95 backdrop-blur-md' : ''}`}>
+      <nav className={`fixed top-0 left-0 w-100 ${responsiveClasses.navHeight} bg-white shadow-md z-50 transition-all ${isScrolled ? 'bg-white/95 backdrop-blur-md' : ''}`}>
         <div className={`flex justify-around items-center h-full ${responsiveClasses.menuPadding} ${screenSize === 'desktop-large' ? 'max-w-[1600px]' : screenSize === 'desktop' ? 'max-w-[1400px]' : screenSize === 'laptop' ? 'max-w-[1200px]' : 'max-w-full'} mx-auto`}>
           <div className="cursor-pointer" onClick={() => navigate('/')}>
             <img
@@ -786,9 +786,9 @@ const GuestHeader = ({ onLogin }) => {
                 className={`cart-button ${responsiveClasses.iconSize} flex items-center justify-center bg-gray-100 text-gray-700 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 transition-colors relative`}
               >
                 <FaCreditCard className={responsiveClasses.iconText} />
-                
+
               </button>
-              {showCart && <CartDropdown />}
+              {/* {showCart && <CartDropdown />} */}
             </div>
 
             <button
@@ -807,101 +807,142 @@ const GuestHeader = ({ onLogin }) => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-4">
-            {menuItems.map((item, idx) => {
-              if (item.isMegaMenu) {
-                return (
-                  <div
-                    key={idx}
-                    className="relative"
-                    onMouseEnter={handleCoursesMouseEnter}
-                    onMouseLeave={handleCoursesMouseLeave}
-                  >
-                    <span
-                      ref={coursesBtnRef}
-                      className={`flex items-center px-3 py-2 text-base font-medium text-gray-800 cursor-pointer rounded-md transition-all relative ${showCoursesMenu ? 'text-[#a51d34]' : 'hover:text-[#a51d34]'}`}
-                      onClick={() => {
-                        setShowCoursesMenu(!showCoursesMenu);
-                        setShowResourcesMenu(false);
-                        setShowCompanyMenu(false);
-                      }}
-                    >
-                      Courses <FaChevronDown className={`ml-1 text-sm transition-transform ${showCoursesMenu ? 'rotate-180' : ''}`} />
-                    </span>
-                    {showCoursesMenu && <MegaMenu />}
-                    <span className="absolute right-0 top-1/2 transform -translate-y-1/2 h-5 border-r border-gray-300"></span>
-                  </div>
-                );
-              } else if (item.isDropdown) {
-                return (
-                  <div
-                    key={idx}
-                    className="relative"
-                    onMouseEnter={item.label === 'Services' ? handleResourcesMouseEnter : handleCompanyMouseEnter}
-                    onMouseLeave={item.label === 'Services' ? handleResourcesMouseLeave : handleCompanyMouseLeave}
-                  >
-                    <span
-                      ref={item.label === 'Services' ? resourcesBtnRef : companyBtnRef}
-                      className={`flex items-center px-3 py-2 text-base font-medium cursor-pointer rounded-md transition-all ${((item.label === 'Services' && showResourcesMenu) || (item.label === 'Company' && showCompanyMenu)) ? 'text-[#a51d34]' : 'text-gray-800 hover:text-[#a51d34]'}`}
-                      onClick={() => {
-                        if (item.label === 'Services') {
-                          setShowResourcesMenu(!showResourcesMenu);
-                          setShowCoursesMenu(false);
-                          setShowCompanyMenu(false);
-                        } else {
-                          setShowCompanyMenu(!showCompanyMenu);
-                          setShowCoursesMenu(false);
-                          setShowResourcesMenu(false);
-                        }
-                      }}
-                    >
-                      {item.label} <FaChevronDown className={`ml-1 text-sm transition-transform ${((item.label === 'Services' && showResourcesMenu) || (item.label === 'Company' && showCompanyMenu)) ? 'rotate-180' : ''}`} />
-                    </span>
-                    {item.label === 'Services' && showResourcesMenu && <ResourcesDropdown />}
-                    {item.label === 'Company' && showCompanyMenu && <CompanyDropdown />}
-                    <div className="absolute right-0 top-1/2 transform -translate-y-1/2 h-5 w-px bg-gray-300"></div>
-                  </div>
-                );
+          <div className="hidden lg:flex items-center">
+  {menuItems.map((item, idx) => {
+    const isLast = false; // force separators after every item
+
+    if (item.isMegaMenu) {
+      return (
+        <div
+          key={idx}
+          className="relative flex items-center"
+          onMouseEnter={handleCoursesMouseEnter}
+          onMouseLeave={handleCoursesMouseLeave}
+        >
+          <span
+            ref={coursesBtnRef}
+            className={`flex items-center px-4 py-2 text-base font-medium cursor-pointer rounded-md transition-all relative ${
+              showCoursesMenu
+                ? "text-[#a51d34]"
+                : "text-gray-800 hover:text-[#a51d34]"
+            }`}
+            onClick={() => {
+              setShowCoursesMenu(!showCoursesMenu);
+              setShowResourcesMenu(false);
+              setShowCompanyMenu(false);
+            }}
+          >
+            Courses{" "}
+            <FaChevronDown
+              className={`ml-1 text-sm transition-transform ${
+                showCoursesMenu ? "rotate-180" : ""
+              }`}
+            />
+          </span>
+          {showCoursesMenu && <MegaMenu />}
+
+          {/* Separator */}
+          <div className="h-5 w-px bg-gray-300 mx-2"></div>
+        </div>
+      );
+    } else if (item.isDropdown) {
+      return (
+        <div
+          key={idx}
+          className="relative flex items-center"
+          onMouseEnter={
+            item.label === "Services"
+              ? handleResourcesMouseEnter
+              : handleCompanyMouseEnter
+          }
+          onMouseLeave={
+            item.label === "Services"
+              ? handleResourcesMouseLeave
+              : handleCompanyMouseLeave
+          }
+        >
+          <span
+            ref={item.label === "Services" ? resourcesBtnRef : companyBtnRef}
+            className={`flex items-center px-4 py-2 text-base font-medium cursor-pointer rounded-md transition-all ${
+              (item.label === "Services" && showResourcesMenu) ||
+              (item.label === "Company" && showCompanyMenu)
+                ? "text-[#a51d34]"
+                : "text-gray-800 hover:text-[#a51d34]"
+            }`}
+            onClick={() => {
+              if (item.label === "Services") {
+                setShowResourcesMenu(!showResourcesMenu);
+                setShowCoursesMenu(false);
+                setShowCompanyMenu(false);
               } else {
-                return (
-                  <div key={idx} className="relative flex items-center">
-                    <span
-                      className={`px-3 py-2 text-base font-medium cursor-pointer rounded-md transition-colors ${location.pathname === item.path ? 'text-[#a51d34]' : 'text-gray-800 hover:text-[#a51d34]'}`}
-                      onClick={() => handleNavigate(item.path)}
-                    >
-                      {item.label}
-                    </span>
-                    {/* Optional vertical separator */}
-                    {idx < menuItems.length - 1 && <div className="h-5 w-px bg-gray-300 ml-1"></div>}
-                  </div>
-                );
+                setShowCompanyMenu(!showCompanyMenu);
+                setShowCoursesMenu(false);
+                setShowResourcesMenu(false);
               }
-            })}
+            }}
+          >
+            {item.label}{" "}
+            <FaChevronDown
+              className={`ml-1 text-sm transition-transform ${
+                (item.label === "Services" && showResourcesMenu) ||
+                (item.label === "Company" && showCompanyMenu)
+                  ? "rotate-180"
+                  : ""
+              }`}
+            />
+          </span>
 
-            {/* Desktop Cart Button */}
-            <div className="relative ml-2">
-              <button
-                // onClick={() => setShowCart(!showCart)}
-                onClick={() => navigate('/payment')}
-                className="cart-button flex items-center justify-center w-10 h-10 bg-gray-100 text-gray-700 border border-gray-300 rounded-full cursor-pointer hover:bg-gray-200 transition-colors relative"
-              >
-                <FaCreditCard className="text-lg textcolor" />
-                {/* {getTotalItems() > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#a51d34] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center text-xs">
-                    {getTotalItems()}
-                  </span>
-                )} */}
-              </button>
-              {showCart && <CartDropdown />}
-            </div>
+          {item.label === "Services" && showResourcesMenu && (
+            <ResourcesDropdown />
+          )}
+          {item.label === "Company" && showCompanyMenu && <CompanyDropdown />}
 
-            <button
-              onClick={() => setShowLoginModal(true)}
-              className={`ml-2 ${screenSize === 'laptop' ? 'mx-2 px-4 py-2' : screenSize === 'desktop' ? 'mx-2.5 px-4 py-2' : 'mx-3 px-8 py-2'} bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded-full font-semibold ${screenSize === 'laptop' ? 'text-sm' : screenSize === 'desktop' ? 'text-base' : 'text-base'} cursor-pointer whitespace-nowrap hover:opacity-90 transition-opacity`}
-            >
-              Login
-            </button>
-          </div>
+          {/* Separator */}
+          <div className="h-5 w-px bg-gray-300 mx-2"></div>
+        </div>
+      );
+    } else {
+      return (
+        <div key={idx} className="relative flex items-center">
+          <span
+            className={`px-4 py-2 text-base font-medium cursor-pointer rounded-md transition-colors ${
+              location.pathname === item.path
+                ? "text-[#a51d34]"
+                : "text-gray-800 hover:text-[#a51d34]"
+            }`}
+            onClick={() => handleNavigate(item.path)}
+          >
+            {item.label}
+          </span>
+
+          {/* Separator */}
+          <div className="h-5 w-px bg-gray-300 mx-2"></div>
+        </div>
+      );
+    }
+  })}
+
+  {/* Desktop Cart Button */}
+  <div className="relative flex items-center">
+    <button
+      onClick={() => navigate("/payment")}
+      className="cart-button flex items-center justify-center w-10 h-10 bg-gray-100 text-gray-700 border border-gray-300 rounded-full cursor-pointer hover:bg-gray-200 transition-colors relative"
+    >
+      <FaCreditCard className="text-lg textcolor" />
+    </button>
+    {/* Separator */}
+    <div className="h-5 w-px bg-gray-300 mx-2"></div>
+  </div>
+
+  {/* Login Button */}
+  <button
+    onClick={() => setShowLoginModal(true)}
+    className="ml-2 px-6 py-2 bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded-full font-semibold text-base cursor-pointer whitespace-nowrap hover:opacity-90 transition-opacity"
+  >
+    Login
+  </button>
+</div>
+
         </div>
       </nav>
 
@@ -1102,13 +1143,14 @@ const GuestHeader = ({ onLogin }) => {
       )}
 
       <a
-        href="https://wa.me/919876543210" // replace with your WhatsApp number
+        href="https://wa.me/919000239871" // replace with your WhatsApp number
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-5 right-5 bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 transition duration-300 z-[9999]"
       >
         <FaWhatsapp size={30} />
       </a>
+
 
 
       <ContactUsModal

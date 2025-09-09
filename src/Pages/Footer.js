@@ -93,19 +93,40 @@ const Footer = () => {
                 <div className="text-center text-sm-start">
                   <h5 className="fw-bold mb-3">Community</h5>
                   <ul className="list-unstyled">
-                    {["Slack", "Discord", "WhatsApp"].map((item, idx) => (
-                      <li key={idx} className="mb-2">
-                        <a
-                          href="#"
-                          className="text-white text-decoration-none link-hover"
-                        >
-                          {item}
-                        </a>
-                      </li>
-                    ))}
+                    <li className="mb-2">
+                      <a
+                        href="https://slack.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white text-decoration-none link-hover"
+                      >
+                        Slack
+                      </a>
+                    </li>
+                    <li className="mb-2">
+                      <a
+                        href="https://discord.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white text-decoration-none link-hover"
+                      >
+                        Discord
+                      </a>
+                    </li>
+                    <li className="mb-2">
+                      <a
+                        href="https://wa.me/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white text-decoration-none link-hover"
+                      >
+                        WhatsApp
+                      </a>
+                    </li>
                   </ul>
                 </div>
               </div>
+
 
               {/* Company */}
               <div className="col-12 col-sm-4 mb-4 mb-sm-0">
@@ -114,25 +135,52 @@ const Footer = () => {
                   <ul className="list-unstyled">
                     <li className="mb-2">
                       <a
-                        href="/aboutus"
+                        href="#"
                         className="text-white text-decoration-none link-hover"
                       >
                         About Us
                       </a>
                     </li>
-                    {["Careers", "Events", "Certificates"].map((item, idx) => (
-                      <li key={idx} className="mb-2">
-                        <a
-                          href="#"
-                          className="text-white text-decoration-none link-hover"
-                        >
-                          {item}
-                        </a>
-                      </li>
-                    ))}
+
+                    <li className="mb-2">
+                      <a
+                        href="/careers"
+                        className="text-white text-decoration-none link-hover"
+                      >
+                        Careers
+                      </a>
+                    </li>
+
+                    <li className="mb-2">
+                      <a
+                        href="/faqs"
+                        className="text-white text-decoration-none link-hover"
+                      >
+                        FAQ's
+                      </a>
+                    </li>
+
+                    {/* <li className="mb-2">
+                      <a
+                        href="#"
+                        className="text-white text-decoration-none link-hover"
+                      >
+                        Events
+                      </a>
+                    </li> */}
+
+                    {/* <li className="mb-2">
+                      <a
+                        href="/certificates"
+                        className="text-white text-decoration-none link-hover"
+                      >
+                        Certificates
+                      </a>
+                    </li> */}
                   </ul>
                 </div>
               </div>
+
 
               {/* Contact */}
               <div className="col-12 col-sm-4">
@@ -141,18 +189,18 @@ const Footer = () => {
 
                   {/* Phone */}
                   <div className="d-flex flex-wrap justify-content-center justify-content-sm-start align-items-center mb-3 gap-2 contact-row">
-                    <a href="tel:+916299161616" className="contact-icon phone-icon mb-2 mb-sm-0">
+                    <a href="tel:+919000239871" className="contact-icon phone-icon mb-2 mb-sm-0">
                       <i className="fas fa-phone-alt mirrored"></i>
                     </a>
-                    <a href="tel:+916299161616" className="text-white text-decoration-none link-hover">
-                      +91 6299161616
+                    <a href="tel:+919000239871" className="text-white text-decoration-none link-hover">
+                      +91 9000239871
                     </a>
                   </div>
 
                   {/* WhatsApp */}
                   <div className="d-flex flex-wrap justify-content-center justify-content-sm-start align-items-center mb-3 gap-2 contact-row">
                     <a
-                      href="https://wa.me/916299161616"
+                      href="https://wa.me/919000239871"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="contact-icon whatsapp-icon mb-2 mb-sm-0"
@@ -160,30 +208,35 @@ const Footer = () => {
                       <i className="fab fa-whatsapp"></i>
                     </a>
                     <a
-                      href="https://wa.me/916299161616"
+                      href="https://wa.me/919000239871"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-white text-decoration-none link-hover"
                     >
-                      +91 6299161616
+                      +91 9000239871
                     </a>
                   </div>
 
                   {/* Email */}
                   <div className="d-flex flex-wrap justify-content-center justify-content-sm-start align-items-center gap-2 contact-row">
                     <a
-                      href="mailto:info@techsterker.com"
+                      href="https://mail.google.com/mail/?view=cm&fs=1&to=info@techsterker.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="contact-icon email-icon mb-2 mb-sm-0"
                     >
                       <i className="fas fa-envelope"></i>
                     </a>
                     <a
-                      href="mailto:info@techsterker.com"
+                      href="https://mail.google.com/mail/?view=cm&fs=1&to=info@techsterker.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-white text-decoration-none link-hover"
                     >
                       info@techsterker.com
                     </a>
                   </div>
+
                 </div>
               </div>
 
@@ -249,9 +302,10 @@ const Footer = () => {
                 {[
                   "Home",
                   "Contact Us",
-                  "Security",
                   "Privacy Policy",
-                  "Terms of Service",
+                  "Terms & Conditions",
+                  "Refund Policy",
+                  "Cookie Policy",
                 ].map((item, idx) => (
                   <React.Fragment key={idx}>
                     <a
@@ -260,7 +314,7 @@ const Footer = () => {
                     >
                       {item}
                     </a>
-                    {idx < 4 && (
+                    {idx < 5 && (
                       <span className="text-light d-none d-md-inline">|</span>
                     )}
                   </React.Fragment>

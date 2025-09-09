@@ -436,7 +436,7 @@ const CourseDetail = () => {
                       <div key={index} className="text-center" style={{ width: "80px" }}>
                         <img
                           src={tool}
-                          alt={`Tool ${index}`}
+                          alt={`${course.name} Tool ${index}`}
                           className="img-fluid mb-2"
                           style={{
                             height: "50px",

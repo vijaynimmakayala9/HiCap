@@ -493,7 +493,7 @@ const GuestHeader = ({ onLogin }) => {
             onClick={() => {
               setShowCoursesMenu(false);
               setIsMobileMenuOpen(false);
-              window.location.href = "tel:9876543211";
+              window.location.href = "tel:9000239871";
             }}
           >
             Contact Advisor
@@ -623,7 +623,7 @@ const GuestHeader = ({ onLogin }) => {
           onClick={() => {
             setShowCoursesMenu(false);
             setIsMobileMenuOpen(false);
-            window.location.href = "tel:9876543211";
+            window.location.href = "tel:9000239871";
           }}
         >
           Contact Advisor

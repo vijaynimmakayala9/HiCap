@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
-import ContactUsModal from "./ContactUsModal"; 
+import React, { useState, useRef, useEffect } from "react";
+import ContactUsModal from "./ContactUsModal";
 import CourseEnquiryModal from "../components/EnrollModal";
 
 const StickyContactButtons = () => {
@@ -8,70 +8,104 @@ const StickyContactButtons = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [hoveredIcon, setHoveredIcon] = useState(null);
 
-  const containerRef = useRef(null);
-  let timeoutId = useRef(null);
+  const closeTimer = useRef(null);
 
-  const handleMouseEnter = () => {
-    clearTimeout(timeoutId.current);
+  const enterZone = () => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
     setIsExpanded(true);
   };
 
-  const handleMouseLeave = () => {
-    timeoutId.current = setTimeout(() => {
+  const leaveZone = () => {
+    // small delay to prevent flicker when moving between items/tooltips
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => {
       setIsExpanded(false);
       setHoveredIcon(null);
-    }, 200); // small delay to prevent flicker
+    }, 250);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (closeTimer.current) clearTimeout(closeTimer.current);
+    };
+  }, []);
+
+  // Mobile/touch toggle
+  const handleTouchToggle = () => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+    setIsExpanded((v) => !v);
   };
 
   return (
     <>
       <div
-        ref={containerRef}
         className="position-fixed d-flex flex-column align-items-end"
-        style={{ right: 0, top: '50%', transform: 'translateY(-50%)', zIndex: 1050 }}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        style={{ right: 0, top: "50%", transform: "translateY(-50%)", zIndex: 1050 }}
+        onMouseEnter={enterZone}
+        onMouseLeave={leaveZone}
+        onTouchStart={handleTouchToggle}
       >
-        {/* Main Vertical Enquiry Button */}
+        {/* Main Vertical Enquiry Button (shown when collapsed) */}
         {!isExpanded && (
           <div
             className="bg-danger text-white fw-bold text-center"
             style={{
-              writingMode: 'vertical-rl',
-              textOrientation: 'mixed',
-              padding: '15px 5px',
-              borderTopLeftRadius: '5px',
-              borderBottomLeftRadius: '5px',
-              fontSize: '0.9rem',
-              letterSpacing: '1px',
-              cursor: 'pointer'
+              writingMode: "vertical-rl",
+              textOrientation: "mixed",
+              padding: "15px 5px",
+              borderTopLeftRadius: "5px",
+              borderBottomLeftRadius: "5px",
+              fontSize: "0.9rem",
+              letterSpacing: "1px",
+              cursor: "pointer",
             }}
+            onMouseEnter={enterZone}
+            onClick={handleTouchToggle}
           >
-            ENQUIRY NOW
+            ENQUIRY
           </div>
         )}
 
         {/* Expanded Buttons */}
         {isExpanded && (
-          <div className="d-flex flex-column bg-danger" style={{ borderBottomLeftRadius: '5px' }}>
+          <div
+            className="d-flex flex-column bg-danger"
+            style={{ borderBottomLeftRadius: "5px" }}
+            onMouseEnter={enterZone}
+            onMouseLeave={leaveZone}
+          >
             {/* Contact Us */}
             <div
               className="position-relative"
               style={{
-                backgroundColor: hoveredIcon === 'contact' ? '#b92d3b' : '#a51d34',
-                padding: '12px 15px',
-                borderBottomLeftRadius: '5px',
-                cursor: 'pointer'
+                backgroundColor: hoveredIcon === "contact" ? "#b92d3b" : "#a51d34",
+                padding: "12px 15px",
+                borderBottomLeftRadius: "5px",
+                cursor: "pointer",
               }}
               onClick={() => setShowContactModal(true)}
-              onMouseEnter={() => setHoveredIcon('contact')}
-              onMouseLeave={() => setHoveredIcon(null)}
+              onMouseEnter={() => {
+                enterZone();
+                setHoveredIcon("contact");
+              }}
+              onMouseLeave={() => {
+                setHoveredIcon(null);
+                leaveZone();
+              }}
             >
               <span className="text-white fw-bold">Contact Us</span>
-              {hoveredIcon === 'contact' && (
+              {hoveredIcon === "contact" && (
                 <span
                   className="position-absolute end-100 me-2 bg-dark text-white px-2 py-1 rounded small"
-                  style={{ top: '50%', transform: 'translateY(-50%)', whiteSpace: 'nowrap' }}
+                  style={{ top: "50%", transform: "translateY(-50%)", whiteSpace: "nowrap" }}
+                  onMouseEnter={enterZone}
+                  onMouseLeave={leaveZone}
                 >
                   Contact Us
                 </span>
@@ -82,20 +116,28 @@ const StickyContactButtons = () => {
             <div
               className="position-relative"
               style={{
-                backgroundColor: hoveredIcon === 'enroll' ? '#b92d3b' : '#a51d34',
-                padding: '12px 15px',
-                borderBottomLeftRadius: '5px',
-                cursor: 'pointer'
+                backgroundColor: hoveredIcon === "enroll" ? "#b92d3b" : "#a51d34",
+                padding: "12px 15px",
+                borderBottomLeftRadius: "5px",
+                cursor: "pointer",
               }}
               onClick={() => setShowEnquiryModal(true)}
-              onMouseEnter={() => setHoveredIcon('enroll')}
-              onMouseLeave={() => setHoveredIcon(null)}
+              onMouseEnter={() => {
+                enterZone();
+                setHoveredIcon("enroll");
+              }}
+              onMouseLeave={() => {
+                setHoveredIcon(null);
+                leaveZone();
+              }}
             >
               <span className="text-white fw-bold">Enroll Now</span>
-              {hoveredIcon === 'enroll' && (
+              {hoveredIcon === "enroll" && (
                 <span
                   className="position-absolute end-100 me-2 bg-dark text-white px-2 py-1 rounded small"
-                  style={{ top: '50%', transform: 'translateY(-50%)', whiteSpace: 'nowrap' }}
+                  style={{ top: "50%", transform: "translateY(-50%)", whiteSpace: "nowrap" }}
+                  onMouseEnter={enterZone}
+                  onMouseLeave={leaveZone}
                 >
                   Enroll Now
                 </span>

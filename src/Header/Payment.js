@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Footer from "../Pages/Footer";
 import Header from "./Header";
+import { useNavigate } from "react-router-dom";
 
 const PaymentForm = () => {
     const [userType, setUserType] = useState("student");
@@ -11,6 +12,8 @@ const PaymentForm = () => {
 
     const courseInputRef = useRef(null);
     const suggestionsRef = useRef(null);
+
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         name: "",
@@ -77,9 +80,8 @@ const PaymentForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!agreed) return; // safety check
         console.log("Enrollment Submitted:", formData);
-        // 🔹 integrate payment API here
+        navigate('/ourpolicies')
     };
 
     const filteredCourses = courses.filter((c) =>
@@ -91,11 +93,11 @@ const PaymentForm = () => {
             <Header />
             <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4 main-content">
                 <div className="w-full max-w-3xl bg-white shadow-lg rounded-2xl p-6 sm:p-10">
-                    <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+                    <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
                         Payment Form
                     </h2>
 
-                    <form onSubmit={handleSubmit} className="space-y-5">
+                    <form className="space-y-5">
                         {/* Name */}
                         <div>
                             <label className="block text-gray-700 mb-1">Full Name</label>
@@ -275,14 +277,14 @@ const PaymentForm = () => {
 
                         {/* Submit */}
                         <button
-                            type="submit"
+                            onClick={handleSubmit}
                             //disabled={!agreed} // ✅ Disabled until checked
                             className={`w-full text-white font-semibold py-3 rounded-lg shadow-md transition ${!agreed
                                 ? "bg-gradient-to-br from-[#a51d34] to-[#d32f2f] hover:opacity-90"
                                 : "bg-gray-400 cursor-not-allowed"
                                 }`}
                         >
-                            Proceed to Payment
+                            Proceed
                         </button>
                     </form>
                 </div>
