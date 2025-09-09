@@ -12,6 +12,7 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
   const [loading, setLoading] = useState(false);
   const [pdfUrl, setPdfUrl] = useState('');
   const [fileName, setFileName] = useState('');
+  const [courseName, setCourseName] = useState('');
 
   // 🔽 Helper: Download PDF
   const handleDownload = async (url, filename = "document.pdf") => {
@@ -32,8 +33,8 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
     }
   };
 
-  // Fetch course PDF URL
-  const fetchCoursePdf = async () => {
+  // 🔽 Fetch course details (PDF + Name)
+  const fetchCourseDetails = async () => {
     try {
       setLoading(true);
       const response = await axios.get(
@@ -46,6 +47,7 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
         if (course && course.pdf) {
           setPdfUrl(course.pdf);
           setFileName(`${course.name}-syllabus.pdf`);
+          setCourseName(course.name);
           return { url: course.pdf, name: course.name };
         } else {
           Swal.fire("Oops", "PDF not available for this course.", "warning");
@@ -56,15 +58,15 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
         return null;
       }
     } catch (error) {
-      console.error("Error fetching course PDF:", error);
-      Swal.fire("Error", "Error fetching PDF. Please try again.", "error");
+      console.error("Error fetching course details:", error);
+      Swal.fire("Error", "Error fetching course info. Please try again.", "error");
       return null;
     } finally {
       setLoading(false);
     }
   };
 
-  // 🔽 Send OTP
+  // 🔽 Send OTP (with syllabus payload)
   const sendOtp = async () => {
     if (!name || !phone) {
       Swal.fire('Warning', 'Please enter your name and phone number.', 'warning');
@@ -73,9 +75,18 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
 
     try {
       setLoading(true);
+
+      // Get course details (to send syllabus name)
+      const course = await fetchCourseDetails();
+      if (!course) return;
+
       const response = await axios.post(
-        'http://31.97.206.144:5001/api/send-otp',
-        { name, phoneNumber: phone } // Removed '+' prefix
+        'https://backend-hicap.onrender.com/api/send-otp',
+        {
+          name,
+          phoneNumber: phone,
+          syllabus: course.name, // 👈 syllabus from course name
+        }
       );
 
       if (response.data.success) {
@@ -103,8 +114,8 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
     try {
       setLoading(true);
       const response = await axios.post(
-        'http://31.97.206.144:5001/api/verify-otp',
-        { phoneNumber: phone, otp } // Removed '+' prefix
+        'https://backend-hicap.onrender.com/api/verify-otp',
+        { phoneNumber: phone, otp }
       );
 
       if (response.data.success) {
@@ -114,15 +125,15 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
         let name = fileName;
 
         if (!url) {
-          const result = await fetchCoursePdf();
+          const result = await fetchCourseDetails();
           if (result) {
             url = result.url;
-            name = result.name;
+            name = `${result.name}-syllabus.pdf`;
           }
         }
 
         if (url) {
-          await handleDownload(url, `${name}.pdf`);
+          await handleDownload(url, name);
         }
 
         handleClose();

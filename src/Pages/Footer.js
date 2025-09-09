@@ -10,6 +10,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const Footer = () => {
   const [courses, setCourses] = useState([]);
   const [socialLinks, setSocialLinks] = useState({});
+  const [communityLinks, setCommunityLinks] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -59,8 +60,28 @@ const Footer = () => {
       }
     };
 
+    const fetchCommunityLinks = async () => {
+      try {
+        const response = await fetch(
+          "https://backend-hicap.onrender.com/api/communitys"
+        );
+        const data = await response.json();
+        if (data.success && data.data.length > 0) {
+          setCommunityLinks(data.data[0]); // ✅ use first record
+        }
+      } catch (error) {
+        console.error("Error fetching community links:", error);
+        setCommunityLinks({
+          slack: "https://slack.com/",
+          discord: "https://discord.com/",
+          whatsapp: "https://wa.me/",
+        });
+      }
+    };
+
     fetchCourses();
     fetchSocialLinks();
+    fetchCommunityLinks();
   }, []);
 
   return (
@@ -93,40 +114,45 @@ const Footer = () => {
                 <div className="text-center text-sm-start">
                   <h5 className="fw-bold mb-3">Community</h5>
                   <ul className="list-unstyled">
-                    <li className="mb-2">
-                      <a
-                        href="https://slack.com/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-white text-decoration-none link-hover"
-                      >
-                        Slack
-                      </a>
-                    </li>
-                    <li className="mb-2">
-                      <a
-                        href="https://discord.com/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-white text-decoration-none link-hover"
-                      >
-                        Discord
-                      </a>
-                    </li>
-                    <li className="mb-2">
-                      <a
-                        href="https://wa.me/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-white text-decoration-none link-hover"
-                      >
-                        WhatsApp
-                      </a>
-                    </li>
+                    {communityLinks.slack && (
+                      <li className="mb-2">
+                        <a
+                          href={communityLinks.slack}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-white text-decoration-none link-hover"
+                        >
+                          Slack
+                        </a>
+                      </li>
+                    )}
+                    {communityLinks.discord && (
+                      <li className="mb-2">
+                        <a
+                          href={communityLinks.discord}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-white text-decoration-none link-hover"
+                        >
+                          Discord
+                        </a>
+                      </li>
+                    )}
+                    {communityLinks.whatsapp && (
+                      <li className="mb-2">
+                        <a
+                          href={communityLinks.whatsapp}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-white text-decoration-none link-hover"
+                        >
+                          WhatsApp
+                        </a>
+                      </li>
+                    )}
                   </ul>
                 </div>
               </div>
-
 
               {/* Company */}
               <div className="col-12 col-sm-4 mb-4 mb-sm-0">
@@ -141,7 +167,6 @@ const Footer = () => {
                         About Us
                       </a>
                     </li>
-
                     <li className="mb-2">
                       <a
                         href="/careers"
@@ -150,7 +175,6 @@ const Footer = () => {
                         Careers
                       </a>
                     </li>
-
                     <li className="mb-2">
                       <a
                         href="/faqs"
@@ -159,28 +183,9 @@ const Footer = () => {
                         FAQ's
                       </a>
                     </li>
-
-                    {/* <li className="mb-2">
-                      <a
-                        href="#"
-                        className="text-white text-decoration-none link-hover"
-                      >
-                        Events
-                      </a>
-                    </li> */}
-
-                    {/* <li className="mb-2">
-                      <a
-                        href="/certificates"
-                        className="text-white text-decoration-none link-hover"
-                      >
-                        Certificates
-                      </a>
-                    </li> */}
                   </ul>
                 </div>
               </div>
-
 
               {/* Contact */}
               <div className="col-12 col-sm-4">
@@ -189,10 +194,16 @@ const Footer = () => {
 
                   {/* Phone */}
                   <div className="d-flex flex-wrap justify-content-center justify-content-sm-start align-items-center mb-3 gap-2 contact-row">
-                    <a href="tel:+919000239871" className="contact-icon phone-icon mb-2 mb-sm-0">
+                    <a
+                      href="tel:+919000239871"
+                      className="contact-icon phone-icon mb-2 mb-sm-0"
+                    >
                       <i className="fas fa-phone-alt mirrored"></i>
                     </a>
-                    <a href="tel:+919000239871" className="text-white text-decoration-none link-hover">
+                    <a
+                      href="tel:+919000239871"
+                      className="text-white text-decoration-none link-hover"
+                    >
                       +91 9000239871
                     </a>
                   </div>
@@ -236,10 +247,8 @@ const Footer = () => {
                       info@techsterker.com
                     </a>
                   </div>
-
                 </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -403,7 +412,6 @@ const Footer = () => {
 }
 
 `}</style>
-
     </footer>
   );
 };

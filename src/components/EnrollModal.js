@@ -20,12 +20,13 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
     message: ''
   });
 
+  // Fetch all available courses
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch('http://31.97.206.144:5001/api/coursecontroller');
+        const response = await fetch('https://backend-hicap.onrender.com/api/coursecontroller');
         const data = await response.json();
-        setCourses(data.data);
+        setCourses(data.data || []);
       } catch (error) {
         console.error('Failed to fetch courses:', error);
       }
@@ -33,6 +34,7 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
     fetchCourses();
   }, []);
 
+  // Autofill if prefillCourse is provided
   useEffect(() => {
     if (prefillCourse) {
       setFormData(prev => ({ ...prev, courses: [prefillCourse] }));
@@ -40,6 +42,7 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
     }
   }, [prefillCourse]);
 
+  // Close suggestions when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -88,29 +91,41 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
       name: formData.name,
       phoneNumber: formData.phone,
       email: formData.email,
-      section: formData.courses.map(course => ({ name: course })),
+      courses: formData.courses.map(course => ({ name: course })), // ✅ correct field
       city: formData.city,
       message: formData.message
     };
 
     try {
-      const response = await fetch('http://31.97.206.144:5001/api/Enquiry', {
+      const response = await fetch('https://backend-hicap.onrender.com/api/Enquiry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
 
       if (response.ok) {
-        Swal.fire({ icon: 'success', title: 'Enquiry Submitted', text: 'We will get back to you soon!' });
+        Swal.fire({
+          icon: 'success',
+          title: 'Enquiry Submitted',
+          text: 'We will get back to you soon!'
+        });
         setFormData({ name: '', phone: '', email: '', courses: [], city: '', message: '' });
         setSearchTerm('');
         handleClose();
       } else {
-        Swal.fire({ icon: 'error', title: 'Submission Failed', text: 'Please try again later.' });
+        Swal.fire({
+          icon: 'error',
+          title: 'Submission Failed',
+          text: 'Please try again later.'
+        });
       }
     } catch (error) {
       console.error('Submission error:', error);
-      Swal.fire({ icon: 'error', title: 'Network Error', text: 'Unable to submit enquiry.' });
+      Swal.fire({
+        icon: 'error',
+        title: 'Network Error',
+        text: 'Unable to submit enquiry.'
+      });
     }
   };
 
@@ -158,7 +173,7 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
                   key={idx}
                   pill
                   bg="danger"
-                  className='bg-meroon'
+                  className="bg-meroon"
                   style={{ cursor: 'pointer' }}
                   onClick={() => handleRemoveCourse(course)}
                 >
@@ -186,7 +201,7 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
               >
                 {filteredCourses.map((course) => (
                   <ListGroup.Item
-                    key={course._id}                    
+                    key={course._id}
                     action
                     onClick={() => handleCourseSelect(course.name)}
                   >
@@ -205,7 +220,7 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
             value={formData.city}
             onChange={handleChange}
           />
-          
+
           <Form.Control
             as="textarea"
             name="message"
@@ -215,6 +230,7 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
             value={formData.message}
             onChange={handleChange}
           />
+
           <Button type="submit" className="px-4 w-100 bg-meroon border-0">
             Enroll Now
           </Button>
