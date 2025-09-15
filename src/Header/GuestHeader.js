@@ -88,7 +88,7 @@ const GuestHeader = ({ onLogin }) => {
       if (width < 480) return 'mobile-small';
       if (width < 640) return 'mobile';
       if (width < 768) return 'mobile-large';
-      if (width < 1024) return 'tablet';
+      if (width < 1024) return 'tablet'; // Tablet size
       if (width < 1280) return 'laptop';
       if (width < 1536) return 'desktop';
       return 'desktop-large';
@@ -710,17 +710,7 @@ const GuestHeader = ({ onLogin }) => {
                         <span>{course.duration || 0}</span>
                       </div>
                     </div>
-                    <div className="flex-shrink-0">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          addToCart(course);
-                        }}
-                        className="bg-[#a51d34] text-white p-1 rounded text-xs hover:bg-[#d32f2f]"
-                      >
-                        Add
-                      </button>
-                    </div>
+                    
                   </div>
                 </li>
               ))}
@@ -759,7 +749,7 @@ const GuestHeader = ({ onLogin }) => {
           }}
         >
           Contact Advisor
-        </button>
+          </button>
       </div>
     </div>
   );
@@ -776,288 +766,285 @@ const GuestHeader = ({ onLogin }) => {
             />
           </div>
 
-          {/* Mobile Menu Button, Cart and Login */}
-          <div className={`flex items-center ${screenSize === 'mobile-small' ? 'gap-1.5' : 'gap-2'} lg:hidden`}>
-            {/* Cart Button for Mobile */}
-            <div className="relative">
+          {/* Mobile Menu Button, Cart and Login - Show for tablets and smaller screens */}
+          {(screenSize === 'tablet' || screenSize === 'mobile-large' || screenSize === 'mobile' || screenSize === 'mobile-small') && (
+            <div className={`flex items-center ${screenSize === 'mobile-small' ? 'gap-1.5' : 'gap-2'}`}>
+              {/* Cart Button for Mobile */}
+              <div className="relative">
+                <button
+                  onClick={() => navigate('/payment')}
+                  className={`cart-button ${responsiveClasses.iconSize} flex items-center justify-center bg-gray-100 text-gray-700 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 transition-colors relative`}
+                >
+                  <FaCreditCard className={responsiveClasses.iconText} />
+                </button>
+              </div>
+
               <button
-                //onClick={() => setShowCart(!showCart)}
-                onClick={() => navigate('/payment')}
-                className={`cart-button ${responsiveClasses.iconSize} flex items-center justify-center bg-gray-100 text-gray-700 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 transition-colors relative`}
+                onClick={() => setShowLoginModal(true)}
+                className={`${responsiveClasses.buttonPadding} bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded ${responsiveClasses.buttonText} cursor-pointer whitespace-nowrap hover:opacity-90 transition-opacity`}
               >
-                <FaCreditCard className={responsiveClasses.iconText} />
-
+                Login
               </button>
-              {/* {showCart && <CartDropdown />} */}
+              <button
+                className={`${responsiveClasses.iconSize} flex items-center justify-center bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded cursor-pointer hover:opacity-90 transition-opacity`}
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                aria-label="Toggle navigation"
+              >
+                {isMobileMenuOpen ? <FaTimes className={responsiveClasses.iconText} /> : <FaBars className={responsiveClasses.iconText} />}
+              </button>
             </div>
-
-            <button
-              onClick={() => setShowLoginModal(true)}
-              className={`${responsiveClasses.buttonPadding} bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded ${responsiveClasses.buttonText} cursor-pointer whitespace-nowrap hover:opacity-90 transition-opacity`}
-            >
-              Login
-            </button>
-            <button
-              className={`${responsiveClasses.iconSize} flex items-center justify-center bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded cursor-pointer hover:opacity-90 transition-opacity`}
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle navigation"
-            >
-              {isMobileMenuOpen ? <FaTimes className={responsiveClasses.iconText} /> : <FaBars className={responsiveClasses.iconText} />}
-            </button>
-          </div>
-
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center">
-  {menuItems.map((item, idx) => {
-    const isLast = false; // force separators after every item
-
-    if (item.isMegaMenu) {
-      return (
-        <div
-          key={idx}
-          className="relative flex items-center"
-          onMouseEnter={handleCoursesMouseEnter}
-          onMouseLeave={handleCoursesMouseLeave}
-        >
-          <span
-            ref={coursesBtnRef}
-            className={`flex items-center px-4 py-2 text-base font-medium cursor-pointer rounded-md transition-all relative ${
-              showCoursesMenu
-                ? "text-[#a51d34]"
-                : "text-gray-800 hover:text-[#a51d34]"
-            }`}
-            onClick={() => {
-              setShowCoursesMenu(!showCoursesMenu);
-              setShowResourcesMenu(false);
-              setShowCompanyMenu(false);
-            }}
-          >
-            Courses{" "}
-            <FaChevronDown
-              className={`ml-1 text-sm transition-transform ${
-                showCoursesMenu ? "rotate-180" : ""
-              }`}
-            />
-          </span>
-          {showCoursesMenu && <MegaMenu />}
-
-          {/* Separator */}
-          <div className="h-5 w-px bg-gray-300 mx-2"></div>
-        </div>
-      );
-    } else if (item.isDropdown) {
-      return (
-        <div
-          key={idx}
-          className="relative flex items-center"
-          onMouseEnter={
-            item.label === "Services"
-              ? handleResourcesMouseEnter
-              : handleCompanyMouseEnter
-          }
-          onMouseLeave={
-            item.label === "Services"
-              ? handleResourcesMouseLeave
-              : handleCompanyMouseLeave
-          }
-        >
-          <span
-            ref={item.label === "Services" ? resourcesBtnRef : companyBtnRef}
-            className={`flex items-center px-4 py-2 text-base font-medium cursor-pointer rounded-md transition-all ${
-              (item.label === "Services" && showResourcesMenu) ||
-              (item.label === "Company" && showCompanyMenu)
-                ? "text-[#a51d34]"
-                : "text-gray-800 hover:text-[#a51d34]"
-            }`}
-            onClick={() => {
-              if (item.label === "Services") {
-                setShowResourcesMenu(!showResourcesMenu);
-                setShowCoursesMenu(false);
-                setShowCompanyMenu(false);
-              } else {
-                setShowCompanyMenu(!showCompanyMenu);
-                setShowCoursesMenu(false);
-                setShowResourcesMenu(false);
-              }
-            }}
-          >
-            {item.label}{" "}
-            <FaChevronDown
-              className={`ml-1 text-sm transition-transform ${
-                (item.label === "Services" && showResourcesMenu) ||
-                (item.label === "Company" && showCompanyMenu)
-                  ? "rotate-180"
-                  : ""
-              }`}
-            />
-          </span>
-
-          {item.label === "Services" && showResourcesMenu && (
-            <ResourcesDropdown />
           )}
-          {item.label === "Company" && showCompanyMenu && <CompanyDropdown />}
 
-          {/* Separator */}
-          <div className="h-5 w-px bg-gray-300 mx-2"></div>
-        </div>
-      );
-    } else {
-      return (
-        <div key={idx} className="relative flex items-center">
-          <span
-            className={`px-4 py-2 text-base font-medium cursor-pointer rounded-md transition-colors ${
-              location.pathname === item.path
-                ? "text-[#a51d34]"
-                : "text-gray-800 hover:text-[#a51d34]"
-            }`}
-            onClick={() => handleNavigate(item.path)}
-          >
-            {item.label}
-          </span>
+          {/* Desktop Navigation - Show for laptop and larger screens */}
+          {screenSize !== 'tablet' && screenSize !== 'mobile-large' && screenSize !== 'mobile' && screenSize !== 'mobile-small' && (
+            <div className="flex items-center">
+              {menuItems.map((item, idx) => {
+                const isLast = false; // force separators after every item
 
-          {/* Separator */}
-          <div className="h-5 w-px bg-gray-300 mx-2"></div>
-        </div>
-      );
-    }
-  })}
+                if (item.isMegaMenu) {
+                  return (
+                    <div
+                      key={idx}
+                      className="relative flex items-center"
+                      onMouseEnter={handleCoursesMouseEnter}
+                      onMouseLeave={handleCoursesMouseLeave}
+                    >
+                      <span
+                        ref={coursesBtnRef}
+                        className={`flex items-center px-4 py-2 text-base font-medium cursor-pointer rounded-md transition-all relative ${showCoursesMenu
+                            ? "text-[#a51d34]"
+                            : "text-gray-800 hover:text-[#a51d34]"
+                          }`}
+                        onClick={() => {
+                          setShowCoursesMenu(!showCoursesMenu);
+                          setShowResourcesMenu(false);
+                          setShowCompanyMenu(false);
+                        }}
+                      >
+                        Courses{" "}
+                        <FaChevronDown
+                          className={`ml-1 text-sm transition-transform ${showCoursesMenu ? "rotate-180" : ""
+                            }`}
+                        />
+                      </span>
+                      {showCoursesMenu && <MegaMenu />}
 
-  {/* Desktop Cart Button */}
-  <div className="relative flex items-center">
-    <button
-      onClick={() => navigate("/payment")}
-      className="cart-button flex items-center justify-center w-10 h-10 bg-gray-100 text-gray-700 border border-gray-300 rounded-full cursor-pointer hover:bg-gray-200 transition-colors relative"
-    >
-      <FaCreditCard className="text-lg textcolor" />
-    </button>
-    {/* Separator */}
-    <div className="h-5 w-px bg-gray-300 mx-2"></div>
-  </div>
+                      {/* Separator */}
+                      <div className="h-5 w-px bg-gray-300 mx-2"></div>
+                    </div>
+                  );
+                } else if (item.isDropdown) {
+                  return (
+                    <div
+                      key={idx}
+                      className="relative flex items-center"
+                      onMouseEnter={
+                        item.label === "Services"
+                          ? handleResourcesMouseEnter
+                          : handleCompanyMouseEnter
+                      }
+                      onMouseLeave={
+                        item.label === "Services"
+                          ? handleResourcesMouseLeave
+                          : handleCompanyMouseLeave
+                      }
+                    >
+                      <span
+                        ref={item.label === "Services" ? resourcesBtnRef : companyBtnRef}
+                        className={`flex items-center px-4 py-2 text-base font-medium cursor-pointer rounded-md transition-all ${(item.label === "Services" && showResourcesMenu) ||
+                            (item.label === "Company" && showCompanyMenu)
+                            ? "text-[#a51d34]"
+                            : "text-gray-800 hover:text-[#a51d34]"
+                          }`}
+                        onClick={() => {
+                          if (item.label === "Services") {
+                            setShowResourcesMenu(!showResourcesMenu);
+                            setShowCoursesMenu(false);
+                            setShowCompanyMenu(false);
+                          } else {
+                            setShowCompanyMenu(!showCompanyMenu);
+                            setShowCoursesMenu(false);
+                            setShowResourcesMenu(false);
+                          }
+                        }}
+                      >
+                        {item.label}{" "}
+                        <FaChevronDown
+                          className={`ml-1 text-sm transition-transform ${(item.label === "Services" && showResourcesMenu) ||
+                              (item.label === "Company" && showCompanyMenu)
+                              ? "rotate-180"
+                              : ""
+                            }`}
+                        />
+                      </span>
 
-  {/* Login Button */}
-  <button
-    onClick={() => setShowLoginModal(true)}
-    className="ml-2 px-6 py-2 bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded-full font-semibold text-base cursor-pointer whitespace-nowrap hover:opacity-90 transition-opacity"
-  >
-    Login
-  </button>
-</div>
+                      {item.label === "Services" && showResourcesMenu && (
+                        <ResourcesDropdown />
+                      )}
+                      {item.label === "Company" && showCompanyMenu && <CompanyDropdown />}
 
+                      {/* Separator */}
+                      <div className="h-5 w-px bg-gray-300 mx-2"></div>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div key={idx} className="relative flex items-center">
+                      <span
+                        className={`px-4 py-2 text-base font-medium cursor-pointer rounded-md transition-colors ${location.pathname === item.path
+                            ? "text-[#a51d34]"
+                            : "text-gray-800 hover:text-[#a51d34]"
+                          }`}
+                        onClick={() => handleNavigate(item.path)}
+                      >
+                        {item.label}
+                      </span>
+
+                      {/* Separator */}
+                      <div className="h-5 w-px bg-gray-300 mx-2"></div>
+                    </div>
+                  );
+                }
+              })}
+
+              {/* Desktop Cart Button */}
+              <div className="relative flex items-center">
+                <button
+                  onClick={() => navigate("/payment")}
+                  className="cart-button flex items-center justify-center w-10 h-10 bg-gray-100 text-gray-700 border border-gray-300 rounded-full cursor-pointer hover:bg-gray-200 transition-colors relative"
+                >
+                  <FaCreditCard className="text-lg textcolor" />
+                </button>
+                {/* Separator */}
+                <div className="h-5 w-px bg-gray-300 mx-2"></div>
+              </div>
+
+              {/* Login Button */}
+              <button
+                onClick={() => setShowLoginModal(true)}
+                className="ml-2 px-6 py-2 bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded-full font-semibold text-base cursor-pointer whitespace-nowrap hover:opacity-90 transition-opacity"
+              >
+                Login
+              </button>
+            </div>
+          )}
         </div>
       </nav>
 
-      {/* Mobile Slide-out Menu */}
-      <div className={`fixed top-0 left-0 w-full h-full z-[1060] pointer-events-none ${isMobileMenuOpen ? 'pointer-events-auto' : ''}`}>
-        <div className={`absolute top-0 left-0 w-full h-full bg-black/50 transition-opacity ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'}`} onClick={() => setIsMobileMenuOpen(false)}></div>
-        <div className={`absolute top-0 left-[-100%] w-full h-full bg-white transition-transform flex flex-col ${isMobileMenuOpen ? 'translate-x-full' : ''}`}>
-          <div className={`flex justify-between items-center ${screenSize === 'mobile-small' ? 'p-3' : 'p-4'} border-b border-gray-200`}>
-            <img
-              src="/logo/hicapnewlogo.png"
-              alt="HiCap Logo"
-              className={`${screenSize === 'mobile-small' ? 'h-7' : screenSize === 'mobile' ? 'h-8' : 'h-10'}`}
-            />
-            <button
-              className={`bg-transparent border-none ${screenSize === 'mobile-small' ? 'text-lg' : screenSize === 'mobile' ? 'text-xl' : 'text-2xl'} text-gray-800 cursor-pointer hover:text-[#a51d34] transition-colors`}
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <FaTimes />
-            </button>
-          </div>
+      {/* Mobile Slide-out Menu - Show for tablets and smaller screens */}
+      {(screenSize === 'tablet' || screenSize === 'mobile-large' || screenSize === 'mobile' || screenSize === 'mobile-small') && (
+        <div className={`fixed top-0 left-0 w-full h-full z-[1060] pointer-events-none ${isMobileMenuOpen ? 'pointer-events-auto' : ''}`}>
+          <div className={`absolute top-0 left-0 w-full h-full bg-black/50 transition-opacity ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'}`} onClick={() => setIsMobileMenuOpen(false)}></div>
+          <div className={`absolute top-0 left-[-100%] w-full h-full bg-white transition-transform flex flex-col ${isMobileMenuOpen ? 'translate-x-full' : ''}`}>
+            <div className={`flex justify-between items-center ${screenSize === 'mobile-small' ? 'p-3' : 'p-4'} border-b border-gray-200`}>
+              <img
+                src="/logo/hicapnewlogo.png"
+                alt="HiCap Logo"
+                className={`${screenSize === 'mobile-small' ? 'h-7' : screenSize === 'mobile' ? 'h-8' : 'h-10'}`}
+              />
+              <button
+                className={`bg-transparent border-none ${screenSize === 'mobile-small' ? 'text-lg' : screenSize === 'mobile' ? 'text-xl' : 'text-2xl'} text-gray-800 cursor-pointer hover:text-[#a51d34] transition-colors`}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <FaTimes />
+              </button>
+            </div>
 
-          <div className="flex-grow overflow-y-auto py-2">
-            {menuItems.map((item, idx) => {
-              if (item.isMegaMenu) {
-                return (
-                  <div key={idx} className="border-b border-gray-100 last:border-b-0">
-                    <div
-                      className={`flex justify-between items-center ${screenSize === 'mobile-small' ? 'p-2.5' : 'p-3'} cursor-pointer transition-all hover:bg-gray-50`}
-                      onClick={() => {
-                        setShowMobileCoursesMenu(!showMobileCoursesMenu);
-                        setShowMobileResourcesMenu(false);
-                        setShowMobileCompanyMenu(false);
-                      }}
-                    >
-                      <span className={`${screenSize === 'mobile-small' ? 'text-sm' : 'text-base'} font-medium text-gray-800`}>{item.label}</span>
-                      <FaChevronDown className={`${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} text-gray-600 transition-transform ${showMobileCoursesMenu ? 'rotate-180' : ''}`} />
-                    </div>
-                    {showMobileCoursesMenu && <MobileMegaMenu />}
-                  </div>
-                );
-              } else if (item.isDropdown) {
-                return (
-                  <div key={idx} className="border-b border-gray-100 last:border-b-0">
-                    <div
-                      className={`flex justify-between items-center ${screenSize === 'mobile-small' ? 'p-2.5' : 'p-3'} cursor-pointer transition-all hover:bg-gray-50`}
-                      onClick={() => {
-                        if (item.label === 'Services') {
-                          setShowMobileResourcesMenu(!showMobileResourcesMenu);
-                          setShowMobileCoursesMenu(false);
-                          setShowMobileCompanyMenu(false);
-                        } else if (item.label === 'Company') {
-                          setShowMobileCompanyMenu(!showMobileCompanyMenu);
-                          setShowMobileCoursesMenu(false);
+            <div className="flex-grow overflow-y-auto py-2">
+              {menuItems.map((item, idx) => {
+                if (item.isMegaMenu) {
+                  return (
+                    <div key={idx} className="border-b border-gray-100 last:border-b-0">
+                      <div
+                        className={`flex justify-between items-center ${screenSize === 'mobile-small' ? 'p-2.5' : 'p-3'} cursor-pointer transition-all hover:bg-gray-50`}
+                        onClick={() => {
+                          setShowMobileCoursesMenu(!showMobileCoursesMenu);
                           setShowMobileResourcesMenu(false);
-                        }
-                      }}
-                    >
-                      <span className={`${screenSize === 'mobile-small' ? 'text-sm' : 'text-base'} font-medium text-gray-800`}>{item.label}</span>
-                      <FaChevronDown className={`${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} text-gray-600 transition-transform ${(item.label === 'Services' && showMobileResourcesMenu) || (item.label === 'Company' && showMobileCompanyMenu) ? 'rotate-180' : ''}`} />
+                          setShowMobileCompanyMenu(false);
+                        }}
+                      >
+                        <span className={`${screenSize === 'mobile-small' ? 'text-sm' : 'text-base'} font-medium text-gray-800`}>{item.label}</span>
+                        <FaChevronDown className={`${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} text-gray-600 transition-transform ${showMobileCoursesMenu ? 'rotate-180' : ''}`} />
+                      </div>
+                      {showMobileCoursesMenu && <MobileMegaMenu />}
                     </div>
-                    {showMobileResourcesMenu && item.label === 'Services' && (
-                      <div className="bg-gray-50 border-t border-gray-200">
-                        {item.items.map((subItem, subIdx) => (
-                          <div
-                            key={subIdx}
-                            className={`${screenSize === 'mobile-small' ? 'p-2.5 pl-6' : 'p-3 pl-8'} cursor-pointer ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} text-gray-700 transition-all border-b border-gray-100 last:border-b-0 hover:bg-white hover:text-[#a51d34] ${location.pathname === subItem.path ? 'text-[#a51d34] bg-white' : ''}`}
-                            onClick={() => handleNavigate(subItem.path)}
-                          >
-                            {subItem.label}
-                          </div>
-                        ))}
+                  );
+                } else if (item.isDropdown) {
+                  return (
+                    <div key={idx} className="border-b border-gray-100 last:border-b-0">
+                      <div
+                        className={`flex justify-between items-center ${screenSize === 'mobile-small' ? 'p-2.5' : 'p-3'} cursor-pointer transition-all hover:bg-gray-50`}
+                        onClick={() => {
+                          if (item.label === 'Services') {
+                            setShowMobileResourcesMenu(!showMobileResourcesMenu);
+                            setShowMobileCoursesMenu(false);
+                            setShowMobileCompanyMenu(false);
+                          } else if (item.label === 'Company') {
+                            setShowMobileCompanyMenu(!showMobileCompanyMenu);
+                            setShowMobileCoursesMenu(false);
+                            setShowMobileResourcesMenu(false);
+                          }
+                        }}
+                      >
+                        <span className={`${screenSize === 'mobile-small' ? 'text-sm' : 'text-base'} font-medium text-gray-800`}>{item.label}</span>
+                        <FaChevronDown className={`${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} text-gray-600 transition-transform ${(item.label === 'Services' && showMobileResourcesMenu) || (item.label === 'Company' && showMobileCompanyMenu) ? 'rotate-180' : ''}`} />
                       </div>
-                    )}
-                    {showMobileCompanyMenu && item.label === 'Company' && (
-                      <div className="bg-gray-50 border-t border-gray-200">
-                        {item.items.map((subItem, subIdx) => (
-                          <div
-                            key={subIdx}
-                            className={`${screenSize === 'mobile-small' ? 'p-2.5 pl-6' : 'p-3 pl-8'} cursor-pointer ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} text-gray-700 transition-all border-b border-gray-100 last:border-b-0 hover:bg-white hover:text-[#a51d34] ${location.pathname === subItem.path ? 'text-[#a51d34] bg-white' : ''}`}
-                            onClick={() => handleNavigate(subItem.path)}
-                          >
-                            {subItem.label}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              } else {
-                return (
-                  <div
-                    key={idx}
-                    className={`${screenSize === 'mobile-small' ? 'p-2.5' : 'p-3'} cursor-pointer transition-all border-b border-gray-100 last:border-b-0 hover:bg-gray-50 hover:text-[#a51d34] ${location.pathname === item.path ? 'text-[#a51d34] bg-[#f8d7da]' : ''}`}
-                    onClick={() => handleNavigate(item.path)}
-                  >
-                    <span className={`${screenSize === 'mobile-small' ? 'text-sm' : 'text-base'} font-medium`}>{item.label}</span>
-                  </div>
-                );
-              }
-            })}
-          </div>
+                      {showMobileResourcesMenu && item.label === 'Services' && (
+                        <div className="bg-gray-50 border-t border-gray-200">
+                          {item.items.map((subItem, subIdx) => (
+                            <div
+                              key={subIdx}
+                              className={`${screenSize === 'mobile-small' ? 'p-2.5 pl-6' : 'p-3 pl-8'} cursor-pointer ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} text-gray-700 transition-all border-b border-gray-100 last:border-b-0 hover:bg-white hover:text-[#a51d34] ${location.pathname === subItem.path ? 'text-[#a51d34] bg-white' : ''}`}
+                              onClick={() => handleNavigate(subItem.path)}
+                            >
+                              {subItem.label}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      {showMobileCompanyMenu && item.label === 'Company' && (
+                        <div className="bg-gray-50 border-t border-gray-200">
+                          {item.items.map((subItem, subIdx) => (
+                            <div
+                              key={subIdx}
+                              className={`${screenSize === 'mobile-small' ? 'p-2.5 pl-6' : 'p-3 pl-8'} cursor-pointer ${screenSize === 'mobile-small' ? 'text-xs' : 'text-sm'} text-gray-700 transition-all border-b border-gray-100 last:border-b-0 hover:bg-white hover:text-[#a51d34] ${location.pathname === subItem.path ? 'text-[#a51d34] bg-white' : ''}`}
+                              onClick={() => handleNavigate(subItem.path)}
+                            >
+                              {subItem.label}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div
+                      key={idx}
+                      className={`${screenSize === 'mobile-small' ? 'p-2.5' : 'p-3'} cursor-pointer transition-all border-b border-gray-100 last:border-b-0 hover:bg-gray-50 hover:text-[#a51d34] ${location.pathname === item.path ? 'text-[#a51d34] bg-[#f8d7da]' : ''}`}
+                      onClick={() => handleNavigate(item.path)}
+                    >
+                      <span className={`${screenSize === 'mobile-small' ? 'text-sm' : 'text-base'} font-medium`}>{item.label}</span>
+                    </div>
+                  );
+                }
+              })}
+            </div>
 
-          <div className={`${screenSize === 'mobile-small' ? 'p-3' : 'p-4'} border-t border-gray-200`}>
-            <button
-              className={`w-full ${screenSize === 'mobile-small' ? 'p-2.5' : 'p-3'} bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded-md font-semibold cursor-pointer ${screenSize === 'mobile-small' ? 'text-sm' : 'text-base'} hover:opacity-90 transition-opacity`}
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                setShowLoginModal(true);
-              }}
-            >
-              Login
-            </button>
+            <div className={`${screenSize === 'mobile-small' ? 'p-3' : 'p-4'} border-t border-gray-200`}>
+              <button
+                className={`w-full ${screenSize === 'mobile-small' ? 'p-2.5' : 'p-3'} bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white border-none rounded-md font-semibold cursor-pointer ${screenSize === 'mobile-small' ? 'text-sm' : 'text-base'} hover:opacity-90 transition-opacity`}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setShowLoginModal(true);
+                }}
+              >
+                Login
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Login Modal */}
       {showLoginModal && (
@@ -1150,8 +1137,6 @@ const GuestHeader = ({ onLogin }) => {
       >
         <FaWhatsapp size={30} />
       </a>
-
-
 
       <ContactUsModal
         show={showContactModal}
