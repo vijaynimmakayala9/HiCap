@@ -25,7 +25,7 @@ const OurPolicies = () => {
 
   // Get formId and mobile from navigation state
   const location = useLocation();
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   const { formId, mobile } = location.state || {};
 
   const studentId = formId;
@@ -165,7 +165,7 @@ const OurPolicies = () => {
         handler: function (response) {
           alert(
             "Payment Successful! Payment ID: " +
-              response.razorpay_payment_id
+            response.razorpay_payment_id
           );
           // TODO: Call backend to confirm/save payment
           navigate("/");
@@ -197,7 +197,7 @@ const OurPolicies = () => {
       <Container className="mb-3 main-content">
         <Row className="justify-content-center">
           <Col md={8}>
-            <h2 className="text-center mb-4">Our Policies</h2>
+            <h2 className="text-center textcolor mb-4">Our Policies</h2>
 
             {/* Dropdown */}
             <Form.Group controlId="policySelect" className="mb-4">
@@ -206,7 +206,7 @@ const OurPolicies = () => {
                 value={selectedPolicy}
                 onChange={(e) => setSelectedPolicy(e.target.value)}
               >
-                <option value="">-- Select Policy --</option>
+                <option value="" disabled>-- Select Policy --</option>
                 {Object.keys(policies).map((policy, idx) => (
                   <option key={idx} value={policy}>
                     {policy}
@@ -286,31 +286,66 @@ const OurPolicies = () => {
       </Container>
 
       {/* OTP Verification Modal */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>OTP Verification</Modal.Title>
+      <Modal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        centered
+        backdrop="static"
+        keyboard={false}
+        contentClassName="rounded-3 shadow-lg border-0"
+      >
+        {/* Header */}
+        <Modal.Header
+          closeButton
+          className="border-0 pb-0"
+          style={{
+            background: "linear-gradient(135deg, #a51d34, #d32f2f)",
+            color: "#fff",
+          }}
+        >
+          <Modal.Title className="fw-bold fs-5 text-white p-3">
+            OTP Verification
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <p>Enter the OTP sent to your mobile number ({mobile})</p>
+
+        {/* Body */}
+        <Modal.Body className="pt-3 pb-1 px-4">
+          <p className="text-muted mb-3">
+            Enter the OTP sent to your mobile number{" "}
+            <span className="fw-semibold text-dark">({mobile})</span>
+          </p>
           <Form.Control
             type="text"
             placeholder="Enter OTP"
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
-            className="mb-3"
+            className="mb-3 py-2 fs-6 text-center"
+            style={{ borderRadius: "10px", border: "1px solid #a51d34" }}
           />
           {verificationMessage && (
-            <p className="text-center text-muted">{verificationMessage}</p>
+            <p className="text-center text-secondary small fw-medium">
+              {verificationMessage}
+            </p>
           )}
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
+
+        {/* Footer */}
+        <Modal.Footer className="border-0 pt-0 px-4 pb-4">
+          <Button
+            variant="outline-danger"
+            onClick={() => setShowModal(false)}
+            className="px-4 py-2 rounded-pill fw-semibold"
+          >
             Cancel
           </Button>
           <Button
-            variant="primary"
             disabled={loading || otp.length === 0}
             onClick={handleVerifyOtp}
+            className="px-4 py-2 rounded-pill fw-semibold shadow-sm"
+            style={{
+              background: "linear-gradient(135deg, #a51d34, #d32f2f)",
+              border: "none",
+            }}
           >
             {loading ? "Verifying..." : "Verify OTP"}
           </Button>

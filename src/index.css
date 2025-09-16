@@ -228,3 +228,11 @@ body a {
   transform: translateY(-5px);
   /* Optional hover effect */
 }
+
+html, body {
+  overflow-x: hidden;
+}
+
+.header-nav {
+  width: 100%;
+}

@@ -33,9 +33,7 @@ const PaymentForm = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await fetch(
-          "http://31.97.206.144:5001/api/coursecontroller"
-        );
+        const res = await fetch("http://31.97.206.144:5001/api/coursecontroller");
         const data = await res.json();
         setCourses(data.data || []);
       } catch (error) {
@@ -58,8 +56,7 @@ const PaymentForm = () => {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleChange = (e) => {
@@ -89,17 +86,23 @@ const PaymentForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-
     const payload = {
       fullName: formData.name,
       mobile: formData.mobile,
       email: formData.email,
       courseId: formData.courseId,
       roleType: userType,
-      company: formData.company,
-      role: formData.role,
-      experience: formData.experience,
-      isPrivacyAccepted: true
+      ...(userType === "student"
+        ? {
+            degree: formData.degree,
+            department: formData.department,
+            yearOfPassedOut: formData.yearOfPassedOut,
+          }
+        : {
+            company: formData.company,
+            role: formData.role,
+            experience: formData.experience,
+          }),
     };
 
     try {
@@ -115,13 +118,12 @@ const PaymentForm = () => {
 
       if (res.ok && data.success) {
         console.log("Form submitted successfully:", data);
-        
-        // Pass formId and mobile through state when navigating
-        navigate("/ourpolicies", { 
-          state: { 
-            formId: data.data._id, // Assuming the API returns the created form ID
-            mobile: formData.mobile 
-          } 
+
+        navigate("/ourpolicies", {
+          state: {
+            formId: data.data._id,
+            mobile: formData.mobile,
+          },
         });
       } else {
         alert(data.message || "Submission failed");
@@ -140,55 +142,63 @@ const PaymentForm = () => {
   return (
     <>
       <Header />
-      <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4 main-content">
-        <div className="w-full max-w-3xl bg-white shadow-lg rounded-2xl p-6 sm:p-10">
-          <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-[#fdf1f2] to-[#f9e6e7] p-4 main-content">
+        <div className="w-full max-w-3xl bg-white shadow-xl rounded-2xl p-6 sm:p-10 border border-[#a51d34]/30">
+          <h2 className="text-3xl font-bold text-center mb-6 text-[#a51d34]">
             Payment Form
           </h2>
 
           <form className="space-y-5" onSubmit={handleSubmit}>
             {/* Name */}
             <div>
-              <label className="block text-gray-700 mb-1">Full Name</label>
+              <label className="block text-[#a51d34] font-medium mb-1">
+                Full Name
+              </label>
               <input
                 type="text"
                 name="name"
                 onChange={handleChange}
                 value={formData.name}
                 required
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-4 py-2 border border-[#a51d34]/40 rounded-lg focus:ring-2 focus:ring-[#a51d34] outline-none"
               />
             </div>
 
             {/* Mobile */}
             <div>
-              <label className="block text-gray-700 mb-1">Mobile</label>
+              <label className="block text-[#a51d34] font-medium mb-1">
+                Mobile
+              </label>
               <input
                 type="tel"
                 name="mobile"
                 onChange={handleChange}
                 value={formData.mobile}
                 required
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-4 py-2 border border-[#a51d34]/40 rounded-lg focus:ring-2 focus:ring-[#a51d34] outline-none"
               />
             </div>
 
             {/* Email */}
             <div>
-              <label className="block text-gray-700 mb-1">Email</label>
+              <label className="block text-[#a51d34] font-medium mb-1">
+                Email
+              </label>
               <input
                 type="email"
                 name="email"
                 onChange={handleChange}
                 value={formData.email}
                 required
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-4 py-2 border border-[#a51d34]/40 rounded-lg focus:ring-2 focus:ring-[#a51d34] outline-none"
               />
             </div>
 
             {/* Searchable Courses Section */}
             <div className="relative" ref={courseInputRef}>
-              <label className="block text-gray-700 mb-1">Course</label>
+              <label className="block text-[#a51d34] font-medium mb-1">
+                Course
+              </label>
               <input
                 type="text"
                 placeholder="Search or Select Course"
@@ -196,19 +206,19 @@ const PaymentForm = () => {
                 onChange={handleCourseInputChange}
                 onFocus={() => setShowSuggestions(true)}
                 required
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-4 py-2 border border-[#a51d34]/40 rounded-lg focus:ring-2 focus:ring-[#a51d34] outline-none"
               />
 
               {showSuggestions && filteredCourses.length > 0 && (
                 <ul
                   ref={suggestionsRef}
-                  className="absolute left-0 right-0 bg-white border rounded-lg shadow-md max-h-48 overflow-y-auto mt-1 z-50"
+                  className="absolute left-0 right-0 bg-white border border-[#a51d34]/40 rounded-lg shadow-md max-h-48 overflow-y-auto mt-1 z-50"
                 >
                   {filteredCourses.map((course) => (
                     <li
                       key={course._id}
                       onClick={() => handleCourseSelect(course)}
-                      className="px-4 py-2 hover:bg-blue-100 cursor-pointer"
+                      className="px-4 py-2 hover:bg-[#fcebed] cursor-pointer text-[#a51d34]"
                     >
                       {course.name}
                     </li>
@@ -219,11 +229,13 @@ const PaymentForm = () => {
 
             {/* User Type Selection */}
             <div>
-              <label className="block text-gray-700 mb-1">I am a</label>
+              <label className="block text-[#a51d34] font-medium mb-1">
+                I am a
+              </label>
               <select
                 value={userType}
                 onChange={(e) => setUserType(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-4 py-2 border border-[#a51d34]/40 rounded-lg focus:ring-2 focus:ring-[#a51d34] outline-none "
               >
                 <option value="student">Student</option>
                 <option value="professional">Professional</option>
@@ -234,27 +246,31 @@ const PaymentForm = () => {
             {userType === "student" && (
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="block text-gray-700 mb-1">Degree</label>
+                  <label className="block text-[#a51d34] font-medium mb-1">
+                    Degree
+                  </label>
                   <input
                     type="text"
                     name="degree"
                     onChange={handleChange}
                     value={formData.degree}
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    className="w-full px-4 py-2 border border-[#a51d34]/40 rounded-lg focus:ring-2 focus:ring-[#a51d34] outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 mb-1">Department</label>
+                  <label className="block text-[#a51d34] font-medium mb-1">
+                    Department
+                  </label>
                   <input
                     type="text"
                     name="department"
                     onChange={handleChange}
                     value={formData.department}
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    className="w-full px-4 py-2 border border-[#a51d34]/40 rounded-lg focus:ring-2 focus:ring-[#a51d34] outline-none"
                   />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="block text-gray-700 mb-1">
+                  <label className="block text-[#a51d34] font-medium mb-1">
                     Year of Passed Out
                   </label>
                   <input
@@ -262,7 +278,7 @@ const PaymentForm = () => {
                     name="yearOfPassedOut"
                     onChange={handleChange}
                     value={formData.yearOfPassedOut}
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    className="w-full px-4 py-2 border border-[#a51d34]/40 rounded-lg focus:ring-2 focus:ring-[#a51d34] outline-none"
                   />
                 </div>
               </div>
@@ -272,46 +288,57 @@ const PaymentForm = () => {
             {userType === "professional" && (
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="block text-gray-700 mb-1">Company</label>
+                  <label className="block text-[#a51d34] font-medium mb-1">
+                    Company
+                  </label>
                   <input
                     type="text"
                     name="company"
                     onChange={handleChange}
                     value={formData.company}
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    className="w-full px-4 py-2 border border-[#a51d34]/40 rounded-lg focus:ring-2 focus:ring-[#a51d34] outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 mb-1">Role</label>
+                  <label className="block text-[#a51d34] font-medium mb-1">
+                    Role
+                  </label>
                   <input
                     type="text"
                     name="role"
                     onChange={handleChange}
                     value={formData.role}
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    className="w-full px-4 py-2 border border-[#a51d34]/40 rounded-lg focus:ring-2 focus:ring-[#a51d34] outline-none"
                   />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="block text-gray-700 mb-1">Experience</label>
+                  <label className="block text-[#a51d34] font-medium mb-1">
+                    Experience
+                  </label>
                   <input
                     type="text"
                     name="experience"
                     onChange={handleChange}
                     value={formData.experience}
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    className="w-full px-4 py-2 border border-[#a51d34]/40 rounded-lg focus:ring-2 focus:ring-[#a51d34] outline-none"
                   />
                 </div>
               </div>
             )}
 
-            
-
             {/* Submit */}
             <button
               type="submit"
-              className={`w-full text-white font-semibold py-3 rounded-lg shadow-md transition bg-gradient-to-br from-[#a51d34] to-[#d32f2f] hover:opacity-90}`}
+              disabled={!formData.courseId || loading}
+              className="w-full text-white font-semibold py-3 rounded-lg shadow-md transition bg-gradient-to-br from-[#a51d34] to-[#d32f2f] hover:opacity-90 disabled:opacity-50"
             >
-              {loading ? "Submitting..." : "Proceed"}
+              {loading
+                ? "Submitting..."
+                : formData.courseId
+                ? `Proceed to Pay ₹${
+                    courses.find((c) => c._id === formData.courseId)?.price || 0
+                  }/-`
+                : "Select a Course to Proceed"}
             </button>
           </form>
         </div>

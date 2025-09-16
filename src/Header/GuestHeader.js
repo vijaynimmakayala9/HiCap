@@ -756,7 +756,7 @@ const GuestHeader = ({ onLogin }) => {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 w-100 ${responsiveClasses.navHeight} bg-white shadow-md z-50 transition-all ${isScrolled ? 'bg-white/95 backdrop-blur-md' : ''}`}>
+      <nav className={`header-nav fixed top-0 left-0 w-100 ${responsiveClasses.navHeight} bg-white shadow-md z-50 transition-all ${isScrolled ? 'bg-white/95 backdrop-blur-md' : ''}`}>
         <div className={`flex justify-around items-center h-full ${responsiveClasses.menuPadding} ${screenSize === 'desktop-large' ? 'max-w-[1600px]' : screenSize === 'desktop' ? 'max-w-[1400px]' : screenSize === 'laptop' ? 'max-w-[1200px]' : 'max-w-full'} mx-auto`}>
           <div className="cursor-pointer" onClick={() => navigate('/')}>
             <img
