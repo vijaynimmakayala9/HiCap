@@ -161,7 +161,7 @@ const Footer = () => {
                   <ul className="list-unstyled">
                     <li className="mb-2">
                       <a
-                        href="#"
+                        href="/aboutus"
                         className="text-white text-decoration-none link-hover"
                       >
                         About Us
