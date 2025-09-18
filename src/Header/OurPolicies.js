@@ -23,6 +23,9 @@ const OurPolicies = () => {
   const [loading, setLoading] = useState(false);
   const [verificationMessage, setVerificationMessage] = useState("");
 
+  // ✅ Success Modal State
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
   // Get formId and mobile from navigation state
   const location = useLocation();
   const navigate = useNavigate();
@@ -141,11 +144,14 @@ const OurPolicies = () => {
   // Razorpay Payment
   const handlePayment = async () => {
     try {
-      const res = await fetch("https://backend-hicap.onrender.com/api/payment-create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ studentId }),
-      });
+      const res = await fetch(
+        "https://backend-hicap.onrender.com/api/payment-create",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ studentId }),
+        }
+      );
       const data = await res.json();
 
       if (!data.success) {
@@ -163,12 +169,10 @@ const OurPolicies = () => {
         description: courseName,
         order_id: orderId,
         handler: function (response) {
-          alert(
-            "Payment Successful! Payment ID: " +
-            response.razorpay_payment_id
-          );
-          // TODO: Call backend to confirm/save payment
-          navigate("/");
+          console.log("Payment Successful! Payment ID:", response.razorpay_payment_id);
+
+          // ✅ Show success modal instead of alert
+          setShowSuccessModal(true);
         },
         prefill: {
           name: "Student",
@@ -206,7 +210,9 @@ const OurPolicies = () => {
                 value={selectedPolicy}
                 onChange={(e) => setSelectedPolicy(e.target.value)}
               >
-                <option value="" disabled>-- Select Policy --</option>
+                <option value="" disabled>
+                  -- Select Policy --
+                </option>
                 {Object.keys(policies).map((policy, idx) => (
                   <option key={idx} value={policy}>
                     {policy}
@@ -348,6 +354,53 @@ const OurPolicies = () => {
             }}
           >
             {loading ? "Verifying..." : "Verify OTP"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* ✅ Payment Success Modal */}
+      <Modal
+        show={showSuccessModal}
+        onHide={() => setShowSuccessModal(false)}
+        centered
+        backdrop="static"
+        keyboard={false}
+        contentClassName="rounded-3 shadow-lg border-0"
+      >
+        <Modal.Header
+          closeButton
+          className="border-0 pb-0"
+          style={{
+            background: "linear-gradient(135deg, #c34153, #a51d34)",
+            color: "#fff",
+          }}
+        >
+          <Modal.Title className="fw-bold fs-5 text-white p-3">
+            🎉 Congratulations!
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body className="pt-3 pb-1 px-4 text-center">
+          <h5 className="fw-bold textcolor mb-3">Payment Successful</h5>
+          <p className="text-muted">
+            Thank you for your payment. An invoice has been sent to your
+            registered email. Please check your inbox.
+          </p>
+        </Modal.Body>
+
+        <Modal.Footer className="border-0 pt-0 px-4 pb-4">
+          <Button
+            onClick={() => {
+              setShowSuccessModal(false);
+              navigate("/"); // redirect to homepage or dashboard
+            }}
+            className="px-4 py-2 rounded-pill fw-semibold shadow-sm"
+            style={{
+              background: "linear-gradient(135deg, #c34153, #a51d34)",
+              border: "none",
+            }}
+          >
+            Go to HomePage
           </Button>
         </Modal.Footer>
       </Modal>
