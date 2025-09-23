@@ -107,7 +107,7 @@ const PaymentForm = () => {
 
     try {
       setLoading(true);
-      const res = await fetch("https://backend-hicap.onrender.com/api/form", {
+      const res = await fetch("http://31.97.206.144:5001/api/form", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

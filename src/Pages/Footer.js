@@ -63,7 +63,7 @@ const Footer = () => {
     const fetchCommunityLinks = async () => {
       try {
         const response = await fetch(
-          "https://backend-hicap.onrender.com/api/communitys"
+          "http://31.97.206.144:5001/api/communitys"
         );
         const data = await response.json();
         if (data.success && data.data.length > 0) {

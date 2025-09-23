@@ -87,7 +87,7 @@ const OurPolicies = () => {
     try {
       setLoading(true);
       const res = await fetch(
-        `https://backend-hicap.onrender.com/api/generate/${formId}`,
+        `http://31.97.206.144:5001/api/generate/${formId}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -115,7 +115,7 @@ const OurPolicies = () => {
     try {
       setLoading(true);
       const res = await fetch(
-        `https://backend-hicap.onrender.com/api/verify/${formId}`,
+        `http://31.97.206.144:5001/api/verify/${formId}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -145,7 +145,7 @@ const OurPolicies = () => {
   const handlePayment = async () => {
     try {
       const res = await fetch(
-        "https://backend-hicap.onrender.com/api/payment-create",
+        "http://31.97.206.144:5001/api/payment-create",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

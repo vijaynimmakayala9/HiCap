@@ -11,7 +11,7 @@ const AwardBanner = () => {
   useEffect(() => {
     const fetchCertificate = async () => {
       try {
-        const res = await axios.get("https://backend-hicap.onrender.com/api/OurCertificates");
+        const res = await axios.get("http://31.97.206.144:5001/api/OurCertificates");
         if (res.data.success && res.data.data.length > 0) {
           setCertificate(res.data.data[0]); // pick first certificate
         }

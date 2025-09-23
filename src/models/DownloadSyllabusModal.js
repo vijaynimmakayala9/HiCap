@@ -81,7 +81,7 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
       if (!course) return;
 
       const response = await axios.post(
-        'https://backend-hicap.onrender.com/api/send-otp',
+        'http://31.97.206.144:5001/api/send-otp',
         {
           name,
           phoneNumber: phone,
@@ -114,7 +114,7 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
     try {
       setLoading(true);
       const response = await axios.post(
-        'https://backend-hicap.onrender.com/api/verify-otp',
+        'http://31.97.206.144:5001/api/verify-otp',
         { phoneNumber: phone, otp }
       );
 
