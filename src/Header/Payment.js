@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Footer from "../Pages/Footer";
 import Header from "./Header";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const PaymentForm = () => {
   const [userType, setUserType] = useState("student");
@@ -29,17 +30,22 @@ const PaymentForm = () => {
     experience: "",
   });
 
-  // Fetch courses
+  // Fetch courses from API
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await fetch("http://31.97.206.144:5001/api/coursecontroller");
-        const data = await res.json();
-        setCourses(data.data || []);
+        setLoading(true);
+        const res = await axios.get("http://31.97.206.144:5001/api/coursecontroller");
+        if (res.data.success) {
+          setCourses(res.data.data); // API returns {success, count, data:[...]}
+        }
       } catch (error) {
         console.error("Error fetching courses:", error);
+      } finally {
+        setLoading(false);
       }
     };
+
     fetchCourses();
   }, []);
 
@@ -86,53 +92,18 @@ const PaymentForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const payload = {
-      fullName: formData.name,
-      mobile: formData.mobile,
-      email: formData.email,
-      courseId: formData.courseId,
-      roleType: userType,
-      ...(userType === "student"
-        ? {
-            degree: formData.degree,
-            department: formData.department,
-            yearOfPassedOut: formData.yearOfPassedOut,
-          }
-        : {
-            company: formData.company,
-            role: formData.role,
-            experience: formData.experience,
-          }),
-    };
-
-    try {
-      setLoading(true);
-      const res = await fetch("http://31.97.206.144:5001/api/form", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-      setLoading(false);
-
-      if (res.ok && data.success) {
-        console.log("Form submitted successfully:", data);
-
-        navigate("/ourpolicies", {
-          state: {
-            formId: data.data._id,
-            mobile: formData.mobile,
-          },
-        });
-      } else {
-        alert(data.message || "Submission failed");
-      }
-    } catch (error) {
-      setLoading(false);
-      console.error("Error submitting form:", error);
-      alert("Something went wrong. Please try again later.");
+    if (!formData.name || !formData.mobile || !formData.email || !formData.courseId) {
+      alert("Please fill all required fields");
+      return;
     }
+
+    navigate("/ourpolicies", {
+      state: {
+        formData: formData,
+        userType: userType,
+        selectedCourse: courses.find((c) => c._id === formData.courseId),
+      },
+    });
   };
 
   const filteredCourses = courses.filter((c) =>
@@ -145,14 +116,14 @@ const PaymentForm = () => {
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-[#fdf1f2] to-[#f9e6e7] p-4 main-content">
         <div className="w-full max-w-3xl bg-white shadow-xl rounded-2xl p-6 sm:p-10 border border-[#a51d34]/30">
           <h2 className="text-3xl font-bold text-center mb-6 text-[#a51d34]">
-            Payment Form
+            Course Registration Form
           </h2>
 
           <form className="space-y-5" onSubmit={handleSubmit}>
             {/* Name */}
             <div>
               <label className="block text-[#a51d34] font-medium mb-1">
-                Full Name
+                Full Name *
               </label>
               <input
                 type="text"
@@ -167,7 +138,7 @@ const PaymentForm = () => {
             {/* Mobile */}
             <div>
               <label className="block text-[#a51d34] font-medium mb-1">
-                Mobile
+                Mobile *
               </label>
               <input
                 type="tel"
@@ -182,7 +153,7 @@ const PaymentForm = () => {
             {/* Email */}
             <div>
               <label className="block text-[#a51d34] font-medium mb-1">
-                Email
+                Email *
               </label>
               <input
                 type="email"
@@ -194,10 +165,10 @@ const PaymentForm = () => {
               />
             </div>
 
-            {/* Searchable Courses Section */}
+            {/* Searchable Courses */}
             <div className="relative" ref={courseInputRef}>
               <label className="block text-[#a51d34] font-medium mb-1">
-                Course
+                Course *
               </label>
               <input
                 type="text"
@@ -206,6 +177,7 @@ const PaymentForm = () => {
                 onChange={handleCourseInputChange}
                 onFocus={() => setShowSuggestions(true)}
                 required
+                disabled={loading}
                 className="w-full px-4 py-2 border border-[#a51d34]/40 rounded-lg focus:ring-2 focus:ring-[#a51d34] outline-none"
               />
 
@@ -218,19 +190,20 @@ const PaymentForm = () => {
                     <li
                       key={course._id}
                       onClick={() => handleCourseSelect(course)}
-                      className="px-4 py-2 hover:bg-[#fcebed] cursor-pointer text-[#a51d34]"
+                      className="px-4 py-2 hover:bg-[#fcebed] cursor-pointer text-[#a51d34] flex justify-between"
                     >
-                      {course.name}
+                      <span>{course.name}</span>
+                      
                     </li>
                   ))}
                 </ul>
               )}
             </div>
 
-            {/* User Type Selection */}
+            {/* User Type */}
             <div>
               <label className="block text-[#a51d34] font-medium mb-1">
-                I am a
+                I am a *
               </label>
               <select
                 value={userType}
@@ -242,8 +215,8 @@ const PaymentForm = () => {
               </select>
             </div>
 
-            {/* Student Fields */}
-            {userType === "student" && (
+            {/* Conditional fields */}
+            {userType === "student" ? (
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="block text-[#a51d34] font-medium mb-1">
@@ -282,10 +255,7 @@ const PaymentForm = () => {
                   />
                 </div>
               </div>
-            )}
-
-            {/* Professional Fields */}
-            {userType === "professional" && (
+            ) : (
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="block text-[#a51d34] font-medium mb-1">
@@ -332,13 +302,15 @@ const PaymentForm = () => {
               disabled={!formData.courseId || loading}
               className="w-full text-white font-semibold py-3 rounded-lg shadow-md transition bg-gradient-to-br from-[#a51d34] to-[#d32f2f] hover:opacity-90 disabled:opacity-50"
             >
-              {loading
-                ? "Submitting..."
-                : formData.courseId
-                ? `Proceed to Pay ₹${
+              {formData.courseId
+                ? `Continue with ${
+                    courses.find((c) => c._id === formData.courseId)?.name || ""
+                  } - ₹${
                     courses.find((c) => c._id === formData.courseId)?.price || 0
                   }/-`
-                : "Select a Course to Proceed"}
+                : loading
+                ? "Loading Courses..."
+                : "Select a Course to Continue"}
             </button>
           </form>
         </div>

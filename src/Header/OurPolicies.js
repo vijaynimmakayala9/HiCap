@@ -15,23 +15,26 @@ import { useLocation, useNavigate } from "react-router-dom";
 const OurPolicies = () => {
   const [selectedPolicy, setSelectedPolicy] = useState("Privacy Policy");
   const [agreed, setAgreed] = useState(false);
-
-  // OTP Modal States
-  const [showModal, setShowModal] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [token, setToken] = useState("");
+  const [paymentType, setPaymentType] = useState("full"); // 'full' or 'advance'
   const [loading, setLoading] = useState(false);
-  const [verificationMessage, setVerificationMessage] = useState("");
 
-  // ✅ Success Modal State
+  // Success Modal State
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  // Get formId and mobile from navigation state
+  // Get form data from navigation state
   const location = useLocation();
   const navigate = useNavigate();
-  const { formId, mobile } = location.state || {};
+  const { formData, userType, selectedCourse } = location.state || {};
 
-  const studentId = formId;
+  // If no data passed, redirect back
+  if (!formData || !selectedCourse) {
+    alert("Missing registration data. Please start from the beginning.");
+    navigate("/");
+    return null;
+  }
+
+  const fullPrice = selectedCourse.price;
+  const advancePrice = 15000; // 30% advance payment
 
   const policies = {
     "Privacy Policy": `
@@ -77,122 +80,119 @@ const OurPolicies = () => {
     `,
   };
 
-  // Generate OTP API
-  const handleProceed = async () => {
-    if (!agreed) return;
-    if (!formId || !mobile) {
-      alert("Form data is missing. Please go back and try again.");
+  // Handle Payment Integration
+  const handleProceedToPayment = async () => {
+    if (!agreed) {
+      alert("Please accept the terms and conditions to proceed");
       return;
     }
+
     try {
       setLoading(true);
-      const res = await fetch(
-        `http://31.97.206.144:5001/api/generate/${formId}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ mobile }),
-        }
-      );
-      const data = await res.json();
-      setLoading(false);
 
-      if (data.success) {
-        setToken(data.token);
-        setShowModal(true);
-      } else {
-        alert("Failed to generate OTP");
-      }
-    } catch (error) {
-      setLoading(false);
-      console.error("OTP Generate Error:", error);
-      alert("Something went wrong!");
-    }
-  };
+      // Calculate payment amount based on selection
+      const paymentAmount = paymentType === "advance" ? advancePrice : fullPrice;
+      const isAdvancePayment = paymentType === "advance";
 
-  // Verify OTP API
-  const handleVerifyOtp = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch(
-        `http://31.97.206.144:5001/api/verify/${formId}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ otp, token }),
-        }
-      );
-      const data = await res.json();
-      setLoading(false);
+      // Prepare payload for user registration
+      const payload = {
+        name: formData.name,
+        mobile: formData.mobile,
+        email: formData.email,
+        courseId: formData.courseId,
+        course: formData.course,
+        degree: formData.degree || "",
+        department: formData.department || "",
+        yearOfPassedOut: formData.yearOfPassedOut || "",
+        company: formData.company || "",
+        role: userType === "student" ? "Student" : formData.role || "",
+        experience: formData.experience || "",
+        transactionId: "", // Will be updated after payment
+        advancePayment: isAdvancePayment ? paymentAmount : 0,
+        isAdvancePayment: isAdvancePayment
+      };
 
-      if (data.success) {
-        setVerificationMessage("✅ OTP Verified! Proceeding to Payment...");
-        setTimeout(() => {
-          setShowModal(false);
-          handlePayment(); // open Razorpay after OTP success
-        }, 1500);
-      } else {
-        setVerificationMessage("❌ Invalid OTP, please try again.");
-      }
-    } catch (error) {
-      setLoading(false);
-      console.error("OTP Verify Error:", error);
-      setVerificationMessage("⚠️ Verification failed. Try again.");
-    }
-  };
-
-  // Razorpay Payment
-  const handlePayment = async () => {
-    try {
-      const res = await fetch(
-        "http://31.97.206.144:5001/api/payment-create",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ studentId }),
-        }
-      );
-      const data = await res.json();
-
-      if (!data.success) {
-        alert("Payment initiation failed");
-        return;
-      }
-
-      const { orderId, amount, currency, courseName } = data.data;
-
+      // Initialize Razorpay payment
       const options = {
-        key: "rzp_test_RHlt1aNxIRxsUa", // replace with your Razorpay Key ID
-        amount: amount,
-        currency: currency,
+        key: "rzp_test_RHlt1aNxIRxsUa", // Replace with your actual Razorpay key
+        amount: paymentAmount * 100, // Amount in paise
+        currency: "INR",
         name: "Our Company",
-        description: courseName,
-        order_id: orderId,
-        handler: function (response) {
+        description: `${formData.course} - ${isAdvancePayment ? 'Advance Payment' : 'Full Payment'}`,
+        image: "/logo192.png", // Add your company logo
+        handler: async function (response) {
+          // Payment successful
           console.log("Payment Successful! Payment ID:", response.razorpay_payment_id);
+          
+          // Update payload with transaction ID
+          payload.transactionId = response.razorpay_payment_id;
 
-          // ✅ Show success modal instead of alert
-          setShowSuccessModal(true);
+          // Call user registration API
+          try {
+            const res = await fetch("http://31.97.206.144:5001/api/userregister", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+
+            const data = await res.json();
+            
+            if (res.ok && data.success) {
+              console.log("User registered successfully:", data);
+              setShowSuccessModal(true);
+            } else {
+              console.error("Registration API Error:", data);
+              alert(`Registration failed after payment: ${data.message || 'Unknown error'}. Please contact support with Payment ID: ${response.razorpay_payment_id}`);
+            }
+          } catch (error) {
+            console.error("Error registering user:", error);
+            alert(`Network error during registration. Please contact support with Payment ID: ${response.razorpay_payment_id}. Error: ${error.message}`);
+          }
+
+          setLoading(false);
         },
         prefill: {
-          name: "Student",
-          email: "student@example.com",
-          contact: mobile,
+          name: formData.name,
+          email: formData.email,
+          contact: formData.mobile,
         },
         notes: {
-          formId: formId,
+          courseId: formData.courseId,
+          courseName: formData.course,
+          userType: userType,
+          paymentType: paymentType
         },
         theme: {
-          color: "#8A1538", // your theme color
+          color: "#a51d34",
         },
+        modal: {
+          ondismiss: function() {
+            setLoading(false);
+          }
+        }
       };
 
       const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', function (response) {
+        setLoading(false);
+        alert('Payment Failed: ' + response.error.description);
+      });
+      
       rzp.open();
+
     } catch (error) {
-      console.error("Payment Error:", error);
-      alert("Something went wrong with payment!");
+      setLoading(false);
+      console.error("Payment initialization error:", error);
+      alert("Something went wrong with payment initialization!");
     }
+  };
+
+  const getCurrentPaymentAmount = () => {
+    return paymentType === "advance" ? advancePrice : fullPrice;
+  };
+
+  const getRemainingAmount = () => {
+    return paymentType === "advance" ? fullPrice - advancePrice : 0;
   };
 
   return (
@@ -201,18 +201,68 @@ const OurPolicies = () => {
       <Container className="mb-3 main-content">
         <Row className="justify-content-center">
           <Col md={8}>
-            <h2 className="text-center textcolor mb-4">Our Policies</h2>
+            <h2 className="text-center textcolor mb-4">Course Registration - Terms & Payment</h2>
 
-            {/* Dropdown */}
+            {/* Course Summary */}
+            <Card className="shadow-sm mb-4" style={{ borderColor: "#a51d34" }}>
+              <Card.Body>
+                <Card.Title className="textcolor">Selected Course</Card.Title>
+                <div className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h5 className="mb-1">{selectedCourse.name}</h5>
+                    <p className="text-muted mb-0">Student: {formData.name}</p>
+                    <p className="text-muted mb-0">Email: {formData.email}</p>
+                    <p className="text-muted mb-0">Mobile: {formData.mobile}</p>
+                  </div>
+                  <div className="text-end">
+                    <h4 className="textcolor mb-0">₹{fullPrice.toLocaleString()}/-</h4>
+                    <small className="text-muted">Total Course Fee</small>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
+
+            {/* Payment Type Selection */}
+            <Card className="shadow-sm mb-4">
+              <Card.Body>
+                <Card.Title>Payment Options</Card.Title>
+                <Form.Group className="mb-3">
+                  <div className="d-flex gap-3">
+                    <Form.Check
+                      type="radio"
+                      name="paymentType"
+                      id="fullPayment"
+                      label={`Full Payment - ₹${fullPrice.toLocaleString()}/-`}
+                      value="full"
+                      checked={paymentType === "full"}
+                      onChange={(e) => setPaymentType(e.target.value)}
+                    />
+                    <Form.Check
+                      type="radio"
+                      name="paymentType"
+                      id="advancePayment"
+                      label={`Advance Payment - ₹${advancePrice.toLocaleString()}/- `}
+                      value="advance"
+                      checked={paymentType === "advance"}
+                      onChange={(e) => setPaymentType(e.target.value)}
+                    />
+                  </div>
+                  {paymentType === "advance" && (
+                    <small className="text-muted">
+                      Remaining Amount: ₹{getRemainingAmount().toLocaleString()}/- (to be paid later)
+                    </small>
+                  )}
+                </Form.Group>
+              </Card.Body>
+            </Card>
+
+            {/* Policy Dropdown */}
             <Form.Group controlId="policySelect" className="mb-4">
-              <Form.Label>View a Policy</Form.Label>
+              <Form.Label>Review Our Policies</Form.Label>
               <Form.Select
                 value={selectedPolicy}
                 onChange={(e) => setSelectedPolicy(e.target.value)}
               >
-                <option value="" disabled>
-                  -- Select Policy --
-                </option>
                 {Object.keys(policies).map((policy, idx) => (
                   <option key={idx} value={policy}>
                     {policy}
@@ -234,131 +284,77 @@ const OurPolicies = () => {
             )}
 
             {/* Agreement Checkbox */}
-            <div className="flex items-start space-x-2 mb-3">
-              <input
+            <div className="d-flex align-items-start mb-4">
+              <Form.Check
                 type="checkbox"
                 id="terms"
                 checked={agreed}
                 onChange={(e) => setAgreed(e.target.checked)}
-                className="mt-1 w-5 h-5 text-primary border-gray-300 rounded focus:ring-2 focus:ring-primary"
+                className="me-2 mt-1"
               />
-              <label htmlFor="terms" className="text-muted small">
+              <Form.Label htmlFor="terms" className="text-muted small">
                 By selecting this, you acknowledge that you've read and agree to
                 our{" "}
                 <a
                   href="/terms"
                   className="text-primary text-decoration-underline"
+                  target="_blank"
                 >
                   Terms & Conditions
                 </a>
-                , <br />
+                , {" "}
                 <a
                   href="/policy"
                   className="text-primary text-decoration-underline"
+                  target="_blank"
                 >
-                  Privacy & Policy
+                  Privacy Policy
                 </a>
-                ,{" "}
+                , {" "}
                 <a
                   href="/refund"
                   className="text-primary text-decoration-underline"
+                  target="_blank"
                 >
                   Refund Policy
                 </a>
-                ,{" "}
+                , and {" "}
                 <a
                   href="/cookie"
                   className="text-primary text-decoration-underline"
+                  target="_blank"
                 >
                   Cookie Policy
                 </a>
                 .
-              </label>
+              </Form.Label>
             </div>
 
-            {/* Proceed Button */}
+            {/* Payment Button */}
             <div className="text-center">
               <button
-                className="btn btn-lg bg-meroonlight text-white w-100"
-                size="lg"
-                disabled={!agreed || loading || !formId || !mobile}
-                onClick={handleProceed}
+                className="btn btn-lg text-white w-100"
+                style={{ backgroundColor: "#a51d34" }}
+                disabled={!agreed || loading}
+                onClick={handleProceedToPayment}
               >
-                {loading ? "Please wait..." : "Proceed to OTP Verification"}
+                {loading 
+                  ? "Processing..." 
+                  : `Pay ₹${getCurrentPaymentAmount().toLocaleString()}/- ${paymentType === 'advance' ? '(Advance)' : '(Full Payment)'}`
+                }
               </button>
+              
+              {paymentType === "advance" && (
+                <small className="text-muted d-block mt-2">
+                  Secure your seat with advance payment. Complete remaining amount later.
+                </small>
+              )}
             </div>
           </Col>
         </Row>
       </Container>
 
-      {/* OTP Verification Modal */}
-      <Modal
-        show={showModal}
-        onHide={() => setShowModal(false)}
-        centered
-        backdrop="static"
-        keyboard={false}
-        contentClassName="rounded-3 shadow-lg border-0"
-      >
-        {/* Header */}
-        <Modal.Header
-          closeButton
-          className="border-0 pb-0"
-          style={{
-            background: "linear-gradient(135deg, #a51d34, #d32f2f)",
-            color: "#fff",
-          }}
-        >
-          <Modal.Title className="fw-bold fs-5 text-white p-3">
-            OTP Verification
-          </Modal.Title>
-        </Modal.Header>
-
-        {/* Body */}
-        <Modal.Body className="pt-3 pb-1 px-4">
-          <p className="text-muted mb-3">
-            Enter the OTP sent to your mobile number{" "}
-            <span className="fw-semibold text-dark">({mobile})</span>
-          </p>
-          <Form.Control
-            type="text"
-            placeholder="Enter OTP"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            className="mb-3 py-2 fs-6 text-center"
-            style={{ borderRadius: "10px", border: "1px solid #a51d34" }}
-          />
-          {verificationMessage && (
-            <p className="text-center text-secondary small fw-medium">
-              {verificationMessage}
-            </p>
-          )}
-        </Modal.Body>
-
-        {/* Footer */}
-        <Modal.Footer className="border-0 pt-0 px-4 pb-4">
-          <Button
-            variant="outline-danger"
-            onClick={() => setShowModal(false)}
-            className="px-4 py-2 rounded-pill fw-semibold"
-          >
-            Cancel
-          </Button>
-          <Button
-            disabled={loading || otp.length === 0}
-            onClick={handleVerifyOtp}
-            className="px-4 py-2 rounded-pill fw-semibold shadow-sm"
-            style={{
-              background: "linear-gradient(135deg, #a51d34, #d32f2f)",
-              border: "none",
-            }}
-          >
-            {loading ? "Verifying..." : "Verify OTP"}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      {/* ✅ Payment Success Modal */}
+      {/* Success Modal */}
       <Modal
         show={showSuccessModal}
         onHide={() => setShowSuccessModal(false)}
@@ -376,23 +372,38 @@ const OurPolicies = () => {
           }}
         >
           <Modal.Title className="fw-bold fs-5 text-white p-3">
-            🎉 Congratulations!
+            🎉 Registration Successful!
           </Modal.Title>
         </Modal.Header>
 
         <Modal.Body className="pt-3 pb-1 px-4 text-center">
-          <h5 className="fw-bold textcolor mb-3">Payment Successful</h5>
-          <p className="text-muted">
-            Thank you for your payment. An invoice has been sent to your
-            registered email. Please check your inbox.
+          <h5 className="fw-bold mb-3" style={{ color: "#a51d34" }}>
+            Welcome to {selectedCourse.name}!
+          </h5>
+          <p className="text-muted mb-3">
+            Your payment has been processed successfully and your course registration is complete.
           </p>
+          <div className="alert alert-light border-0" style={{ backgroundColor: "#f8f9fa" }}>
+            <small className="text-muted">
+              📧 Confirmation email sent to: <strong>{formData.email}</strong><br/>
+              📱 SMS confirmation sent to: <strong>{formData.mobile}</strong>
+            </small>
+          </div>
+          {paymentType === "advance" && (
+            <div className="alert alert-warning">
+              <small>
+                <strong>Note:</strong> You have made an advance payment of ₹{advancePrice.toLocaleString()}/-. 
+                Remaining amount ₹{getRemainingAmount().toLocaleString()}/- can be paid later.
+              </small>
+            </div>
+          )}
         </Modal.Body>
 
         <Modal.Footer className="border-0 pt-0 px-4 pb-4">
           <Button
             onClick={() => {
               setShowSuccessModal(false);
-              navigate("/"); // redirect to homepage or dashboard
+              navigate("/"); // redirect to homepage
             }}
             className="px-4 py-2 rounded-pill fw-semibold shadow-sm"
             style={{
@@ -400,7 +411,7 @@ const OurPolicies = () => {
               border: "none",
             }}
           >
-            Go to HomePage
+            Go to Home
           </Button>
         </Modal.Footer>
       </Modal>

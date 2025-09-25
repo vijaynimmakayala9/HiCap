@@ -34,9 +34,9 @@ const StudentDetails = ({ userDetailsLoading, userData, student, enrolledCourses
             <div className="d-grid gap-3">
               {[
                 { icon: "bi-person-badge", label: "Student ID", value: userData._id ? userData._id.slice(-8) : "N/A" },
-                { icon: "bi-person", label: "Full Name", value: `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || `${student.name}` },
+                { icon: "bi-person", label: "Full Name", value: `${userData.name || ''} ` },
                 { icon: "bi-envelope", label: "Email", value: userData.email || "N/A" },
-                { icon: "bi-telephone", label: "Phone", value: userData.phoneNumber || "N/A" },
+                { icon: "bi-telephone", label: "Phone", value: userData.mobile || "N/A" },
                 { icon: "bi-book", label: "Enrolled Courses", value: enrolledCourses.length },
                 { icon: "bi-calendar", label: "Joining Date", value: formatJoiningDate(userData.createdAt) },
                 { icon: "bi-award", label: "Status", value: "Active" }
