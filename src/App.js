@@ -33,6 +33,11 @@ import PaymentForm from "./Header/Payment";
 import Acknowledge from "./admin/Acknowledgment";
 import Careers from "./newone/Career";
 import OurPolicies from "./Header/OurPolicies";
+import CookieAcceptance from "./OurDocuments/CookiesAcceptance";
+import PrivacyAndPolicies from "./Ourpolicies/PrivacyAndPolicy";
+import CookiePolicies from "./Ourpolicies/CookiePolicy";
+import Terms from "./Ourpolicies/TermsAndConditions";
+import RefundPolicies from "./Ourpolicies/RefundPolicy";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -72,6 +77,7 @@ function App() {
 
   return (
     <>
+      <CookieAcceptance />
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={
@@ -99,6 +105,10 @@ function App() {
         <Route path="/careers" element={<Careers />} />
         <Route path="/ourpolicies" element={<OurPolicies />} />
         <Route path="/admin" element={<CourseAdminPanel />} />
+        <Route path="/privacypolicy" element={ <PrivacyAndPolicies/>}/>
+        <Route path="/cookiepolicy" element={ <CookiePolicies/>}/>
+        <Route path="/termsofuse" element={ <Terms/>}/>
+        <Route path="/refundpolicy" element={ <RefundPolicies/>}/>
 
         {/* Protected Dashboard Routes */}
         <Route path="/dashboard" element={

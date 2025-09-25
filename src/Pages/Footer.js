@@ -309,21 +309,21 @@ const Footer = () => {
             <div className="text-center pt-3">
               <div className="d-flex flex-wrap justify-content-center gap-2 gap-md-3">
                 {[
-                  "Home",
-                  "Contact Us",
-                  "Privacy Policy",
-                  "Terms & Conditions",
-                  "Refund Policy",
-                  "Cookie Policy",
-                ].map((item, idx) => (
+                  { name: "Home", link: "/" },
+                  { name: "Contact Us", link: "/contact" },
+                  { name: "Privacy Policy", link: "/privacypolicy" },
+                  { name: "Terms & Conditions", link: "/termsofuse" },
+                  { name: "Refund Policy", link: "/refundpolicy" },
+                  { name: "Cookie Policy", link: "/cookiepolicy" },
+                ].map((item, idx, arr) => (
                   <React.Fragment key={idx}>
                     <a
-                      href={idx === 0 ? "/" : "#"}
+                      href={item.link}
                       className="text-white text-decoration-none link-hover small"
                     >
-                      {item}
+                      {item.name}
                     </a>
-                    {idx < 5 && (
+                    {idx < arr.length - 1 && (
                       <span className="text-light d-none d-md-inline">|</span>
                     )}
                   </React.Fragment>
@@ -332,6 +332,7 @@ const Footer = () => {
             </div>
           </div>
         </div>
+
 
         {/* ===== Bottom Text ===== */}
         <div className="row mt-3">

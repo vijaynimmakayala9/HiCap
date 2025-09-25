@@ -11,6 +11,10 @@ import {
 import Header from "./Header";
 import Footer from "../Pages/Footer";
 import { useLocation, useNavigate } from "react-router-dom";
+import PrivacyPolicy from "../OurDocuments/PrivacyandPolicy";
+import Terms from "../OurDocuments/TermsandConditions";
+import RefundPolicy from "../OurDocuments/RefundPolicy";
+import CookiePolicy from "../OurDocuments/CookiePolicy";
 
 const OurPolicies = () => {
   const [selectedPolicy, setSelectedPolicy] = useState("Privacy Policy");
@@ -37,47 +41,10 @@ const OurPolicies = () => {
   const advancePrice = 15000; // 30% advance payment
 
   const policies = {
-    "Privacy Policy": `
-      At Our Company, we are committed to protecting your personal information and your right to privacy. 
-      This Privacy Policy explains what information we collect, how we use it, and what rights you have in relation to it.
-      
-      - We may collect your name, email, phone number, payment details, and course preferences.  
-      - Your data is used only for account creation, order processing, and personalized learning experiences.  
-      - We do not share your personal details with third-party advertisers.  
-      - You have the right to request access, update, or deletion of your personal information.  
-      
-      By using our services, you agree to the practices described in this Privacy Policy.
-    `,
-    "Terms & Conditions": `
-      Welcome to Our Company! These Terms & Conditions govern your use of our website, courses, and services.  
-      
-      - You must provide accurate details when registering on our platform.  
-      - Any misuse, fraudulent activity, or violation of intellectual property rights will lead to account termination.  
-      - Payments made are subject to our refund policy.  
-      - We reserve the right to update these terms at any time.  
-      
-      By accessing or using our services, you agree to abide by these Terms & Conditions in full.
-    `,
-    "Refund Policy": `
-      We aim to provide the best learning experience. However, if you are not satisfied with your purchase, you may request a refund under the following conditions:  
-      
-      - Refund requests must be made within 7 days of purchase.  
-      - If more than 30% of the course content has been accessed, a refund will not be issued.  
-      - Refunds are not available for promotional or discounted purchases.  
-      - Approved refunds will be credited back to your original payment method within 5-10 business days.  
-      
-      Please contact our support team to initiate a refund request.
-    `,
-    "Cookie Policy": `
-      Our website uses cookies to improve your browsing experience. By continuing to use our site, you consent to our use of cookies.  
-      
-      - Cookies help us remember your preferences and personalize your content.  
-      - Analytical cookies allow us to track website traffic and improve performance.  
-      - Advertising cookies may be used to display relevant ads.  
-      - You can disable cookies in your browser settings, but some features may not function properly.  
-      
-      By using our services, you agree to the practices outlined in this Cookie Policy.
-    `,
+    "Privacy Policy": <PrivacyPolicy />,
+    "Terms & Conditions": <Terms />,
+    "Refund Policy": <RefundPolicy />,
+    "Cookie Policy": <CookiePolicy />,
   };
 
   // Handle Payment Integration
@@ -123,7 +90,7 @@ const OurPolicies = () => {
         handler: async function (response) {
           // Payment successful
           console.log("Payment Successful! Payment ID:", response.razorpay_payment_id);
-          
+
           // Update payload with transaction ID
           payload.transactionId = response.razorpay_payment_id;
 
@@ -136,7 +103,7 @@ const OurPolicies = () => {
             });
 
             const data = await res.json();
-            
+
             if (res.ok && data.success) {
               console.log("User registered successfully:", data);
               setShowSuccessModal(true);
@@ -166,7 +133,7 @@ const OurPolicies = () => {
           color: "#a51d34",
         },
         modal: {
-          ondismiss: function() {
+          ondismiss: function () {
             setLoading(false);
           }
         }
@@ -177,7 +144,7 @@ const OurPolicies = () => {
         setLoading(false);
         alert('Payment Failed: ' + response.error.description);
       });
-      
+
       rzp.open();
 
     } catch (error) {
@@ -198,7 +165,7 @@ const OurPolicies = () => {
   return (
     <>
       <Header />
-      <Container className="mb-3 main-content">
+      <Container fluid className="mb-3 main-content">
         <Row className="justify-content-center">
           <Col md={8}>
             <h2 className="text-center textcolor mb-4">Course Registration - Terms & Payment</h2>
@@ -257,6 +224,7 @@ const OurPolicies = () => {
             </Card>
 
             {/* Policy Dropdown */}
+            {/* Policy Dropdown */}
             <Form.Group controlId="policySelect" className="mb-4">
               <Form.Label>Review Our Policies</Form.Label>
               <Form.Select
@@ -272,16 +240,19 @@ const OurPolicies = () => {
             </Form.Group>
 
             {/* Show Selected Policy */}
-            {selectedPolicy && (
-              <Card className="shadow-sm mb-4">
-                <Card.Body>
-                  <Card.Title>{selectedPolicy}</Card.Title>
-                  <Card.Text style={{ whiteSpace: "pre-line" }}>
-                    {policies[selectedPolicy]}
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            )}
+            <Card className="shadow-sm vh-100 d-flex flex-column">
+              <Card.Body className="d-flex flex-column p-1 h-100 w-100">
+                {/* Card Title */}
+                <Card.Title className="my-3 fw-bold text-center">{selectedPolicy}</Card.Title>
+
+                {/* Scrollable Policy Content */}
+                <div className="overflow-auto flex-grow-1" style={{ maxHeight: "calc(100% - 2rem)" }}>
+                  {policies[selectedPolicy]}
+                </div>
+              </Card.Body>
+            </Card>
+
+
 
             {/* Agreement Checkbox */}
             <div className="d-flex align-items-start mb-4">
@@ -338,12 +309,12 @@ const OurPolicies = () => {
                 disabled={!agreed || loading}
                 onClick={handleProceedToPayment}
               >
-                {loading 
-                  ? "Processing..." 
+                {loading
+                  ? "Processing..."
                   : `Pay ₹${getCurrentPaymentAmount().toLocaleString()}/- ${paymentType === 'advance' ? '(Advance)' : '(Full Payment)'}`
                 }
               </button>
-              
+
               {paymentType === "advance" && (
                 <small className="text-muted d-block mt-2">
                   Secure your seat with advance payment. Complete remaining amount later.
@@ -385,14 +356,14 @@ const OurPolicies = () => {
           </p>
           <div className="alert alert-light border-0" style={{ backgroundColor: "#f8f9fa" }}>
             <small className="text-muted">
-              📧 Confirmation email sent to: <strong>{formData.email}</strong><br/>
+              📧 Confirmation email sent to: <strong>{formData.email}</strong><br />
               📱 SMS confirmation sent to: <strong>{formData.mobile}</strong>
             </small>
           </div>
           {paymentType === "advance" && (
             <div className="alert alert-warning">
               <small>
-                <strong>Note:</strong> You have made an advance payment of ₹{advancePrice.toLocaleString()}/-. 
+                <strong>Note:</strong> You have made an advance payment of ₹{advancePrice.toLocaleString()}/-.
                 Remaining amount ₹{getRemainingAmount().toLocaleString()}/- can be paid later.
               </small>
             </div>

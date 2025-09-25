@@ -1133,7 +1133,7 @@ const GuestHeader = ({ onLogin }) => {
         href="https://wa.me/919000239871" // replace with your WhatsApp number
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-5 right-5 bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 transition duration-300 z-[9999]"
+        className="fixed bottom-5 right-5 bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 transition duration-300 z-[8888]"
       >
         <FaWhatsapp size={30} />
       </a>
