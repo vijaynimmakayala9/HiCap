@@ -84,9 +84,9 @@ const OurPolicies = () => {
         key: "rzp_test_RHlt1aNxIRxsUa", // Replace with your actual Razorpay key
         amount: paymentAmount * 100, // Amount in paise
         currency: "INR",
-        name: "Our Company",
+        name: "Techsterker",
         description: `${formData.course} - ${isAdvancePayment ? 'Advance Payment' : 'Full Payment'}`,
-        image: "/logo192.png", // Add your company logo
+        image: "/logo/hicaplogo.png", // Add your company logo
         handler: async function (response) {
           // Payment successful
           console.log("Payment Successful! Payment ID:", response.razorpay_payment_id);
@@ -190,7 +190,7 @@ const OurPolicies = () => {
             </Card>
 
             {/* Payment Type Selection */}
-            <Card className="shadow-sm mb-4">
+            {/* <Card className="shadow-sm mb-4">
               <Card.Body>
                 <Card.Title>Payment Options</Card.Title>
                 <Form.Group className="mb-3">
@@ -221,9 +221,9 @@ const OurPolicies = () => {
                   )}
                 </Form.Group>
               </Card.Body>
-            </Card>
+            </Card> */}
 
-            {/* Policy Dropdown */}
+
             {/* Policy Dropdown */}
             <Form.Group controlId="policySelect" className="mb-4">
               <Form.Label>Review Our Policies</Form.Label>
@@ -300,6 +300,42 @@ const OurPolicies = () => {
                 .
               </Form.Label>
             </div>
+
+            {/* Show payment options only if agreed */}
+            {agreed && (
+              <Card className="shadow-sm mb-4">
+                <Card.Body>
+                  <Card.Title>Payment Options</Card.Title>
+                  <Form.Group className="mb-3">
+                    <div className="d-flex gap-3">
+                      <Form.Check
+                        type="radio"
+                        name="paymentType"
+                        id="fullPayment"
+                        label={`Full Payment - ₹${fullPrice.toLocaleString()}/-`}
+                        value="full"
+                        checked={paymentType === "full"}
+                        onChange={(e) => setPaymentType(e.target.value)}
+                      />
+                      <Form.Check
+                        type="radio"
+                        name="paymentType"
+                        id="advancePayment"
+                        label={`Advance Payment - ₹${advancePrice.toLocaleString()}/- `}
+                        value="advance"
+                        checked={paymentType === "advance"}
+                        onChange={(e) => setPaymentType(e.target.value)}
+                      />
+                    </div>
+                    {paymentType === "advance" && (
+                      <small className="text-muted">
+                        Remaining Amount: ₹{getRemainingAmount().toLocaleString()}/- (to be paid later)
+                      </small>
+                    )}
+                  </Form.Group>
+                </Card.Body>
+              </Card>
+            )}
 
             {/* Payment Button */}
             <div className="text-center">

@@ -104,6 +104,7 @@ const PaymentForm = () => {
         selectedCourse: courses.find((c) => c._id === formData.courseId),
       },
     });
+    window.scrollTo(0,0);
   };
 
   const filteredCourses = courses.filter((c) =>

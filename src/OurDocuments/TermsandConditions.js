@@ -20,8 +20,15 @@ const TermsOfUse = () => {
               Welcome to Techsterker (“Company,” “we,” “our,” or “us”), a brand
               owned and operated by <strong>Hicap Edtech Private Limited</strong>.
               These Terms of Use (“Terms”) govern your access and use of our website{" "}
-              <span className="italic">https://techsterker.com</span> (“Website”)
-              and our online coaching services (“Services”). By registering,
+              <a
+                href="https://techsterker.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="italic text-primary text-decoration-underline"
+              >
+                https://techsterker.com
+              </a> (“Techsterker”)
+              and our online coaching services {/* (“Services”) */}. By registering,
               accessing, or using our Website, you agree to be bound by these
               Terms. If you do not agree, please do not use our Website or
               Services.

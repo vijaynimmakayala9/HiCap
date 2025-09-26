@@ -6,12 +6,18 @@ import {
   FaInstagram,
 } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
+import ContactUsModal from '../models/ContactUsModal';
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
   const [courses, setCourses] = useState([]);
   const [socialLinks, setSocialLinks] = useState({});
   const [communityLinks, setCommunityLinks] = useState({});
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
+
+  const [showContactModal, setShowContactModal] = useState(false);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -83,6 +89,16 @@ const Footer = () => {
     fetchSocialLinks();
     fetchCommunityLinks();
   }, []);
+
+  const handlePath = (path) => {
+    if (path === "/contactus") {
+      setShowContactModal(true);
+    } else {
+      navigate(path);
+      window.scrollTo(0, 0);
+    }
+  };
+
 
   return (
     <footer className="meroon-back text-white pt-5 pb-3">
@@ -310,7 +326,7 @@ const Footer = () => {
               <div className="d-flex flex-wrap justify-content-center gap-2 gap-md-3">
                 {[
                   { name: "Home", link: "/" },
-                  { name: "Contact Us", link: "/contact" },
+                  { name: "Contact Us", link: "/contactus" },
                   { name: "Privacy Policy", link: "/privacypolicy" },
                   { name: "Terms & Conditions", link: "/termsofuse" },
                   { name: "Refund Policy", link: "/refundpolicy" },
@@ -318,7 +334,11 @@ const Footer = () => {
                 ].map((item, idx, arr) => (
                   <React.Fragment key={idx}>
                     <a
-                      href={item.link}
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handlePath(item.link);
+                      }}
                       className="text-white text-decoration-none link-hover small"
                     >
                       {item.name}
@@ -334,6 +354,7 @@ const Footer = () => {
         </div>
 
 
+
         {/* ===== Bottom Text ===== */}
         <div className="row mt-3">
           <div className="col-12 text-center">
@@ -344,6 +365,11 @@ const Footer = () => {
           </div>
         </div>
       </div>
+
+      <ContactUsModal
+        show={showContactModal}
+        onHide={() => setShowContactModal(false)}
+      />
 
       {/* CSS */}
       <style>{`
