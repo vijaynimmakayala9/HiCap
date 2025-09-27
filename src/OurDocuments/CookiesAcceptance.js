@@ -47,17 +47,17 @@ const CookieAcceptance = () => {
         </p>
         <div className="flex items-center space-x-2 md:space-x-4">
           <button
-            onClick={handleAccept}
-            className="bg-white hover:bg-gray-100 text-black text-sm md:text-base font-semibold px-4 py-2 rounded-md transition"
-          >
-            Accept
-          </button>
-
-          <button
             onClick={() => setShowPolicies(true)}
             className="bg-gray-200 hover:bg-gray-300 text-black text-sm md:text-base font-semibold px-4 py-2 rounded-md transition"
           >
             View Policies
+          </button>
+
+          <button
+            onClick={handleAccept}
+            className="bg-white hover:bg-gray-100 text-black text-sm md:text-base font-semibold px-4 py-2 rounded-md transition"
+          >
+            Accept
           </button>
         </div>
       </div>

@@ -385,7 +385,7 @@ const OurPolicies = () => {
 
         <Modal.Body className="pt-3 pb-1 px-4 text-center">
           <h5 className="fw-bold mb-3" style={{ color: "#a51d34" }}>
-            Welcome to {selectedCourse.name}!
+            Welcome to Techsterker
           </h5>
           <p className="text-muted mb-3">
             Your payment has been processed successfully and your course registration is complete.
@@ -393,7 +393,7 @@ const OurPolicies = () => {
           <div className="alert alert-light border-0" style={{ backgroundColor: "#f8f9fa" }}>
             <small className="text-muted">
               📧 Confirmation email sent to: <strong>{formData.email}</strong><br />
-              📱 SMS confirmation sent to: <strong>{formData.mobile}</strong>
+              {/* 📱 SMS confirmation sent to: <strong>{formData.mobile}</strong> */}
             </small>
           </div>
           {paymentType === "advance" && (

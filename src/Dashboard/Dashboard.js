@@ -11,21 +11,24 @@ import StudentDetails from "./StudentDetails";
 import CalendarSection from "./CalendarSection";
 import RecommendedCourses from "./RecommendedCourses";
 import CourseEnquiryModal from "../components/EnrollModal";
+import RegisteredCourses from "./RegisteredCourses";
 
 const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [recommendedCourses, setRecommendedCourses] = useState([]);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [registrecourses, setRegistrecourses] = useState([]);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [enrollmentsLoading, setEnrollmentsLoading] = useState(true);
+  const [registrecoursesLoading, setRegistrecoursesLoading] = useState(true);
   const [userDetailsLoading, setUserDetailsLoading] = useState(true);
   const [todaysClassesCount, setTodaysClassesCount] = useState(0);
 
   const Student = JSON.parse(sessionStorage.getItem('user') || '{}');
   const UserId = Student.id;
- 
+
 
   const navigate = useNavigate();
 
@@ -50,7 +53,7 @@ const Dashboard = () => {
 
   const fetchEnrollments = async () => {
     try {
-      const response = await axios.get(`http://31.97.206.144:5001/api/user/${UserId}/enrollments`);
+      const response = await axios.get(`http://31.97.206.144:5001/api/userenrollments/${UserId}`);
       setEnrolledCourses(response.data.enrolledCourses || []);
     } catch (error) {
       console.error("Error fetching enrollments:", error);
@@ -59,6 +62,20 @@ const Dashboard = () => {
       setEnrollmentsLoading(false);
     }
   };
+
+  const fetchRegistercourses = async () => {
+    try {
+      const response = await axios.get(`http://31.97.206.144:5001/api/usercourse/${UserId}`);
+      setRegistrecourses(response.data.data.user || []);
+      console.log(response.data.data.user)
+    } catch (error) {
+      console.error("Error fetching enrollments:", error);
+      setRegistrecourses([]);
+    } finally {
+      setRegistrecoursesLoading(false);
+    }
+  };
+
 
   const fetchUserDetails = async () => {
     try {
@@ -92,6 +109,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (UserId && UserId) {
       fetchRecommendedCourses();
+      fetchRegistercourses();
       fetchEnrollments();
       fetchUserDetails();
       fetchTodaysClasses();
@@ -118,26 +136,31 @@ const Dashboard = () => {
   return (
     <Container fluid className="min-vh-100 bg-light p-3 p-md-4">
       {/* Header Section */}
-      <HeaderSection 
-        userData={userData} 
-        enrolledCourses={enrolledCourses} 
+      <HeaderSection
+        userData={userData}
+        enrolledCourses={enrolledCourses}
         navigate={navigate}
         todaysClassesCount={todaysClassesCount}
       />
 
       <Row className="mb-4">
         {/* Attendance Section */}
-        <AttendanceSection enrolledCourses={enrolledCourses} />
-        
+        {/* <AttendanceSection enrolledCourses={enrolledCourses} /> */}
+        <RegisteredCourses
+          coursesLoading={registrecoursesLoading}
+          registeredCourses={registrecourses}
+          navigate={navigate}
+        />
+
         {/* Enrolled Courses */}
-        <EnrolledCourses 
+        <EnrolledCourses
           enrollmentsLoading={enrollmentsLoading}
           enrolledCourses={enrolledCourses}
           navigate={navigate}
         />
 
         {/* Student Details */}
-        <StudentDetails 
+        <StudentDetails
           userDetailsLoading={userDetailsLoading}
           userData={userData}
           student={UserId}
@@ -158,10 +181,10 @@ const Dashboard = () => {
       </Row>
 
       {/* Enroll Modal */}
-      <CourseEnquiryModal 
-        show={showModal} 
-        handleClose={() => setShowModal(false)} 
-        prefillCourse={selectedCourse} 
+      <CourseEnquiryModal
+        show={showModal}
+        handleClose={() => setShowModal(false)}
+        prefillCourse={selectedCourse}
       />
     </Container>
   );

@@ -183,7 +183,7 @@ const PrivacyPolicy = () => {
             </ul>
             <p className="text-gray-700">
               Indian users may exercise rights under the <strong>DPDP Act, 2023</strong>. To exercise your rights, contact us at <a
-                href="https://mail.google.com/mail/?view=cm&fs=1&to=techsterker@gmail.com&su=Your%20Enquiry"
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=techsterker@gmail.com&su=Enquiry%20for%20Privacy%20and%20Policies"
                 className="text-blue-600 hover:underline"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -242,7 +242,7 @@ const PrivacyPolicy = () => {
               <br />
               Email:{" "}
               <a
-                href="https://mail.google.com/mail/?view=cm&fs=1&to=techsterker@gmail.com&su=Your%20Enquiry"
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=techsterker@gmail.com&su=Enquiry%20for%20Privacy%20and%20Policies"
                 className="text-blue-600 hover:underline"
                 target="_blank"
                 rel="noopener noreferrer"

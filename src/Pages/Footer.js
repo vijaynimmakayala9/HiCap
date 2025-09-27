@@ -344,8 +344,8 @@ const Footer = () => {
                       {item.name}
                     </a>
                     {idx < arr.length - 1 && (
-                      <span className="text-light d-none d-md-inline">|</span>
-                    )}
+                      <span className="text-light  d-md-inline">|</span> 
+                    )}{/* d-none */}
                   </React.Fragment>
                 ))}
               </div>

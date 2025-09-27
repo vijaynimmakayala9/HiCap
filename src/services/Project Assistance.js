@@ -107,7 +107,7 @@ const ProjectAssistance = () => {
             {/* Modals */}
             <ContactUsModal
                 show={showContactModal}
-                type="project"
+                type="Project Assistance"
                 onHide={() => setShowContactModal(false)}
             />
 

@@ -106,7 +106,7 @@ const RealTimeAssistance = () => {
             {/* Modals */}
             <ContactUsModal
                 show={showContactModal}
-                type="realtime"
+                type="Realtime Assistance"
                 onHide={() => setShowContactModal(false)}
             />
 

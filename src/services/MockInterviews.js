@@ -119,7 +119,7 @@ const MockInterviews = () => {
             {/* Modals */}
             <ContactUsModal
                 show={showContactModal}
-                type="mock"
+                type="Mock-Interviews"
                 onHide={() => setShowContactModal(false)}
             />
 

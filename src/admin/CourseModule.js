@@ -442,7 +442,7 @@ const CourseModuleInterface = () => {
                     <div>
                       <div className="aspect-w-16 aspect-h-9 bg-black rounded-lg overflow-hidden mb-6">
                         <iframe
-                          src={`https://www.youtube.com/embed/${selectedClass.videoId}`}
+                          src={`https://www.youtube.com/embed/${selectedClass.videoId}?rel=0&modestbranding=1&controls=1&showinfo=0&iv_load_policy=3&fs=1&disablekb=1`}
                           title={selectedClass.name}
                           frameBorder="0"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

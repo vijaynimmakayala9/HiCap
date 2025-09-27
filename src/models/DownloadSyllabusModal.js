@@ -176,9 +176,16 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
                 type="text"
                 placeholder="Enter WhatsApp number"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => {
+                  let value = e.target.value;
+                  if (!value.startsWith('+91')) {
+                    value = '+91' + value.replace(/\D/g, '').slice(0, 10); // only digits
+                  }
+                  setPhone(value);
+                }}
                 className="py-2"
               />
+
               <Form.Text className="text-muted">
                 We'll send a verification code to this number.
               </Form.Text>

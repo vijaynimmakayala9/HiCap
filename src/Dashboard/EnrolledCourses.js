@@ -58,20 +58,22 @@ const EnrolledCourses = ({ enrollmentsLoading, enrolledCourses, navigate }) => {
                           </Badge>
                         </div>
                         <p className="text-secondary small mb-2">Batch: {course.batchName}</p>
-                        {status !== "Upcoming" && (
-                          <>
-                            <div className="progress mb-2" style={{ height: "8px" }}>
-                              <div className={`progress-bar ${status === "Completed" ? "bg-success" : "bg-primary"}`}
-                                role="progressbar" style={{ width: `${progress}%` }}></div>
-                            </div>
-                            <p className="text-secondary small mb-0">{progress}% completed</p>
-                          </>
-                        )}
+
+                        <p className="text-secondary small mb-0">Lessons: {course.courseId.noOfLessons}</p>
                         {status === "Upcoming" && (
                           <p className="text-secondary small mb-0">
                             Starting on {new Date(course.startDate).toLocaleDateString()}
                           </p>
                         )}
+
+                        <Button
+                          variant="success"
+                          className="text-white mt-2"
+                          onClick={() => navigate(`/dashboard/coursemodule`)}
+                        >
+                          View Details
+                        </Button>
+
                       </Card.Body>
                     </Card>
                   </div>
@@ -81,7 +83,7 @@ const EnrolledCourses = ({ enrollmentsLoading, enrolledCourses, navigate }) => {
           ) : (
             <div className="text-center py-4">
               <p className="text-muted">No courses enrolled yet.</p>
-              <Button variant="success" onClick={() => navigate("/courses")}>
+              <Button variant="success" onClick={() => navigate("/dashboard/browsecourses")}>
                 Browse Courses
               </Button>
             </div>

@@ -2,7 +2,7 @@ import React from "react";
 
 const CookiePolicy = () => {
   return (
-    <div className="max-w-5xl mx-auto px-5 py-10">
+    <div className="max-w-5xl mx-auto">
       <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col">
         
         {/* Page Title */}
@@ -18,7 +18,7 @@ const CookiePolicy = () => {
           {/* Intro */}
           <section id="intro" className="space-y-2">
             <p className="text-gray-800 text-base md:text-lg leading-relaxed">
-              This Cookie Policy explains how Techsterker (“we,” “our,” “us”), a
+              This Cookie Policy explains how <strong>Techsterker</strong> (“we,” “our,” “us”), a
               brand owned and operated by Hicap Edtech Private Limited, uses
               cookies and similar technologies on our Website{" "}
               <a
@@ -83,12 +83,12 @@ const CookiePolicy = () => {
               including:
             </p>
             <ul className="list-disc list-inside text-gray-700 space-y-1">
-              <li>Analytics providers (e.g., Google Analytics).</li>
+              <li><strong>Analytics providers</strong> (e.g., Google Analytics).</li>
               <li>
-                Payment gateways (for fraud prevention and secure processing).
+                <strong>Payment gateways </strong>(for fraud prevention and secure processing).
               </li>
               <li>
-                Learning platforms or communication tools (for interactive
+                <strong>Learning platforms or communication tools</strong> (for interactive
                 features).
               </li>
             </ul>
@@ -123,7 +123,7 @@ const CookiePolicy = () => {
             </p>
             <ul className="list-disc list-inside text-gray-700 space-y-1">
               <li>
-                Disabling strictly necessary cookies may prevent you from
+                Disabling <strong>strictly necessary cookies</strong> may prevent you from
                 logging in or accessing courses.
               </li>
               <li>
@@ -164,7 +164,8 @@ const CookiePolicy = () => {
               <br />
               Email:{" "}
               <a
-                href="mailto:techsterker@gmail.com"
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=techsterker@gmail.com&su=Enquiry%20for%20Cookie%20and%20Policies"
+                target="_blank"
                 className="text-blue-600 hover:underline"
               >
                 techsterker@gmail.com

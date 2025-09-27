@@ -14,7 +14,7 @@ const GuestHeader = ({ onLogin }) => {
   const [showCompanyMenu, setShowCompanyMenu] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginData, setLoginData] = useState({
-    phoneNumber: '',
+    email: '',
     password: ''
   });
   const [loginError, setLoginError] = useState('');
@@ -285,45 +285,50 @@ const GuestHeader = ({ onLogin }) => {
   };
 
   const handleLoginSubmit = async (e) => {
-    e.preventDefault();
-    setLoginError('');
-    setIsLoggingIn(true);
+  e.preventDefault();
+  setLoginError("");
+  setIsLoggingIn(true);
 
-    try {
-      const response = await fetch('http://31.97.206.144:5001/api/userlogin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          phoneNumber: loginData.phoneNumber,
-          password: loginData.password
-        })
+  console.log("Login attempt:", loginData);
+
+
+  try {
+    const response = await fetch("http://31.97.206.144:5001/api/userlogin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: loginData.email,   // FIXED → using email
+        password: loginData.password,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+      setShowLoginModal(false);
+      const userData = result.data;
+      onLogin({
+        id: userData._id,
+        name: userData.name,
+        phone: userData.mobile,
+        email: userData.email,
+        token: userData.token,
       });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        setShowLoginModal(false);
-        const userData = result.data;
-        onLogin({
-          id: userData._id,
-          name: userData.name,
-          phone: userData.phoneNumber,
-          email: userData.email,
-          token: userData.token
-        });
-        navigate('/dashboard');
-      } else {
-        setLoginError(result.message || 'Login failed. Please try again.');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      setLoginError('An error occurred. Please try again.');
-    } finally {
-      setIsLoggingIn(false);
+      navigate("/dashboard");
+    } else {
+      setLoginError(result.message || "Login failed. Please try again.");
     }
-  };
+  } catch (error) {
+    console.error("Login error:", error);
+    setLoginError("An error occurred. Please try again.");
+  } finally {
+    setIsLoggingIn(false);
+  }
+};
+
+
 
   const addToCart = (course) => {
     setCartItems(prev => {
@@ -710,7 +715,7 @@ const GuestHeader = ({ onLogin }) => {
                         <span>{course.duration || 0}</span>
                       </div>
                     </div>
-                    
+
                   </div>
                 </li>
               ))}
@@ -749,7 +754,7 @@ const GuestHeader = ({ onLogin }) => {
           }}
         >
           Contact Advisor
-          </button>
+        </button>
       </div>
     </div>
   );
@@ -812,8 +817,8 @@ const GuestHeader = ({ onLogin }) => {
                       <span
                         ref={coursesBtnRef}
                         className={`flex items-center px-4 py-2 text-base font-medium cursor-pointer rounded-md transition-all relative ${showCoursesMenu
-                            ? "text-[#a51d34]"
-                            : "text-gray-800 hover:text-[#a51d34]"
+                          ? "text-[#a51d34]"
+                          : "text-gray-800 hover:text-[#a51d34]"
                           }`}
                         onClick={() => {
                           setShowCoursesMenu(!showCoursesMenu);
@@ -852,9 +857,9 @@ const GuestHeader = ({ onLogin }) => {
                       <span
                         ref={item.label === "Services" ? resourcesBtnRef : companyBtnRef}
                         className={`flex items-center px-4 py-2 text-base font-medium cursor-pointer rounded-md transition-all ${(item.label === "Services" && showResourcesMenu) ||
-                            (item.label === "Company" && showCompanyMenu)
-                            ? "text-[#a51d34]"
-                            : "text-gray-800 hover:text-[#a51d34]"
+                          (item.label === "Company" && showCompanyMenu)
+                          ? "text-[#a51d34]"
+                          : "text-gray-800 hover:text-[#a51d34]"
                           }`}
                         onClick={() => {
                           if (item.label === "Services") {
@@ -871,9 +876,9 @@ const GuestHeader = ({ onLogin }) => {
                         {item.label}{" "}
                         <FaChevronDown
                           className={`ml-1 text-sm transition-transform ${(item.label === "Services" && showResourcesMenu) ||
-                              (item.label === "Company" && showCompanyMenu)
-                              ? "rotate-180"
-                              : ""
+                            (item.label === "Company" && showCompanyMenu)
+                            ? "rotate-180"
+                            : ""
                             }`}
                         />
                       </span>
@@ -892,8 +897,8 @@ const GuestHeader = ({ onLogin }) => {
                     <div key={idx} className="relative flex items-center">
                       <span
                         className={`px-4 py-2 text-base font-medium cursor-pointer rounded-md transition-colors ${location.pathname === item.path
-                            ? "text-[#a51d34]"
-                            : "text-gray-800 hover:text-[#a51d34]"
+                          ? "text-[#a51d34]"
+                          : "text-gray-800 hover:text-[#a51d34]"
                           }`}
                         onClick={() => handleNavigate(item.path)}
                       >
@@ -1046,88 +1051,8 @@ const GuestHeader = ({ onLogin }) => {
         </div>
       )}
 
-      {/* Login Modal */}
-      {showLoginModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1070] flex items-center justify-center p-2 sm:p-4 md:p-6">
-          <div
-            ref={modalRef}
-            className={`bg-white rounded-lg md:rounded-xl ${screenSize === 'mobile-small' ? 'p-4 w-full max-w-[95%]' : screenSize === 'mobile' ? 'p-4 w-full max-w-[90%]' : screenSize === 'mobile-large' ? 'p-5 w-full max-w-[85%] sm:max-w-[360px]' : screenSize === 'tablet' ? 'p-5 w-full max-w-[420px]' : screenSize === 'laptop' ? 'p-6 w-full max-w-[450px]' : 'p-6 w-full max-w-[480px]'} shadow-2xl`}
-          >
-            <div className={`flex justify-center ${screenSize === 'mobile-small' ? 'mb-3' : 'mb-4 sm:mb-5'}`}>
-              <img
-                src="/logo/hicaplogo.png"
-                alt="Logo"
-                className={`${screenSize === 'mobile-small' ? 'w-14' : screenSize === 'mobile' ? 'w-16' : screenSize === 'mobile-large' ? 'w-18 sm:w-20' : screenSize === 'tablet' ? 'w-22 md:w-24' : screenSize === 'laptop' ? 'w-24 lg:w-26' : 'w-26 lg:w-28'} h-auto object-contain`}
-              />
-            </div>
+      
 
-            <div className={`flex justify-between items-center ${screenSize === 'mobile-small' ? 'mb-4' : 'mb-4 sm:mb-5 md:mb-6'}`}>
-              <h4 className={`text-[#a51d34] ${screenSize === 'mobile-small' ? 'text-base' : screenSize === 'mobile' ? 'text-lg' : screenSize === 'mobile-large' ? 'text-lg sm:text-xl' : screenSize === 'tablet' ? 'text-xl md:text-2xl' : 'text-xl lg:text-2xl'} font-semibold m-0`}>
-                Login
-              </h4>
-              <button
-                onClick={() => setShowLoginModal(false)}
-                className={`bg-transparent border-none ${screenSize === 'mobile-small' ? 'text-lg' : screenSize === 'mobile' ? 'text-xl' : 'text-xl sm:text-2xl'} cursor-pointer hover:text-gray-600 transition-colors`}
-              >
-                <FaTimes />
-              </button>
-            </div>
-
-            <form onSubmit={handleLoginSubmit}>
-              {loginError && (
-                <div className={`${screenSize === 'mobile-small' ? 'p-2' : 'p-2 sm:p-2.5'} bg-[#f8d7da] text-[#721c24] rounded ${screenSize === 'mobile-small' ? 'mb-3' : 'mb-3 sm:mb-4'} ${screenSize === 'mobile-small' ? 'text-xs' : 'text-xs sm:text-sm'}`}>
-                  {loginError}
-                </div>
-              )}
-
-              <div className={`${screenSize === 'mobile-small' ? 'mb-3' : 'mb-3 sm:mb-4 md:mb-5'}`}>
-                <div className="relative">
-                  <FaPhone className={`absolute ${screenSize === 'mobile-small' ? 'left-3' : 'left-3 sm:left-4'} top-1/2 -translate-y-1/2 text-gray-600 ${screenSize === 'mobile-small' ? 'text-sm' : screenSize === 'mobile' ? 'text-base' : 'text-base sm:text-lg md:text-xl'}`} />
-                  <input
-                    type="tel"
-                    name="phoneNumber"
-                    value={loginData.phoneNumber}
-                    onChange={handleLoginChange}
-                    placeholder="Phone Number"
-                    required
-                    className={`w-full ${screenSize === 'mobile-small' ? 'py-2 pl-9 pr-3' : screenSize === 'mobile' ? 'py-2 pl-10 pr-3' : 'py-2 sm:py-2.5 md:py-3 pl-10 sm:pl-12 md:pl-12 pr-3'} border border-gray-300 rounded-md ${screenSize === 'mobile-small' ? 'text-sm' : screenSize === 'mobile' ? 'text-sm' : 'text-sm sm:text-base md:text-lg'} focus:border-[#a51d34] focus:outline-none focus:ring-1 focus:ring-[#a51d34] transition-colors`}
-                  />
-                </div>
-              </div>
-
-              <div className={`${screenSize === 'mobile-small' ? 'mb-3' : 'mb-3 sm:mb-4 md:mb-5'}`}>
-                <div className="relative">
-                  <FaLock className={`absolute ${screenSize === 'mobile-small' ? 'left-3' : 'left-3 sm:left-4'} top-1/2 -translate-y-1/2 text-gray-600 ${screenSize === 'mobile-small' ? 'text-sm' : screenSize === 'mobile' ? 'text-base' : 'text-base sm:text-lg md:text-xl'}`} />
-                  <input
-                    type="password"
-                    name="password"
-                    value={loginData.password}
-                    onChange={handleLoginChange}
-                    placeholder="Password"
-                    required
-                    className={`w-full ${screenSize === 'mobile-small' ? 'py-2 pl-9 pr-3' : screenSize === 'mobile' ? 'py-2 pl-10 pr-3' : 'py-2 sm:py-2.5 md:py-3 pl-10 sm:pl-12 md:pl-12 pr-3'} border border-gray-300 rounded-md ${screenSize === 'mobile-small' ? 'text-sm' : screenSize === 'mobile' ? 'text-sm' : 'text-sm sm:text-base md:text-lg'} focus:border-[#a51d34] focus:outline-none focus:ring-1 focus:ring-[#a51d34] transition-colors`}
-                  />
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={isLoggingIn}
-                className={`w-full ${screenSize === 'mobile-small' ? 'py-2' : screenSize === 'mobile' ? 'py-2.5' : 'py-2 sm:py-2.5 md:py-3'} bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white rounded-md font-semibold ${screenSize === 'mobile-small' ? 'text-sm' : screenSize === 'mobile' ? 'text-sm' : 'text-sm sm:text-base md:text-lg'} cursor-pointer hover:opacity-90 transition-opacity ${isLoggingIn ? "opacity-80" : ""}`}
-              >
-                {isLoggingIn ? (
-                  <>
-                    <span className={`inline-block ${screenSize === 'mobile-small' ? 'w-3 h-3' : screenSize === 'mobile' ? 'w-3 h-3' : 'w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5'} border-2 border-white/30 rounded-full border-t-white animate-spin mr-2`}></span>
-                    Logging in...
-                  </>
-                ) : (
-                  "Login"
-                )}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
 
       <a
         href="https://wa.me/919000239871" // replace with your WhatsApp number
@@ -1137,6 +1062,225 @@ const GuestHeader = ({ onLogin }) => {
       >
         <FaWhatsapp size={30} />
       </a>
+
+      {/* Login Modal */}
+{showLoginModal && (
+  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1070] flex items-center justify-center p-2 sm:p-4 md:p-6">
+    <div
+      ref={modalRef}
+      className={`bg-white rounded-lg md:rounded-xl ${
+        screenSize === "mobile-small"
+          ? "p-4 w-full max-w-[95%]"
+          : screenSize === "mobile"
+          ? "p-4 w-full max-w-[90%]"
+          : screenSize === "mobile-large"
+          ? "p-5 w-full max-w-[85%] sm:max-w-[360px]"
+          : screenSize === "tablet"
+          ? "p-5 w-full max-w-[420px]"
+          : screenSize === "laptop"
+          ? "p-6 w-full max-w-[450px]"
+          : "p-6 w-full max-w-[480px]"
+      } shadow-2xl`}
+    >
+      <div
+        className={`flex justify-center ${
+          screenSize === "mobile-small" ? "mb-3" : "mb-4 sm:mb-5"
+        }`}
+      >
+        <img
+          src="/logo/hicaplogo.png"
+          alt="Logo"
+          className={`${
+            screenSize === "mobile-small"
+              ? "w-14"
+              : screenSize === "mobile"
+              ? "w-16"
+              : screenSize === "mobile-large"
+              ? "w-18 sm:w-20"
+              : screenSize === "tablet"
+              ? "w-22 md:w-24"
+              : screenSize === "laptop"
+              ? "w-24 lg:w-26"
+              : "w-26 lg:w-28"
+          } h-auto object-contain`}
+        />
+      </div>
+
+      <div
+        className={`flex justify-between items-center ${
+          screenSize === "mobile-small" ? "mb-4" : "mb-4 sm:mb-5 md:mb-6"
+        }`}
+      >
+        <h4
+          className={`text-[#a51d34] ${
+            screenSize === "mobile-small"
+              ? "text-base"
+              : screenSize === "mobile"
+              ? "text-lg"
+              : screenSize === "mobile-large"
+              ? "text-lg sm:text-xl"
+              : screenSize === "tablet"
+              ? "text-xl md:text-2xl"
+              : "text-xl lg:text-2xl"
+          } font-semibold m-0`}
+        >
+          Login
+        </h4>
+        <button
+          onClick={() => setShowLoginModal(false)}
+          className={`bg-transparent border-none ${
+            screenSize === "mobile-small"
+              ? "text-lg"
+              : screenSize === "mobile"
+              ? "text-xl"
+              : "text-xl sm:text-2xl"
+          } cursor-pointer hover:text-gray-600 transition-colors`}
+        >
+          <FaTimes />
+        </button>
+      </div>
+
+      <form onSubmit={handleLoginSubmit}>
+        {loginError && (
+          <div
+            className={`${
+              screenSize === "mobile-small" ? "p-2" : "p-2 sm:p-2.5"
+            } bg-[#f8d7da] text-[#721c24] rounded ${
+              screenSize === "mobile-small" ? "mb-3" : "mb-3 sm:mb-4"
+            } ${
+              screenSize === "mobile-small" ? "text-xs" : "text-xs sm:text-sm"
+            }`}
+          >
+            {loginError}
+          </div>
+        )}
+
+        {/* Email */}
+        <div
+          className={`${
+            screenSize === "mobile-small" ? "mb-3" : "mb-3 sm:mb-4 md:mb-5"
+          }`}
+        >
+          <div className="relative">
+            <FaPhone
+              className={`absolute ${
+                screenSize === "mobile-small" ? "left-3" : "left-3 sm:left-4"
+              } top-1/2 -translate-y-1/2 text-gray-600 ${
+                screenSize === "mobile-small"
+                  ? "text-sm"
+                  : screenSize === "mobile"
+                  ? "text-base"
+                  : "text-base sm:text-lg md:text-xl"
+              }`}
+            />
+            <input
+              type="email"
+              name="email"
+              value={loginData.email}
+              onChange={handleLoginChange}
+              placeholder="Email"
+              required
+              className={`w-full ${
+                screenSize === "mobile-small"
+                  ? "py-2 pl-9 pr-3"
+                  : screenSize === "mobile"
+                  ? "py-2 pl-10 pr-3"
+                  : "py-2 sm:py-2.5 md:py-3 pl-10 sm:pl-12 md:pl-12 pr-3"
+              } border border-gray-300 rounded-md ${
+                screenSize === "mobile-small"
+                  ? "text-sm"
+                  : screenSize === "mobile"
+                  ? "text-sm"
+                  : "text-sm sm:text-base md:text-lg"
+              } focus:border-[#a51d34] focus:outline-none focus:ring-1 focus:ring-[#a51d34] transition-colors`}
+            />
+          </div>
+        </div>
+
+        {/* Password */}
+        <div
+          className={`${
+            screenSize === "mobile-small" ? "mb-3" : "mb-3 sm:mb-4 md:mb-5"
+          }`}
+        >
+          <div className="relative">
+            <FaLock
+              className={`absolute ${
+                screenSize === "mobile-small" ? "left-3" : "left-3 sm:left-4"
+              } top-1/2 -translate-y-1/2 text-gray-600 ${
+                screenSize === "mobile-small"
+                  ? "text-sm"
+                  : screenSize === "mobile"
+                  ? "text-base"
+                  : "text-base sm:text-lg md:text-xl"
+              }`}
+            />
+            <input
+              type="password"
+              name="password"
+              value={loginData.password}
+              onChange={handleLoginChange}
+              placeholder="Password"
+              required
+              className={`w-full ${
+                screenSize === "mobile-small"
+                  ? "py-2 pl-9 pr-3"
+                  : screenSize === "mobile"
+                  ? "py-2 pl-10 pr-3"
+                  : "py-2 sm:py-2.5 md:py-3 pl-10 sm:pl-12 md:pl-12 pr-3"
+              } border border-gray-300 rounded-md ${
+                screenSize === "mobile-small"
+                  ? "text-sm"
+                  : screenSize === "mobile"
+                  ? "text-sm"
+                  : "text-sm sm:text-base md:text-lg"
+              } focus:border-[#a51d34] focus:outline-none focus:ring-1 focus:ring-[#a51d34] transition-colors`}
+            />
+          </div>
+        </div>
+
+        {/* Submit */}
+        <button
+          type="submit"
+          disabled={isLoggingIn}
+          className={`w-full ${
+            screenSize === "mobile-small"
+              ? "py-2"
+              : screenSize === "mobile"
+              ? "py-2.5"
+              : "py-2 sm:py-2.5 md:py-3"
+          } bg-gradient-to-br from-[#a51d34] to-[#d32f2f] text-white rounded-md font-semibold ${
+            screenSize === "mobile-small"
+              ? "text-sm"
+              : screenSize === "mobile"
+              ? "text-sm"
+              : "text-sm sm:text-base md:text-lg"
+          } cursor-pointer hover:opacity-90 transition-opacity ${
+            isLoggingIn ? "opacity-80" : ""
+          }`}
+        >
+          {isLoggingIn ? (
+            <>
+              <span
+                className={`inline-block ${
+                  screenSize === "mobile-small"
+                    ? "w-3 h-3"
+                    : screenSize === "mobile"
+                    ? "w-3 h-3"
+                    : "w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5"
+                } border-2 border-white/30 rounded-full border-t-white animate-spin mr-2`}
+              ></span>
+              Logging in...
+            </>
+          ) : (
+            "Login"
+          )}
+        </button>
+      </form>
+    </div>
+  </div>
+)}
+
 
       <ContactUsModal
         show={showContactModal}

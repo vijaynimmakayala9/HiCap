@@ -114,7 +114,7 @@ const OnetoOneSession = () => {
       {/* Modals */}
       <ContactUsModal
         show={showContactModal}
-        type="oneonone"
+        type="One-on-One Session"
         onHide={() => setShowContactModal(false)}
       />
 

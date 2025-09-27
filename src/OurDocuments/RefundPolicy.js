@@ -2,7 +2,7 @@ import React from "react";
 
 const RefundPolicy = () => {
   return (
-    <div className="max-w-5xl mx-auto px-5 py-10">
+    <div className="max-w-5xl mx-auto">
       <div className="bg-white rounded-xl shadow-lg p-8">
         {/* Heading */}
         <header className="mb-8">
@@ -18,8 +18,8 @@ const RefundPolicy = () => {
           <section id="intro" className="space-y-3">
             <p className="text-gray-800 text-base md:text-lg leading-relaxed">
               This Refund Policy (“Policy”) governs all payments made to
-              Techsterker, a brand owned and operated by Hicap Edtech Private
-              Limited (“Company,” “we,” “our,” or “us”). This Policy applies to
+              <strong>Techsterker</strong>, a brand owned and operated by <strong>Hicap Edtech Private
+              Limited</strong> (“Company,” “we,” “our,” or “us”). This Policy applies to
               all users, students, and customers (“you,” “your,” or “student”)
               who purchase or subscribe to our courses, training programs, or
               related services (“Services”) through our Website, mobile
@@ -38,8 +38,8 @@ const RefundPolicy = () => {
             </h2>
             <ul className="list-disc list-inside text-gray-700 space-y-1">
               <li>
-                All fees, charges, or payments made to Techsterker are final,
-                non-refundable, and non-transferable, except as explicitly
+                All fees, charges, or payments made to Techsterker are <strong>final,
+                non-refundable</strong>, and non-transferable, except as explicitly
                 stated in this Policy.
               </li>
               <li>
@@ -62,8 +62,7 @@ const RefundPolicy = () => {
               2. Limited Exceptions
             </h2>
             <p className="text-gray-700 text-base leading-relaxed">
-              Refunds may be considered by the Company at its sole discretion
-              under the following exceptional circumstances:
+              Notwithstanding the above Refunds may be considered by the Company <strong>at its sole discretion</strong> under the following exceptional circumstances:
             </p>
             <ul className="list-disc list-inside text-gray-700 space-y-1">
               <li>
@@ -76,12 +75,11 @@ const RefundPolicy = () => {
                 <ul className="list-disc list-inside ml-5 space-y-1">
                   <li>
                     If you are unable to access purchased course content due to
-                    a verified technical error directly attributable to the
-                    Company, and
+                    a <strong>verified technical error directly attributable to the
+                    Company</strong>, and
                   </li>
                   <li>
-                    Our support team is unable to provide access within seven
-                    (7) business days from notification, then you may request a
+                    Our support team is unable to provide access within <strong>seven (7) business</strong> from notification, then you may request a
                     refund for the affected transaction.
                   </li>
                 </ul>
@@ -101,24 +99,20 @@ const RefundPolicy = () => {
               3. Refund Request Procedure
             </h2>
             <ul className="list-disc list-inside text-gray-700 space-y-1">
+              3.1. To request a refund under the limited exceptions above, you must:
               <li>
-                Submit a written request by emailing{" "}
-                <span className="italic">[Insert Email ID]</span> within three
-                (3) calendar days of the payment date.
+              Submit a written request by emailing <strong>[Insert Email ID]</strong> within <strong>three (3) calendar days</strong> of the payment date.
               </li>
               <li>
-                Provide transaction details (order ID, date of payment, mode of
-                payment, amount, and screenshot of payment confirmation).
+                Provide transaction details (order ID, date of payment, mode of payment, amount, and screenshot of payment confirmation).
               </li>
               <li>Provide relevant supporting documents, if applicable.</li>
-              <li>
-                Refund requests received after three (3) calendar days will not
+              3.2. Refund requests received after three (3) calendar days will not
                 be entertained.
-              </li>
-              <li>
-                All refund approvals are at the sole discretion of the Company,
+  
+             3.3. All refund approvals are at the <strong>sole discretion of the Company</strong>,
                 and our decision shall be final and binding.
-              </li>
+            
             </ul>
           </section>
 
@@ -129,11 +123,11 @@ const RefundPolicy = () => {
             </h2>
             <ul className="list-disc list-inside text-gray-700 space-y-1">
               <li>
-                If approved, refunds will be initiated within fifteen (15) to
-                twenty (20) business days from the date of approval.
+                If approved, refunds will be initiated within <strong>fifteen (15) to
+                twenty (20) business days</strong> from the date of approval.
               </li>
               <li>
-                Refunds will only be made to the original payment method used
+                Refunds will only be made to the <strong>original payment method</strong> used
                 during purchase. We are not responsible for delays caused by
                 banks, payment gateways, or third-party service providers.
               </li>
@@ -203,7 +197,7 @@ const RefundPolicy = () => {
               This Refund Policy shall be governed by and construed in
               accordance with the laws of India. Any disputes arising out of or
               in relation to this Policy shall be resolved in accordance with
-              the Governing Law & Dispute Resolution clause of our Terms of Use.
+              the <strong>Governing Law & Dispute Resolution clause</strong> of our Terms of Use.
             </p>
           </section>
 
@@ -224,7 +218,8 @@ const RefundPolicy = () => {
               <br />
               Email:{" "}
               <a
-                href="mailto:techsterker@gmail.com"
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=techsterker@gmail.com&su=Enquiry%20for%20Refund%20Policies"
+                target="_blank"
                 className="text-blue-600 hover:underline"
               >
                 techsterker@gmail.com

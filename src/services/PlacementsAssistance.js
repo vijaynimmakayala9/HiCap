@@ -103,7 +103,7 @@ const PlacementAssistance = () => {
             {/* Modals */}
             <ContactUsModal
                 show={showContactModal}
-                type="placement"
+                type="Placement Assistance"
                 onHide={() => setShowContactModal(false)}
             />
 

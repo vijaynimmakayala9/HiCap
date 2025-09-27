@@ -38,6 +38,8 @@ import PrivacyAndPolicies from "./Ourpolicies/PrivacyAndPolicy";
 import CookiePolicies from "./Ourpolicies/CookiePolicy";
 import Terms from "./Ourpolicies/TermsAndConditions";
 import RefundPolicies from "./Ourpolicies/RefundPolicy";
+import BrowseCourses from "./Dashboard/BrowseCourses";
+import DashboardCourseDetail from "./Dashboard/DashboardCourseDetails";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -123,6 +125,8 @@ function App() {
           <Route path="doubt-session" element={<DoubtSession />} />
           <Route path="certificate" element={<Certificate />} />
           <Route path="acknowledge" element={<Acknowledge />} />
+          <Route path="browsecourses" element={<BrowseCourses />} />
+          <Route path="course/:id" element={<DashboardCourseDetail />} />
         </Route>
 
         {/* Redirect unknown routes */}

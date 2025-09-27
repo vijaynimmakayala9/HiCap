@@ -2,7 +2,7 @@ import React from "react";
 
 const TermsOfUse = () => {
   return (
-    <div className="max-w-5xl mx-auto px-5 py-10">
+    <div className="max-w-5xl mx-auto">
       <div className="bg-white rounded-xl shadow-lg p-8">
         {/* Heading */}
         <header className="mb-8">
@@ -39,8 +39,8 @@ const TermsOfUse = () => {
           <section id="eligibility" className="space-y-4">
             <h2 className="text-xl md:text-2xl font-semibold text-gray-900">1. Eligibility</h2>
             <ul className="list-disc list-inside text-gray-700 space-y-2">
-              <li>You must be at least 18 years of age to register and use our Services.</li>
-              <li>By creating an account, you represent that all information provided is accurate, complete, and truthful.</li>
+              <li>You must be at least <strong>18 years of age</strong> to register and use our Services.</li>
+              <li>By creating an account, you represent that all information provided is <strong>accurate, complete, and truthful.</strong></li>
               <li>If you are under 18, you may only use the Services under parental/guardian supervision.</li>
             </ul>
           </section>
@@ -49,7 +49,7 @@ const TermsOfUse = () => {
           <section id="account" className="space-y-4">
             <h2 className="text-xl md:text-2xl font-semibold text-gray-900">2. Account Registration & Security</h2>
             <ul className="list-disc list-inside text-gray-700 space-y-2">
-              <li>To access courses, you must create an account with a username and password.</li>
+              <li>To access courses, you must create an account with a <strong>username and password.</strong></li>
               <li>You are responsible for maintaining the confidentiality of your login credentials.</li>
               <li>You agree not to share your account or allow unauthorized use.</li>
               <li>Notify us immediately if you suspect unauthorized access.</li>
@@ -61,7 +61,7 @@ const TermsOfUse = () => {
           <section id="privacy" className="space-y-4">
             <h2 className="text-xl md:text-2xl font-semibold text-gray-900">3. Student Information & Privacy</h2>
             <ul className="list-disc list-inside text-gray-700 space-y-2">
-              <li>By using our Services, you consent to the collection and processing of your personal and academic information, as described in our Privacy Policy and Cookie Policy.</li>
+              <li>By using our Services, you consent to the collection and processing of your personal and academic information, as described in our <strong>Privacy Policy</strong> and <strong>Cookie Policy.</strong></li>
               <li>We collect: personal details, login credentials, academic data (course enrollments, results, certifications).</li>
               <li>You agree that we may use your data to provide Services, improve the Website, and comply with law.</li>
             </ul>
@@ -71,7 +71,7 @@ const TermsOfUse = () => {
           <section id="use" className="space-y-4">
             <h2 className="text-xl md:text-2xl font-semibold text-gray-900">4. Use of Services</h2>
             <ul className="list-disc list-inside text-gray-700 space-y-2">
-              <li>Services are provided solely for educational and personal use.</li>
+              <li>Services are provided solely for <strong>educational and personal use.</strong></li>
               <li>
                 You agree not to:
                 <ol className="list-decimal list-inside ml-5 space-y-2">
@@ -88,8 +88,8 @@ const TermsOfUse = () => {
           <section id="content" className="space-y-4">
             <h2 className="text-xl md:text-2xl font-semibold text-gray-900">5. Course Content & Intellectual Property</h2>
             <ul className="list-disc list-inside text-gray-700 space-y-2">
-              <li>All Website content (courses, study materials, videos, assessments, graphics, and trademarks) are the intellectual property of the Company.</li>
-              <li>You are granted a limited, non-transferable, non-exclusive license to access and use materials for personal learning.</li>
+              <li>All Website content (courses, study materials, videos, assessments, graphics, and trademarks) are the <strong>intellectual property of the Company.</strong></li>
+              <li>You are granted a <strong>limited, non-transferable, non-exclusive license</strong> to access and use materials for personal learning.</li>
               <li>You may not reproduce, distribute, modify, or create derivative works without prior written consent.</li>
             </ul>
           </section>
@@ -100,7 +100,7 @@ const TermsOfUse = () => {
             <ul className="list-disc list-inside text-gray-700 space-y-2">
               <li>Fees for courses must be paid in accordance with the pricing displayed on the Website.</li>
               <li>Payments are processed securely through third-party gateways.</li>
-              <li>Once enrolled, fees are non-refundable, unless specifically mentioned otherwise in our refund policy.</li>
+              <li>Once enrolled, <strong>fees are non-refundable</strong>, unless specifically mentioned otherwise in our refund policy.</li>
               <li>In case of failed or duplicate payments, we will assist in resolving issues with the payment provider.</li>
             </ul>
           </section>
@@ -129,7 +129,7 @@ const TermsOfUse = () => {
           <section id="liability" className="space-y-4">
             <h2 className="text-xl md:text-2xl font-semibold text-gray-900">9. Limitation of Liability</h2>
             <ul className="list-disc list-inside text-gray-700 space-y-2">
-              <li>Services are provided on an “as is” basis without warranties of any kind.</li>
+              <li>Services are provided on an <strong>“as is” basis</strong> without warranties of any kind.</li>
               <li>
                 We are not responsible for:
                 <ul className="list-disc list-inside ml-5 space-y-2">
@@ -167,10 +167,10 @@ const TermsOfUse = () => {
           <section id="governing" className="space-y-4">
             <h2 className="text-xl md:text-2xl font-semibold text-gray-900">12. Governing Law & Dispute Resolution</h2>
             <ul className="list-disc list-inside text-gray-700 space-y-2">
-              <li>These Terms are governed by the laws of India.</li>
-              <li>Any disputes shall first be resolved through mutual discussion.</li>
-              <li>If unresolved, disputes shall be referred to arbitration under the Arbitration and Conciliation Act, 1996, with a sole arbitrator appointed by the Company.</li>
-              <li>The seat of arbitration shall be Hyderabad, India, and proceedings shall be conducted in English.</li>
+              <li>These Terms are governed by the laws of <strong>India.</strong></li>
+              <li>Any disputes shall first be resolved through <strong>mutual discussion.</strong></li>
+              <li>If unresolved, disputes shall be referred to <strong>arbitration under the Arbitration and Conciliation Act, 1996</strong>, with a sole arbitrator appointed by the Company.</li>
+              <li>The seat of arbitration shall be <strong>[Hyderabad, India]</strong>, and proceedings shall be conducted in <strong>English.</strong></li>
             </ul>
           </section>
 
@@ -224,7 +224,7 @@ const TermsOfUse = () => {
               <strong>Hicap Edtech Private Limited</strong>
               <br />
               Email:{" "}
-              <a href="mailto:techsterker@gmail.com" className="text-blue-600 hover:underline">
+              <a href="https://mail.google.com/mail/?view=cm&fs=1&to=techsterker@gmail.com&su=Enquiry%20for%20Terms%20and%20Conditions" target="_blank" className="text-blue-600 hover:underline">
                 techsterker@gmail.com
               </a>
               <br />

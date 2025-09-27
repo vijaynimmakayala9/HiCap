@@ -45,9 +45,9 @@ const HeaderSection = ({ userData, enrolledCourses, navigate, todaysClassesCount
     <Row className="mb-4">
       <Col md={4}>
         <Card className="shadow-sm border-0 rounded-3 p-3" style={{ backgroundColor: "#e3f2fd" }}>
-          <h5 className="text-primary fw-semibold mb-1">Welcome</h5>
+          <h5 className="text-primary fw-semibold mb-1">Welcome,</h5>
           <p className="text-secondary mb-0">
-            {userData ? `${userData.firstName || ''} ${userData.lastName || ''}`.trim() : "Loading..."}
+            {userData ? `${userData.name || ''}`.trim() : "Loading..."}
           </p>
         </Card>
       </Col>

@@ -168,7 +168,7 @@ const ResumeBuilding = () => {
       {/* Modals */}
       <ContactUsModal
         show={showContactModal}
-        type="resume"
+        type="Resume Building"
         onHide={() => setShowContactModal(false)}
       />
 

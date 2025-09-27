@@ -33,7 +33,7 @@ const StudentDetails = ({ userDetailsLoading, userData, student, enrolledCourses
           ) : userData ? (
             <div className="d-grid gap-3">
               {[
-                { icon: "bi-person-badge", label: "Student ID", value: userData._id ? userData._id.slice(-8) : "N/A" },
+                { icon: "bi-person-badge", label: "Student ID", value: userData._id ? userData.userId : "N/A" },
                 { icon: "bi-person", label: "Full Name", value: `${userData.name || ''} ` },
                 { icon: "bi-envelope", label: "Email", value: userData.email || "N/A" },
                 { icon: "bi-telephone", label: "Phone", value: userData.mobile || "N/A" },
