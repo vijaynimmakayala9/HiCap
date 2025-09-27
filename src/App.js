@@ -106,7 +106,6 @@ function App() {
         <Route path="/payment" element={<PaymentForm />} />
         <Route path="/careers" element={<Careers />} />
         <Route path="/ourpolicies" element={<OurPolicies />} />
-        <Route path="/admin" element={<CourseAdminPanel />} />
         <Route path="/privacypolicy" element={ <PrivacyAndPolicies/>}/>
         <Route path="/cookiepolicy" element={ <CookiePolicies/>}/>
         <Route path="/termsofuse" element={ <Terms/>}/>

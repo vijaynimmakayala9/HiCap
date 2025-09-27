@@ -97,7 +97,7 @@ const RegisteredCourses = ({ coursesLoading, registeredCourses, navigate }) => {
                           <Button
                             variant="warning"
                             className="text-white mt-2"
-                            onClick={() => navigate(`/course/${courseInfo._id}`)}
+                            onClick={() => navigate(`/dashboard/course/${courseInfo._id}`)}
                           >
                             View Details
                           </Button>

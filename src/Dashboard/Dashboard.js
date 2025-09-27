@@ -144,8 +144,7 @@ const Dashboard = () => {
       />
 
       <Row className="mb-4">
-        {/* Attendance Section */}
-        {/* <AttendanceSection enrolledCourses={enrolledCourses} /> */}
+        
         <RegisteredCourses
           coursesLoading={registrecoursesLoading}
           registeredCourses={registrecourses}
@@ -158,6 +157,8 @@ const Dashboard = () => {
           enrolledCourses={enrolledCourses}
           navigate={navigate}
         />
+        {/* Attendance Section */}
+        <AttendanceSection enrolledCourses={enrolledCourses} />
 
         {/* Student Details */}
         <StudentDetails

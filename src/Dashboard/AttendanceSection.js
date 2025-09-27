@@ -9,7 +9,7 @@ const AttendanceSection = () => {
   ];
 
   return (
-    <Col xl={6} lg={6} md={6} className="mb-4">
+    <Col xl={12} lg={12} md={12} className="mb-4">
       <Card
         className="h-100 shadow-sm border-0"
         style={{ backgroundColor: "#ffebee" }}
