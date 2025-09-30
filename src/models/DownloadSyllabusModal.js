@@ -171,10 +171,10 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
             </Form.Group>
 
             <Form.Group className="mb-4 text-start">
-              <Form.Label className="fw-semibold">Enter WhatsApp Number</Form.Label>
+              <Form.Label className="fw-semibold">Enter Mobile Number</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter WhatsApp number"
+                placeholder="Enter Mobile number"
                 value={phone}
                 onChange={(e) => {
                   let value = e.target.value;
@@ -221,7 +221,7 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
                 maxLength={6}
               />
               <Form.Text className="text-muted">
-                Check your WhatsApp for the verification code
+                Check your Mobile for the verification code
               </Form.Text>
             </Form.Group>
 

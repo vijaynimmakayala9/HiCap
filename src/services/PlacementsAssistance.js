@@ -45,10 +45,10 @@ const PlacementAssistance = () => {
                     {/* Features Cards */}
                     <Row className="mt-5 g-4">
                         <Col md={4}>
-                            <Card className="h-100 shadow-sm border-0 card-hover-effect">
+                            <Card className="h-100 shadow-sm border-0 card-hover-effect text-center">
                                 <Card.Body>
                                     <div className="icon-box mb-3">
-                                        <div className="icon-circle bg-meroonlight">
+                                        <div className="icon-circle meroon-back mx-auto">
                                             <i className="fas fa-handshake text-white"></i>
                                         </div>
                                     </div>
@@ -62,10 +62,10 @@ const PlacementAssistance = () => {
                             </Card>
                         </Col>
                         <Col md={4}>
-                            <Card className="h-100 shadow-sm border-0 card-hover-effect">
+                            <Card className="h-100 shadow-sm border-0 card-hover-effect text-center">
                                 <Card.Body>
                                     <div className="icon-box mb-3">
-                                        <div className="icon-circle bg-meroonlight">
+                                        <div className="icon-circle meroon-back mx-auto">
                                             <i className="fas fa-bullseye text-white"></i>
                                         </div>
                                     </div>
@@ -79,10 +79,10 @@ const PlacementAssistance = () => {
                             </Card>
                         </Col>
                         <Col md={4}>
-                            <Card className="h-100 shadow-sm border-0 card-hover-effect">
+                            <Card className="h-100 shadow-sm border-0 card-hover-effect text-center">
                                 <Card.Body>
                                     <div className="icon-box mb-3">
-                                        <div className="icon-circle bg-meroonlight">
+                                        <div className="icon-circle meroon-back mx-auto">
                                             <i className="fas fa-chart-pie text-white"></i>
                                         </div>
                                     </div>

@@ -101,7 +101,7 @@ const RefundPolicy = () => {
             <ul className="list-disc list-inside text-gray-700 space-y-1">
               3.1. To request a refund under the limited exceptions above, you must:
               <li>
-              Submit a written request by emailing <strong>[Insert Email ID]</strong> within <strong>three (3) calendar days</strong> of the payment date.
+              Submit a written request by emailing <strong>techsterker@gmail.com</strong> within <strong>three (3) calendar days</strong> of the payment date.
               </li>
               <li>
                 Provide transaction details (order ID, date of payment, mode of payment, amount, and screenshot of payment confirmation).

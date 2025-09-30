@@ -174,20 +174,24 @@ const OurPolicies = () => {
             <Card className="shadow-sm mb-4" style={{ borderColor: "#a51d34" }}>
               <Card.Body>
                 <Card.Title className="textcolor">Selected Course</Card.Title>
-                <div className="d-flex justify-content-between align-items-center">
-                  <div>
+                <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                  {/* Left Section */}
+                  <div className="mb-3 mb-md-0">
                     <h5 className="mb-1">{selectedCourse.name}</h5>
-                    <p className="text-muted mb-0">Student: {formData.name}</p>
-                    <p className="text-muted mb-0">Email: {formData.email}</p>
-                    <p className="text-muted mb-0">Mobile: {formData.mobile}</p>
+                    <p className="text-muted mb-0"><strong>Student:</strong> {formData.name}</p>
+                    <p className="text-muted mb-0"><strong>Email:</strong> {formData.email}</p>
+                    <p className="text-muted mb-0"><strong>Mobile:</strong> {formData.mobile}</p>
                   </div>
-                  <div className="text-end">
+
+                  {/* Right Section */}
+                  <div className="text-md-end">
                     <h4 className="textcolor mb-0">₹{fullPrice.toLocaleString()}/-</h4>
                     <small className="text-muted">Total Course Fee</small>
                   </div>
                 </div>
               </Card.Body>
             </Card>
+
 
             {/* Payment Type Selection */}
             {/* <Card className="shadow-sm mb-4">
