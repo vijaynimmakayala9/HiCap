@@ -42,7 +42,7 @@ const DoubtSession = () => {
       }
 
       const response = await axios.post(
-        'http://31.97.206.144:5001/api/doubtsession',
+        'https://api.techsterker.com/api/doubtsession',
         formDataToSend,
         {
           headers: {

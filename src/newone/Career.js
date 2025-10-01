@@ -34,7 +34,7 @@ const Careers = () => {
         data.append(key, formData[key]);
       });
 
-      await axios.post("http://31.97.206.144:5001/api/apply", data, {
+      await axios.post("https://api.techsterker.com/api/apply", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

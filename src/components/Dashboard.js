@@ -24,7 +24,7 @@ const Dashboard = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await axios.get("http://31.97.206.144:5001/api/coursecontroller");
+      const response = await axios.get("https://api.techsterker.com/api/coursecontroller");
       setRecommendedCourses(response.data.data || response.data || []);
     } catch (error) {
       console.error("Error fetching courses:", error);
@@ -36,7 +36,7 @@ const Dashboard = () => {
 
   const fetchEnrollments = async () => {
     try {
-      const response = await axios.get(`http://31.97.206.144:5001/api/user/${student.id}/enrollments`);
+      const response = await axios.get(`https://api.techsterker.com/api/user/${student.id}/enrollments`);
       
       setEnrolledCourses(response.data.enrolledCourses || []);
     } catch (error) {
@@ -49,7 +49,7 @@ const Dashboard = () => {
 
   const fetchUserDetails = async () => {
     try {
-      const response = await axios.get(`http://31.97.206.144:5001/api/userregister/${student.id}`);
+      const response = await axios.get(`https://api.techsterker.com/api/userregister/${student.id}`);
       setUserData(response.data.data)
     } catch (error) {
       console.error("Error fetching user details:", error);

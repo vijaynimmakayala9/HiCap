@@ -14,7 +14,7 @@ const CalendarSection = () => {
 
   const fetchCalendarEvents = async () => {
     try {
-      const response = await axios.get("http://31.97.206.144:5001/api/calendars");
+      const response = await axios.get("https://api.techsterker.com/api/calendars");
       if (response.data.success) {
         setCalendarEvents(response.data.data || []);
       }

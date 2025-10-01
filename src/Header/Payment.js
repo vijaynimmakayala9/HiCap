@@ -35,7 +35,7 @@ const PaymentForm = () => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("http://31.97.206.144:5001/api/coursecontroller");
+        const res = await axios.get("https://api.techsterker.com/api/coursecontroller");
         if (res.data.success) {
           setCourses(res.data.data); // API returns {success, count, data:[...]}
         }

@@ -102,7 +102,7 @@ const GuestHeader = ({ onLogin }) => {
   }, []);
 
   useEffect(() => {
-    fetch('http://31.97.206.144:5001/api/coursecontroller')
+    fetch('https://api.techsterker.com/api/coursecontroller')
       .then((res) => res.json())
       .then((data) => {
         if (data.success && Array.isArray(data.data)) {
@@ -283,7 +283,7 @@ const GuestHeader = ({ onLogin }) => {
     setIsLoggingIn(true);
 
     try {
-      const response = await fetch('http://31.97.206.144:5001/api/userlogin', {
+      const response = await fetch('https://api.techsterker.com/api/userlogin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

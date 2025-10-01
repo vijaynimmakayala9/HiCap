@@ -42,7 +42,7 @@ const DashboardCourseDetail = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://31.97.206.144:5001/api/coursecontroller');
+        const response = await fetch('https://api.techsterker.com/api/coursecontroller');
         const coursesData = await response.json();
 
         if (coursesData.success) {

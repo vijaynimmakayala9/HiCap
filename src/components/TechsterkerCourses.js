@@ -35,7 +35,7 @@ const TechsterkerCourses = () => {
     const fetchCourses = async () => {
       try {
         const res = await axios.get(
-          "http://31.97.206.144:5001/api/courses"
+          "https://api.techsterker.com/api/courses"
         );
         setCourses(res.data.data || []);
       } catch (error) {

@@ -15,7 +15,7 @@ const FAQ = () => {
 
   useEffect(() => {
     axios
-      .get('http://31.97.206.144:5001/api/faq')
+      .get('https://api.techsterker.com/api/faq')
       .then((res) => {
         const data = res.data.data[0];
         setFaqImage(data.image || '');

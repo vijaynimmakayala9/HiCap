@@ -38,7 +38,7 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "http://31.97.206.144:5001/api/coursecontroller"
+        "https://api.techsterker.com/api/coursecontroller"
       );
 
       if (response.data.success) {
@@ -81,7 +81,7 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
       if (!course) return;
 
       const response = await axios.post(
-        'http://31.97.206.144:5001/api/send-otp',
+        'https://api.techsterker.com/api/send-otp',
         {
           name,
           phoneNumber: phone,
@@ -114,7 +114,7 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
     try {
       setLoading(true);
       const response = await axios.post(
-        'http://31.97.206.144:5001/api/verify-otp',
+        'https://api.techsterker.com/api/verify-otp',
         { phoneNumber: phone, otp }
       );
 

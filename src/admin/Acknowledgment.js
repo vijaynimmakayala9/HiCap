@@ -31,7 +31,7 @@ const Acknowledge = () => {
     const fetchEnrollments = async () => {
       try {
         const res = await axios.get(
-          `http://31.97.206.144:5001/api/user/${UserId}/enrollments`
+          `https://api.techsterker.com/api/user/${UserId}/enrollments`
         );
         if (res.data.success) {
           const options = res.data.enrolledCourses.map((enroll) => ({

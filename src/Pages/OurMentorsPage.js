@@ -9,12 +9,12 @@ const OurMentorsPage = () => {
 
   useEffect(() => {
     axios
-      .get('http://31.97.206.144:5001/api/our-mentor/Mentor')
+      .get('https://api.techsterker.com/api/our-mentor/Mentor')
       .then(res => setMentors(res.data.data || []))
       .catch(err => console.error('Mentor API error:', err));
 
     axios
-      .get('http://31.97.206.144:5001/api/our-mentor/experience')
+      .get('https://api.techsterker.com/api/our-mentor/experience')
       .then(res => setBenefits(res.data.data || []))
       .catch(err => console.error('Benefits API error:', err));
   }, []);

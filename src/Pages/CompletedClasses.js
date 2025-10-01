@@ -14,7 +14,7 @@ const CompletedCourses = () => {
     const fetchCompletedCourses = async () => {
       try {
         const response = await axios.get(
-          `http://31.97.206.144:5001/api/enrollments/${userId}`
+          `https://api.techsterker.com/api/enrollments/${userId}`
         );
 
         if (response.data.success) {

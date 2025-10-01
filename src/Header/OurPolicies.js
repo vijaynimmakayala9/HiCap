@@ -47,112 +47,125 @@ const OurPolicies = () => {
     "Cookie Policy": <CookiePolicy />,
   };
 
-  // Handle Payment Integration
   const handleProceedToPayment = async () => {
-    if (!agreed) {
-      alert("Please accept the terms and conditions to proceed");
-      return;
-    }
+  if (!agreed) {
+    alert("Please accept the terms and conditions to proceed");
+    return;
+  }
 
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      // Calculate payment amount based on selection
-      const paymentAmount = paymentType === "advance" ? advancePrice : fullPrice;
-      const isAdvancePayment = paymentType === "advance";
+    // Calculate payment amount based on selection
+    const paymentAmount = paymentType === "advance" ? advancePrice : fullPrice;
+    const isAdvancePayment = paymentType === "advance";
 
-      // Prepare payload for user registration
-      const payload = {
-        name: formData.name,
-        mobile: formData.mobile,
-        email: formData.email,
-        courseId: formData.courseId,
-        course: formData.course,
-        degree: formData.degree || "",
-        department: formData.department || "",
-        yearOfPassedOut: formData.yearOfPassedOut || "",
-        company: formData.company || "",
-        role: userType === "student" ? "Student" : formData.role || "",
-        experience: formData.experience || "",
-        transactionId: "", // Will be updated after payment
-        advancePayment: isAdvancePayment ? paymentAmount : 0,
-        isAdvancePayment: isAdvancePayment
-      };
+    // Prepare payload for user registration
+    const payload = {
+      name: formData.name,
+      mobile: formData.mobile,
+      email: formData.email,
+      courseId: formData.courseId,
+      course: formData.course,
+      degree: formData.degree || "N/A",
+      department: formData.department || "N/A",
+      yearOfPassedOut: formData.yearOfPassedOut || "N/A",
+      company: formData.company || "N/A",
+      role: userType === "student" ? "Student" : formData.role || "",
+      experience: formData.experience || "N/A",
+      transactionId: "", // Will be updated after payment
+      advancePayment: isAdvancePayment ? paymentAmount : 0,
+      isAdvancePayment: isAdvancePayment
+    };
 
-      // Initialize Razorpay payment
-      const options = {
-        key: "rzp_test_RHlt1aNxIRxsUa", // Replace with your actual Razorpay key
-        amount: paymentAmount * 100, // Amount in paise
-        currency: "INR",
-        name: "Techsterker",
-        description: `${formData.course} - ${isAdvancePayment ? 'Advance Payment' : 'Full Payment'}`,
-        image: "/logo/hicaplogo.png", // Add your company logo
-        handler: async function (response) {
-          // Payment successful
-          console.log("Payment Successful! Payment ID:", response.razorpay_payment_id);
+    // Initialize Razorpay payment
+    const options = {
+      key: "rzp_test_BxtRNvflG06PTV", // Replace with your actual Razorpay key
+      amount: paymentAmount * 100, // Amount in paise
+      currency: "INR",
+      name: "Techsterker",
+      description: `${formData.course} - ${isAdvancePayment ? 'Advance Payment' : 'Full Payment'}`,
+      image: "/logo/hicaplogo.png",
+      handler: async function (response) {
+        setLoading(true);
 
-          // Update payload with transaction ID
-          payload.transactionId = response.razorpay_payment_id;
+        // Safely get payment ID
+        const transactionId = response?.razorpay_payment_id || "";
 
-          // Call user registration API
-          try {
-            const res = await fetch("http://31.97.206.144:5001/api/userregister", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(payload),
-            });
-
-            const data = await res.json();
-
-            if (res.ok && data.success) {
-              console.log("User registered successfully:", data);
-              setShowSuccessModal(true);
-            } else {
-              console.error("Registration API Error:", data);
-              alert(`Registration failed after payment: ${data.message || 'Unknown error'}. Please contact support with Payment ID: ${response.razorpay_payment_id}`);
-            }
-          } catch (error) {
-            console.error("Error registering user:", error);
-            alert(`Network error during registration. Please contact support with Payment ID: ${response.razorpay_payment_id}. Error: ${error.message}`);
-          }
-
+        if (!transactionId && isAdvancePayment) {
           setLoading(false);
-        },
-        prefill: {
-          name: formData.name,
-          email: formData.email,
-          contact: formData.mobile,
-        },
-        notes: {
-          courseId: formData.courseId,
-          courseName: formData.course,
-          userType: userType,
-          paymentType: paymentType
-        },
-        theme: {
-          color: "#a51d34",
-        },
-        modal: {
-          ondismiss: function () {
-            setLoading(false);
-          }
+          alert("Payment failed or no transaction ID returned. Please try again.");
+          return;
         }
-      };
 
-      const rzp = new window.Razorpay(options);
-      rzp.on('payment.failed', function (response) {
-        setLoading(false);
-        alert('Payment Failed: ' + response.error.description);
-      });
+        payload.transactionId = transactionId;
 
-      rzp.open();
+        try {
+          const res = await fetch("https://api.techsterker.com/api/userregister", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
 
-    } catch (error) {
+          let data;
+          try {
+            data = await res.json();
+          } catch (jsonErr) {
+            console.error("Failed to parse JSON:", jsonErr);
+            alert("Server response was invalid. Please contact support.");
+            setLoading(false);
+            return;
+          }
+
+          if (!res.ok || !data.success) {
+            alert(`Registration failed: ${data?.message || "Unknown error"}. Payment ID: ${transactionId}`);
+            setLoading(false);
+            return;
+          }
+
+          console.log("User registered successfully:", data);
+          setShowSuccessModal(true);
+        } catch (error) {
+          console.error("Error registering user:", error);
+          alert(`Network error during registration. Payment ID: ${transactionId}`);
+        } finally {
+          setLoading(false);
+        }
+      },
+      prefill: {
+        name: formData.name,
+        email: formData.email,
+        contact: formData.mobile,
+      },
+      notes: {
+        courseId: formData.courseId,
+        courseName: formData.course,
+        userType: userType,
+        paymentType: paymentType
+      },
+      theme: { color: "#a51d34" },
+      modal: {
+        ondismiss: function () {
+          setLoading(false);
+        }
+      }
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.on('payment.failed', function (response) {
       setLoading(false);
-      console.error("Payment initialization error:", error);
-      alert("Something went wrong with payment initialization!");
-    }
-  };
+      alert('Payment Failed: ' + response.error?.description || 'Unknown error');
+    });
+
+    rzp.open();
+
+  } catch (error) {
+    setLoading(false);
+    console.error("Payment initialization error:", error);
+    alert("Something went wrong with payment initialization!");
+  }
+};
+
 
   const getCurrentPaymentAmount = () => {
     return paymentType === "advance" ? advancePrice : fullPrice;

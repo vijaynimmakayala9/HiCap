@@ -21,18 +21,20 @@ const UpCommingBatches = () => {
     const fetchData = async () => {
       try {
         // Fetch batches
-        const batchesRes = await axios.get('http://31.97.206.144:5001/api/upcomingBatch');
+        const batchesRes = await axios.get("https://api.techsterker.com/api/allenrollments");
         if (batchesRes.data.success && batchesRes.data.data.length > 0) {
-          const batches = batchesRes.data.data[0].allbatches.map(b => ({
+          const batches = batchesRes.data.data.map((b) => ({
             batchName: b.batchName,
-            date: b.date,
-            timing: b.timing,
+            date: b.startDate,
+            timing: b.timings,
             duration: b.duration,
-            category: b.categorie,
+            category: b.category,
           }));
+
           setAllBatches(batches);
           setFilteredBatches(batches);
-          const uniqueCategories = [...new Set(batches.map(batch => batch.category))];
+
+          const uniqueCategories = [...new Set(batches.map((batch) => batch.category))];
           setCategories(["All Categories", ...uniqueCategories]);
         } else {
           setAllBatches([]);
@@ -40,20 +42,14 @@ const UpCommingBatches = () => {
         }
 
         // Fetch Abroad Students data
-        const abroadRes = await axios.get('http://31.97.206.144:5001/api/abrodstudents');
+        const abroadRes = await axios.get("https://api.techsterker.com/api/abrodstudents");
         if (abroadRes.data.success && abroadRes.data.data.length > 0) {
           setAbroadData(abroadRes.data.data[0]);
         }
 
-        // Fetch Enrollments data
-        const enrollmentsRes = await axios.get('http://31.97.206.144:5001/api/enrollments');
-        if (enrollmentsRes.data.success) {
-          setEnrollments(enrollmentsRes.data.data);
-        }
-
       } catch (err) {
         setError(err.message);
-        console.error('Failed to fetch:', err);
+        console.error("Failed to fetch:", err);
       } finally {
         setLoading(false);
       }

@@ -32,7 +32,7 @@ const HomePage = () => {
 
     // Fetch content for modal
     axios
-      .get("http://31.97.206.144:5001/api/content")
+      .get("https://api.techsterker.com/api/content")
       .then((res) => {
         if (res.data?.data?.length > 0) {
           setModalContent(res.data.data[0]);
@@ -50,30 +50,30 @@ const HomePage = () => {
     setShowModal(false);
   };
 
-  
+
 
   return (
     <>
       <Header />
 
-     
-        <>
-          {/* <CourseAndFeatures /> */}
-          <NewHero/>
-          {/* <HeroSection/> */}
-          
-         
-          <TechsterkerCourses/>
-           <AwardBanner/>
-          <ClientScroller/>
-          <Features />
-          {/* <Counter/> */}
-          <Course />
-          <DifferSection />
-          <Reviews />
-          {/* <IndustryExperts /> */}
-        </>
-     
+
+      <>
+        {/* <CourseAndFeatures /> */}
+        <NewHero />
+        {/* <HeroSection/> */}
+
+
+        <TechsterkerCourses />
+        {/* <AwardBanner/> */}
+        {/* <ClientScroller /> */}
+        <Features />
+        {/* <Counter/> */}
+        <Course />
+        <DifferSection />
+        <Reviews />
+        {/* <IndustryExperts /> */}
+      </>
+
 
       <Footer />
 

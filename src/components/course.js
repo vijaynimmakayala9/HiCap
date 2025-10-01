@@ -13,7 +13,7 @@ const Course = () => {
 
     const fetchCourses = async () => {
         try {
-            const response = await axios.get('http://31.97.206.144:5001/api/coursecontroller');
+            const response = await axios.get('https://api.techsterker.com/api/coursecontroller');
             // Adjust based on actual API structure
             setCourses(response.data.data || response.data || []);
             setLoading(false);

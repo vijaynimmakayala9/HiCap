@@ -21,7 +21,7 @@ const Courses = () => {
     const fetchCourses = async () => {
       try {
         const response = await fetch(
-          "http://31.97.206.144:5001/api/coursecontroller"
+          "https://api.techsterker.com/api/coursecontroller"
         );
         const data = await response.json();
         if (response.ok) {

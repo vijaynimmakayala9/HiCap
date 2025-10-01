@@ -42,7 +42,7 @@ const ContactUsModal = ({ show, type, onHide }) => {
         message: contactData.message,
       };
       const response = await axios.post(
-        "http://31.97.206.144:5001/api/contactus",
+        "https://api.techsterker.com/api/contactus",
         payload
       );
 

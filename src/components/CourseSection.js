@@ -16,7 +16,7 @@ const CourseAndFeatures = () => {
     const fetchCourses = async () => {
       try {
         const res = await fetch(
-          "http://31.97.206.144:5001/api/hero-banners"
+          "https://api.techsterker.com/api/hero-banners"
         );
         const data = await res.json();
         if (data.success) {

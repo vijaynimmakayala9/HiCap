@@ -10,7 +10,7 @@ const Counter = () => {
     // Fetch counters from API
     const fetchCounts = async () => {
       try {
-        const res = await fetch("http://31.97.206.144:5001/api/counts");
+        const res = await fetch("https://api.techsterker.com/api/counts");
         const data = await res.json();
 
         if (data.success && data.data.length > 0) {

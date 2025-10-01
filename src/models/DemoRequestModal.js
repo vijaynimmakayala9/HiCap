@@ -23,7 +23,7 @@ const DemoRequestModal = ({ show, handleClose }) => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch('http://31.97.206.144:5001/api/coursecontroller');
+        const response = await fetch('https://api.techsterker.com/api/coursecontroller');
         const data = await response.json();
         if (data.data) setCourses(data.data);
       } catch (error) {
@@ -77,7 +77,7 @@ const DemoRequestModal = ({ show, handleClose }) => {
     };
 
     try {
-      const response = await fetch('http://31.97.206.144:5001/api/demo', {
+      const response = await fetch('https://api.techsterker.com/api/demo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

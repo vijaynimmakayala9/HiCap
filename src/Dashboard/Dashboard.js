@@ -34,13 +34,13 @@ const Dashboard = () => {
 
   const fetchRecommendedCourses = async () => {
     try {
-      const response = await axios.get(`http://31.97.206.144:5001/api/recommend-courses/${UserId}`);
+      const response = await axios.get(`https://api.techsterker.com/api/recommend-courses/${UserId}`);
       setRecommendedCourses(response.data.data || []);
     } catch (error) {
       console.error("Error fetching recommended courses:", error);
       // Fallback to general courses if recommendation fails
       try {
-        const response = await axios.get("http://31.97.206.144:5001/api/coursecontroller");
+        const response = await axios.get("https://api.techsterker.com/api/coursecontroller");
         setRecommendedCourses(response.data.data || response.data || []);
       } catch (fallbackError) {
         console.error("Error fetching fallback courses:", fallbackError);
@@ -53,7 +53,7 @@ const Dashboard = () => {
 
   const fetchEnrollments = async () => {
     try {
-      const response = await axios.get(`http://31.97.206.144:5001/api/userenrollments/${UserId}`);
+      const response = await axios.get(`https://api.techsterker.com/api/userenrollments/${UserId}`);
       setEnrolledCourses(response.data.enrolledCourses || []);
     } catch (error) {
       console.error("Error fetching enrollments:", error);
@@ -65,7 +65,7 @@ const Dashboard = () => {
 
   const fetchRegistercourses = async () => {
     try {
-      const response = await axios.get(`http://31.97.206.144:5001/api/usercourse/${UserId}`);
+      const response = await axios.get(`https://api.techsterker.com/api/usercourse/${UserId}`);
       setRegistrecourses(response.data.data.user || []);
       console.log(response.data.data.user)
     } catch (error) {
@@ -79,7 +79,7 @@ const Dashboard = () => {
 
   const fetchUserDetails = async () => {
     try {
-      const response = await axios.get(`http://31.97.206.144:5001/api/userregister/${UserId}`);
+      const response = await axios.get(`https://api.techsterker.com/api/userregister/${UserId}`);
       setUserData(response.data.data);
     } catch (error) {
       console.error("Error fetching user details:", error);
@@ -90,7 +90,7 @@ const Dashboard = () => {
 
   const fetchTodaysClasses = async () => {
     try {
-      const response = await axios.get(`http://31.97.206.144:5001/api/live-classes/user/${UserId}`);
+      const response = await axios.get(`https://api.techsterker.com/api/live-classes/user/${UserId}`);
       if (response.data.success) {
         const today = new Date().toDateString();
         const todaysClasses = response.data.data.filter(cls => {

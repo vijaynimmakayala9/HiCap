@@ -84,7 +84,7 @@ useEffect(() => {
   setLoading(true);
   const timer = setTimeout(() => {
     setLoading(false);
-  }, 1000); // 2 sec
+  }, 1000); // 1 sec
 
   return () => clearTimeout(timer);
 }, [location]); // 👈 re-run when route changes

@@ -11,7 +11,7 @@ const TopPerformers = () => {
   const fetchCourses = async () => {
     try {
       const response = await axios.get(
-        "http://31.97.206.144:5001/api/coursecontroller"
+        "https://api.techsterker.com/api/coursecontroller"
       );
 
       if (response.data.success && Array.isArray(response.data.data)) {
@@ -38,7 +38,7 @@ const TopPerformers = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://31.97.206.144:5001/api/enrollments/top-practical/${courseId}`
+        `https://api.techsterker.com/api/enrollments/top-practical/${courseId}`
       );
 
       if (response.data.success && Array.isArray(response.data.data)) {

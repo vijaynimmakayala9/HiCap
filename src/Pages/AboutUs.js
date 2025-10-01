@@ -12,7 +12,7 @@ const AboutUS = () => {
     const fetchData = async () => {
       try {
         // Fetch leadership data
-        const leadershipResponse = await fetch('http://31.97.206.144:5001/api/leadership');
+        const leadershipResponse = await fetch('https://api.techsterker.com/api/leadership');
         const leadershipData = await leadershipResponse.json();
         if (leadershipData.length > 0 && leadershipData[0].leadership) {
           setLeadershipTeam(leadershipData[0].leadership);
@@ -61,7 +61,7 @@ const AboutUS = () => {
           <div className="col-lg-6">
             <div className="h-100">
               <img
-                src="/service/whyus - Copy.jpg"
+                src="/service/whyus1.png"
                 alt="Why Choose TECHSTERKER"
                 className="img-fluid rounded w-100 p-lg-5 p-md-0 p-xl-5"
                 style={{

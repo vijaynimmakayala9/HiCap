@@ -23,7 +23,7 @@ const Footer = () => {
     const fetchCourses = async () => {
       try {
         const response = await fetch(
-          "http://31.97.206.144:5001/api/coursecontroller"
+          "https://api.techsterker.com/api/coursecontroller"
         );
         const data = await response.json();
         if (data.success) setCourses(data.data);
@@ -43,7 +43,7 @@ const Footer = () => {
     const fetchSocialLinks = async () => {
       try {
         const response = await fetch(
-          "http://31.97.206.144:5001/api/social-media"
+          "https://api.techsterker.com/api/social-media"
         );
         const data = await response.json();
         if (data.success) {
@@ -69,7 +69,7 @@ const Footer = () => {
     const fetchCommunityLinks = async () => {
       try {
         const response = await fetch(
-          "http://31.97.206.144:5001/api/communitys"
+          "https://api.techsterker.com/api/communitys"
         );
         const data = await response.json();
         if (data.success && data.data.length > 0) {

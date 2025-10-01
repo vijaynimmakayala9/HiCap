@@ -87,7 +87,7 @@ const Interviews = () => {
     const fetchInterviews = async () => {
       try {
         const response = await fetch(
-          `http://31.97.206.144:5001/api/interview/user/${userId}`
+          `https://api.techsterker.com/api/interview/user/${userId}`
         );
         if (!response.ok) throw new Error('Failed to fetch interviews');
         const data = await response.json();

@@ -22,7 +22,7 @@ const ClientScrollerBootstrap = () => {
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const res = await fetch("http://31.97.206.144:5001/api/clients");
+        const res = await fetch("https://api.techsterker.com/api/clients");
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
           setContent(data[0].content || "");

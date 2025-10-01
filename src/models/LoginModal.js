@@ -37,7 +37,7 @@ const LoginModal = ({ show, setShowLoginModal, onLogin }) => {
     setIsLoggingIn(true);
 
     try {
-      const response = await fetch("http://31.97.206.144:5001/api/userlogin", {
+      const response = await fetch("https://api.techsterker.com/api/userlogin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

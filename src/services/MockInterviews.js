@@ -14,9 +14,9 @@ const MockInterviews = () => {
                 <Container>
                     <Row className="align-items-center">
                         {/* Image Section */}
-                        <Col lg={6} className="mb-4 mb-lg-0 order-lg-1 order-2">
+                        <Col lg={6} className="mb-4 mb-lg-0 order-lg-1 order-1">
                             <img
-                                src="/service/mockinterview.jpg"
+                                src="/service/mock.png"
                                 alt="Mock Interview Practice"
                                 className="img-fluid rounded img-hover-effect"
                                 style={{
@@ -27,7 +27,7 @@ const MockInterviews = () => {
                         </Col>
 
                         {/* Text Section */}
-                        <Col lg={6} className="order-lg-2 order-1">
+                        <Col lg={6} className="order-lg-2 order-2">
                             <h2 className="fw-bold textcolor mb-3 display-6">
                                 <span style={{ color: "#a51d34" }}>Industry-Standard</span> Mock Interviews
                             </h2>
@@ -44,7 +44,7 @@ const MockInterviews = () => {
                                 <li className="textcolorlight">✅ Company-specific interview patterns</li>
                             </ul>
                             <Button
-                                size="lg"
+                                size="sm"
                                 style={{
                                     background: "linear-gradient(90deg, #a51d34, #d63447)",
                                     border: "none",

@@ -49,7 +49,7 @@ const GetInTouch = () => {
       }
 
       const response = await axios.post(
-        "http://31.97.206.144:5001/api/getintouch",
+        "https://api.techsterker.com/api/getintouch",
         payload
       );
 
