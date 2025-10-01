@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { FaRegCalendarTimes } from 'react-icons/fa';
 
 const InterviewCard = ({ interview, onOpen }) => (
   <div
@@ -37,7 +38,7 @@ const InterviewCard = ({ interview, onOpen }) => (
       {new Date(interview.createdAt).toLocaleDateString('en-IN')}
     </div>
 
-    
+
 
     {/* Card Body */}
     <div className="mt-5 p-4 d-flex flex-column flex-grow-1 justify-content-between">
@@ -123,18 +124,19 @@ const Interviews = () => {
       </div>
     );
 
+
+
   if (error)
     return (
-      <div className="container py-5 text-center min-vh-100">
-        <div className="alert alert-light rounded-4 shadow-sm border">
-          <h5 className="text-danger">Oops! Something went wrong</h5>
-          <p className="mb-0 text-muted">{error}</p>
+      <div className="container py-5 text-center min-vh-100 d-flex justify-content-center align-items-center">
+        <div className="alert alert-light rounded-4 shadow-sm border p-5">
+          <FaRegCalendarTimes size={40} className="text-danger mb-3" />
+          <h5 className="text-danger mb-2">No Interviews Available</h5>
+          <p className="mb-0 text-muted">Please check back later.</p>
         </div>
-        <button className="btn bg-danger mt-3 rounded-pill px-4" onClick={() => window.location.reload()}>
-          Try Again
-        </button>
       </div>
     );
+
 
   return (
     <div className="container py-5 min-vh-100">

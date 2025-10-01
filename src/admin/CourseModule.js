@@ -3,7 +3,8 @@ import {
   FiBook, FiChevronDown, FiChevronRight, FiMenu, FiX,
   FiCode, FiLayers, FiDatabase, FiPlay, FiClock,
   FiCalendar, FiSearch, FiUser, FiDownload, FiFileText,
-  FiVideo, FiImage, FiMusic, FiBox, FiLoader, FiEye
+  FiVideo, FiImage, FiMusic, FiBox, FiLoader, FiEye,
+  FiVideoOff
 } from 'react-icons/fi';
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -192,25 +193,26 @@ const CourseModuleInterface = () => {
     );
   }
 
+
+
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="mx-auto h-16 w-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-            <FiX className="h-8 w-8 text-red-600" />
+          <div className="mx-auto h-16 w-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
+            <FiVideoOff className="h-8 w-8 text-gray-500" />
           </div>
-          <h2 className="text-xl font-bold text-gray-800 mb-2">Error Loading Content</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <button
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-            onClick={() => window.location.reload()}
-          >
-            Try Again
-          </button>
+          <h2 className="text-xl font-bold text-gray-800 mb-2">
+            No Live Class Videos Available
+          </h2>
+          <p className="text-gray-600">
+            Please check back later for new updates.
+          </p>
         </div>
       </div>
     );
   }
+
 
   if (coursesData.length === 0) {
     return (

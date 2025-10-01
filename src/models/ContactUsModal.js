@@ -146,9 +146,9 @@ const ContactUsModal = ({ show, type, onHide }) => {
           </Form.Group>
 
           <div className="d-grid">
-            <Button
+            <button
               type="submit"
-              className="gradient-button fw-semibold"
+              className="btn btn-lg gradient-button fw-semibold"
               disabled={loading}
             >
               {loading ? (
@@ -159,7 +159,7 @@ const ContactUsModal = ({ show, type, onHide }) => {
               ) : (
                 "Submit Enquiry"
               )}
-            </Button>
+            </button>
           </div>
         </Form>
       </Modal.Body>
