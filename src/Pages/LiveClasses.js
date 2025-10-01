@@ -17,10 +17,18 @@ const LiveClasses = () => {
     }
   };
 
+  // Get user from session storage
+  const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+  const userId = user.id;
+
   useEffect(() => {
+    if (!userId) return; // Don’t fetch without userId
+
     const fetchLiveClasses = async () => {
       try {
-        const res = await axios.get('https://api.techsterker.com/api/liveclasses');
+        const res = await axios.get(
+          `https://api.techsterker.com/api/live-classes/user/${userId}`
+        );
         if (res.data.success) {
           setLiveClasses(res.data.data);
         } else {
@@ -34,21 +42,13 @@ const LiveClasses = () => {
     };
 
     fetchLiveClasses();
-  }, []);
+  }, [userId]);
 
   return (
     <section className="container py-5 position-relative p-2">
       {/* Heading */}
       <div className="mb-4">
         <h2 className="fw-bold textcolor mb-2">Live Classes</h2>
-        {/* <div
-          style={{
-            width: '180px',
-            height: '3px',
-            backgroundColor: '#a51d34',
-            borderRadius: '999px',
-          }}
-        /> */}
       </div>
 
       {/* Scroll Buttons */}
@@ -82,7 +82,6 @@ const LiveClasses = () => {
         <FaChevronRight />
       </button>
 
-
       {/* Content */}
       {loading ? (
         <p>Loading live classes...</p>
@@ -96,51 +95,66 @@ const LiveClasses = () => {
           className="d-flex overflow-auto gap-4 py-2 px-2"
           style={{ scrollBehavior: 'smooth', scrollbarWidth: 'none' }}
         >
-          {liveClasses.map((cls) => (
-            <div key={cls._id} className="flex-shrink-0" style={{ width: '300px' }}>
-              <div className="card h-100 shadow rounded-4 p-3 d-flex flex-column justify-content-between">
-                <div className="mb-3">
-                  <h5 className="fw-bold textcolor mb-1">{cls.title}</h5>
-                  <p className="text-muted mb-2">{cls.description}</p>
-                  <small className="text-secondary">
-                    <strong>Mentor:</strong> {cls.mentorName}
-                  </small>
-                  <br />
-                  <small className="text-secondary">
-                    <strong>Course:</strong> {cls.course}
-                  </small>
-                </div>
+          {liveClasses.map((cls) => {
+            const courseName = cls.enrollmentIdRef?.courseId?.name || 'N/A';
+            const mentorName =
+              cls.enrollmentIdRef?.assignedMentors?.length > 0
+                ? `${cls.enrollmentIdRef.assignedMentors[0].firstName} ${cls.enrollmentIdRef.assignedMentors[0].lastName}`
+                : 'N/A';
 
-                <div className="d-flex justify-content-between mb-3">
-                  <div
-                    className="bg-light border d-flex flex-column align-items-center justify-content-center px-2 py-2 rounded"
-                    style={{ width: '48%', borderColor: '#00000022' }}
-                  >
-                    <MdOutlineTimer size={24} color="#a51d34" />
-                    <small className="fw-medium mt-1">{cls.duration}</small>
+            return (
+              <div key={cls._id} className="flex-shrink-0" style={{ width: '300px' }}>
+                <div className="card h-100 shadow rounded-4 p-3 d-flex flex-column justify-content-between">
+                  <div className="mb-3">
+                    <h5 className="fw-bold textcolor mb-1">{cls.className}</h5>
+                    <p className="text-muted mb-2">{cls.subjectName}</p>
+                    <small className="text-secondary">
+                      <strong>Mentor:</strong> {mentorName}
+                    </small>
+                    <br />
+                    <small className="text-secondary">
+                      <strong>Course:</strong> {courseName}
+                    </small>
+                    <br />
+                    <small className="text-secondary">
+                      <strong>Date:</strong> {new Date(cls.date).toLocaleDateString()}
+                    </small>
+                    <br />
+                    <small className="text-secondary">
+                      <strong>Time:</strong> {cls.timing}
+                    </small>
                   </div>
 
-                  <div
-                    className="bg-light border d-flex flex-column align-items-center justify-content-center px-2 py-2 rounded"
-                    style={{ width: '48%', borderColor: '#00000022' }}
-                  >
-                    <SiGoogleclassroom size={24} color="#a51d34" />
-                    <small className="fw-medium mt-1">Live</small>
+                  <div className="d-flex justify-content-between mb-3">
+                    <div
+                      className="bg-light border d-flex flex-column align-items-center justify-content-center px-2 py-2 rounded"
+                      style={{ width: '48%', borderColor: '#00000022' }}
+                    >
+                      <MdOutlineTimer size={24} color="#a51d34" />
+                      <small className="fw-medium mt-1">{cls.timing}</small>
+                    </div>
+
+                    <div
+                      className="bg-light border d-flex flex-column align-items-center justify-content-center px-2 py-2 rounded"
+                      style={{ width: '48%', borderColor: '#00000022' }}
+                    >
+                      <SiGoogleclassroom size={24} color="#a51d34" />
+                      <small className="fw-medium mt-1">Live</small>
+                    </div>
                   </div>
+
+                  <a
+                    href={cls.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-md bg-meroon text-white d-flex align-items-center justify-content-center gap-2"
+                  >
+                    Join Now <MoveRight size={20} />
+                  </a>
                 </div>
-
-                <button className='btn btn-md bg-meroon'><a
-                  href={cls.meetLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn text-white d-flex align-items-center justify-content-center gap-2"
-
-                >
-                  Join Now <MoveRight size={20} />
-                </a></button>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </section>
