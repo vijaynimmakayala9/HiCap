@@ -224,8 +224,8 @@ const TermsOfUse = () => {
               <strong>Hicap Edtech Private Limited</strong>
               <br />
               Email:{" "}
-              <a href="https://mail.google.com/mail/?view=cm&fs=1&to=techsterker@gmail.com&su=Enquiry%20for%20Terms%20and%20Conditions" target="_blank" className="text-blue-600 hover:underline">
-                techsterker@gmail.com
+              <a href="https://mail.google.com/mail/?view=cm&fs=1&to=info@techsterker.com&su=Enquiry%20for%20Terms%20and%20Conditions" target="_blank" className="text-blue-600 hover:underline">
+                info@techsterker.com
               </a>
               <br />
               Phone:{" "}

@@ -22,6 +22,13 @@ const OurPolicies = () => {
   const [paymentType, setPaymentType] = useState("full"); // 'full' or 'advance'
   const [loading, setLoading] = useState(false);
 
+  // OTP Modal States
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpError, setOtpError] = useState("");
+
   // Success Modal State
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
@@ -38,13 +45,7 @@ const OurPolicies = () => {
   }
 
   const fullPrice = selectedCourse.price;
-  const advancePrice = fullPrice*0.5;
-
-  // const coursePrice = selectedCourse.price;
-  // const gst = (coursePrice * 5) / 100;
-  // const fullPrice = coursePrice + gst;
-  // const advanceBase = fullPrice * 0.5;
-  // const advancePrice = advanceBase + (advanceBase * 5) / 100; // 15000 + GST
+  const advancePrice = fullPrice * 0.5;
 
   const policies = {
     "Privacy Policy": <PrivacyPolicy />,
@@ -53,126 +54,205 @@ const OurPolicies = () => {
     "Cookie Policy": <CookiePolicy />,
   };
 
-  const handleProceedToPayment = async () => {
-  if (!agreed) {
-    alert("Please accept the terms and conditions to proceed");
-    return;
-  }
+  // Generate OTP
+  const generateOtp = async () => {
+    try {
+      setOtpLoading(true);
+      setOtpError("");
 
-  try {
-    setLoading(true);
+      const response = await fetch("https://api.techsterker.com/api/generate-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mobile: formData.mobile
+        }),
+      });
 
-    // Calculate payment amount based on selection
-    const paymentAmount = paymentType === "advance" ? advancePrice : fullPrice;
-    const isAdvancePayment = paymentType === "advance";
+      const data = await response.json();
 
-    // Prepare payload for user registration
-    const payload = {
-      name: formData.name,
-      mobile: formData.mobile,
-      email: formData.email,
-      courseId: formData.courseId,
-      course: formData.course,
-      degree: formData.degree || "N/A",
-      department: formData.department || "N/A",
-      yearOfPassedOut: formData.yearOfPassedOut || 0,
-      company: formData.company || "N/A",
-      role: userType === "student" ? "Student" : formData.role || "",
-      experience: formData.experience || "N/A",
-      transactionId: "", // Will be updated after payment
-      advancePayment: isAdvancePayment ? paymentAmount : 0,
-      isAdvancePayment: isAdvancePayment
-    };
-
-    const AmountforPayment = paymentAmount + paymentAmount*0.05
-
-    // Initialize Razorpay payment
-    const options = {
-      key: "rzp_live_ROKQXDRUzOnshb", // Replace with your actual Razorpay key
-      amount: AmountforPayment * 100, // Amount in paise
-      currency: "INR",
-      name: "Techsterker",
-      description: `${formData.course} - ${isAdvancePayment ? 'Advance Payment' : 'Full Payment'}`,
-      image: "/logo/hicaplogo.png",
-      handler: async function (response) {
-        setLoading(true);
-
-        // Safely get payment ID
-        const transactionId = response?.razorpay_payment_id || "";
-        if (!transactionId && isAdvancePayment) {
-          setLoading(false);
-          alert("Payment failed or no transaction ID returned. Please try again.");
-          return;
-        }
-
-        payload.transactionId = transactionId;
-
-        try {
-          const res = await fetch("https://api.techsterker.com/api/userregister", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          });
-
-          let data;
-          try {
-            data = await res.json();
-          } catch (jsonErr) {
-            console.error("Failed to parse JSON:", jsonErr);
-            alert("Server response was invalid. Please contact support.");
-            setLoading(false);
-            return;
-          }
-
-          if (!res.ok || !data.success) {
-            alert(`Registration failed: ${data?.message || "Unknown error"}. Payment ID: ${transactionId}`);
-            setLoading(false);
-            return;
-          }
-
-          console.log("User registered successfully:", data);
-          setShowSuccessModal(true);
-        } catch (error) {
-          console.error("Error registering user:", error);
-          alert(`Network error during registration. Payment ID: ${transactionId}`);
-        } finally {
-          setLoading(false);
-        }
-      },
-      prefill: {
-        name: formData.name,
-        email: formData.email,
-        contact: formData.mobile,
-      },
-      notes: {
-        courseId: formData.courseId,
-        courseName: formData.course,
-        userType: userType,
-        paymentType: paymentType
-      },
-      theme: { color: "#a51d34" },
-      modal: {
-        ondismiss: function () {
-          setLoading(false);
-        }
+      if (data.success) {
+        setOtpSent(true);
+        setOtpError("");
+        alert("OTP sent successfully to your mobile number!");
+      } else {
+        setOtpError(data.message || "Failed to send OTP. Please try again.");
       }
-    };
+    } catch (error) {
+      console.error("Error generating OTP:", error);
+      setOtpError("Network error. Please check your connection and try again.");
+    } finally {
+      setOtpLoading(false);
+    }
+  };
 
-    const rzp = new window.Razorpay(options);
-    rzp.on('payment.failed', function (response) {
+  // Verify OTP
+  const verifyOtp = async () => {
+    if (!otp || otp.length !== 4) {
+      setOtpError("Please enter a valid 4-digit OTP");
+      return;
+    }
+
+    try {
+      setOtpLoading(true);
+      setOtpError("");
+
+      const response = await fetch("https://api.techsterker.com/api/validate-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          otp: otp
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setOtpError("");
+        setShowOtpModal(false);
+        // Proceed to payment after successful OTP verification
+        proceedToPayment();
+      } else {
+        setOtpError(data.message || "Invalid OTP. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+      setOtpError("Network error. Please try again.");
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
+  // Handle Proceed to Payment (with OTP verification)
+  const handleProceedToPayment = () => {
+    if (!agreed) {
+      alert("Please accept the terms and conditions to proceed");
+      return;
+    }
+
+    // Show OTP modal first
+    setShowOtpModal(true);
+    generateOtp();
+  };
+
+  // Proceed to payment after OTP verification
+  const proceedToPayment = async () => {
+    try {
+      setLoading(true);
+
+      // Calculate payment amount based on selection
+      const paymentAmount = paymentType === "advance" ? advancePrice : fullPrice;
+      const isAdvancePayment = paymentType === "advance";
+
+      // Prepare payload for user registration
+      const payload = {
+        name: formData.name,
+        mobile: formData.mobile,
+        email: formData.email,
+        courseId: formData.courseId,
+        course: formData.course,
+        degree: formData.degree || "N/A",
+        department: formData.department || "N/A",
+        yearOfPassedOut: formData.yearOfPassedOut || 0,
+        company: formData.company || "N/A",
+        role: userType === "student" ? "Student" : formData.role || "",
+        experience: formData.experience || "N/A",
+        transactionId: "", // Will be updated after payment
+        advancePayment: isAdvancePayment ? paymentAmount : 0,
+        isAdvancePayment: isAdvancePayment
+      };
+
+      const AmountforPayment = paymentAmount + paymentAmount * 0.05;
+
+      // Initialize Razorpay payment
+      const options = {
+        key: "rzp_live_ROKQXDRUzOnshb", // Replace with your actual Razorpay key
+        amount: AmountforPayment * 100, // Amount in paise
+        currency: "INR",
+        name: "Techsterker",
+        description: `${formData.course} - ${isAdvancePayment ? 'Advance Payment' : 'Full Payment'}`,
+        image: "/logo/hicaplogo.png",
+        handler: async function (response) {
+          setLoading(true);
+
+          // Safely get payment ID
+          const transactionId = response?.razorpay_payment_id || "";
+          if (!transactionId && isAdvancePayment) {
+            setLoading(false);
+            alert("Payment failed or no transaction ID returned. Please try again.");
+            return;
+          }
+
+          payload.transactionId = transactionId;
+
+          try {
+            const res = await fetch("https://api.techsterker.com/api/userregister", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+
+            let data;
+            try {
+              data = await res.json();
+            } catch (jsonErr) {
+              console.error("Failed to parse JSON:", jsonErr);
+              alert("Server response was invalid. Please contact support.");
+              setLoading(false);
+              return;
+            }
+
+            if (!res.ok || !data.success) {
+              alert(`Registration failed: ${data?.message || "Unknown error"}. Payment ID: ${transactionId}`);
+              setLoading(false);
+              return;
+            }
+
+            console.log("User registered successfully:", data);
+            setShowSuccessModal(true);
+          } catch (error) {
+            console.error("Error registering user:", error);
+            alert(`Network error during registration. Payment ID: ${transactionId}`);
+          } finally {
+            setLoading(false);
+          }
+        },
+        prefill: {
+          name: formData.name,
+          email: formData.email,
+          contact: formData.mobile,
+        },
+        notes: {
+          courseId: formData.courseId,
+          courseName: formData.course,
+          userType: userType,
+          paymentType: paymentType
+        },
+        theme: { color: "#a51d34" },
+        modal: {
+          ondismiss: function () {
+            setLoading(false);
+          }
+        }
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', function (response) {
+        setLoading(false);
+        alert('Payment Failed: ' + response.error?.description || 'Unknown error');
+      });
+
+      rzp.open();
+
+    } catch (error) {
       setLoading(false);
-      alert('Payment Failed: ' + response.error?.description || 'Unknown error');
-    });
-
-    rzp.open();
-
-  } catch (error) {
-    setLoading(false);
-    console.error("Payment initialization error:", error);
-    alert("Something went wrong with payment initialization!");
-  }
-};
-
+      console.error("Payment initialization error:", error);
+      alert("Something went wrong with payment initialization!");
+    }
+  };
 
   const getCurrentPaymentAmount = () => {
     return paymentType === "advance" ? advancePrice : fullPrice;
@@ -180,6 +260,22 @@ const OurPolicies = () => {
 
   const getRemainingAmount = () => {
     return paymentType === "advance" ? fullPrice - advancePrice : 0;
+  };
+
+  // Resend OTP
+  const handleResendOtp = () => {
+    setOtp("");
+    setOtpSent(false);
+    setOtpError("");
+    generateOtp();
+  };
+
+  // Close OTP modal
+  const handleCloseOtpModal = () => {
+    setShowOtpModal(false);
+    setOtp("");
+    setOtpSent(false);
+    setOtpError("");
   };
 
   return (
@@ -212,42 +308,6 @@ const OurPolicies = () => {
               </Card.Body>
             </Card>
 
-
-            {/* Payment Type Selection */}
-            {/* <Card className="shadow-sm mb-4">
-              <Card.Body>
-                <Card.Title>Payment Options</Card.Title>
-                <Form.Group className="mb-3">
-                  <div className="d-flex gap-3">
-                    <Form.Check
-                      type="radio"
-                      name="paymentType"
-                      id="fullPayment"
-                      label={`Full Payment - ₹${fullPrice.toLocaleString()}/-`}
-                      value="full"
-                      checked={paymentType === "full"}
-                      onChange={(e) => setPaymentType(e.target.value)}
-                    />
-                    <Form.Check
-                      type="radio"
-                      name="paymentType"
-                      id="advancePayment"
-                      label={`Advance Payment - ₹${advancePrice.toLocaleString()}/- `}
-                      value="advance"
-                      checked={paymentType === "advance"}
-                      onChange={(e) => setPaymentType(e.target.value)}
-                    />
-                  </div>
-                  {paymentType === "advance" && (
-                    <small className="text-muted">
-                      Remaining Amount: ₹{getRemainingAmount().toLocaleString()}/- (to be paid later)
-                    </small>
-                  )}
-                </Form.Group>
-              </Card.Body>
-            </Card> */}
-
-
             {/* Policy Dropdown */}
             <Form.Group controlId="policySelect" className="mb-4">
               <Form.Label>Review Our Policies</Form.Label>
@@ -275,8 +335,6 @@ const OurPolicies = () => {
                 </div>
               </Card.Body>
             </Card>
-
-
 
             {/* Agreement Checkbox */}
             <div className="d-flex align-items-start mb-4">
@@ -371,7 +429,7 @@ const OurPolicies = () => {
               >
                 {loading
                   ? "Processing..."
-                  : `Pay ₹${getCurrentPaymentAmount().toLocaleString()}/- ${paymentType === 'advance' ? '(Advance)' : '(Full Payment)'}`
+                  : `Proceed to Pay ₹${getCurrentPaymentAmount().toLocaleString()}/- ${paymentType === 'advance' ? '(Advance)' : '(Full Payment)'}`
                 }
               </button>
 
@@ -384,6 +442,111 @@ const OurPolicies = () => {
           </Col>
         </Row>
       </Container>
+
+      {/* OTP Verification Modal */}
+      <Modal
+        show={showOtpModal}
+        onHide={handleCloseOtpModal}
+        centered
+        backdrop="static"
+        keyboard={false}
+        contentClassName="rounded-3 shadow-lg border-0"
+      >
+        <Modal.Header
+          closeButton
+          className="border-0 pb-0"
+          style={{
+            background: "linear-gradient(135deg, #c34153, #a51d34)",
+            color: "#fff",
+          }}
+        >
+          <Modal.Title className="fw-bold fs-5 text-white p-3">
+            🔐 Mobile Verification
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body className="pt-3 pb-1 px-4 text-center">
+          <h5 className="fw-bold mb-3" style={{ color: "#a51d34" }}>
+            Verify Your Mobile Number
+          </h5>
+          <p className="text-muted mb-3">
+            We've sent a 4-digit OTP to your mobile number:
+          </p>
+          <div className="alert alert-light border-0 mb-4" style={{ backgroundColor: "#f8f9fa" }}>
+            <strong className="text-primary">+91 {formData.mobile}</strong>
+          </div>
+
+          {!otpSent ? (
+            <div className="text-center">
+              <p className="text-muted">Sending OTP...</p>
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          ) : (
+            <>
+              <Form.Group className="mb-4">
+                <Form.Label className="fw-semibold">Enter OTP</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter 4-digit OTP"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                  className="text-center fw-bold fs-5 py-2"
+                  style={{ letterSpacing: '0.5em' }}
+                  maxLength={4}
+                  disabled={otpLoading}
+                />
+                <Form.Text className="text-muted">
+                  Enter the 4-digit code sent to your mobile
+                </Form.Text>
+              </Form.Group>
+
+              {otpError && (
+                <div className="alert alert-danger py-2" role="alert">
+                  <small>{otpError}</small>
+                </div>
+              )}
+
+              <div className="d-flex justify-content-between align-items-center mt-3">
+                <Button
+                  variant="outline-secondary"
+                  onClick={handleResendOtp}
+                  disabled={otpLoading}
+                  size="sm"
+                >
+                  ↻ Resend OTP
+                </Button>
+
+                <Button
+                  onClick={verifyOtp}
+                  disabled={otp.length !== 4 || otpLoading}
+                  className="px-4"
+                  style={{
+                    background: "linear-gradient(135deg, #c34153, #a51d34)",
+                    border: "none",
+                  }}
+                >
+                  {otpLoading ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      Verifying...
+                    </>
+                  ) : (
+                    "Verify & Proceed"
+                  )}
+                </Button>
+              </div>
+            </>
+          )}
+        </Modal.Body>
+
+        <Modal.Footer className="border-0 pt-0 px-4 pb-4">
+          <small className="text-muted">
+            OTP will expire in 10 minutes. Make sure to enter it quickly.
+          </small>
+        </Modal.Footer>
+      </Modal>
 
       {/* Success Modal */}
       <Modal
@@ -417,7 +580,7 @@ const OurPolicies = () => {
           <div className="alert alert-light border-0" style={{ backgroundColor: "#f8f9fa" }}>
             <small className="text-muted">
               📧 Confirmation email sent to: <strong>{formData.email}</strong><br />
-              {/* 📱 SMS confirmation sent to: <strong>{formData.mobile}</strong> */}
+              📱 Mobile verified: <strong>+91 {formData.mobile}</strong>
             </small>
           </div>
           {paymentType === "advance" && (

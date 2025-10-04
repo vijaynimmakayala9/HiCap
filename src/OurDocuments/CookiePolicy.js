@@ -164,11 +164,11 @@ const CookiePolicy = () => {
               <br />
               Email:{" "}
               <a
-                href="https://mail.google.com/mail/?view=cm&fs=1&to=techsterker@gmail.com&su=Enquiry%20for%20Cookie%20and%20Policies"
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=info@techsterker.com&su=Enquiry%20for%20Cookie%20and%20Policies"
                 target="_blank"
                 className="text-blue-600 hover:underline"
               >
-                techsterker@gmail.com
+                info@techsterker.com
               </a>
               <br />
               Phone:{" "}

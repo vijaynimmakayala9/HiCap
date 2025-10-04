@@ -1,36 +1,21 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaTimes, FaPhone, FaLock } from "react-icons/fa";
+import { FaTimes, FaIdBadge, FaKey } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const LoginModal = ({ show, setShowLoginModal, onLogin }) => {
-  const [loginData, setLoginData] = useState({ phoneNumber: "", password: "" });
+  const [loginData, setLoginData] = useState({ userId: "", generatedPassword: "" });
   const [loginError, setLoginError] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [screenSize, setScreenSize] = useState("desktop");
   const modalRef = useRef(null);
   const navigate = useNavigate();
 
-  // Update screen size
-  useEffect(() => {
-    const updateScreenSize = () => {
-      const width = window.innerWidth;
-      if (width < 360) setScreenSize("mobile-small");
-      else if (width < 400) setScreenSize("mobile");
-      else if (width < 500) setScreenSize("mobile-large");
-      else if (width < 768) setScreenSize("tablet");
-      else if (width < 1024) setScreenSize("laptop");
-      else setScreenSize("desktop");
-    };
-    updateScreenSize();
-    window.addEventListener("resize", updateScreenSize);
-    return () => window.removeEventListener("resize", updateScreenSize);
-  }, []);
-
+  // handle input changes
   const handleLoginChange = (e) => {
     const { name, value } = e.target;
     setLoginData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // handle submit
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoginError("");
@@ -41,8 +26,8 @@ const LoginModal = ({ show, setShowLoginModal, onLogin }) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          phoneNumber: loginData.phoneNumber,
-          password: loginData.password,
+          userId: loginData.userId,
+          generatedPassword: loginData.generatedPassword,
         }),
       });
 
@@ -54,7 +39,7 @@ const LoginModal = ({ show, setShowLoginModal, onLogin }) => {
         onLogin({
           id: userData._id,
           name: userData.name,
-          phone: userData.phoneNumber,
+          userId: userData.userId,
           email: userData.email,
           token: userData.token,
         });
@@ -76,7 +61,7 @@ const LoginModal = ({ show, setShowLoginModal, onLogin }) => {
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 md:p-6">
       <div
         ref={modalRef}
-        className={`bg-white rounded-xl shadow-2xl w-full max-w-[480px] p-6 sm:p-6 md:p-6`}
+        className="bg-white rounded-xl shadow-2xl w-full max-w-[480px] p-6 sm:p-6 md:p-6"
       >
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
@@ -98,29 +83,29 @@ const LoginModal = ({ show, setShowLoginModal, onLogin }) => {
 
         {/* Form */}
         <form onSubmit={handleLoginSubmit}>
-          {/* Phone Number */}
+          {/* User ID */}
           <div className="mb-3 sm:mb-4 md:mb-5 relative">
-            <FaPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 text-base sm:text-lg md:text-xl" />
+            <FaIdBadge className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 text-base sm:text-lg md:text-xl" />
             <input
-              type="tel"
-              name="phoneNumber"
-              value={loginData.phoneNumber}
+              type="text"
+              name="userId"
+              value={loginData.userId}
               onChange={handleLoginChange}
-              placeholder="Phone Number"
+              placeholder="User ID"
               required
               className="w-full py-2 sm:py-2.5 md:py-3 pl-10 pr-3 border border-gray-300 rounded-md text-sm sm:text-base md:text-lg focus:border-[#a51d34] focus:outline-none focus:ring-1 focus:ring-[#a51d34] transition-colors"
             />
           </div>
 
-          {/* Password */}
+          {/* Generated Password */}
           <div className="mb-3 sm:mb-4 md:mb-5 relative">
-            <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 text-base sm:text-lg md:text-xl" />
+            <FaKey className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 text-base sm:text-lg md:text-xl" />
             <input
               type="password"
-              name="password"
-              value={loginData.password}
+              name="generatedPassword"
+              value={loginData.generatedPassword}
               onChange={handleLoginChange}
-              placeholder="Password"
+              placeholder="Generated Password"
               required
               className="w-full py-2 sm:py-2.5 md:py-3 pl-10 pr-3 border border-gray-300 rounded-md text-sm sm:text-base md:text-lg focus:border-[#a51d34] focus:outline-none focus:ring-1 focus:ring-[#a51d34] transition-colors"
             />

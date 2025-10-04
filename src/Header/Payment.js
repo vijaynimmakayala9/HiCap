@@ -10,6 +10,7 @@ const PaymentForm = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState("");
 
   const courseInputRef = useRef(null);
   const suggestionsRef = useRef(null);
@@ -35,7 +36,9 @@ const PaymentForm = () => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("https://api.techsterker.com/api/coursecontroller");
+        const res = await axios.get(
+          "https://api.techsterker.com/api/coursecontroller"
+        );
         if (res.data.success) {
           setCourses(res.data.data); // API returns {success, count, data:[...]}
         }
@@ -65,11 +68,36 @@ const PaymentForm = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    // Email uniqueness check
+    if (name === "email") {
+      if (!value) {
+        setEmailError("Email is required");
+        return;
+      }
+
+      try {
+        const res = await axios.get("https://api.techsterker.com/api/allusers");
+        if (res.data.success) {
+          const exists = res.data.data.some(
+            (u) => u.email.toLowerCase() === value.toLowerCase()
+          );
+          if (exists) {
+            setEmailError("This email is already registered. Try another.");
+          } else {
+            setEmailError("");
+          }
+        }
+      } catch (err) {
+        console.error("Error checking email uniqueness:", err);
+      }
+    }
   };
 
   // Handle course search input
@@ -97,6 +125,11 @@ const PaymentForm = () => {
       return;
     }
 
+    if (emailError) {
+      alert("Please fix email issue before continuing.");
+      return;
+    }
+
     navigate("/ourpolicies", {
       state: {
         formData: formData,
@@ -104,7 +137,7 @@ const PaymentForm = () => {
         selectedCourse: courses.find((c) => c._id === formData.courseId),
       },
     });
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
   };
 
   const filteredCourses = courses.filter((c) =>
@@ -162,8 +195,15 @@ const PaymentForm = () => {
                 onChange={handleChange}
                 value={formData.email}
                 required
-                className="w-full px-4 py-2 border border-[#a51d34]/40 rounded-lg focus:ring-2 focus:ring-[#a51d34] outline-none"
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 outline-none ${
+                  emailError
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-[#a51d34]/40 focus:ring-[#a51d34]"
+                }`}
               />
+              {emailError && (
+                <p className="text-red-500 text-sm mt-1">{emailError}</p>
+              )}
             </div>
 
             {/* Searchable Courses */}
@@ -194,7 +234,6 @@ const PaymentForm = () => {
                       className="px-4 py-2 hover:bg-[#fcebed] cursor-pointer text-[#a51d34] flex justify-between"
                     >
                       <span>{course.name}</span>
-                      
                     </li>
                   ))}
                 </ul>
@@ -300,7 +339,7 @@ const PaymentForm = () => {
             {/* Submit */}
             <button
               type="submit"
-              disabled={!formData.courseId || loading}
+              disabled={!formData.courseId || loading || !!emailError}
               className="w-full text-white font-semibold py-3 rounded-lg shadow-md transition bg-gradient-to-br from-[#a51d34] to-[#d32f2f] hover:opacity-90 disabled:opacity-50"
             >
               {formData.courseId
