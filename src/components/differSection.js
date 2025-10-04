@@ -25,12 +25,7 @@ const DifferSection = () => {
   return (
     <section
       className="py-5"
-      style={{
-        backgroundImage: 'url("https://cdn.pixabay.com/photo/2016/11/29/02/02/bulb-1867395_960_720.jpg")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
+      
     >
       <div className="container">
         <div className="bg-white rounded-4 p-4 p-lg-5">

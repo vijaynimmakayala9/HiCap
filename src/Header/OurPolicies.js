@@ -38,7 +38,13 @@ const OurPolicies = () => {
   }
 
   const fullPrice = selectedCourse.price;
-  const advancePrice = 15000; // 30% advance payment
+  const advancePrice = fullPrice*0.5;
+
+  // const coursePrice = selectedCourse.price;
+  // const gst = (coursePrice * 5) / 100;
+  // const fullPrice = coursePrice + gst;
+  // const advanceBase = fullPrice * 0.5;
+  // const advancePrice = advanceBase + (advanceBase * 5) / 100; // 15000 + GST
 
   const policies = {
     "Privacy Policy": <PrivacyPolicy />,
@@ -69,7 +75,7 @@ const OurPolicies = () => {
       course: formData.course,
       degree: formData.degree || "N/A",
       department: formData.department || "N/A",
-      yearOfPassedOut: formData.yearOfPassedOut || "N/A",
+      yearOfPassedOut: formData.yearOfPassedOut || 0,
       company: formData.company || "N/A",
       role: userType === "student" ? "Student" : formData.role || "",
       experience: formData.experience || "N/A",
@@ -78,10 +84,12 @@ const OurPolicies = () => {
       isAdvancePayment: isAdvancePayment
     };
 
+    const AmountforPayment = paymentAmount + paymentAmount*0.05
+
     // Initialize Razorpay payment
     const options = {
-      key: "rzp_test_BxtRNvflG06PTV", // Replace with your actual Razorpay key
-      amount: paymentAmount * 100, // Amount in paise
+      key: "rzp_live_ROKQXDRUzOnshb", // Replace with your actual Razorpay key
+      amount: AmountforPayment * 100, // Amount in paise
       currency: "INR",
       name: "Techsterker",
       description: `${formData.course} - ${isAdvancePayment ? 'Advance Payment' : 'Full Payment'}`,
@@ -91,7 +99,6 @@ const OurPolicies = () => {
 
         // Safely get payment ID
         const transactionId = response?.razorpay_payment_id || "";
-
         if (!transactionId && isAdvancePayment) {
           setLoading(false);
           alert("Payment failed or no transaction ID returned. Please try again.");

@@ -356,7 +356,7 @@ const LiveClassesPage = () => {
           <h5 className="alert-heading">Need Help?</h5>
           <p className="mb-0">
             If you're having trouble joining a class or have any questions, please contact support at
-            <strong> support@hicap.com</strong> or call <strong>+1-800-HICAP-HELP</strong>.
+            <strong> techsterker@gmail.com</strong> or call <strong>+91 9000239871</strong>.
           </p>
         </div>
       )}

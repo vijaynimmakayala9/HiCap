@@ -776,12 +776,12 @@ const GuestHeader = ({ onLogin }) => {
             <div className={`flex items-center ${screenSize === 'mobile-small' ? 'gap-1.5' : 'gap-2'}`}>
               {/* Cart Button for Mobile */}
               <div className="relative">
-                {/* <button
+                <button
                   onClick={() => navigate('/payment')}
                   className={`cart-button ${responsiveClasses.iconSize} flex items-center justify-center bg-gray-100 text-gray-700 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 transition-colors relative`}
                 >
                   <FaCreditCard className={responsiveClasses.iconText} />
-                </button> */}
+                </button>
               </div>
 
               <button
@@ -914,14 +914,14 @@ const GuestHeader = ({ onLogin }) => {
 
               {/* Desktop Cart Button */}
               <div className="relative flex items-center">
-                {/* <button
+                <button
                   onClick={() => navigate("/payment")}
                   className="cart-button flex items-center justify-center w-10 h-10 bg-gray-100 text-gray-700 border border-gray-300 rounded-full cursor-pointer hover:bg-gray-200 transition-colors relative"
                 >
                   <FaCreditCard className="text-lg textcolor" />
-                </button> */}
+                </button>
                 {/* Separator */}
-                {/* <div className="h-5 w-px bg-gray-300 mx-2"></div> */}
+                <div className="h-5 w-px bg-gray-300 mx-2"></div>
               </div>
 
               {/* Login Button */}
