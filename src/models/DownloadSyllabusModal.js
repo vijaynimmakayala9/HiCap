@@ -3,6 +3,9 @@ import { Modal, Button, Form, Spinner } from 'react-bootstrap';
 import { FaDownload } from 'react-icons/fa';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { InputGroup } from "react-bootstrap";
+import { FaFlag } from "react-icons/fa"; // optional flag icon
+
 
 const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
   const [otpSent, setOtpSent] = useState(false);
@@ -84,7 +87,7 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
         'https://api.techsterker.com/api/send-otp',
         {
           name,
-          phoneNumber: phone,
+          phoneNumber: `+91${phone}`,
           syllabus: course.name, // 👈 syllabus from course name
         }
       );
@@ -115,7 +118,7 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
       setLoading(true);
       const response = await axios.post(
         'https://api.techsterker.com/api/verify-otp',
-        { phoneNumber: phone, otp }
+        { phoneNumber: `+91${phone}`, otp }
       );
 
       if (response.data.success) {
@@ -137,6 +140,7 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
         }
 
         handleClose();
+        setOtpSent(false);
       } else {
         Swal.fire('Error', response.data.message || 'Invalid OTP. Try again.', 'error');
       }
@@ -172,24 +176,25 @@ const DownloadSyllabusModal = ({ show, handleClose, courseId }) => {
 
             <Form.Group className="mb-4 text-start">
               <Form.Label className="fw-semibold">Enter Mobile Number</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter Mobile number"
-                value={phone}
-                onChange={(e) => {
-                  let value = e.target.value;
-                  if (!value.startsWith('+91')) {
-                    value = '+91' + value.replace(/\D/g, '').slice(0, 10); // only digits
-                  }
-                  setPhone(value);
-                }}
-                className="py-2"
-              />
-
+              <InputGroup>
+                <InputGroup.Text className="bg-light fw-semibold">+91</InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter 10-digit mobile number"
+                  value={phone}
+                  onChange={(e) => {
+                    let value = e.target.value.replace(/\D/g, ""); // digits only
+                    if (value.length > 10) value = value.slice(0, 10); // limit to 10 digits
+                    setPhone(value);
+                  }}
+                  className="py-2"
+                />
+              </InputGroup>
               <Form.Text className="text-muted">
                 We'll send a verification code to this number.
               </Form.Text>
             </Form.Group>
+
 
             <div className="d-grid">
               <Button

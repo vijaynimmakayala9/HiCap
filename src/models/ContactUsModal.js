@@ -47,7 +47,7 @@ const ContactUsModal = ({ show, type, onHide }) => {
       );
 
       if (response.data.success) {
-        Swal.fire("Success", "Your enquiry has been submitted!", "success");
+        Swal.fire("Success", "Your Request has been submitted!", "success");
         setContactData({
           name: "",
           email: "",

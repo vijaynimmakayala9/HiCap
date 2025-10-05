@@ -45,7 +45,7 @@ const OurPolicies = () => {
   }
 
   const fullPrice = selectedCourse.price;
-  const advancePrice = fullPrice * 0.5;
+  const advancePrice = fullPrice * 0.6;
 
   const policies = {
     "Privacy Policy": <PrivacyPolicy />,
@@ -75,7 +75,7 @@ const OurPolicies = () => {
       if (data.success) {
         setOtpSent(true);
         setOtpError("");
-        alert("OTP sent successfully to your mobile number!");
+
       } else {
         setOtpError(data.message || "Failed to send OTP. Please try again.");
       }
@@ -324,7 +324,7 @@ const OurPolicies = () => {
             </Form.Group>
 
             {/* Show Selected Policy */}
-            <Card className="shadow-sm vh-100 d-flex flex-column">
+            <Card className="shadow-sm d-flex flex-column" style={{ height: "45vh", width: "100%" }}>
               <Card.Body className="d-flex flex-column p-1 h-100 w-100">
                 {/* Card Title */}
                 <Card.Title className="my-3 fw-bold text-center">{selectedPolicy}</Card.Title>
@@ -450,29 +450,23 @@ const OurPolicies = () => {
         centered
         backdrop="static"
         keyboard={false}
-        contentClassName="rounded-3 shadow-lg border-0"
+        contentClassName="rounded-lg shadow-lg border-0"
       >
         <Modal.Header
           closeButton
-          className="border-0 pb-0"
-          style={{
-            background: "linear-gradient(135deg, #c34153, #a51d34)",
-            color: "#fff",
-          }}
+          className="border-0 pb-0 bg-gradient-to-r from-red-600 to-red-800 text-white"
         >
-          <Modal.Title className="fw-bold fs-5 text-white p-3">
+          <Modal.Title className="fw-bold fs-5 p-3">
             🔐 Mobile Verification
           </Modal.Title>
         </Modal.Header>
 
         <Modal.Body className="pt-3 pb-1 px-4 text-center">
-          <h5 className="fw-bold mb-3" style={{ color: "#a51d34" }}>
-            Verify Your Mobile Number
-          </h5>
+          <h5 className="fw-bold mb-2 text-red-700">Verify Your Mobile Number</h5>
           <p className="text-muted mb-3">
             We've sent a 4-digit OTP to your mobile number:
           </p>
-          <div className="alert alert-light border-0 mb-4" style={{ backgroundColor: "#f8f9fa" }}>
+          <div className="alert alert-light border-0 mb-4 bg-gray-100">
             <strong className="text-primary">+91 {formData.mobile}</strong>
           </div>
 
@@ -489,9 +483,11 @@ const OurPolicies = () => {
                 <Form.Label className="fw-semibold">Enter OTP</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter 4-digit OTP"
+                  placeholder=""
                   value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                  onChange={(e) =>
+                    setOtp(e.target.value.replace(/\D/g, '').slice(0, 4))
+                  }
                   className="text-center fw-bold fs-5 py-2"
                   style={{ letterSpacing: '0.5em' }}
                   maxLength={4}
@@ -514,6 +510,7 @@ const OurPolicies = () => {
                   onClick={handleResendOtp}
                   disabled={otpLoading}
                   size="sm"
+                  className="rounded-pill"
                 >
                   ↻ Resend OTP
                 </Button>
@@ -521,19 +518,20 @@ const OurPolicies = () => {
                 <Button
                   onClick={verifyOtp}
                   disabled={otp.length !== 4 || otpLoading}
-                  className="px-4"
-                  style={{
-                    background: "linear-gradient(135deg, #c34153, #a51d34)",
-                    border: "none",
-                  }}
+                  className="px-4 rounded-pill text-white"
+                  style={{ background: 'linear-gradient(135deg, #c34153, #a51d34)', border: 'none' }}
                 >
                   {otpLoading ? (
                     <>
-                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
                       Verifying...
                     </>
                   ) : (
-                    "Verify & Proceed"
+                    'Verify & Proceed'
                   )}
                 </Button>
               </div>
@@ -543,7 +541,7 @@ const OurPolicies = () => {
 
         <Modal.Footer className="border-0 pt-0 px-4 pb-4">
           <small className="text-muted">
-            OTP will expire in 10 minutes. Make sure to enter it quickly.
+            OTP will expire in 1 minute. Make sure to enter it quickly.
           </small>
         </Modal.Footer>
       </Modal>
@@ -555,36 +553,31 @@ const OurPolicies = () => {
         centered
         backdrop="static"
         keyboard={false}
-        contentClassName="rounded-3 shadow-lg border-0"
+        contentClassName="rounded-lg shadow-lg border-0"
       >
         <Modal.Header
           closeButton
-          className="border-0 pb-0"
-          style={{
-            background: "linear-gradient(135deg, #c34153, #a51d34)",
-            color: "#fff",
-          }}
+          className="border-0 pb-0 bg-gradient-to-r from-red-600 to-red-800 text-white"
         >
-          <Modal.Title className="fw-bold fs-5 text-white p-3">
+          <Modal.Title className="fw-bold fs-5 p-3">
             🎉 Registration Successful!
           </Modal.Title>
         </Modal.Header>
 
         <Modal.Body className="pt-3 pb-1 px-4 text-center">
-          <h5 className="fw-bold mb-3" style={{ color: "#a51d34" }}>
-            Welcome to Techsterker
-          </h5>
+          <h5 className="fw-bold mb-2 text-red-700">Welcome to Techsterker</h5>
           <p className="text-muted mb-3">
             Your payment has been processed successfully and your course registration is complete.
           </p>
-          <div className="alert alert-light border-0" style={{ backgroundColor: "#f8f9fa" }}>
+          <div className="alert alert-light border-0 bg-gray-100 mb-3">
             <small className="text-muted">
               📧 Confirmation email sent to: <strong>{formData.email}</strong><br />
               📱 Mobile verified: <strong>+91 {formData.mobile}</strong>
             </small>
           </div>
-          {paymentType === "advance" && (
-            <div className="alert alert-warning">
+
+          {paymentType === 'advance' && (
+            <div className="alert alert-warning rounded">
               <small>
                 <strong>Note:</strong> You have made an advance payment of ₹{advancePrice.toLocaleString()}/-.
                 Remaining amount ₹{getRemainingAmount().toLocaleString()}/- can be paid later.
@@ -597,13 +590,10 @@ const OurPolicies = () => {
           <Button
             onClick={() => {
               setShowSuccessModal(false);
-              navigate("/"); // redirect to homepage
+              navigate('/');
             }}
-            className="px-4 py-2 rounded-pill fw-semibold shadow-sm"
-            style={{
-              background: "linear-gradient(135deg, #c34153, #a51d34)",
-              border: "none",
-            }}
+            className="px-4 py-2 rounded-pill fw-semibold text-white shadow-sm"
+            style={{ background: 'linear-gradient(135deg, #c34153, #a51d34)', border: 'none' }}
           >
             Go to Home
           </Button>

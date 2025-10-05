@@ -63,7 +63,7 @@ const AboutUS = () => {
               <img
                 src="/service/whyus1.png"
                 alt="Why Choose TECHSTERKER"
-                className="img-fluid rounded w-100 p-lg-5 p-md-0 p-xl-5"
+                className="img-fluid rounded w-100 p-lg-0 p-md-0 p-xl-5"
                 style={{
                   maxWidth: "100%",
                   height: "auto",

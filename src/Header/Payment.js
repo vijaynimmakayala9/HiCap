@@ -23,12 +23,12 @@ const PaymentForm = () => {
     email: "",
     courseId: "",
     course: "",
-    degree: "",
-    department: "",
-    yearOfPassedOut: "",
-    company: "",
-    role: "",
-    experience: "",
+    degree: "degree",
+    department: "department",
+    yearOfPassedOut: "0",
+    company: "company",
+    role: "role",
+    experience: "experiance",
   });
 
   // Fetch courses from API
@@ -241,7 +241,7 @@ const PaymentForm = () => {
             </div>
 
             {/* User Type */}
-            <div>
+            {/* <div>
               <label className="block text-[#a51d34] font-medium mb-1">
                 I am a *
               </label>
@@ -253,10 +253,10 @@ const PaymentForm = () => {
                 <option value="student">Student</option>
                 <option value="professional">Professional</option>
               </select>
-            </div>
+            </div> */}
 
             {/* Conditional fields */}
-            {userType === "student" ? (
+            {/* {userType === "student" ? (
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="block text-[#a51d34] font-medium mb-1">
@@ -334,7 +334,7 @@ const PaymentForm = () => {
                   />
                 </div>
               </div>
-            )}
+            )} */}
 
             {/* Submit */}
             <button
@@ -345,9 +345,8 @@ const PaymentForm = () => {
               {formData.courseId
                 ? `Continue with ${
                     courses.find((c) => c._id === formData.courseId)?.name || ""
-                  } - ₹${
-                    courses.find((c) => c._id === formData.courseId)?.price || 0
-                  }/-`
+                  }`
+                   //- ₹${courses.find((c) => c._id === formData.courseId)?.price || 0}/-
                 : loading
                 ? "Loading Courses..."
                 : "Select a Course to Continue"}

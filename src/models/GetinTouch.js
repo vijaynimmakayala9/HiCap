@@ -56,8 +56,8 @@ const GetInTouch = () => {
       if (response.data.success) {
         Swal.fire({
           icon: "success",
-          title: "Message Sent!",
-          text: "Your message has been sent successfully.",
+          title: "Your Message Recieved Successfully",
+          text: "Our Team Will Get Back to you soon.",
           confirmButtonColor: "#a51d34",
         });
         setFormData({

@@ -86,8 +86,8 @@ const DemoRequestModal = ({ show, handleClose }) => {
       if (response.ok) {
         Swal.fire({
           icon: 'success',
-          title: 'Demo Requested',
-          text: 'Your demo request has been submitted successfully!'
+          title: `Your Demo Request for ${formData.course} has Submitted succesfully`,
+          text: 'You will receive a mail soon regarding demo session.'
         });
         setFormData({ name: '', phone: '', email: '', course: '', message: '' });
         setSearchTerm('');

@@ -226,7 +226,7 @@ const UpCommingBatches = () => {
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
                 onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
-                onClick={() => window.location.href = "tel:9000239871"}
+                onClick={() => window.location.href = "whatsapp://call?phone=919000239871"}
               >
                 Call a Counselor Now
               </Button>
@@ -264,7 +264,7 @@ const UpCommingBatches = () => {
                   </ul>
                   <Button
                     variant="danger"
-                    href="tel:9000239871"
+                    href="whatsapp://call?phone=919000239871"
                     size="sm"
                     style={{
                       backgroundColor: "#a51d34",
@@ -303,7 +303,7 @@ const UpCommingBatches = () => {
               <Button variant="danger" size="sm" className="me-3" onClick={handleEnroll}>
                 Enroll Now
               </Button>
-              <Button as="a" href="tel:9000239871" variant="outline-danger" size="sm">
+              <Button as="a" href="whatsapp://call?phone=919000239871" variant="outline-danger" size="sm">
                 Speak with a Counselor
               </Button>
             </Card.Body>

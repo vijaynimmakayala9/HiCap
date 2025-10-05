@@ -106,8 +106,8 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
       if (response.ok) {
         Swal.fire({
           icon: 'success',
-          title: 'Enquiry Submitted',
-          text: 'We will get back to you soon!'
+          title: 'Your Enquiry Submitted Successfully',
+          text: 'Our Team will get back to you soon!'
         });
         setFormData({ name: '', phone: '', email: '', courses: [], city: '', message: '' });
         setSearchTerm('');
@@ -123,8 +123,8 @@ const CourseEnquiryModal = ({ show, handleClose, prefillCourse = '' }) => {
       console.error('Submission error:', error);
       Swal.fire({
         icon: 'error',
-        title: 'Network Error',
-        text: 'Unable to submit enquiry.'
+        title: 'Check Your Network',
+        text: 'Unable to submit enquiry. Try after sometime'
       });
     }
   };

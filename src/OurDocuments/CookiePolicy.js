@@ -22,10 +22,10 @@ const CookiePolicy = () => {
               brand owned and operated by Hicap Edtech Private Limited, uses
               cookies and similar technologies on our Website{" "}
               <a
-                href="https://techsterker.com"
+                href="www.techsterker.com"
                 className="text-blue-600 hover:underline"
               >
-                https://techsterker.com
+                www.techsterker.com
               </a>.
             </p>
           </section>

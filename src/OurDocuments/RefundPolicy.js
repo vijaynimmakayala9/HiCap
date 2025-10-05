@@ -6,7 +6,7 @@ const RefundPolicy = () => {
       <div className="bg-white rounded-xl shadow-lg p-8">
         {/* Heading */}
         <header className="mb-8">
-          
+
           <p className="text-sm text-gray-500">
             Effective Date: 20th September 2025
           </p>
@@ -19,7 +19,7 @@ const RefundPolicy = () => {
             <p className="text-gray-800 text-base md:text-lg leading-relaxed">
               This Refund Policy (“Policy”) governs all payments made to
               <strong>Techsterker</strong>, a brand owned and operated by <strong>Hicap Edtech Private
-              Limited</strong> (“Company,” “we,” “our,” or “us”). This Policy applies to
+                Limited</strong> (“Company,” “we,” “our,” or “us”). This Policy applies to
               all users, students, and customers (“you,” “your,” or “student”)
               who purchase or subscribe to our courses, training programs, or
               related services (“Services”) through our Website, mobile
@@ -39,7 +39,7 @@ const RefundPolicy = () => {
             <ul className="list-disc list-inside text-gray-700 space-y-1">
               <li>
                 All fees, charges, or payments made to Techsterker are <strong>final,
-                non-refundable</strong>, and non-transferable, except as explicitly
+                  non-refundable</strong>, and non-transferable, except as explicitly
                 stated in this Policy.
               </li>
               <li>
@@ -76,7 +76,7 @@ const RefundPolicy = () => {
                   <li>
                     If you are unable to access purchased course content due to
                     a <strong>verified technical error directly attributable to the
-                    Company</strong>, and
+                      Company</strong>, and
                   </li>
                   <li>
                     Our support team is unable to provide access within <strong>seven (7) business</strong> from notification, then you may request a
@@ -101,18 +101,18 @@ const RefundPolicy = () => {
             <ul className="list-disc list-inside text-gray-700 space-y-1">
               3.1. To request a refund under the limited exceptions above, you must:
               <li>
-              Submit a written request by emailing <strong>info@techsterker.com</strong> within <strong>three (3) calendar days</strong> of the payment date.
+                Submit a written request by emailing <strong>info@techsterker.com</strong> within <strong>three (3) calendar days</strong> of the payment date.
               </li>
               <li>
                 Provide transaction details (order ID, date of payment, mode of payment, amount, and screenshot of payment confirmation).
               </li>
               <li>Provide relevant supporting documents, if applicable.</li>
               3.2. Refund requests received after three (3) calendar days will not
-                be entertained.
-  
-             3.3. All refund approvals are at the <strong>sole discretion of the Company</strong>,
-                and our decision shall be final and binding.
-            
+              be entertained.
+              <br />
+              3.3. All refund approvals are at the <strong>sole discretion of the Company</strong>,
+              and our decision shall be final and binding.
+
             </ul>
           </section>
 
@@ -124,7 +124,7 @@ const RefundPolicy = () => {
             <ul className="list-disc list-inside text-gray-700 space-y-1">
               <li>
                 If approved, refunds will be initiated within <strong>fifteen (15) to
-                twenty (20) business days</strong> from the date of approval.
+                  twenty (20) business days</strong> from the date of approval.
               </li>
               <li>
                 Refunds will only be made to the <strong>original payment method</strong> used

@@ -38,7 +38,7 @@ const Careers = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      Swal.fire("✅ Success", "Application submitted successfully!", "success");
+      Swal.fire("✅ We Recieved Your Resume.", "Our Team Will get Back to You Soon.", "success");
 
       // reset form
       setFormData({

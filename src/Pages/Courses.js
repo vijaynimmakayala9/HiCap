@@ -85,8 +85,8 @@ const Courses = () => {
           {/* First Page */}
           <li className={`page-item ${currentPage === 1 ? "active" : ""}`}>
             <button
-              className={`page-link ${
-                currentPage === 1 ? "bg-meroon" : "textcolor border-danger"
+              className={`page-link border-danger ${
+                currentPage === 1 ? "bg-meroon" : "textcolor border-danger "
               }`}
               onClick={() => setCurrentPage(1)}
             >
@@ -105,7 +105,7 @@ const Courses = () => {
           {currentPage > 2 && (
             <li className="page-item">
               <button
-                className="page-link textcolor border-danger"
+                className="page-link textcolor"
                 onClick={() => setCurrentPage(currentPage - 1)}
               >
                 {currentPage - 1}
@@ -116,7 +116,7 @@ const Courses = () => {
           {/* Current Page */}
           {currentPage !== 1 && currentPage !== totalPages && (
             <li className="page-item active">
-              <button className="page-link bg-meroon">{currentPage}</button>
+              <button className="page-link border-0 bg-meroon">{currentPage}</button>
             </li>
           )}
 
@@ -147,7 +147,7 @@ const Courses = () => {
               }`}
             >
               <button
-                className={`page-link ${
+                className={`page-link border-danger ${
                   currentPage === totalPages
                     ? "bg-meroon"
                     : "textcolor border-danger"

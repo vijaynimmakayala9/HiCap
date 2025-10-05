@@ -22,12 +22,12 @@ const PrivacyPolicy = () => {
               information. This Privacy Policy explains how we collect, use,
               disclose, and safeguard your information when you access our
               website <a
-                href="https://techsterker.com"
+                href="www.techsterker.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="italic text-primary text-decoration-underline"
               >
-                https://techsterker.com
+                www.techsterker.com
               </a>{" "}
               ("Techsterker") and use our online coaching services. <br /><br />By using our
               Website, you consent to the practices described in this Privacy
