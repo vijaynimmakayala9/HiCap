@@ -77,39 +77,39 @@ function App() {
     setUser(null);
   };
 
-  const [loading, setLoading] = useState(false);
+//   const [loading, setLoading] = useState(false);
 
-useEffect(() => {
-  // Show splash every time route changes
-  setLoading(true);
-  const timer = setTimeout(() => {
-    setLoading(false);
-  }, 1000); // 1 sec
+// useEffect(() => {
+//   // Show splash every time route changes
+//   setLoading(true);
+//   const timer = setTimeout(() => {
+//     setLoading(false);
+//   }, 1000); // 1 sec
 
-  return () => clearTimeout(timer);
-}, [location]); // 👈 re-run when route changes
+//   return () => clearTimeout(timer);
+// }, [location]); // 👈 re-run when route changes
 
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen bg-white ">
-        {/* Logo */}
-        <img
-          src="/logo/hicaplogo.png"
-          alt="App Logo"
-          className="w-24 h-24 animate-bounce mb-4"
-        />
+//   if (loading) {
+//     return (
+//       <div className="flex flex-col items-center justify-center h-screen bg-white ">
+//         {/* Logo */}
+//         <img
+//           src="/logo/hicaplogo.png"
+//           alt="App Logo"
+//           className="w-24 h-24 animate-bounce mb-4"
+//         />
 
-        {/* App/Website Name */}
-        <h1 className="text-3xl font-bold text-gray-800">Techsterker</h1>
+//         {/* App/Website Name */}
+//         <h1 className="text-3xl font-bold text-gray-800">Techsterker</h1>
 
-        {/* Tagline */}
-        {/* <p className="mt-2 text-gray-500 animate-pulse">
-          Start Your career with Us.
-        </p> */}
-      </div>
-    );
-  }
+//         {/* Tagline */}
+//         {/* <p className="mt-2 text-gray-500 animate-pulse">
+//           Start Your career with Us.
+//         </p> */}
+//       </div>
+//     );
+//   }
 
   return (
     <>

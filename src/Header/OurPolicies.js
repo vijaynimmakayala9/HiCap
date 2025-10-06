@@ -165,7 +165,7 @@ const OurPolicies = () => {
         isAdvancePayment: isAdvancePayment
       };
 
-      const AmountforPayment = paymentAmount + paymentAmount * 0.05;
+      const AmountforPayment = paymentAmount + paymentAmount * 0.18;
 
       // Initialize Razorpay payment
       const options = {

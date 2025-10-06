@@ -59,7 +59,7 @@ const Careers = () => {
   return (
     <>
       <Header />
-      <Container className="main-content mb-3">
+      <Container className="main-content mb-3 py-5">
         <Row className="justify-content-center">
           <Col md={8}>
             <h2 className="text-center fw-bold textcolor mb-4">
