@@ -17,6 +17,9 @@ import HeroSection from "../newone/Hero";
 import AwardBanner from "../newone/AwardBanner";
 import NewHero from "../newone/NewHero";
 import FullScreenHero from "../newone/HeroBanners";
+import SplitHeroBanner from "../newone/SplitHero";
+import OverlayHeroBanner from "../newone/SplitHero";
+import FullScreenHero1 from "../newone/SplitHero";
 
 const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -60,9 +63,10 @@ const HomePage = () => {
 
       <>
         {/* <CourseAndFeatures /> */}
-        <FullScreenHero/>
+        {/* <FullScreenHero/> */}
         {/* <NewHero /> */}
         {/* <HeroSection/> */}
+        <FullScreenHero1/>
 
 
         <TechsterkerCourses />
