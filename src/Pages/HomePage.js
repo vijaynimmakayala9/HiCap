@@ -16,6 +16,7 @@ import Counter from "../components/Counter";
 import HeroSection from "../newone/Hero";
 import AwardBanner from "../newone/AwardBanner";
 import NewHero from "../newone/NewHero";
+import FullScreenHero from "../newone/HeroBanners";
 
 const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -59,7 +60,8 @@ const HomePage = () => {
 
       <>
         {/* <CourseAndFeatures /> */}
-        <NewHero />
+        <FullScreenHero/>
+        {/* <NewHero /> */}
         {/* <HeroSection/> */}
 
 
