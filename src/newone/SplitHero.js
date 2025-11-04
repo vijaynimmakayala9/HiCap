@@ -69,7 +69,7 @@ const FullScreenHero1 = () => {
   return (
     <section
       className="position-relative mt-5"
-      style={{ height: "100vh", overflow: "hidden" }}
+      style={{ height: "80vh", overflow: "hidden" }}
     >
       <div
         id="heroCarousel"
@@ -100,11 +100,40 @@ const FullScreenHero1 = () => {
                       border: "1px solid rgba(255,255,255,0.2)",
                     }}
                   >
-                    <h1 className="fw-bold mb-3 text-light" style={{ fontSize: "2.6rem" }}>
-                      {banner.title}
+                    <h1 className="fw-bold mb-3 text-light" style={{ fontSize: "2.2rem" }}>
+                      <span
+                        style={{
+                          fontSize: "1.5rem",
+                          position: "relative",
+                          top: "-0.4em",
+                          lineHeight: "1",
+                        }}
+                      >
+                        ❝
+                      </span>{" "}
+                      {banner.title.split(" ").map((word, i) => (
+                        <span
+                          key={i}
+                          style={{
+                            color: i % 2 === 0 ? "#FF3B5C" : "#fff",
+                          }}
+                        >
+                          {word}{" "}
+                        </span>
+                      ))}{" "}
+                      <span
+                        style={{
+                          fontSize: "1.5rem",
+                          position: "relative",
+                          top: "-0.4em",
+                          lineHeight: "1",
+                        }}
+                      >
+                        ❞
+                      </span>
                     </h1>
 
-                    <p className="text-light opacity-75 mb-4" style={{ fontSize: "1.1rem" }}>
+                    <p className="text-light opacity-75 mb-4" style={{ fontSize: "1.0rem" }}>
                       {banner.description}
                     </p>
 
