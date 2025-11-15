@@ -12,7 +12,8 @@ import {
   FaArrowRight,
   FaSignOutAlt,
   FaUserCircle,
-  FaReceipt
+  FaReceipt,
+  FaChartArea
 } from 'react-icons/fa';
 
 const UserSidebar = ({ isCollapsed, onToggleCollapse, isMobile }) => {
@@ -38,6 +39,7 @@ const UserSidebar = ({ isCollapsed, onToggleCollapse, isMobile }) => {
     { path: '/dashboard/interviews', icon: <FaQuestionCircle />, label: 'Interviews' },
     { path: '/dashboard/live-classes', icon: <FaVideo />, label: 'Live Classes' },
     { path: '/dashboard/coursemodule', icon: <FaBook />, label: 'Course Module' },
+    { path: '/dashboard/chat', icon: <FaChartArea />, label: 'Chat' },
     // { path: '/dashboard/doubt-session', icon: <FaQuestionCircle />, label: 'Doubt Session' },
     { path: '/dashboard/certificate', icon: <FaCertificate />, label: 'Certificate' },
     // { path: '/dashboard/acknowledge', icon: <FaReceipt />, label: 'Acknowledgement' },    

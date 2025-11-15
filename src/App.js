@@ -40,6 +40,11 @@ import Terms from "./Ourpolicies/TermsAndConditions";
 import RefundPolicies from "./Ourpolicies/RefundPolicy";
 import BrowseCourses from "./Dashboard/BrowseCourses";
 import DashboardCourseDetail from "./Dashboard/DashboardCourseDetails";
+import ChatModule from "./ChatModule/ChatModule";
+import ChatSlack from "./ChatModule/ChatModule";
+import Chat from "./ChatModule/ChatModule";
+import StudentChats from "./ChatModule/ChatModule";
+import BlogDetails from "./Pages/BlogDetails";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -124,6 +129,7 @@ function App() {
         <Route path="/upcommingbatches" element={<UpCommingBatches />} />
         <Route path="/faqs" element={<FAQ />} />
         <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:slug" element={<BlogDetails />} />
         <Route path="/ourmentors" element={<OurMentorsPage />} />
         <Route path="/courses" element={<Courses />} />
         <Route path="/course/:id" element={<CourseDetail />} />
@@ -159,7 +165,8 @@ function App() {
           <Route path="certificate" element={<Certificate />} />
           <Route path="acknowledge" element={<Acknowledge />} />
           <Route path="browsecourses" element={<BrowseCourses />} />
-          <Route path="course/:id" element={<DashboardCourseDetail />} />
+          <Route path="course/:slug" element={<DashboardCourseDetail />} />
+          <Route path="chat" element={<StudentChats />} />
         </Route>
 
         {/* Redirect unknown routes */}

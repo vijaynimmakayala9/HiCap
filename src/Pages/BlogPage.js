@@ -1,108 +1,134 @@
-import React from 'react';
-import { FaShareAlt } from 'react-icons/fa';
-import Header from '../Header/Header';
-import Footer from './Footer';
-
-const blogData = new Array(9).fill({
-  title: 'Blog Title',
-  description:
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard.",
-  image: '/blog.png', // Adjust if needed
-});
+import React from "react";
+import { FaShareAlt } from "react-icons/fa";
+import Header from "../Header/Header";
+import Footer from "./Footer";
+import blogData from "./BlogData";
+import { useNavigate } from "react-router-dom";
 
 const BlogPage = () => {
+  const navigate = useNavigate();
+
   return (
     <>
       <Header />
 
       <div
         style={{
-          maxWidth: '1280px',
-          margin: '60px auto',
-          padding: '0 24px',
-          fontFamily: 'Roboto',
-          marginTop: '100px',  // Added margin-top for spacing from top
+          maxWidth: "1300px",
+          margin: "0 auto",
+          padding: "120px 24px 60px",
+          fontFamily: "Roboto",
         }}
       >
-        {/* Heading with green line, left aligned and smaller */}
-        <div className="max-w-[600px] mb-12 mt-18">
-          <h1 className="font-roboto font-bold text-3xl mb-2 mt-10 text-black">
-            Our Latest <span style={{ color: "#a51d34" }}>Blogs</span>
+        {/* Heading */}
+        <div className="text-left mb-12">
+          <h1 className="font-bold text-4xl text-black">
+            Our Latest{" "}
+            <span style={{ color: "#a51d34" }}>Blogs</span>
           </h1>
-          {/* <div
-            style={{
-              width: '216px',
-              height: '3px',
-              borderRadius: '20px',
-              backgroundColor: '#a51d34',
-            }}
-          /> */}
+          <p className="mt-2 text-gray-500 text-lg">
+            Stay updated with the latest trends, insights & knowledge.
+          </p>
         </div>
 
+        {/* Blog Grid */}
         <div
           style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '30px',
-            justifyContent: 'space-between',
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "30px",
+            justifyContent: "space-between",
           }}
         >
           {blogData.map((blog, index) => (
             <div
               key={index}
               style={{
-                width: '387px',
-                height: '400px', // reduced from 443px
-                backgroundColor: '#FFFFFF',
-                boxShadow: '0px 4px 4px 0px #00000040',
-                borderRadius: '10px',
-                overflow: 'hidden',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                position: 'relative',
+                width: "387px",
+                height: "430px",
+                backgroundColor: "#FFFFFF",
+                boxShadow: "0px 6px 12px rgba(0,0,0,0.1)",
+                borderRadius: "16px",
+                overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+                transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                cursor: "pointer",
               }}
+              className="blog-card"
             >
-              <img
-                src={blog.image}
-                alt="Blog"
-                style={{
-                  width: '363px',
-                  height: '210px', // slightly reduced
-                  objectFit: 'cover',
-                  margin: '12px auto 0',
-                  borderRadius: '8px',
-                }}
-              />
-              <div style={{ padding: '16px', paddingBottom: '40px' }}>
+              {/* Image with hover zoom effect */}
+              <div style={{ overflow: "hidden" }}>
+                <img
+                  src={blog.image}
+                  alt="Blog"
+                  style={{
+                    width: "100%",
+                    height: "220px",
+                    objectFit: "cover",
+                    transition: "transform 0.4s ease",
+                  }}
+                  className="blog-image"
+                />
+              </div>
+
+              <div style={{ padding: "18px", paddingBottom: "60px" }}>
                 <h2
                   style={{
-                    fontSize: '20px',
-                    fontWeight: '600',
-                    marginBottom: '8px',
+                    fontSize: "22px",
+                    fontWeight: "700",
+                    marginBottom: "10px",
+                    color: "#222",
                   }}
-                  className='textcolor'
                 >
                   {blog.title}
                 </h2>
-                <p style={{ fontSize: '14px', color: '#555', lineHeight: '1.6' }}>
-                  {blog.description}
+
+                <p
+                  style={{
+                    fontSize: "15px",
+                    color: "#555",
+                    lineHeight: "1.6",
+                    marginBottom: "16px",
+                  }}
+                >
+                  {blog.description.length > 120
+                    ? blog.description.slice(0, 120) + "..."
+                    : blog.description}
                 </p>
+
+                {/* Read More button */}
+                <button
+                  style={{
+                    backgroundColor: "#a51d34",
+                    color: "white",
+                    padding: "8px 18px",
+                    borderRadius: "6px",
+                    border: "none",
+                    fontSize: "14px",
+                    cursor: "pointer",
+                    transition: "0.3s",
+                  }}
+                  onClick={() => navigate(`/blog/${blog.slug}`)}
+
+                >
+                  Read More
+                </button>
               </div>
 
-              {/* Share Icon Bottom Right */}
+              {/* Share Icon */}
               <div
                 style={{
-                  position: 'absolute',
-                  bottom: '12px',
-                  right: '16px',
-                  cursor: 'pointer',
-                  color: '#007860',
-                  fontSize: '18px',
+                  position: "absolute",
+                  bottom: "16px",
+                  right: "20px",
+                  cursor: "pointer",
+                  fontSize: "20px",
                 }}
                 title="Share this blog"
               >
-                <FaShareAlt className='textcolor' />
+                <FaShareAlt style={{ color: "#a51d34" }} />
               </div>
             </div>
           ))}
@@ -110,6 +136,17 @@ const BlogPage = () => {
       </div>
 
       <Footer />
+
+      {/* Hover Animation Styles */}
+      <style>{`
+        .blog-card:hover {
+          transform: translateY(-8px);
+          box-shadow: 0px 12px 20px rgba(0,0,0,0.15);
+        }
+        .blog-card:hover .blog-image {
+          transform: scale(1.06);
+        }
+      `}</style>
     </>
   );
 };

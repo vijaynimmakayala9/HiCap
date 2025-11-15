@@ -780,14 +780,14 @@ const GuestHeader = ({ onLogin }) => {
           {(screenSize === 'tablet' || screenSize === 'mobile-large' || screenSize === 'mobile' || screenSize === 'mobile-small') && (
             <div className={`flex items-center ${screenSize === 'mobile-small' ? 'gap-1.5' : 'gap-2'}`}>
               {/* Cart Button for Mobile */}
-              <div className="relative">
+              {/* <div className="relative">
                 <button
                   onClick={() => navigate('/payment')}
                   className={`cart-button ${responsiveClasses.iconSize} flex items-center justify-center bg-gray-100 text-gray-700 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 transition-colors relative`}
                 >
                   <FaCreditCard className={responsiveClasses.iconText} />
                 </button>
-              </div>
+              </div> */}
 
               <button
                 onClick={() => setShowLoginModal(true)}
@@ -918,16 +918,16 @@ const GuestHeader = ({ onLogin }) => {
               })}
 
               {/* Desktop Cart Button */}
-              <div className="relative flex items-center">
+              {/* <div className="relative flex items-center">
                 <button
                   onClick={() => navigate("/payment")}
                   className="cart-button flex items-center justify-center w-10 h-10 bg-gray-100 text-gray-700 border border-gray-300 rounded-full cursor-pointer hover:bg-gray-200 transition-colors relative"
                 >
                   <FaCreditCard className="text-lg textcolor" />
                 </button>
-                {/* Separator */}
+                
                 <div className="h-5 w-px bg-gray-300 mx-2"></div>
-              </div>
+              </div> */}
 
               {/* Login Button */}
               <button

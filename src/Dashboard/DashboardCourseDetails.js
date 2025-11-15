@@ -450,7 +450,7 @@ const DashboardCourseDetail = () => {
           )}
 
           {/* Reviews Section (Directly after FAQs) */}
-          {course.reviews && course.reviews.length > 0 && (
+          {/* {course.reviews && course.reviews.length > 0 && (
             <Container className="py-5">
               <h3 className="mb-4 text-center" style={{ color: "#a51d34" }}>
                 Alumni Reviews
@@ -491,7 +491,7 @@ const DashboardCourseDetail = () => {
                 ))}
               </Row>
             </Container>
-          )}
+          )} */}
 
 
           <GetInTouch />
