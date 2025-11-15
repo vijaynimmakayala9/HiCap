@@ -20,6 +20,7 @@ import FullScreenHero from "../newone/HeroBanners";
 import SplitHeroBanner from "../newone/SplitHero";
 import OverlayHeroBanner from "../newone/SplitHero";
 import FullScreenHero1 from "../newone/SplitHero";
+import WebsiteCertificate from "./websiteCertificate";
 
 const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -76,6 +77,7 @@ const HomePage = () => {
         {/* <Counter/> */}
         <Course />
         <DifferSection />
+        <WebsiteCertificate/>
         <Reviews />
         {/* <IndustryExperts /> */}
       </>

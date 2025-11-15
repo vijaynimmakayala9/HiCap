@@ -12,16 +12,17 @@ import {
     ChevronDown,
     ChevronUp,
     AlertCircle,
+    Users2 // Icon for the members button
 } from "lucide-react";
 
-const BASE_URL = "https://techsterker-backend-2.onrender.com";
+const BASE_URL = "https://api.techsterker.com";
 
 const StudentChats = () => {
     const [activeChat, setActiveChat] = useState(null);
     const [message, setMessage] = useState("");
     const [showList, setShowList] = useState(true);
-    const [showMembersModal, setShowMembersModal] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [showMembersModal, setShowMembersModal] = useState(false); // Modal for group members
+    const [searchTerm, setSearchTerm] = useState(""); // Search term for members modal
     const [isMobile, setIsMobile] = useState(false);
     const [files, setFiles] = useState([]);
     const [loadingChats, setLoadingChats] = useState(true);
@@ -34,13 +35,14 @@ const StudentChats = () => {
     const [previewModal, setPreviewModal] = useState({ open: false, file: null });
     const [showAllGroups, setShowAllGroups] = useState(false);
     const [showAllIndividuals, setShowAllIndividuals] = useState(false);
-    const [mentors, setMentors] = useState([]);
+    const [mentors, setMentors] = useState([]); // All mentors from all groups
     const [loadingMentors, setLoadingMentors] = useState(false);
-
+    const [refreshInterval, setRefreshInterval] = useState(null);
+    const [activeChatMembers, setActiveChatMembers] = useState([]); // Members for the active chat
+    const [loadingMembers, setLoadingMembers] = useState(false); // Loading state for members modal
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
     const fileInputRef = useRef(null);
-
     const Student = JSON.parse(sessionStorage.getItem('user') || '{}');
     const CURRENT_USER_ID = Student?.id;
 
@@ -48,11 +50,9 @@ const StudentChats = () => {
     const isValidUserId = (userId) => {
         return userId && typeof userId === 'string' && userId.trim().length > 0;
     };
-
     const isValidChatId = (chatId) => {
         return chatId && typeof chatId === 'string' && chatId.trim().length > 0;
     };
-
     const validateMessageData = (text, files) => {
         return text.trim().length > 0 || files.length > 0;
     };
@@ -69,24 +69,21 @@ const StudentChats = () => {
         return () => window.removeEventListener("resize", checkScreen);
     }, []);
 
-    // Fetch mentors from group chats
+    // Fetch mentors from group chats (global list)
     useEffect(() => {
         if (!isValidUserId(CURRENT_USER_ID)) {
             setError("Invalid user ID. Please log in again.");
             return;
         }
-
         const fetchMentorsFromGroups = async () => {
             try {
                 setLoadingMentors(true);
                 const res = await fetch(`${BASE_URL}/api/group-chats/${CURRENT_USER_ID}`);
                 const data = await res.json();
-                
                 if (data.success && Array.isArray(data.data)) {
                     // Extract all unique mentors from all groups
                     const allMentors = [];
                     const mentorIds = new Set();
-                    
                     data.data.forEach(group => {
                         if (Array.isArray(group.mentors)) {
                             group.mentors.forEach(mentor => {
@@ -99,13 +96,12 @@ const StudentChats = () => {
                                         expertise: mentor.expertise,
                                         subjects: mentor.subjects,
                                         role: "Mentor",
-                                        status: "online"
+                                        status: "online" // Assuming online for simplicity
                                     });
                                 }
                             });
                         }
                     });
-
                     setMentors(allMentors);
                 }
             } catch (err) {
@@ -115,7 +111,6 @@ const StudentChats = () => {
                 setLoadingMentors(false);
             }
         };
-
         fetchMentorsFromGroups();
     }, [CURRENT_USER_ID]);
 
@@ -126,23 +121,18 @@ const StudentChats = () => {
             setLoadingChats(false);
             return;
         }
-
         const fetchAllChats = async () => {
             try {
                 setLoadingChats(true);
                 setError(null);
-                
                 // Fetch group chats
                 const groupRes = await fetch(`${BASE_URL}/api/group-chats/${CURRENT_USER_ID}`);
                 const groupData = await groupRes.json();
-                
                 // Fetch individual chats
                 const individualRes = await fetch(`${BASE_URL}/api/individual-chats/${CURRENT_USER_ID}`);
                 const individualData = await individualRes.json();
-
                 console.log("Fetched group chats:", groupData);
                 console.log("Fetched individual chats:", individualData);
-
                 let groupChats = [];
                 let individualChats = [];
 
@@ -153,19 +143,17 @@ const StudentChats = () => {
                         name: g.groupName || "Unnamed Group",
                         type: "group",
                         lastMessage: g.lastMessage?.text || "",
-                        members: [...(g.enrolledUsers || []), ...(g.mentors || [])],
+                        members: [...(g.enrolledUsers || []), ...(g.mentors || [])], // Store raw member list
                         admin: g.admin,
                         raw: g,
                     }));
                 }
-
                 // Process individual chats
                 if (individualData.success && Array.isArray(individualData.data)) {
                     individualChats = individualData.data.map((chat) => {
-                        const otherUser = chat.otherUser || 
+                        const otherUser = chat.otherUser ||
                             (chat.enrolledUsers && chat.enrolledUsers.find(u => u._id !== CURRENT_USER_ID)) ||
                             (chat.mentors && chat.mentors.find(m => m._id !== CURRENT_USER_ID));
-                        
                         return {
                             id: chat._id,
                             name: otherUser?.name || chat.groupName || "Unknown User",
@@ -176,10 +164,8 @@ const StudentChats = () => {
                         };
                     });
                 }
-
                 setGroups(groupChats);
                 setIndividuals(individualChats);
-
             } catch (err) {
                 console.error("Error fetching chats:", err);
                 setError("Failed to load chats. Please try again.");
@@ -187,9 +173,112 @@ const StudentChats = () => {
                 setLoadingChats(false);
             }
         };
-
         fetchAllChats();
     }, [CURRENT_USER_ID]);
+
+    // Auto-refresh messages for active chat
+    useEffect(() => {
+        if (!activeChat || !isValidUserId(CURRENT_USER_ID)) {
+            // Clear interval if no active chat
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+                setRefreshInterval(null);
+            }
+            return;
+        }
+        // Function to fetch messages
+        const fetchMessages = async () => {
+            try {
+                let apiUrl;
+                if (activeChat.type === "group") {
+                    apiUrl = `${BASE_URL}/api/group-messages/${activeChat.id}/${CURRENT_USER_ID}`;
+                } else {
+                    // For individual chats, we need to determine the other user's ID
+                    const otherUserId = activeChat.otherUser?._id;
+                    if (!otherUserId) {
+                        console.error("Unable to determine chat participant");
+                        return;
+                    }
+                    apiUrl = `${BASE_URL}/api/individual-messages/${otherUserId}/${CURRENT_USER_ID}`;
+                }
+                const res = await fetch(apiUrl);
+                const data = await res.json();
+                if (data.success && Array.isArray(data.data)) {
+                    const formattedMessages = data.data.map((msg) => {
+                        const sender = msg.sender;
+                        const senderName = sender?.name || "Unknown";
+                        const isYou = sender?._id === CURRENT_USER_ID;
+                        const timestamp = new Date(msg.createdAt).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                        });
+                        let mediaFiles = [];
+                        if (Array.isArray(msg.media) && msg.media.length > 0) {
+                            mediaFiles = msg.media.map((m) => {
+                                const url = m.url;
+                                const fileName = m.fileName || url.split('/').pop() || 'file';
+                                const lowerName = fileName.toLowerCase();
+                                const isImageType = m.type?.startsWith('image/') ||
+                                    /\.(jpg|jpeg|png|gif|webp|svg|bmp)$/i.test(lowerName);
+                                return {
+                                    url,
+                                    fileName,
+                                    type: isImageType ? "image" : "file",
+                                };
+                            });
+                        }
+                        return {
+                            id: msg._id,
+                            sender: isYou ? "You" : senderName,
+                            text: msg.text || "",
+                            timestamp,
+                            files: mediaFiles,
+                            raw: msg,
+                        };
+                    });
+                    // Only update if messages have changed
+                    setChatMessages((prev) => {
+                        const currentMessages = prev[activeChat.id] || [];
+                        if (JSON.stringify(currentMessages) !== JSON.stringify(formattedMessages)) {
+                            return {
+                                ...prev,
+                                [activeChat.id]: formattedMessages,
+                            };
+                        }
+                        return prev;
+                    });
+                } else {
+                    console.error("Failed to auto-refresh messages:", data.message);
+                }
+            } catch (err) {
+                console.error("Error auto-refreshing messages:", err);
+                // Don't show error to user for auto-refresh failures
+            }
+        };
+        // Clear any existing interval
+        if (refreshInterval) {
+            clearInterval(refreshInterval);
+        }
+        // Fetch immediately and then set up interval
+        fetchMessages();
+        const interval = setInterval(fetchMessages, 2000);
+        setRefreshInterval(interval);
+        // Cleanup on unmount or when dependencies change
+        return () => {
+            if (interval) {
+                clearInterval(interval);
+            }
+        };
+    }, [activeChat, CURRENT_USER_ID]); // Re-run when activeChat or CURRENT_USER_ID changes
+
+    // Also add cleanup when component unmounts
+    useEffect(() => {
+        return () => {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        };
+    }, []);
 
     useEffect(() => {
         scrollToBottom();
@@ -200,11 +289,15 @@ const StudentChats = () => {
     };
 
     const handleChatSelect = async (chat) => {
+        // Clear existing interval when switching chats
+        if (refreshInterval) {
+            clearInterval(refreshInterval);
+            setRefreshInterval(null);
+        }
         if (!isValidChatId(chat.id) || !isValidUserId(CURRENT_USER_ID)) {
             setError("Invalid chat or user information");
             return;
         }
-
         setLoadingMessages(true);
         setError(null);
         try {
@@ -219,10 +312,8 @@ const StudentChats = () => {
                 }
                 apiUrl = `${BASE_URL}/api/individual-messages/${otherUserId}/${CURRENT_USER_ID}`;
             }
-
             const res = await fetch(apiUrl);
             const data = await res.json();
-
             if (data.success && Array.isArray(data.data)) {
                 const formattedMessages = data.data.map((msg) => {
                     const sender = msg.sender;
@@ -232,7 +323,6 @@ const StudentChats = () => {
                         hour: "2-digit",
                         minute: "2-digit",
                     });
-
                     let mediaFiles = [];
                     if (Array.isArray(msg.media) && msg.media.length > 0) {
                         mediaFiles = msg.media.map((m) => {
@@ -241,7 +331,6 @@ const StudentChats = () => {
                             const lowerName = fileName.toLowerCase();
                             const isImageType = m.type?.startsWith('image/') ||
                                 /\.(jpg|jpeg|png|gif|webp|svg|bmp)$/i.test(lowerName);
-
                             return {
                                 url,
                                 fileName,
@@ -249,7 +338,6 @@ const StudentChats = () => {
                             };
                         });
                     }
-
                     return {
                         id: msg._id,
                         sender: isYou ? "You" : senderName,
@@ -259,7 +347,6 @@ const StudentChats = () => {
                         raw: msg,
                     };
                 });
-
                 setChatMessages((prev) => ({
                     ...prev,
                     [chat.id]: formattedMessages,
@@ -277,69 +364,95 @@ const StudentChats = () => {
         }
     };
 
+    // Function to fetch members for the active group chat
+    const fetchActiveChatMembers = async () => {
+        if (!activeChat || activeChat.type !== "group") {
+            // If not a group, set empty members list or a message
+            setActiveChatMembers([]);
+            return;
+        }
+        setLoadingMembers(true);
+        setError(null);
+        try {
+            // Use the members data already fetched with the chat list
+            const group = groups.find(g => g.id === activeChat.id);
+            if (group && Array.isArray(group.members)) {
+                // Format members for the modal list (users and mentors)
+                const formattedMembers = group.members.map(m => ({
+                    _id: m._id,
+                    name: m.name || "Unknown User",
+                    role: m.role || (m.expertise ? "Mentor" : "Member"), // Distinguish based on presence of expertise
+                    status: "online" // Assuming online for simplicity
+                }));
+                setActiveChatMembers(formattedMembers);
+            } else {
+                setActiveChatMembers([]);
+            }
+        } catch (err) {
+            console.error("Error fetching members for active chat:", err);
+            setError("Failed to load members for this chat.");
+            setActiveChatMembers([]);
+        } finally {
+            setLoadingMembers(false);
+        }
+    };
+
+    // Fetch members when the active chat changes (only if it's a group)
+    useEffect(() => {
+        fetchActiveChatMembers();
+    }, [activeChat]); // Run when activeChat changes
+
+
     const sendMessage = async () => {
         if (!validateMessageData(message, files)) {
             setError("Message cannot be empty");
             return;
         }
-
         if (!activeChat || !isValidUserId(CURRENT_USER_ID)) {
             setError("Invalid chat or user information");
             return;
         }
-
         setSendingMessage(true);
         setError(null);
-
         try {
             const formData = new FormData();
-            
             if (activeChat.type === "group") {
                 formData.append("chatGroupId", activeChat.id);
                 formData.append("senderId", CURRENT_USER_ID);
                 if (message.trim()) formData.append("text", message.trim());
-
                 files.forEach((file) => {
                     formData.append("files", file);
                 });
-
                 const res = await fetch(`${BASE_URL}/api/group-messages`, {
                     method: "POST",
                     body: formData,
                 });
                 const result = await res.json();
-
                 if (!result.success) {
                     throw new Error(result.message || "Failed to send message");
                 }
-
             } else {
                 // Individual message
                 const otherUserId = activeChat.otherUser?._id;
                 if (!otherUserId) {
                     throw new Error("Unable to determine recipient");
                 }
-
                 formData.append("userId", CURRENT_USER_ID);
                 formData.append("mentorId", otherUserId);
                 formData.append("senderId", CURRENT_USER_ID);
                 if (message.trim()) formData.append("text", message.trim());
-
                 files.forEach((file) => {
                     formData.append("files", file);
                 });
-
                 const res = await fetch(`${BASE_URL}/api/individual-messages`, {
                     method: "POST",
                     body: formData,
                 });
                 const result = await res.json();
-
                 if (!result.success) {
                     throw new Error(result.message || "Failed to send message");
                 }
             }
-
             // Update local state immediately
             const now = new Date();
             const newMsg = {
@@ -357,153 +470,19 @@ const StudentChats = () => {
                     };
                 }),
             };
-
             setChatMessages((prev) => ({
                 ...prev,
                 [activeChat.id]: [...(prev[activeChat.id] || []), newMsg],
             }));
-
             // Clear form
             setMessage("");
             setFiles([]);
             if (fileInputRef.current) fileInputRef.current.value = "";
-
         } catch (err) {
             console.error("Error sending message:", err);
             setError(err.message || "Failed to send message. Please try again.");
         } finally {
             setSendingMessage(false);
-        }
-    };
-
-    // New function to send message to mentor from members list
-    const sendMessageToMentor = async (mentor) => {
-        if (!isValidUserId(CURRENT_USER_ID) || !mentor?._id) {
-            setError("Invalid user or mentor information");
-            return;
-        }
-
-        setSendingMessage(true);
-        setError(null);
-
-        try {
-            const formData = new FormData();
-            formData.append("userId", CURRENT_USER_ID);
-            formData.append("mentorId", mentor._id);
-            formData.append("senderId", CURRENT_USER_ID);
-            if (message.trim()) formData.append("text", message.trim());
-
-            files.forEach((file) => {
-                formData.append("files", file);
-            });
-
-            const res = await fetch(`${BASE_URL}/api/individual-messages`, {
-                method: "POST",
-                body: formData,
-            });
-            const result = await res.json();
-
-            if (!result.success) {
-                throw new Error(result.message || "Failed to send message");
-            }
-
-            // Create or update the individual chat in the list
-            const newIndividualChat = {
-                id: `temp-${Date.now()}`,
-                name: mentor.name,
-                type: "individual",
-                lastMessage: message.trim() || "File shared",
-                otherUser: mentor,
-                raw: { _id: `temp-${Date.now()}` },
-            };
-
-            // Check if this mentor already exists in individual chats
-            const existingChatIndex = individuals.findIndex(
-                chat => chat.otherUser?._id === mentor._id
-            );
-
-            if (existingChatIndex === -1) {
-                // Add new chat to the beginning of the list
-                setIndividuals(prev => [newIndividualChat, ...prev]);
-            } else {
-                // Update existing chat with new last message
-                const updatedIndividuals = [...individuals];
-                updatedIndividuals[existingChatIndex] = {
-                    ...updatedIndividuals[existingChatIndex],
-                    lastMessage: message.trim() || "File shared"
-                };
-                setIndividuals(updatedIndividuals);
-            }
-
-            // Set this as active chat
-            setActiveChat(newIndividualChat);
-
-            // Add the sent message to chat messages
-            const now = new Date();
-            const newMsg = {
-                id: Date.now().toString(),
-                sender: "You",
-                text: message.trim(),
-                timestamp: now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-                files: files.map((file) => {
-                    const lowerName = file.name.toLowerCase();
-                    const isImage = /\.(jpg|jpeg|png|gif|webp|svg|bmp)$/i.test(lowerName);
-                    return {
-                        url: URL.createObjectURL(file),
-                        fileName: file.name,
-                        type: isImage ? "image" : "file",
-                    };
-                }),
-            };
-
-            setChatMessages((prev) => ({
-                ...prev,
-                [newIndividualChat.id]: [newMsg],
-            }));
-
-            // Clear form and close modal
-            setMessage("");
-            setFiles([]);
-            setShowMembersModal(false);
-            if (fileInputRef.current) fileInputRef.current.value = "";
-
-        } catch (err) {
-            console.error("Error sending message to mentor:", err);
-            setError(err.message || "Failed to send message. Please try again.");
-        } finally {
-            setSendingMessage(false);
-        }
-    };
-
-    // Function to handle sending message from members modal without active chat
-    const startNewChatWithMentor = (mentor) => {
-        // Check if we already have an individual chat with this mentor
-        const existingChat = individuals.find(
-            chat => chat.otherUser?._id === mentor._id
-        );
-
-        if (existingChat) {
-            // If chat exists, just select it
-            handleChatSelect(existingChat);
-            setShowMembersModal(false);
-        } else {
-            // If no chat exists, create a temporary one and set it as active
-            const newIndividualChat = {
-                id: `temp-${mentor._id}`,
-                name: mentor.name,
-                type: "individual",
-                lastMessage: "",
-                otherUser: mentor,
-                raw: { _id: `temp-${mentor._id}` },
-            };
-
-            setIndividuals(prev => [newIndividualChat, ...prev]);
-            setActiveChat(newIndividualChat);
-            setChatMessages(prev => ({
-                ...prev,
-                [newIndividualChat.id]: []
-            }));
-            setShowMembersModal(false);
         }
     };
 
@@ -517,7 +496,7 @@ const StudentChats = () => {
     };
 
     const handleAttachClick = () => fileInputRef.current?.click();
-    
+
     const handleFileChange = (e) => {
         const selectedFiles = Array.from(e.target.files || []);
         // Validate file types and sizes
@@ -550,13 +529,11 @@ const StudentChats = () => {
     const renderGroupList = () => {
         if (loadingChats) return <div className="px-3 py-2 text-gray-500">Loading chats...</div>;
         if (error) return <div className="px-3 py-2 text-red-500">{error}</div>;
-        
+
         const groupsToShow = showAllGroups ? groups : groups.slice(0, 4);
-        
         if (groups.length === 0) {
             return <div className="px-3 py-2 text-gray-500">No group chats found</div>;
         }
-        
         return (
             <>
                 {groupsToShow.map((c) => {
@@ -602,11 +579,9 @@ const StudentChats = () => {
 
     const renderIndividualList = () => {
         const individualsToShow = showAllIndividuals ? individuals : individuals.slice(0, 4);
-        
         if (individuals.length === 0) {
             return <div className="px-3 py-2 text-gray-500">No individual chats found</div>;
         }
-        
         return (
             <>
                 {individualsToShow.map((p) => {
@@ -656,18 +631,16 @@ const StudentChats = () => {
             {showList && activeChat && isMobile && (
                 <div className="fixed inset-0 bg-black/40 z-30 md:hidden" onClick={() => setShowList(false)} />
             )}
-
             <aside
                 className={`fixed md:static z-40 top-0 left-0 h-full w-72 border-r bg-white transition-transform duration-200 flex flex-col
                     ${showList ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
             >
-                <div className="h-14 px-3 flex items-center justify-between border-b bg-[#a51d34] text-white flex-shrink-0">
+                <div className="h-14 px-3 flex items-center justify-between border-b bg-[#c94a5a] text-white flex-shrink-0">
                     <span className="font-semibold truncate">Workspace</span>
                     <button className="md:hidden p-1 rounded hover:bg-white/20" onClick={() => setShowList(false)}>
                         <X className="w-5 h-5" />
                     </button>
                 </div>
-
                 <div className="p-3 border-b flex-shrink-0">
                     <div className="relative">
                         <Search className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -677,7 +650,6 @@ const StudentChats = () => {
                         />
                     </div>
                 </div>
-
                 <div className="flex-1 overflow-y-auto">
                     <div className="px-3 pt-3">
                         <div className="text-gray-500 uppercase text-[11px] font-semibold mb-1">Group Chats</div>
@@ -685,7 +657,6 @@ const StudentChats = () => {
                             {renderGroupList()}
                         </ul>
                     </div>
-
                     {individuals.length > 0 && (
                         <div className="px-3 pt-4">
                             <div className="text-gray-500 uppercase text-[11px] font-semibold mb-1">Direct messages</div>
@@ -695,19 +666,8 @@ const StudentChats = () => {
                         </div>
                     )}
                 </div>
-
-                {/* New Message Button */}
-                <div className="p-3 border-t flex-shrink-0">
-                    <button
-                        onClick={() => setShowMembersModal(true)}
-                        className="w-full py-2 bg-[#a51d34] text-white rounded hover:brightness-110 flex items-center justify-center gap-2"
-                    >
-                        <User className="w-4 h-4" />
-                        <span>New Message</span>
-                    </button>
-                </div>
+                {/* Removed the "New Message" button */}
             </aside>
-
             <main className="flex-1 flex flex-col min-w-0">
                 <div className="h-14 flex items-center justify-between border-b px-3 flex-shrink-0">
                     <div className="flex items-center gap-2 min-w-0">
@@ -725,22 +685,23 @@ const StudentChats = () => {
                             </div>
                         </div>
                     </div>
-
-                    <button
-                        onClick={() => setShowMembersModal(true)}
-                        className="px-2 py-1 text-[12px] border border-[#a51d34] text-[#a51d34] rounded hover:bg-red-50"
-                    >
-                        New Message
-                    </button>
+                    {/* Added the Members button, only shown if a group chat is active */}
+                    {activeChat && activeChat.type === "group" && (
+                        <button
+                            onClick={() => setShowMembersModal(true)}
+                            className="px-2 py-1 text-[12px] border border-[#a51d34] text-[#a51d34] rounded hover:bg-red-50 flex items-center gap-1"
+                        >
+                            <Users2 className="w-4 h-4" /> {/* Using a group/users icon */}
+                            <span>Members</span>
+                        </button>
+                    )}
                 </div>
-
                 {error && (
                     <div className="mx-3 mt-2 p-2 bg-red-50 border border-red-200 rounded text-red-700 text-xs flex items-center gap-2">
                         <AlertCircle className="w-4 h-4" />
                         {error}
                     </div>
                 )}
-
                 <div className="flex-1 overflow-y-auto px-3 py-3 bg-white min-h-0">
                     {loadingMessages ? (
                         <div className="h-full flex items-center justify-center text-gray-500">Loading messages...</div>
@@ -768,7 +729,6 @@ const StudentChats = () => {
                         </div>
                     )}
                 </div>
-
                 {activeChat && (
                     <div className="border-t p-2 flex-shrink-0">
                         {files.length > 0 && (
@@ -790,7 +750,6 @@ const StudentChats = () => {
                                 ))}
                             </div>
                         )}
-
                         <div className="flex items-end gap-2">
                             <input
                                 ref={fileInputRef}
@@ -841,22 +800,21 @@ const StudentChats = () => {
                     </div>
                 )}
             </main>
-
+            {/* Members Modal - Replaces the old "New Message" modal */}
             {showMembersModal && (
                 <MembersModal
-                    members={mentors}
+                    members={activeChatMembers} // Pass members specific to the active chat
                     searchTerm={searchTerm}
                     setSearchTerm={setSearchTerm}
                     onClose={() => {
                         setShowMembersModal(false);
                         setSearchTerm("");
                     }}
-                    onSend={startNewChatWithMentor}
                     getStatusColor={getStatusColor}
-                    loading={loadingMentors}
+                    loading={loadingMembers} // Use loading state for members
+                    isGroupChat={activeChat && activeChat.type === "group"} // Pass info about active chat type
                 />
             )}
-
             {previewModal.open && previewModal.file && (
                 <FilePreviewModal file={previewModal.file} onClose={closePreview} />
             )}
@@ -872,7 +830,6 @@ const MessageBubble = ({ msg, isYou, onFileClick }) => {
                     {msg.sender?.charAt(0)}
                 </div>
             )}
-
             <div className="max-w-[80%]">
                 {!isYou && (
                     <div className="flex items-center gap-1 text-[11px] text-gray-500 mb-1">
@@ -880,7 +837,6 @@ const MessageBubble = ({ msg, isYou, onFileClick }) => {
                         <span>{msg.timestamp}</span>
                     </div>
                 )}
-
                 <div
                     className={`px-3 py-2 rounded-lg text-[13px] border leading-5 break-words
                         ${isYou
@@ -889,7 +845,6 @@ const MessageBubble = ({ msg, isYou, onFileClick }) => {
                         }`}
                 >
                     {msg.text && <div className="whitespace-pre-wrap">{msg.text}</div>}
-
                     {Array.isArray(msg.files) && msg.files.length > 0 && (
                         <div className={`mt-1 ${isYou ? "text-white" : "text-gray-800"}`}>
                             {msg.files.map((f, idx) => {
@@ -921,7 +876,6 @@ const MessageBubble = ({ msg, isYou, onFileClick }) => {
                             })}
                         </div>
                     )}
-
                     <div className={`text-[10px] opacity-70 mt-1 ${isYou ? "text-white" : "text-gray-500"}`}>
                         {msg.timestamp}
                     </div>
@@ -933,7 +887,6 @@ const MessageBubble = ({ msg, isYou, onFileClick }) => {
 
 const FilePreviewModal = ({ file, onClose }) => {
     const isImage = file.type === "image";
-
     return (
         <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl relative">
@@ -958,7 +911,6 @@ const FilePreviewModal = ({ file, onClose }) => {
                         </button>
                     </div>
                 </div>
-
                 <div className="p-4 overflow-auto max-h-[70vh] flex items-center justify-center bg-gray-50">
                     {isImage ? (
                         <img
@@ -989,7 +941,9 @@ const FilePreviewModal = ({ file, onClose }) => {
     );
 };
 
-const MembersModal = ({ members, searchTerm, setSearchTerm, onClose, onSend, getStatusColor, loading }) => {
+// Updated MembersModal component to show members of the active chat
+const MembersModal = ({ members, searchTerm, setSearchTerm, onClose, getStatusColor, loading, isGroupChat }) => {
+    // Filter members based on search term
     const filtered = members.filter((m) =>
         m.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -998,51 +952,52 @@ const MembersModal = ({ members, searchTerm, setSearchTerm, onClose, onSend, get
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-lg w-full max-w-md shadow-xl">
                 <div className="flex justify-between items-center p-4 border-b bg-[#a51d34] text-white rounded-t-lg">
-                    <span className="font-semibold">Message a Mentor</span>
+                    <span className="font-semibold">
+                        {isGroupChat ? "Group Members" : "Members"}
+                    </span>
                     <button onClick={onClose}>
                         <X className="w-5 h-5" />
                     </button>
                 </div>
-
                 <div className="p-3 border-b">
                     <div className="relative">
                         <Search className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                         <input
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            placeholder="Search mentors..."
+                            placeholder="Search members..."
                             className="w-full pl-7 pr-3 py-2 border rounded text-[13px] focus:ring-1 focus:ring-[#a51d34]"
                         />
                     </div>
                 </div>
-
                 <div className="p-3 max-h-[65vh] overflow-y-auto space-y-2">
                     {loading ? (
-                        <div className="text-center text-gray-500 py-6 text-sm">Loading mentors...</div>
-                    ) : filtered.length ? (
-                        filtered.map((m) => (
-                            <div key={m._id} className="flex items-center gap-3 p-2 border rounded-lg hover:bg-gray-50">
-                                <div className="w-8 h-8 rounded-full bg-[#a51d34]/10 text-[#a51d34] flex items-center justify-center font-semibold">
-                                    {m.name?.charAt(0) || "M"}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <div className="font-semibold text-[13px] truncate">{m.name || "Unknown Mentor"}</div>
-                                    <div className="text-xs text-gray-500 truncate">
-                                        {m.expertise || "Mentor"}
-                                        {m.subjects && m.subjects.length > 0 && ` • ${m.subjects.slice(0, 2).join(', ')}`}
+                        <div className="text-center text-gray-500 py-6 text-sm">Loading members...</div>
+                    ) : isGroupChat ? (
+                        // Show members if it's a group chat
+                        filtered.length ? (
+                            filtered.map((m) => (
+                                <div key={m._id} className="flex items-center gap-3 p-2 border rounded-lg hover:bg-gray-50">
+                                    <div className="w-8 h-8 rounded-full bg-[#a51d34]/10 text-[#a51d34] flex items-center justify-center font-semibold">
+                                        {m.name?.charAt(0) || "U"}
                                     </div>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="font-semibold text-[13px] truncate">{m.name || "Unknown User"}</div>
+                                        <div className="text-xs text-gray-500 truncate">
+                                            {m.role || "Member"}
+                                        </div>
+                                    </div>
+                                    <span className={`w-3 h-3 rounded-full ${getStatusColor(m.status || "offline")}`} />
                                 </div>
-                                <span className={`w-3 h-3 rounded-full ${getStatusColor(m.status || "online")}`} />
-                                <button
-                                    onClick={() => onSend(m)}
-                                    className="ml-2 px-3 py-1.5 text-[12px] rounded bg-[#a51d34] text-white hover:brightness-110 whitespace-nowrap"
-                                >
-                                    Message
-                                </button>
-                            </div>
-                        ))
+                            ))
+                        ) : (
+                            <div className="text-center text-gray-500 py-6 text-sm">No members found.</div>
+                        )
                     ) : (
-                        <div className="text-center text-gray-500 py-6 text-sm">No mentors found</div>
+                        // Show message if it's not a group chat
+                        <div className="text-center text-gray-500 py-6 text-sm">
+                            Members can only be viewed in group chats.
+                        </div>
                     )}
                 </div>
             </div>
